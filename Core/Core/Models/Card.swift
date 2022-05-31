@@ -24,7 +24,13 @@ public class Card : Identifiable, Codable {
     public let validationServiceID: String? = nil
     public let type: String? = nil
     public let countryDialCode: String? = nil
-//    var merchantPayer: MerchantPayer? = nil
+    //Tingg Virtual Card
+   public static let TYPE_VIRTUAL = "VIRTUAL"
+    // Normal credit cards
+   public static let TYPE_NORMAL = "NORMAL"
+   public static let STATUS_INACTIVE = "0"
+   public static let  STATUS_ACTIVE = "1"
+    var merchantPayer: MerchantPayer? = nil
     enum CodingKeys: String, CodingKey {
         case firstName = "FIRST_NAME"
         case middleName = "MIDDLE_NAME"
@@ -43,6 +49,10 @@ public class Card : Identifiable, Codable {
         case type = "CARD_TYPE"
         case validationServiceID = "VALIDATION_SERVICE_ID"
         case countryDialCode = "COUNTRY_DAILCODE"
-//        case merchantPayer = "merchant_payer_"
+        case merchantPayer = "merchant_payer_"
+    }
+    
+    func isInActive() -> Bool {
+        return self.activeStatus == Card.STATUS_INACTIVE
     }
 }
