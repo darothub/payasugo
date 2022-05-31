@@ -11,6 +11,7 @@
 		715393D228467C88001016E8 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D128467C88001016E8 /* Profile.swift */; };
 		715393D428468405001016E8 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D328468405001016E8 /* Contact.swift */; };
 		715393D628468692001016E8 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D528468692001016E8 /* Country.swift */; };
+		715393D828468BA0001016E8 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D728468BA0001016E8 /* Card.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		715393D128467C88001016E8 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		715393D328468405001016E8 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		715393D528468692001016E8 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		715393D728468BA0001016E8 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				715393D128467C88001016E8 /* Profile.swift */,
 				715393D328468405001016E8 /* Contact.swift */,
 				715393D528468692001016E8 /* Country.swift */,
+				715393D728468BA0001016E8 /* Card.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 				715393D428468405001016E8 /* Contact.swift in Sources */,
 				715393D628468692001016E8 /* Country.swift in Sources */,
 				715393D228467C88001016E8 /* Profile.swift in Sources */,
+				715393D828468BA0001016E8 /* Card.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
