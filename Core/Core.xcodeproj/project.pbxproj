@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		715393CA284667D8001016E8 /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 715393C9284667D8001016E8 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		715393D228467C88001016E8 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D128467C88001016E8 /* Profile.swift */; };
+		715393D428468405001016E8 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D328468405001016E8 /* Contact.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		715393C6284667D8001016E8 /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		715393C9284667D8001016E8 /* Core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Core.h; sourceTree = "<group>"; };
 		715393D128467C88001016E8 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		715393D328468405001016E8 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				715393D128467C88001016E8 /* Profile.swift */,
+				715393D328468405001016E8 /* Contact.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				715393D428468405001016E8 /* Contact.swift in Sources */,
 				715393D228467C88001016E8 /* Profile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
