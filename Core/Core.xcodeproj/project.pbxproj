@@ -16,6 +16,7 @@
 		715393DC2847E80B001016E8 /* ManualBill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DB2847E80B001016E8 /* ManualBill.swift */; };
 		715393DE2847F82A001016E8 /* PayerOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DD2847F82A001016E8 /* PayerOption.swift */; };
 		715393E02847FB7D001016E8 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DF2847FB7D001016E8 /* Category.swift */; };
+		715393E228480CDE001016E8 /* MerchantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E128480CDE001016E8 /* MerchantService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		715393DB2847E80B001016E8 /* ManualBill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualBill.swift; sourceTree = "<group>"; };
 		715393DD2847F82A001016E8 /* PayerOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayerOption.swift; sourceTree = "<group>"; };
 		715393DF2847FB7D001016E8 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		715393E128480CDE001016E8 /* MerchantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				715393DB2847E80B001016E8 /* ManualBill.swift */,
 				715393DD2847F82A001016E8 /* PayerOption.swift */,
 				715393DF2847FB7D001016E8 /* Category.swift */,
+				715393E128480CDE001016E8 /* MerchantService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				715393DC2847E80B001016E8 /* ManualBill.swift in Sources */,
+				715393E228480CDE001016E8 /* MerchantService.swift in Sources */,
 				715393DE2847F82A001016E8 /* PayerOption.swift in Sources */,
 				715393D428468405001016E8 /* Contact.swift in Sources */,
 				715393DA284692A0001016E8 /* MerchantPayer.swift in Sources */,
