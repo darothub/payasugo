@@ -22,6 +22,8 @@
 		715393E82848A087001016E8 /* SecurityQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E72848A087001016E8 /* SecurityQuestion.swift */; };
 		715393EA2848A1D2001016E8 /* SMSTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E92848A1D2001016E8 /* SMSTemplate.swift */; };
 		715393EC2848A6BC001016E8 /* Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393EB2848A6BC001016E8 /* Sync.swift */; };
+		715393EE2848A7CE001016E8 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393ED2848A7CE001016E8 /* TransactionHistory.swift */; };
+		715393F02848AC17001016E8 /* Bank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393EF2848AC17001016E8 /* Bank.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +43,8 @@
 		715393E72848A087001016E8 /* SecurityQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityQuestion.swift; sourceTree = "<group>"; };
 		715393E92848A1D2001016E8 /* SMSTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMSTemplate.swift; sourceTree = "<group>"; };
 		715393EB2848A6BC001016E8 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
+		715393ED2848A7CE001016E8 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
+		715393EF2848AC17001016E8 /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 				715393E72848A087001016E8 /* SecurityQuestion.swift */,
 				715393E92848A1D2001016E8 /* SMSTemplate.swift */,
 				715393EB2848A6BC001016E8 /* Sync.swift */,
+				715393ED2848A7CE001016E8 /* TransactionHistory.swift */,
+				715393EF2848AC17001016E8 /* Bank.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -181,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				715393DC2847E80B001016E8 /* ManualBill.swift in Sources */,
+				715393F02848AC17001016E8 /* Bank.swift in Sources */,
 				715393E228480CDE001016E8 /* MerchantService.swift in Sources */,
 				715393DE2847F82A001016E8 /* PayerOption.swift in Sources */,
 				715393D428468405001016E8 /* Contact.swift in Sources */,
@@ -191,6 +198,7 @@
 				715393E428481260001016E8 /* Enrollment.swift in Sources */,
 				715393D828468BA0001016E8 /* Card.swift in Sources */,
 				715393E82848A087001016E8 /* SecurityQuestion.swift in Sources */,
+				715393EE2848A7CE001016E8 /* TransactionHistory.swift in Sources */,
 				715393E02847FB7D001016E8 /* Category.swift in Sources */,
 				715393EC2848A6BC001016E8 /* Sync.swift in Sources */,
 				715393E6284817A8001016E8 /* Invoice.swift in Sources */,
