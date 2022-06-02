@@ -6,71 +6,63 @@
 //
 
 import Foundation
+
+// MARK: - MerchantPayer
 public class MerchantPayer: Identifiable, Codable {
-    public let id: Int = 0
-    public let hubClientId: String = "0"
-    public let networkId: String? = nil
-    public let clientName: String? = nil
-    public let serviceCode: String? = nil
-    public let payBillNo: String? = nil
-    public let activeStatus: String? = nil
-    public let logo: String? = nil
-    public let viewable: String? = nil
-    public let statusMessage: String? = nil
-    public let referenceLabel: String? = nil
-    public let defaults: String = "0"
-    public let orderId: Int = 0
-    public let paymentInstruction: String? = nil
-    public let merchantPayerEnabled: String? = nil
-    public let abbreviation: String? = nil
-    public let colorCode: String? = nil
-    public let shortName: String? = nil
-    public let showLogo: String? = nil
-    public let checkoutType: String? = nil
-    public let canPayForOther: String? = nil
-    public let payerReference: String? = nil
-    public let changeSyncMode: String? = nil
-    public let paymentCount: String? = nil
-    public let isChargingPayer: Bool? = false
-    public let payerCharge: String? = nil
-    public let alertMessage: String? = nil
-    public let alertTitle: String? = nil
-    public let paymentActivationDesc: String? = nil
-    public let paymentOptionId: String? = nil
-    public let clientId: String? = nil
-    public let selected: String? = nil
+    public let id: Int
+    public let hubClientID, isDefault: String?
+    public let orderID: Int
+    public let isChargingPayer, isSelectedOnAdapter: Bool
+    public let merchantPayerDEFAULT, selected, unSelected, chargeTypeFixed: String?
+    public let chargeTypePercentage, checkoutInApp, checkoutUssdPush, checkoutStkLaunch: String?
+    public let checkoutCard, checkoutBankViaCard, checkoutPinAuth, checkoutMulaWallet: String?
+    public let checkoutTinggWallet, checkoutTinggFundsTransfer, checkoutMnoPinAuth: String?
+
     enum CodingKeys: String, CodingKey {
-        case id = "MERCHANT_PAYER_ID"
-        case hubClientId = "HUB_CLIENT_ID"
-        case networkId = "NETWORK_ID"
-        case clientName = "CLIENT_NAME"
-        case serviceCode = "CLIENT_CODE"
-        case payBillNo = "PAYBILL"
-        case activeStatus = "ACTIVE_STATUS"
-        case logo = "LOGO"
-        case viewable = "VIEWABLE"
-        case statusMessage = "STATUS_MESSAGE"
-        case referenceLabel = "REFERENCE_LABEL"
-        case defaults = "IS_DEFAULT"
-        case orderId = "ORDER_ID"
-        case paymentInstruction = "PAYMENT_INSTRUCTION"
-        case merchantPayerEnabled = "MERCHANT_PAYER_ENABLED"
-        case abbreviation = "ABBREVIATION"
-        case colorCode = "COLOR_CODE"
-        case shortName = "SHORT_NAME"
-        case showLogo = "SHOW_LOGO"
-        case checkoutType = "CHECKOUT_TYPE"
-        case canPayForOther = "CAN_PAY_FOR_OTHER"
-        case payerReference = "PAYER_REFERENCE"
-        case changeSyncMode = "CHARGE_SYNC_MODE"
-        case paymentCount = "PAYMENT_COUNT"
+        case id
+        case hubClientID = "HUB_CLIENT_ID"
+        case isDefault = "IS_DEFAULT"
+        case orderID = "ORDER_ID"
         case isChargingPayer = "IS_CHARGING_PAYER"
-        case payerCharge = "PAYER_CHARGE"
-        case alertMessage = "MESSAGE"
-        case alertTitle = "TITLE"
-        case paymentActivationDesc = "PAYMENT_ACTIVATION_DESC"
-        case paymentOptionId = "PAYMENT_OPTION_ID"
-        case clientId = "CLIENT_ID"
-        case selected = "IS_SELECTED"
+        case isSelectedOnAdapter
+        case merchantPayerDEFAULT = "DEFAULT"
+        case selected = "SELECTED"
+        case unSelected = "UN_SELECTED"
+        case chargeTypeFixed = "CHARGE_TYPE_FIXED"
+        case chargeTypePercentage = "CHARGE_TYPE_PERCENTAGE"
+        case checkoutInApp = "CHECKOUT_IN_APP"
+        case checkoutUssdPush = "CHECKOUT_USSD_PUSH"
+        case checkoutStkLaunch = "CHECKOUT_STK_LAUNCH"
+        case checkoutCard = "CHECKOUT_CARD"
+        case checkoutBankViaCard = "CHECKOUT_BANK_VIA_CARD"
+        case checkoutPinAuth = "CHECKOUT_PIN_AUTH"
+        case checkoutMulaWallet = "CHECKOUT_MULA_WALLET"
+        case checkoutTinggWallet = "CHECKOUT_TINGG_WALLET"
+        case checkoutTinggFundsTransfer = "CHECKOUT_TINGG_FUNDS_TRANSFER"
+        case checkoutMnoPinAuth = "CHECKOUT_MNO_PIN_AUTH"
+    }
+
+    init(id: Int = 0, hubClientID: String?, isDefault: String?, orderID: Int, isChargingPayer: Bool, isSelectedOnAdapter: Bool, merchantPayerDEFAULT: String?, selected: String?, unSelected: String?, chargeTypeFixed: String?, chargeTypePercentage: String?, checkoutInApp: String?, checkoutUssdPush: String?, checkoutStkLaunch: String?, checkoutCard: String?, checkoutBankViaCard: String?, checkoutPinAuth: String?, checkoutMulaWallet: String?, checkoutTinggWallet: String?, checkoutTinggFundsTransfer: String?, checkoutMnoPinAuth: String?) {
+        self.id = id
+        self.hubClientID = hubClientID
+        self.isDefault = isDefault
+        self.orderID = orderID
+        self.isChargingPayer = isChargingPayer
+        self.isSelectedOnAdapter = isSelectedOnAdapter
+        self.merchantPayerDEFAULT = merchantPayerDEFAULT
+        self.selected = selected
+        self.unSelected = unSelected
+        self.chargeTypeFixed = chargeTypeFixed
+        self.chargeTypePercentage = chargeTypePercentage
+        self.checkoutInApp = checkoutInApp
+        self.checkoutUssdPush = checkoutUssdPush
+        self.checkoutStkLaunch = checkoutStkLaunch
+        self.checkoutCard = checkoutCard
+        self.checkoutBankViaCard = checkoutBankViaCard
+        self.checkoutPinAuth = checkoutPinAuth
+        self.checkoutMulaWallet = checkoutMulaWallet
+        self.checkoutTinggWallet = checkoutTinggWallet
+        self.checkoutTinggFundsTransfer = checkoutTinggFundsTransfer
+        self.checkoutMnoPinAuth = checkoutMnoPinAuth
     }
 }
