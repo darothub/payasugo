@@ -6,50 +6,53 @@
 //
 
 import Foundation
-public class Card : Identifiable, Codable {
-    public let firstName: String? = nil
-    public let middleName: String? = nil
-    public let idPassport: String? = nil
-    public let phoneNumber: String? = nil
-    public let email: String? = nil
-    public let customerAddress: String? = nil
-    public let currencyCode: String? = nil
-    public let customerCity: String? = nil
-    public let countryCode: String? = nil
-    public let alias: String = ""
-    public let nameType: String? = nil
-    public let payerClientId: String? = nil
-    public let suffix: String? = nil
-    public let activeStatus: String? = nil
-    public let validationServiceID: String? = nil
-    public let type: String? = nil
-    public let countryDialCode: String? = nil
+
+// MARK: - Card
+public class Card: Codable {
+    public let firstName, middleName, idPassport, phoneNumber: String?
+    public let email, customerAddress, currencyCode, customerCity: String?
+    public let countryCode, cardAlias, nameType, payerClientID: String?
+    public let suffix, activeStatus, validationServiceID, cardType: String?
+    public let countryDialCode: String?
+    public let merchantPayer: MerchantPayer?
     //Tingg Virtual Card
-   public static let TYPE_VIRTUAL = "VIRTUAL"
+    public static let TYPE_VIRTUAL = "VIRTUAL"
     // Normal credit cards
-   public static let TYPE_NORMAL = "NORMAL"
-   public static let STATUS_INACTIVE = "0"
-   public static let  STATUS_ACTIVE = "1"
-    var merchantPayer: MerchantPayer? = nil
+    public static let TYPE_NORMAL = "NORMAL"
+    public static let STATUS_INACTIVE = "0"
+    public static let  STATUS_ACTIVE = "1"
+    
     enum CodingKeys: String, CodingKey {
-        case firstName = "FIRST_NAME"
-        case middleName = "MIDDLE_NAME"
-        case idPassport = "ID_PASSPORT"
-        case phoneNumber = "PHONE_NUMBER"
-        case email = "EMAIL"
-        case customerAddress = "CUSTOMER_ADDRESS"
-        case currencyCode = "CURRENCY_CODE"
-        case customerCity = "CUSTOMER_CITY"
-        case countryCode = "COUNTRY_CODE"
-        case alias = "CARD_ALIAS"
-        case nameType = "CARD_NAME_TYPE"
-        case payerClientId = "PAYER_CLIENT_ID"
-        case suffix = "CARD_NUMBER_SUFFIX"
+        case firstName, middleName, idPassport, phoneNumber, email, customerAddress, currencyCode, customerCity, countryCode
+        case cardAlias = "CARD_ALIAS"
+        case nameType
+        case payerClientID = "PAYER_CLIENT_ID"
+        case suffix
         case activeStatus = "ACTIVE_STATUS"
-        case type = "CARD_TYPE"
-        case validationServiceID = "VALIDATION_SERVICE_ID"
-        case countryDialCode = "COUNTRY_DAILCODE"
-        case merchantPayer = "merchant_payer_"
+        case validationServiceID
+        case cardType = "CARD_TYPE"
+        case countryDialCode, merchantPayer
+    }
+    
+    init(firstName: String?, middleName: String?, idPassport: String?, phoneNumber: String?, email: String?, customerAddress: String?, currencyCode: String?, customerCity: String?, countryCode: String?, cardAlias: String?, nameType: String?, payerClientID: String?, suffix: String?, activeStatus: String?, validationServiceID: String?, cardType: String?, countryDialCode: String?, merchantPayer: MerchantPayer?) {
+        self.firstName = firstName
+        self.middleName = middleName
+        self.idPassport = idPassport
+        self.phoneNumber = phoneNumber
+        self.email = email
+        self.customerAddress = customerAddress
+        self.currencyCode = currencyCode
+        self.customerCity = customerCity
+        self.countryCode = countryCode
+        self.cardAlias = cardAlias
+        self.nameType = nameType
+        self.payerClientID = payerClientID
+        self.suffix = suffix
+        self.activeStatus = activeStatus
+        self.validationServiceID = validationServiceID
+        self.cardType = cardType
+        self.countryDialCode = countryDialCode
+        self.merchantPayer = merchantPayer
     }
     
     func isInActive() -> Bool {
