@@ -6,102 +6,69 @@
 //
 
 import Foundation
-public class Country : Identifiable, Encodable {
-    public let name: String = ""
-    public let code: String = ""
-    public let url: String? = nil
-    public let status: String? = nil
-    public let currency: String = ""
-    public let clientId: String? = nil
-    public let mobileRegex: String? = nil
-    public let genericAccountNumberRegex: String? = nil
-    public let extractSMS: String? = nil
-    public let currencyRegex: String? = nil
-    public let excludedSMSSourceAddress: String? = nil
-    public let dialCode: String = ""
-    public let confirmedAccountLimits: String? = nil
-    public let hotlineAppId: String? = nil
-    public let hotlineAppKey: String? = nil
-    public let freshChatAppId: String? = nil
-    public let freshChatAppKey: String? = nil
-    public let faqUrl: String? = nil
-    public let tacUrl: String? = nil
-    public let alphanumericRegex: String? = nil
-    public let minimumProfiledAccounts: String? = nil
-    public let smsProfilingTimeout: String? = nil
-    public let roundUpAmount: String? = nil
-    public let maximumCards: String? = nil
-    public let flag: String? = nil
-    public let hasWallet: Int = 0
-    public let hasGroups: Int = 0
-    public let hasFloatingButton: Int = 0
-    public let hasDiscover: Int = 0
-    public let useSmileSdk: String? = nil
-    public let hasReferral: Int = 0
-    public let manualKycRegistration: Int = 0
-    public let sourceAddress: String? = nil
-    public let isDefault: Bool = false
-    public let successCallbackUrl: String? = nil
-    public let payerClietCode: String? = nil
-    public let secureCardPayment: String? = nil
-    public let failedCallbackUrl: String? = nil
-    public let webCheckoutUrl: String? = nil
-    public let cleverTapAccountId: String? = nil
-    public let cleverTapToken: String? = nil
-    public let showAssist: String? = nil
-    public let mulaAssistInterestType: String? = nil
-    public let mulaAssistDurationType: String? = nil
-    public let mulaAssistInterestRate: String? = nil
-    public let mulaAssistDuration: String? = nil
-    public let mulaAssistLoanTermDuration: String? = nil
-    public let accessKey: String? = nil
-    public let checkoutServiceCode: String? = nil
-    public let webHookUrl: String? = nil
-    public let fetchBearerTokenUrl: String? = nil
-    public let privacyPolicyUrl: String? = nil
-    
+
+// MARK: - Country
+public class Country: Codable {
+    public let country, countryCode, countryURLNew, status: String?
+    public let currency, mulaClientID, countryMobileRegex, genericAccountNumberRegex: String?
+    public let extractSMSOnProfiling, countryCurrencyRegex, excludedSMSSourceAddresses, countryDialCode: String?
+    public let confirmedAccountLimits, hotlineAppID, hotlineAppKey, freshchatAppID: String?
+    public let freshchatAppKey, faqURL, tacURL, alphanumericRegexes: String?
+    public let minimumProfiledAccounts, smsProfilingTimeout, roundUpAmounts, maximumCards: String?
+    public let countryFlag: String?
+    public let hasWallet, hasGroups, hasFloatingButton, hasDiscover: Int
+    public let useSmileSDK: String?
+    public let hasReferral, isManualKycRegistration: Int
+    public let countrySourceAddresses: String?
+    public let isDefault: Bool
+    public let successCallBackURL, payerClientCode, isSecureCardPayment, failedCallBackURL: String?
+    public let webCheckoutURL, clevertapAccountID, clevertapToken, showAssist: String?
+    public let mulaAssistInterestType, mulaAssistDurationType, mulaAssistInterestRate, mulaAssistDuration: String?
+    public let mulaAssistLoanTermDuration, accessKey, checkoutServiceCode, webHookURL: String?
+    public let fetchBearerTokenURL, privacyPolicyURL: String?
+
     enum CodingKeys: String, CodingKey {
-        case name = "COUNTRY"
-        case code = "COUNTRY_CODE"
-        case url = "COUNTRY_URL_NEW"
+        case country = "COUNTRY"
+        case countryCode = "COUNTRY_CODE"
+        case countryURLNew = "COUNTRY_URL_NEW"
         case status = "STATUS"
         case currency = "CURRENCY"
-        case clientId = "MULA_CLIENT_ID"
-        case mobileRegex = "COUNTRY_MOBILE_REGEX"
+        case mulaClientID = "MULA_CLIENT_ID"
+        case countryMobileRegex = "COUNTRY_MOBILE_REGEX"
         case genericAccountNumberRegex = "GENERIC_ACCOUNT_NUMBER_REGEX"
-        case extractSMS = "EXTRACT_SMS_ON_PROFILING"
-        case currencyRegex = "COUNTRY_CURRENCY_REGEX"
-        case excludedSMSSourceAddress = "EXCLUDED_SMS_SOURCE_ADDRESSES"
-        case dialCode = "COUNTRY_DIAL_CODE"
+        case extractSMSOnProfiling = "EXTRACT_SMS_ON_PROFILING"
+        case countryCurrencyRegex = "COUNTRY_CURRENCY_REGEX"
+        case excludedSMSSourceAddresses = "EXCLUDED_SMS_SOURCE_ADDRESSES"
+        case countryDialCode = "COUNTRY_DIAL_CODE"
         case confirmedAccountLimits = "CONFIRMED_ACCOUNT_LIMITS"
-        case hotlineAppId = "HOTLINE_APP_ID"
+        case hotlineAppID = "HOTLINE_APP_ID"
         case hotlineAppKey = "HOTLINE_APP_KEY"
-        case freshChatAppId = "FRESHCHAT_APP_ID"
-        case freshChatAppKey = "FRESHCHAT_APP_KEY"
-        case faqUrl = "FAQ_URL"
-        case tacUrl = "TAC_URL"
-        case alphanumericRegex = "ALPHANUMERIC_REGEXES"
+        case freshchatAppID = "FRESHCHAT_APP_ID"
+        case freshchatAppKey = "FRESHCHAT_APP_KEY"
+        case faqURL = "FAQ_URL"
+        case tacURL = "TAC_URL"
+        case alphanumericRegexes = "ALPHANUMERIC_REGEXES"
         case minimumProfiledAccounts = "MINIMUM_PROFILED_ACCOUNTS"
         case smsProfilingTimeout = "SMS_PROFILING_TIMEOUT"
-        case roundUpAmount = "ROUND_UP_AMOUNTS"
+        case roundUpAmounts = "ROUND_UP_AMOUNTS"
         case maximumCards = "MAXIMUM_CARDS"
-        case flag = "COUNTRY_FLAG"
+        case countryFlag = "COUNTRY_FLAG"
         case hasWallet = "HAS_WALLET"
         case hasGroups = "HAS_GROUPS"
         case hasFloatingButton = "HAS_FLOATING_BUTTON"
         case hasDiscover = "HAS_DISCOVER"
-        case useSmileSdk = "USE_SMILE_SDK"
+        case useSmileSDK = "USE_SMILE_SDK"
         case hasReferral = "HAS_REFERRAL"
-        case manualKycRegistration = "IS_MANUAL_KYC_REGISTRATION"
-        case sourceAddress = "COUNTRY_SOURCE_ADDRESSES"
+        case isManualKycRegistration = "IS_MANUAL_KYC_REGISTRATION"
+        case countrySourceAddresses = "COUNTRY_SOURCE_ADDRESSES"
         case isDefault = "IS_DEFAULT"
-        case successCallbackUrl = "SUCCESS_CALL_BACK_URL"
-        case payerClietCode = "PAYER_CLIENT_CODE"
-        case secureCardPayment = "IS_SECURE_CARD_PAYMENT"
-        case failedCallbackUrl = "FAILED_CALL_BACK_URL"
-        case webCheckoutUrl = "WEB_CHECKOUT_URL"
-        case cleverTapAccountId = "CLEVERTAP_ACCOUNT_ID"
-        case cleverTapToken = "CLEVERTAP_TOKEN"
+        case successCallBackURL = "SUCCESS_CALL_BACK_URL"
+        case payerClientCode = "PAYER_CLIENT_CODE"
+        case isSecureCardPayment = "IS_SECURE_CARD_PAYMENT"
+        case failedCallBackURL = "FAILED_CALL_BACK_URL"
+        case webCheckoutURL = "WEB_CHECKOUT_URL"
+        case clevertapAccountID = "CLEVERTAP_ACCOUNT_ID"
+        case clevertapToken = "CLEVERTAP_TOKEN"
         case showAssist = "SHOW_ASSIST"
         case mulaAssistInterestType = "MULA_ASSIST_INTEREST_TYPE"
         case mulaAssistDurationType = "MULA_ASSIST_DURATION_TYPE"
@@ -110,9 +77,63 @@ public class Country : Identifiable, Encodable {
         case mulaAssistLoanTermDuration = "MULA_ASSIST_LOAN_TERM_DURATION"
         case accessKey = "ACCESS_KEY"
         case checkoutServiceCode = "CHECKOUT_SERVICE_CODE"
-        case webHookUrl = "WEB_HOOK_URL"
-        case fetchBearerTokenUrl = "FETCH_BEARER_TOKEN_URL"
-        case privacyPolicyUrl = "PRIVACY_POLICY_URL"
-        
+        case webHookURL = "WEB_HOOK_URL"
+        case fetchBearerTokenURL = "FETCH_BEARER_TOKEN_URL"
+        case privacyPolicyURL = "PRIVACY_POLICY_URL"
+    }
+
+    init(country: String?, countryCode: String?, countryURLNew: String?, status: String?, currency: String?, mulaClientID: String?, countryMobileRegex: String?, genericAccountNumberRegex: String?, extractSMSOnProfiling: String?, countryCurrencyRegex: String?, excludedSMSSourceAddresses: String?, countryDialCode: String?, confirmedAccountLimits: String?, hotlineAppID: String?, hotlineAppKey: String?, freshchatAppID: String?, freshchatAppKey: String?, faqURL: String?, tacURL: String?, alphanumericRegexes: String?, minimumProfiledAccounts: String?, smsProfilingTimeout: String?, roundUpAmounts: String?, maximumCards: String?, countryFlag: String?, hasWallet: Int, hasGroups: Int, hasFloatingButton: Int, hasDiscover: Int, useSmileSDK: String?, hasReferral: Int, isManualKycRegistration: Int, countrySourceAddresses: String?, isDefault: Bool, successCallBackURL: String?, payerClientCode: String?, isSecureCardPayment: String?, failedCallBackURL: String?, webCheckoutURL: String?, clevertapAccountID: String?, clevertapToken: String?, showAssist: String?, mulaAssistInterestType: String?, mulaAssistDurationType: String?, mulaAssistInterestRate: String?, mulaAssistDuration: String?, mulaAssistLoanTermDuration: String?, accessKey: String?, checkoutServiceCode: String?, webHookURL: String?, fetchBearerTokenURL: String?, privacyPolicyURL: String?) {
+        self.country = country
+        self.countryCode = countryCode
+        self.countryURLNew = countryURLNew
+        self.status = status
+        self.currency = currency
+        self.mulaClientID = mulaClientID
+        self.countryMobileRegex = countryMobileRegex
+        self.genericAccountNumberRegex = genericAccountNumberRegex
+        self.extractSMSOnProfiling = extractSMSOnProfiling
+        self.countryCurrencyRegex = countryCurrencyRegex
+        self.excludedSMSSourceAddresses = excludedSMSSourceAddresses
+        self.countryDialCode = countryDialCode
+        self.confirmedAccountLimits = confirmedAccountLimits
+        self.hotlineAppID = hotlineAppID
+        self.hotlineAppKey = hotlineAppKey
+        self.freshchatAppID = freshchatAppID
+        self.freshchatAppKey = freshchatAppKey
+        self.faqURL = faqURL
+        self.tacURL = tacURL
+        self.alphanumericRegexes = alphanumericRegexes
+        self.minimumProfiledAccounts = minimumProfiledAccounts
+        self.smsProfilingTimeout = smsProfilingTimeout
+        self.roundUpAmounts = roundUpAmounts
+        self.maximumCards = maximumCards
+        self.countryFlag = countryFlag
+        self.hasWallet = hasWallet
+        self.hasGroups = hasGroups
+        self.hasFloatingButton = hasFloatingButton
+        self.hasDiscover = hasDiscover
+        self.useSmileSDK = useSmileSDK
+        self.hasReferral = hasReferral
+        self.isManualKycRegistration = isManualKycRegistration
+        self.countrySourceAddresses = countrySourceAddresses
+        self.isDefault = isDefault
+        self.successCallBackURL = successCallBackURL
+        self.payerClientCode = payerClientCode
+        self.isSecureCardPayment = isSecureCardPayment
+        self.failedCallBackURL = failedCallBackURL
+        self.webCheckoutURL = webCheckoutURL
+        self.clevertapAccountID = clevertapAccountID
+        self.clevertapToken = clevertapToken
+        self.showAssist = showAssist
+        self.mulaAssistInterestType = mulaAssistInterestType
+        self.mulaAssistDurationType = mulaAssistDurationType
+        self.mulaAssistInterestRate = mulaAssistInterestRate
+        self.mulaAssistDuration = mulaAssistDuration
+        self.mulaAssistLoanTermDuration = mulaAssistLoanTermDuration
+        self.accessKey = accessKey
+        self.checkoutServiceCode = checkoutServiceCode
+        self.webHookURL = webHookURL
+        self.fetchBearerTokenURL = fetchBearerTokenURL
+        self.privacyPolicyURL = privacyPolicyURL
     }
 }
