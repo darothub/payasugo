@@ -24,6 +24,7 @@
 		715393EC2848A6BC001016E8 /* Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393EB2848A6BC001016E8 /* Sync.swift */; };
 		715393EE2848A7CE001016E8 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393ED2848A7CE001016E8 /* TransactionHistory.swift */; };
 		715393F02848AC17001016E8 /* Bank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393EF2848AC17001016E8 /* Bank.swift */; };
+		715393F22848AD52001016E8 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393F12848AD52001016E8 /* Highlight.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		715393EB2848A6BC001016E8 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
 		715393ED2848A7CE001016E8 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 		715393EF2848AC17001016E8 /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
+		715393F12848AD52001016E8 /* Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Highlight.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				715393EB2848A6BC001016E8 /* Sync.swift */,
 				715393ED2848A7CE001016E8 /* TransactionHistory.swift */,
 				715393EF2848AC17001016E8 /* Bank.swift */,
+				715393F12848AD52001016E8 /* Highlight.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				715393E428481260001016E8 /* Enrollment.swift in Sources */,
 				715393D828468BA0001016E8 /* Card.swift in Sources */,
 				715393E82848A087001016E8 /* SecurityQuestion.swift in Sources */,
+				715393F22848AD52001016E8 /* Highlight.swift in Sources */,
 				715393EE2848A7CE001016E8 /* TransactionHistory.swift in Sources */,
 				715393E02847FB7D001016E8 /* Category.swift in Sources */,
 				715393EC2848A6BC001016E8 /* Sync.swift in Sources */,
