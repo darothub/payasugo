@@ -35,25 +35,25 @@ public class MerchantServices: Codable {
 
 // MARK: - MerchantService
 public class MerchantService: Identifiable, Codable {
-    let clientName, showAll, serviceName, serviceCode: String?
-    let activeStatus, serviceLogo, receiverSourceAddress, hubServiceID: String?
-    let hubClientID, minAmount, abbreviation, clientCode: String?
-    let maxAmount, referenceInputMask, formatErrorMessage, servicePatternID: String?
-    let isPrepaidService, paybill, networkID, webTemplateID: String?
-    let colorCode, orderID, serviceImage, presentmentType: String?
-    let referenceLabel, inputType, formType, formParameters: String?
-    let paymentLabel, isBundleService, bundleLabel, bundleCategoryLabel: String?
-    let isDislayableOnLifestream: Bool
-    let bundle, ignoreSaveEnrollment, hasBillAmount, displayNoPendingBillDialog: String?
-    let serviceParameters, canEditAmount: String?
-    let isRefresh: Bool
-    let favoritesDisplayMode, applicableCharges, validateBillAmount, charges: String?
-    let payerClientID, message, title: String?
-    let isCyclicService: Bool
-    let exactPayment, contractualLevel, paymentOptions, categoryID: String?
-    let category: Category?
-    let isManualBill: String?
-    let selected: Bool
+    public let clientName, showAll, serviceName, serviceCode: String?
+    public let activeStatus, serviceLogo, receiverSourceAddress, hubServiceID: String?
+    public let hubClientID, minAmount, abbreviation, clientCode: String?
+    public let maxAmount, referenceInputMask, formatErrorMessage, servicePatternID: String?
+    public let isPrepaidService, paybill, networkID, webTemplateID: String?
+    public let colorCode, orderID, serviceImage, presentmentType: String?
+    public let referenceLabel, inputType, formType, formParameters: String?
+    public let paymentLabel, isBundleService, bundleLabel, bundleCategoryLabel: String?
+    public let isDislayableOnLifestream: Bool
+    public let bundle, ignoreSaveEnrollment, hasBillAmount, displayNoPendingBillDialog: String?
+    public let serviceParameters, canEditAmount: String?
+    public let isRefresh: Bool
+    public let favoritesDisplayMode, applicableCharges, validateBillAmount, charges: String?
+    public let payerClientID, message, title: String?
+    public let isCyclicService: Bool
+    public let exactPayment, contractualLevel, paymentOptions, categoryID: String?
+    public let category: Category?
+    public let isManualBill: String?
+    public let selected: Bool
     
     //service form type dynamic
     public static let GENERIC_FORM = "GENERIC_FORM"

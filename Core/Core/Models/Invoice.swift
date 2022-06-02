@@ -8,16 +8,16 @@
 import Foundation
 // MARK: - Invoice
 public class Invoice: Identifiable, Codable {
-    let currency, dueDate, parkingZone, callbackData: String
-    let beepTransactionID, invoiceNumber, vehicleType, expiryDate: String
-    let billReference, customerName: String
-    let amount, partialPaidAmount: Int
-    let fullyPaid, overPaid: Bool
-    let serviceID, billDescription, biller: String
-    let statusCode: Int
-    let hasPaymentInProgress, isFetchingBill: Bool
-    let enrollment: Enrollment
-    let estimate, statusPaymentInProgress, statusDue: String
+    public let currency, dueDate, parkingZone, callbackData: String?
+    public let beepTransactionID, invoiceNumber, vehicleType, expiryDate: String?
+    public let billReference, customerName: String?
+    public let amount, partialPaidAmount: Int
+    public let fullyPaid, overPaid: Bool
+    public let serviceID, billDescription, biller: String?
+    public let statusCode: Int
+    public let hasPaymentInProgress, isFetchingBill: Bool
+    public let enrollment: Enrollment?
+    public let estimate, statusPaymentInProgress, statusDue: String?
 
     enum CodingKeys: String, CodingKey {
         case currency = "CURRENCY"
@@ -42,7 +42,7 @@ public class Invoice: Identifiable, Codable {
         case statusDue = "STATUS_DUE"
     }
 
-    init(currency: String, dueDate: String, parkingZone: String, callbackData: String, beepTransactionID: String, invoiceNumber: String, vehicleType: String, expiryDate: String, billReference: String, customerName: String, amount: Int, partialPaidAmount: Int, fullyPaid: Bool, overPaid: Bool, serviceID: String, billDescription: String, biller: String, statusCode: Int, hasPaymentInProgress: Bool, isFetchingBill: Bool, enrollment: Enrollment, estimate: String, statusPaymentInProgress: String, statusDue: String) {
+    init(currency: String?, dueDate: String?, parkingZone: String?, callbackData: String?, beepTransactionID: String?, invoiceNumber: String?, vehicleType: String?, expiryDate: String?, billReference: String?, customerName: String?, amount: Int, partialPaidAmount: Int, fullyPaid: Bool, overPaid: Bool, serviceID: String?, billDescription: String?, biller: String?, statusCode: Int, hasPaymentInProgress: Bool, isFetchingBill: Bool, enrollment: Enrollment, estimate: String?, statusPaymentInProgress: String?, statusDue: String?) {
         self.currency = currency
         self.dueDate = dueDate
         self.parkingZone = parkingZone
