@@ -17,6 +17,8 @@
 		715393DE2847F82A001016E8 /* PayerOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DD2847F82A001016E8 /* PayerOption.swift */; };
 		715393E02847FB7D001016E8 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DF2847FB7D001016E8 /* Category.swift */; };
 		715393E228480CDE001016E8 /* MerchantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E128480CDE001016E8 /* MerchantService.swift */; };
+		715393E428481260001016E8 /* Enrollment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E32848125F001016E8 /* Enrollment.swift */; };
+		715393E6284817A8001016E8 /* Invoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E5284817A8001016E8 /* Invoice.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,8 @@
 		715393DD2847F82A001016E8 /* PayerOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayerOption.swift; sourceTree = "<group>"; };
 		715393DF2847FB7D001016E8 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		715393E128480CDE001016E8 /* MerchantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantService.swift; sourceTree = "<group>"; };
+		715393E32848125F001016E8 /* Enrollment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enrollment.swift; sourceTree = "<group>"; };
+		715393E5284817A8001016E8 /* Invoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invoice.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,8 @@
 				715393DD2847F82A001016E8 /* PayerOption.swift */,
 				715393DF2847FB7D001016E8 /* Category.swift */,
 				715393E128480CDE001016E8 /* MerchantService.swift */,
+				715393E32848125F001016E8 /* Enrollment.swift */,
+				715393E5284817A8001016E8 /* Invoice.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -172,8 +178,10 @@
 				715393DA284692A0001016E8 /* MerchantPayer.swift in Sources */,
 				715393D628468692001016E8 /* Country.swift in Sources */,
 				715393D228467C88001016E8 /* Profile.swift in Sources */,
+				715393E428481260001016E8 /* Enrollment.swift in Sources */,
 				715393D828468BA0001016E8 /* Card.swift in Sources */,
 				715393E02847FB7D001016E8 /* Category.swift in Sources */,
+				715393E6284817A8001016E8 /* Invoice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
