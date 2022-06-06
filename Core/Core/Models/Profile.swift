@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - Profile
 public class Profile: Object,  ObjectKeyIdentifiable, Codable {
-    @Persisted public var profileID: Int?
+    @Persisted(primaryKey: true) public var profileID: Int = 0
     @Persisted public var msisdn:String?
     @Persisted public var firstName:String?
     @Persisted public var lastName:String?
@@ -86,7 +86,7 @@ public class Profile: Object,  ObjectKeyIdentifiable, Codable {
     }
     
     init(profileID: Int, msisdn: String?, firstName: String?, lastName: String?, emailAddress: String?, photoURL: String?, accountID: String?, accountAlias: String?, accountNumber: String?, profileProfileID: String?, currency: String?, currencyCode: String?, rewardAmount: String?, mulaAccount: String?, currencyNumber: String?, pinRequestType: String?, isMulaPinSet: String?, isMain: String?, simSerialNumber: String?, hasValidatedCard: String?, creditLimit: String?, hasActivatedAssist: String?, hasOptedOut: String?, currentUsage: String?, loanBalance: String?, hasActivatedWallet: String?, walletAccountID: String?, walletAccountNumber: String?, walletBalance: String?, freshchatRestorationID: String?, loyaltyPoints: String?, identity: String?, postalAddress: String?, acceptedTacVersion: String?, dateAcceptedTac: String?, nationalid: String?, hasBritamAccount: String?, britamWalletData: String?) {
-        self.profileID = 0
+        self.profileID = profileID
         self.msisdn = msisdn
         self.firstName = firstName
         self.lastName = lastName

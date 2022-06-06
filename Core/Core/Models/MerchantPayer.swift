@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 // MARK: - MerchantPayer
 public class MerchantPayer: EmbeddedObject, ObjectKeyIdentifiable, Codable {
-    @Persisted public var id: Int?
+    @Persisted public var id: ObjectId?
     @Persisted public var hubClientID:String?
     @Persisted public var isDefault: String?
     @Persisted public var orderID: Int?
@@ -30,7 +30,7 @@ public class MerchantPayer: EmbeddedObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var checkoutTinggWallet:String?
     @Persisted public var checkoutTinggFundsTransfer:String?
     @Persisted public var checkoutMnoPinAuth: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case hubClientID = "HUB_CLIENT_ID"
@@ -54,9 +54,8 @@ public class MerchantPayer: EmbeddedObject, ObjectKeyIdentifiable, Codable {
         case checkoutTinggFundsTransfer = "CHECKOUT_TINGG_FUNDS_TRANSFER"
         case checkoutMnoPinAuth = "CHECKOUT_MNO_PIN_AUTH"
     }
-
-    init(id: Int = 0, hubClientID: String?, isDefault: String?, orderID: Int, isChargingPayer: Bool, isSelectedOnAdapter: Bool, merchantPayerDEFAULT: String?, selected: String?, unSelected: String?, chargeTypeFixed: String?, chargeTypePercentage: String?, checkoutInApp: String?, checkoutUssdPush: String?, checkoutStkLaunch: String?, checkoutCard: String?, checkoutBankViaCard: String?, checkoutPinAuth: String?, checkoutMulaWallet: String?, checkoutTinggWallet: String?, checkoutTinggFundsTransfer: String?, checkoutMnoPinAuth: String?) {
-        self.id = id
+    
+    init( hubClientID: String?, isDefault: String?, orderID: Int, isChargingPayer: Bool, isSelectedOnAdapter: Bool, merchantPayerDEFAULT: String?, selected: String?, unSelected: String?, chargeTypeFixed: String?, chargeTypePercentage: String?, checkoutInApp: String?, checkoutUssdPush: String?, checkoutStkLaunch: String?, checkoutCard: String?, checkoutBankViaCard: String?, checkoutPinAuth: String?, checkoutMulaWallet: String?, checkoutTinggWallet: String?, checkoutTinggFundsTransfer: String?, checkoutMnoPinAuth: String?) {
         self.hubClientID = hubClientID
         self.isDefault = isDefault
         self.orderID = orderID

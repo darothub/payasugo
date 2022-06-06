@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 // MARK: - Contact
 public class Contact: Object, ObjectKeyIdentifiable, Codable {
-    @Persisted public var id: Int
+    @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var email :String?
     @Persisted public var facebook :String?
     @Persisted public var phone :String?
@@ -37,8 +37,7 @@ public class Contact: Object, ObjectKeyIdentifiable, Codable {
         case dateCreate
     }
 
-    init(id: Int, email: String?, facebook: String?, phone: String?, link: String?, twitter: String?, countryID: String?, website: String?, address: String?, location: String?, contactTitle: String?, dateCreate: String?) {
-        self.id = 0
+    init(email: String?, facebook: String?, phone: String?, link: String?, twitter: String?, countryID: String?, website: String?, address: String?, location: String?, contactTitle: String?, dateCreate: String?) {
         self.email = email
         self.facebook = facebook
         self.phone = phone

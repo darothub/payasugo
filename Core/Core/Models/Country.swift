@@ -10,58 +10,58 @@ import RealmSwift
 
 // MARK: - Country
 public class Country: Object,  ObjectKeyIdentifiable, Codable {
-    public var country: String?
-    public var countryCode: String?
-    public var countryURLNew: String?
-    public var status: String?
-    public var currency: String?
-    public var mulaClientID: String?
-    public var countryMobileRegex: String?
-    public var genericAccountNumberRegex: String?
-    public var extractSMSOnProfiling: String?
-    public var countryCurrencyRegex: String?
-    public var excludedSMSSourceAddresses: String?
-    public var countryDialCode: String?
-    public var confirmedAccountLimits: String?
-    public var hotlineAppID: String?
-    public var hotlineAppKey: String?
-    public var freshchatAppID: String?
-    public var freshchatAppKey: String?
-    public var faqURL: String?
-    public var tacURL: String?
-    public var alphanumericRegexes: String?
-    public var minimumProfiledAccounts: String?
-    public var smsProfilingTimeout: String?
-    public var roundUpAmounts: String?
-    public var maximumCards: String?
-    public var countryFlag: String?
-    public var hasWallet: Int?
-    public var hasGroups: Int?
-    public var hasFloatingButton: Int?
-    public var hasDiscover: Int
-    public var useSmileSDK: String?
-    public var hasReferral: Int?
-    public var isManualKycRegistration: Int
-    public var countrySourceAddresses: String?
-    public var isDefault: Bool
-    public var successCallBackURL: String?
-    public var payerClientCode: String?
-    public var isSecureCardPayment: String?
-    public var failedCallBackURL: String?
-    public var webCheckoutURL: String?
-    public var clevertapAccountID: String?
-    public var clevertapToken: String?
-    public var showAssist: String?
-    public var mulaAssistInterestType: String?
-    public var mulaAssistDurationType: String?
-    public var mulaAssistInterestRate: String?
-    public var mulaAssistDuration: String?
-    public var mulaAssistLoanTermDuration: String?
-    public var accessKey: String?
-    public var checkoutServiceCode: String?
-    public var webHookURL: String?
-    public var fetchBearerTokenURL: String?
-    public var privacyPolicyURL: String?
+    @Persisted public var country: String?
+    @Persisted public var countryCode: String?
+    @Persisted public var countryURLNew: String?
+    @Persisted public var status: String?
+    @Persisted public var currency: String?
+    @Persisted public var mulaClientID: String?
+    @Persisted public var countryMobileRegex: String?
+    @Persisted public var genericAccountNumberRegex: String?
+    @Persisted public var extractSMSOnProfiling: String?
+    @Persisted public var countryCurrencyRegex: String?
+    @Persisted public var excludedSMSSourceAddresses: String?
+    @Persisted public var countryDialCode: String?
+    @Persisted public var confirmedAccountLimits: String?
+    @Persisted public var hotlineAppID: String?
+    @Persisted public var hotlineAppKey: String?
+    @Persisted public var freshchatAppID: String?
+    @Persisted public var freshchatAppKey: String?
+    @Persisted public var faqURL: String?
+    @Persisted public var tacURL: String?
+    @Persisted public var alphanumericRegexes: String?
+    @Persisted public var minimumProfiledAccounts: String?
+    @Persisted public var smsProfilingTimeout: String?
+    @Persisted public var roundUpAmounts: String?
+    @Persisted public var maximumCards: String?
+    @Persisted public var countryFlag: String?
+    @Persisted public var hasWallet: Int?
+    @Persisted public var hasGroups: Int?
+    @Persisted public var hasFloatingButton: Int?
+    @Persisted public var hasDiscover: Int
+    @Persisted public var useSmileSDK: String?
+    @Persisted public var hasReferral: Int?
+    @Persisted public var isManualKycRegistration: Int
+    @Persisted public var countrySourceAddresses: String?
+    @Persisted public var isDefault: Bool
+    @Persisted public var successCallBackURL: String?
+    @Persisted public var payerClientCode: String?
+    @Persisted public var isSecureCardPayment: String?
+    @Persisted public var failedCallBackURL: String?
+    @Persisted public var webCheckoutURL: String?
+    @Persisted public var clevertapAccountID: String?
+    @Persisted public var clevertapToken: String?
+    @Persisted public var showAssist: String?
+    @Persisted public var mulaAssistInterestType: String?
+    @Persisted public var mulaAssistDurationType: String?
+    @Persisted public var mulaAssistInterestRate: String?
+    @Persisted public var mulaAssistDuration: String?
+    @Persisted public var mulaAssistLoanTermDuration: String?
+    @Persisted public var accessKey: String?
+    @Persisted public var checkoutServiceCode: String?
+    @Persisted public var webHookURL: String?
+    @Persisted public var fetchBearerTokenURL: String?
+    @Persisted public var privacyPolicyURL: String?
 
     enum CodingKeys: String, CodingKey {
         case country = "COUNTRY"
