@@ -6,19 +6,19 @@
 //
 
 import Foundation
+import RealmSwift
 
 // MARK: - SecurityQuestion
-public class SecurityQuestion: Identifiable,  Codable {
-    public let questionID: Int
-    public let securityQuestion: String
+public class SecurityQuestion: Object,  ObjectKeyIdentifiable,  Codable {
+    @Persisted(primaryKey: true) public var questionID: ObjectId
+    @Persisted public var securityQuestion: String
 
     enum CodingKeys: String, CodingKey {
         case questionID = "QUESTION_ID"
         case securityQuestion = "SECURITY_QUESTION"
     }
 
-    init(questionID: Int, securityQuestion: String) {
-        self.questionID = questionID
+    init(securityQuestion: String) {
         self.securityQuestion = securityQuestion
     }
 }

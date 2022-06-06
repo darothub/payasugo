@@ -6,18 +6,33 @@
 //
 
 import Foundation
+import RealmSwift
 // MARK: - Invoice
-public class Invoice: Identifiable, Codable {
-    public let currency, dueDate, parkingZone, callbackData: String?
-    public let beepTransactionID, invoiceNumber, vehicleType, expiryDate: String?
-    public let billReference, customerName: String?
-    public let amount, partialPaidAmount: Int
-    public let fullyPaid, overPaid: Bool
-    public let serviceID, billDescription, biller: String?
-    public let statusCode: Int
-    public let hasPaymentInProgress, isFetchingBill: Bool
-    public let enrollment: Enrollment?
-    public let estimate, statusPaymentInProgress, statusDue: String?
+public class Invoice: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted public var currency:String?
+    @Persisted public var dueDate:String?
+    @Persisted public var parkingZone:String?
+    @Persisted public var callbackData: String?
+    @Persisted public var beepTransactionID:String?
+    @Persisted public var invoiceNumber:String?
+    @Persisted public var vehicleType:String?
+    @Persisted public var expiryDate: String?
+    @Persisted public var billReference:String?
+    @Persisted public var customerName: String?
+    @Persisted public var amount:Int?
+    @Persisted public var partialPaidAmount: Int?
+    @Persisted public var fullyPaid:Bool
+    @Persisted public var overPaid: Bool
+    @Persisted public var serviceID:String?
+    @Persisted public var billDescription:String?
+    @Persisted public var biller: String?
+    @Persisted public var statusCode: Int
+    @Persisted public var hasPaymentInProgress:Bool
+    @Persisted public var isFetchingBill: Bool
+    @Persisted public var enrollment: Enrollment?
+    @Persisted public var estimate:String?
+    @Persisted public var statusPaymentInProgress:String?
+    @Persisted public var statusDue: String?
 
     enum CodingKeys: String, CodingKey {
         case currency = "CURRENCY"

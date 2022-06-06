@@ -6,15 +6,29 @@
 //
 
 import Foundation
+import RealmSwift
 // MARK: - SMSTemplate
-public class SMSTemplate:Identifiable, Codable {
-    public let id: Int
-    public let template, regex, serviceID, serviceCode: String?
-    public let clientID, countryID, regexType, sourceAddress: String?
-    public let keywords, mappingValues, messageType, accountNumberRegex: String?
-    public let parseType, serviceCategoryID, service: String?
-    public let isContracted: Bool
-    public let accountSanitizerRegex, smsTemplateType, associativeSourceAddress: String?
+public class SMSTemplate: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted(primaryKey: true) public var id: ObjectId
+    @Persisted public var template:String?
+    @Persisted public var regex:String?
+    @Persisted public var serviceID:String?
+    @Persisted public var serviceCode: String?
+    @Persisted public var clientID:String?
+    @Persisted public var countryID:String?
+    @Persisted public var regexType:String?
+    @Persisted public var sourceAddress: String?
+    @Persisted public var keywords:String?
+    @Persisted public var mappingValues:String?
+    @Persisted public var messageType:String?
+    @Persisted public var accountNumberRegex: String?
+    @Persisted public var parseType:String?
+    @Persisted public var serviceCategoryID:String?
+    @Persisted public var service: String?
+    @Persisted public var isContracted: Bool
+    @Persisted public var accountSanitizerRegex:String?
+    @Persisted public var smsTemplateType:String?
+    @Persisted public var associativeSourceAddress: String?
 
     enum CodingKeys: String, CodingKey {
         case id, template
@@ -38,8 +52,7 @@ public class SMSTemplate:Identifiable, Codable {
         case associativeSourceAddress = "ASSOCIATIVE_SOURCE_ADDRESS"
     }
 
-    init(id: Int, template: String?, regex: String?, serviceID: String?, serviceCode: String?, clientID: String?, countryID: String?, regexType: String?, sourceAddress: String?, keywords: String?, mappingValues: String?, messageType: String?, accountNumberRegex: String?, parseType: String?, serviceCategoryID: String?, service: String?, isContracted: Bool, accountSanitizerRegex: String?, smsTemplateType: String?, associativeSourceAddress: String?) {
-        self.id = 0
+    init(template: String?, regex: String?, serviceID: String?, serviceCode: String?, clientID: String?, countryID: String?, regexType: String?, sourceAddress: String?, keywords: String?, mappingValues: String?, messageType: String?, accountNumberRegex: String?, parseType: String?, serviceCategoryID: String?, service: String?, isContracted: Bool, accountSanitizerRegex: String?, smsTemplateType: String?, associativeSourceAddress: String?) {
         self.template = template
         self.regex = regex
         self.serviceID = serviceID

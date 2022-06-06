@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7108CD3A284DEBF10034EA29 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 7108CD39284DEBF10034EA29 /* Realm */; };
+		7108CD3C284DEBF10034EA29 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7108CD3B284DEBF10034EA29 /* RealmSwift */; };
 		715393CA284667D8001016E8 /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 715393C9284667D8001016E8 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		715393D228467C88001016E8 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D128467C88001016E8 /* Profile.swift */; };
 		715393D428468405001016E8 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D328468405001016E8 /* Contact.swift */; };
@@ -14,7 +16,7 @@
 		715393D828468BA0001016E8 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D728468BA0001016E8 /* Card.swift */; };
 		715393DA284692A0001016E8 /* MerchantPayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D9284692A0001016E8 /* MerchantPayer.swift */; };
 		715393DC2847E80B001016E8 /* ManualBill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DB2847E80B001016E8 /* ManualBill.swift */; };
-		715393DE2847F82A001016E8 /* PayerOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DD2847F82A001016E8 /* PayerOption.swift */; };
+		715393DE2847F82A001016E8 /* PayerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DD2847F82A001016E8 /* PayerOptions.swift */; };
 		715393E02847FB7D001016E8 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393DF2847FB7D001016E8 /* Category.swift */; };
 		715393E228480CDE001016E8 /* MerchantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E128480CDE001016E8 /* MerchantService.swift */; };
 		715393E428481260001016E8 /* Enrollment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393E32848125F001016E8 /* Enrollment.swift */; };
@@ -25,6 +27,7 @@
 		715393EE2848A7CE001016E8 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393ED2848A7CE001016E8 /* TransactionHistory.swift */; };
 		715393F02848AC17001016E8 /* Bank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393EF2848AC17001016E8 /* Bank.swift */; };
 		715393F22848AD52001016E8 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393F12848AD52001016E8 /* Highlight.swift */; };
+		715393F42848BB55001016E8 /* ReferralInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393F32848BB55001016E8 /* ReferralInvite.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +39,7 @@
 		715393D728468BA0001016E8 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		715393D9284692A0001016E8 /* MerchantPayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantPayer.swift; sourceTree = "<group>"; };
 		715393DB2847E80B001016E8 /* ManualBill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualBill.swift; sourceTree = "<group>"; };
-		715393DD2847F82A001016E8 /* PayerOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayerOption.swift; sourceTree = "<group>"; };
+		715393DD2847F82A001016E8 /* PayerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayerOptions.swift; sourceTree = "<group>"; };
 		715393DF2847FB7D001016E8 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		715393E128480CDE001016E8 /* MerchantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantService.swift; sourceTree = "<group>"; };
 		715393E32848125F001016E8 /* Enrollment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enrollment.swift; sourceTree = "<group>"; };
@@ -47,6 +50,7 @@
 		715393ED2848A7CE001016E8 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 		715393EF2848AC17001016E8 /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
 		715393F12848AD52001016E8 /* Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Highlight.swift; sourceTree = "<group>"; };
+		715393F32848BB55001016E8 /* ReferralInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralInvite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7108CD3C284DEBF10034EA29 /* RealmSwift in Frameworks */,
+				7108CD3A284DEBF10034EA29 /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +100,7 @@
 				715393D728468BA0001016E8 /* Card.swift */,
 				715393D9284692A0001016E8 /* MerchantPayer.swift */,
 				715393DB2847E80B001016E8 /* ManualBill.swift */,
-				715393DD2847F82A001016E8 /* PayerOption.swift */,
+				715393DD2847F82A001016E8 /* PayerOptions.swift */,
 				715393DF2847FB7D001016E8 /* Category.swift */,
 				715393E128480CDE001016E8 /* MerchantService.swift */,
 				715393E32848125F001016E8 /* Enrollment.swift */,
@@ -105,6 +111,7 @@
 				715393ED2848A7CE001016E8 /* TransactionHistory.swift */,
 				715393EF2848AC17001016E8 /* Bank.swift */,
 				715393F12848AD52001016E8 /* Highlight.swift */,
+				715393F32848BB55001016E8 /* ReferralInvite.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -137,6 +144,10 @@
 			dependencies = (
 			);
 			name = Core;
+			packageProductDependencies = (
+				7108CD39284DEBF10034EA29 /* Realm */,
+				7108CD3B284DEBF10034EA29 /* RealmSwift */,
+			);
 			productName = Core;
 			productReference = 715393C6284667D8001016E8 /* Core.framework */;
 			productType = "com.apple.product-type.framework";
@@ -165,6 +176,9 @@
 				Base,
 			);
 			mainGroup = 715393BC284667D8001016E8;
+			packageReferences = (
+				7108CD38284DEBF10034EA29 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			productRefGroup = 715393C7284667D8001016E8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -192,7 +206,7 @@
 				715393DC2847E80B001016E8 /* ManualBill.swift in Sources */,
 				715393F02848AC17001016E8 /* Bank.swift in Sources */,
 				715393E228480CDE001016E8 /* MerchantService.swift in Sources */,
-				715393DE2847F82A001016E8 /* PayerOption.swift in Sources */,
+				715393DE2847F82A001016E8 /* PayerOptions.swift in Sources */,
 				715393D428468405001016E8 /* Contact.swift in Sources */,
 				715393DA284692A0001016E8 /* MerchantPayer.swift in Sources */,
 				715393D628468692001016E8 /* Country.swift in Sources */,
@@ -206,6 +220,7 @@
 				715393E02847FB7D001016E8 /* Category.swift in Sources */,
 				715393EC2848A6BC001016E8 /* Sync.swift in Sources */,
 				715393E6284817A8001016E8 /* Invoice.swift in Sources */,
+				715393F42848BB55001016E8 /* ReferralInvite.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +428,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7108CD38284DEBF10034EA29 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7108CD39284DEBF10034EA29 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7108CD38284DEBF10034EA29 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		7108CD3B284DEBF10034EA29 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7108CD38284DEBF10034EA29 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 715393BD284667D8001016E8 /* Project object */;
 }

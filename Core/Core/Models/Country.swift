@@ -6,26 +6,62 @@
 //
 
 import Foundation
+import RealmSwift
 
 // MARK: - Country
-public class Country: Codable {
-    public let country, countryCode, countryURLNew, status: String?
-    public let currency, mulaClientID, countryMobileRegex, genericAccountNumberRegex: String?
-    public let extractSMSOnProfiling, countryCurrencyRegex, excludedSMSSourceAddresses, countryDialCode: String?
-    public let confirmedAccountLimits, hotlineAppID, hotlineAppKey, freshchatAppID: String?
-    public let freshchatAppKey, faqURL, tacURL, alphanumericRegexes: String?
-    public let minimumProfiledAccounts, smsProfilingTimeout, roundUpAmounts, maximumCards: String?
-    public let countryFlag: String?
-    public let hasWallet, hasGroups, hasFloatingButton, hasDiscover: Int
-    public let useSmileSDK: String?
-    public let hasReferral, isManualKycRegistration: Int
-    public let countrySourceAddresses: String?
-    public let isDefault: Bool
-    public let successCallBackURL, payerClientCode, isSecureCardPayment, failedCallBackURL: String?
-    public let webCheckoutURL, clevertapAccountID, clevertapToken, showAssist: String?
-    public let mulaAssistInterestType, mulaAssistDurationType, mulaAssistInterestRate, mulaAssistDuration: String?
-    public let mulaAssistLoanTermDuration, accessKey, checkoutServiceCode, webHookURL: String?
-    public let fetchBearerTokenURL, privacyPolicyURL: String?
+public class Country: Object,  ObjectKeyIdentifiable, Codable {
+    public var country: String?
+    public var countryCode: String?
+    public var countryURLNew: String?
+    public var status: String?
+    public var currency: String?
+    public var mulaClientID: String?
+    public var countryMobileRegex: String?
+    public var genericAccountNumberRegex: String?
+    public var extractSMSOnProfiling: String?
+    public var countryCurrencyRegex: String?
+    public var excludedSMSSourceAddresses: String?
+    public var countryDialCode: String?
+    public var confirmedAccountLimits: String?
+    public var hotlineAppID: String?
+    public var hotlineAppKey: String?
+    public var freshchatAppID: String?
+    public var freshchatAppKey: String?
+    public var faqURL: String?
+    public var tacURL: String?
+    public var alphanumericRegexes: String?
+    public var minimumProfiledAccounts: String?
+    public var smsProfilingTimeout: String?
+    public var roundUpAmounts: String?
+    public var maximumCards: String?
+    public var countryFlag: String?
+    public var hasWallet: Int?
+    public var hasGroups: Int?
+    public var hasFloatingButton: Int?
+    public var hasDiscover: Int
+    public var useSmileSDK: String?
+    public var hasReferral: Int?
+    public var isManualKycRegistration: Int
+    public var countrySourceAddresses: String?
+    public var isDefault: Bool
+    public var successCallBackURL: String?
+    public var payerClientCode: String?
+    public var isSecureCardPayment: String?
+    public var failedCallBackURL: String?
+    public var webCheckoutURL: String?
+    public var clevertapAccountID: String?
+    public var clevertapToken: String?
+    public var showAssist: String?
+    public var mulaAssistInterestType: String?
+    public var mulaAssistDurationType: String?
+    public var mulaAssistInterestRate: String?
+    public var mulaAssistDuration: String?
+    public var mulaAssistLoanTermDuration: String?
+    public var accessKey: String?
+    public var checkoutServiceCode: String?
+    public var webHookURL: String?
+    public var fetchBearerTokenURL: String?
+    public var privacyPolicyURL: String?
 
     enum CodingKeys: String, CodingKey {
         case country = "COUNTRY"

@@ -6,13 +6,25 @@
 //
 
 import Foundation
+import RealmSwift
 // MARK: - Category
-public class Category: Identifiable, Codable {
-    public let categoryID, categoryName, categoryLogo, activeStatus: String?
-    public let categoryOrderID, quickAction, showInHomepage: String?
-    public let parkingID, payTvID, powerID, internetID: String?
-    public let waterID, airtimeID, gasID, otherID: String?
-    public let investID: String?
+public class Category: EmbeddedObject,  ObjectKeyIdentifiable, Codable {
+    public var categoryID:String?
+    public var categoryName:String?
+    public var categoryLogo:String?
+    public var activeStatus: String?
+    public var categoryOrderID:String?
+    public var quickAction:String?
+    public var showInHomepage: String?
+    public var parkingID:String?
+    public var payTvID:String?
+    public var powerID:String?
+    public var internetID: String?
+    public var waterID:String?
+    public var airtimeID:String?
+    public var gasID:String?
+    public var otherID: String?
+    public var investID: String?
 
     enum CodingKeys: String, CodingKey {
         case categoryID = "CATEGORY_ID"

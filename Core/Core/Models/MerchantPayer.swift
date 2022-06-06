@@ -6,17 +6,30 @@
 //
 
 import Foundation
-
+import RealmSwift
 // MARK: - MerchantPayer
-public class MerchantPayer: Identifiable, Codable {
-    public let id: Int
-    public let hubClientID, isDefault: String?
-    public let orderID: Int
-    public let isChargingPayer, isSelectedOnAdapter: Bool
-    public let merchantPayerDEFAULT, selected, unSelected, chargeTypeFixed: String?
-    public let chargeTypePercentage, checkoutInApp, checkoutUssdPush, checkoutStkLaunch: String?
-    public let checkoutCard, checkoutBankViaCard, checkoutPinAuth, checkoutMulaWallet: String?
-    public let checkoutTinggWallet, checkoutTinggFundsTransfer, checkoutMnoPinAuth: String?
+public class MerchantPayer: EmbeddedObject, ObjectKeyIdentifiable, Codable {
+    @Persisted public var id: Int?
+    @Persisted public var hubClientID:String?
+    @Persisted public var isDefault: String?
+    @Persisted public var orderID: Int?
+    @Persisted public var isChargingPayer:Bool
+    @Persisted public var isSelectedOnAdapter: Bool
+    @Persisted public var merchantPayerDEFAULT:String?
+    @Persisted public var selected:String?
+    @Persisted public var unSelected:String?
+    @Persisted public var chargeTypeFixed: String?
+    @Persisted public var chargeTypePercentage:String?
+    @Persisted public var checkoutInApp:String?
+    @Persisted public var checkoutUssdPush:String?
+    @Persisted public var checkoutStkLaunch: String?
+    @Persisted public var checkoutCard:String?
+    @Persisted public var checkoutBankViaCard:String?
+    @Persisted public var checkoutPinAuth:String?
+    @Persisted public var checkoutMulaWallet: String?
+    @Persisted public var checkoutTinggWallet:String?
+    @Persisted public var checkoutTinggFundsTransfer:String?
+    @Persisted public var checkoutMnoPinAuth: String?
 
     enum CodingKeys: String, CodingKey {
         case id

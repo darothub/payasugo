@@ -6,24 +6,28 @@
 //
 
 import Foundation
+import RealmSwift
 
 // MARK: - Bank
-class Bank: Identifiable, Codable {
-    public let id, accountNumber, accountName, bankName: String
-    public let bankBranch: String
-    public let selected: Bool
+struct Bank: Codable {
+    var id:String?
+    var accountNumber:String?
+    var accountName:String?
+    var bankName:String?
+    var bankBranch: String
+    var selected: Bool
     public static let tag: String = "Bank"
 
     enum CodingKeys: String, CodingKey {
         case id, accountNumber, accountName, bankName, bankBranch, selected
     }
 
-    init( id: String, accountNumber: String, accountName: String, bankName: String, bankBranch: String, selected: Bool) {
-        self.id = id
-        self.accountNumber = accountNumber
-        self.accountName = accountName
-        self.bankName = bankName
-        self.bankBranch = bankBranch
-        self.selected = selected
-    }
+//    init( id: String, accountNumber: String, accountName: String, bankName: String, bankBranch: String, selected: Bool) {
+//        self.id = id
+//        self.accountNumber = accountNumber
+//        self.accountName = accountName
+//        self.bankName = bankName
+//        self.bankBranch = bankBranch
+//        self.selected = selected
+//    }
 }

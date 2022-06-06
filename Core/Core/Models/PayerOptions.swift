@@ -6,11 +6,11 @@
 //
 
 import Foundation
-
-public class PayerOptions : Identifiable, Codable {
-    public let clientId: String? = nil
-    public let reference: String? = nil
-    public let referenceLabel: String? = nil
+import RealmSwift
+public class PayerOptions : EmbeddedObject,  ObjectKeyIdentifiable, Codable {
+    @Persisted public var clientId: String? = nil
+    @Persisted public var reference: String? = nil
+    @Persisted public var referenceLabel: String? = nil
     
     enum CodingKeys: String, CodingKey {
         case clientId  = "PAYER_CLIENT_ID"

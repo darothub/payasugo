@@ -6,15 +6,27 @@
 //
 
 import Foundation
-
+import RealmSwift
 // MARK: - Card
-public class Card: Codable {
-    public let firstName, middleName, idPassport, phoneNumber: String?
-    public let email, customerAddress, currencyCode, customerCity: String?
-    public let countryCode, cardAlias, nameType, payerClientID: String?
-    public let suffix, activeStatus, validationServiceID, cardType: String?
-    public let countryDialCode: String?
-    public let merchantPayer: MerchantPayer?
+public class Card: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted public var firstName:String?
+    @Persisted public var middleName:String?
+    @Persisted public var idPassport:String?
+    @Persisted public var phoneNumber: String?
+    @Persisted public var email:String?
+    @Persisted public var customerAddress:String?
+    @Persisted public var currencyCode:String?
+    @Persisted public var customerCity: String?
+    @Persisted public var countryCode:String?
+    @Persisted public var cardAlias:String?
+    @Persisted public var nameType:String?
+    @Persisted public var payerClientID: String?
+    @Persisted public var suffix:String?
+    @Persisted public var activeStatus:String?
+    @Persisted public var validationServiceID:String?
+    @Persisted public var cardType: String?
+    @Persisted public var countryDialCode: String?
+    @Persisted public var merchantPayer: MerchantPayer?
     //Tingg Virtual Card
     public static let TYPE_VIRTUAL = "VIRTUAL"
     // Normal credit cards

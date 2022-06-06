@@ -6,17 +6,23 @@
 //
 
 import Foundation
-
+import RealmSwift
 // MARK: - Enrollment
-public class Enrollment: Identifiable, Codable {
-    let accountAlias, accountNumber, hubServiceID, clientProfileAccountID: String?
-    let isExplicit: String?
-    let isContracted: Bool
-    let dateLastRefreshed, unknownMerchantID, extraData, accountStatus: String?
-    let accountID: String?
-    let isFetchingBill: Bool
-    let confirmStatus: String?
-    let merchantService: MerchantService?
+public class Enrollment: EmbeddedObject,  ObjectKeyIdentifiable, Codable {
+    @Persisted public var accountAlias:String?
+    @Persisted public var accountNumber:String?
+    @Persisted public var hubServiceID:String?
+    @Persisted public var clientProfileAccountID: String?
+    @Persisted public var isExplicit: String?
+    @Persisted public var isContracted: Bool
+    @Persisted public var dateLastRefreshed:String?
+    @Persisted public var unknownMerchantID:String?
+    @Persisted public var extraData:String?
+    @Persisted public var accountStatus: String?
+    @Persisted public var accountID: String?
+    @Persisted public var isFetchingBill: Bool
+    @Persisted public var confirmStatus: String?
+    @Persisted public var merchantService: MerchantService?
     public static let IS_EXPLICIT = "Y"
     public static let NOT_EXPLICIT = "N"
     public static let UNCONFIRMED = "0"

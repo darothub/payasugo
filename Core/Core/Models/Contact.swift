@@ -6,13 +6,21 @@
 //
 
 import Foundation
-
+import RealmSwift
 // MARK: - Contact
-public class Contact: Identifiable, Codable {
-    public let id: Int
-    public let email, facebook, phone, link: String?
-    public let twitter, countryID, website, address: String?
-    public let location, contactTitle, dateCreate: String?
+public class Contact: Object, ObjectKeyIdentifiable, Codable {
+    @Persisted public var id: Int
+    @Persisted public var email :String?
+    @Persisted public var facebook :String?
+    @Persisted public var phone :String?
+    @Persisted public var link: String?
+    @Persisted public var twitter :String?
+    @Persisted public var countryID :String?
+    @Persisted public var website :String?
+    @Persisted public var address: String?
+    @Persisted public var location :String?
+    @Persisted public var contactTitle :String?
+    @Persisted public var dateCreate: String?
 
     enum CodingKeys: String, CodingKey {
         case id

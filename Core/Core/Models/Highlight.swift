@@ -6,13 +6,23 @@
 //
 
 import Foundation
+import RealmSwift
 
 // MARK: - Highlight
-public class Highlight: Codable {
-    public let id: Int
-    public let activeStatus, title, actionName, highlightDESCRIPTION: String?
-    public let hasDeepLink, categoryID, serviceID, imageURL: String?
-    public let deepLink, dynamicLink, amount, priority: String?
+public class Highlight: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted(primaryKey: true) public var id: ObjectId
+    @Persisted public var activeStatus:String?
+    @Persisted public var title:String?
+    @Persisted public var actionName:String?
+    @Persisted public var highlightDESCRIPTION: String?
+    @Persisted public var hasDeepLink:String?
+    @Persisted public var categoryID:String?
+    @Persisted public var serviceID:String?
+    @Persisted public var imageURL: String?
+    @Persisted public var deepLink:String?
+    @Persisted public var dynamicLink:String?
+    @Persisted public var amount:String?
+    @Persisted public var priority: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -30,8 +40,7 @@ public class Highlight: Codable {
         case priority = "PRIORITY"
     }
 
-    init(id: Int, activeStatus: String?, title: String?, actionName: String?, highlightDESCRIPTION: String?, hasDeepLink: String?, categoryID: String?, serviceID: String?, imageURL: String?, deepLink: String?, dynamicLink: String?, amount: String?, priority: String?) {
-        self.id = 0
+    init(activeStatus: String?, title: String?, actionName: String?, highlightDESCRIPTION: String?, hasDeepLink: String?, categoryID: String?, serviceID: String?, imageURL: String?, deepLink: String?, dynamicLink: String?, amount: String?, priority: String?) {
         self.activeStatus = activeStatus
         self.title = title
         self.actionName = actionName

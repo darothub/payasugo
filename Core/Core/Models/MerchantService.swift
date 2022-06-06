@@ -6,54 +6,64 @@
 //
 
 import Foundation
-public class MerchantServices: Codable {
-    public let hubServiceID: String
-    public let isDislayableOnLifestream, isRefresh, isCyclicService: Bool
-    public let isManualBill: String
-    public let selected: Bool
-    public let genericForm, dynamicFormType, kplcPrepaidID, secretGardenID: String
-    public let britamContributionID, mulaChamaID, pdslPrepaidID, favouriteDisplayModeShowAll: String
-    public let favouriteDisplayModeShowPerOption: String
-
-    enum CodingKeys: String, CodingKey {
-        case hubServiceID = "HUB_SERVICE_ID"
-        case isDislayableOnLifestream = "IS_DISLAYABLE_ON_LIFESTREAM"
-        case isRefresh = "IS_REFRESH"
-        case isCyclicService = "IS_CYCLIC_SERVICE"
-        case isManualBill, selected
-        case genericForm = "GENERIC_FORM"
-        case dynamicFormType = "DYNAMIC_FORM_TYPE"
-        case kplcPrepaidID = "KPLC_PREPAID_ID"
-        case secretGardenID = "SECRET_GARDEN_ID"
-        case britamContributionID = "BRITAM_CONTRIBUTION_ID"
-        case mulaChamaID = "MULA_CHAMA_ID"
-        case pdslPrepaidID = "PDSL_PREPAID_ID"
-        case favouriteDisplayModeShowAll = "FAVOURITE_DISPLAY_MODE_SHOW_ALL"
-        case favouriteDisplayModeShowPerOption = "FAVOURITE_DISPLAY_MODE_SHOW_PER_OPTION"
-    }
-}
-
+import RealmSwift
 // MARK: - MerchantService
-public class MerchantService: Identifiable, Codable {
-    public let clientName, showAll, serviceName, serviceCode: String?
-    public let activeStatus, serviceLogo, receiverSourceAddress, hubServiceID: String?
-    public let hubClientID, minAmount, abbreviation, clientCode: String?
-    public let maxAmount, referenceInputMask, formatErrorMessage, servicePatternID: String?
-    public let isPrepaidService, paybill, networkID, webTemplateID: String?
-    public let colorCode, orderID, serviceImage, presentmentType: String?
-    public let referenceLabel, inputType, formType, formParameters: String?
-    public let paymentLabel, isBundleService, bundleLabel, bundleCategoryLabel: String?
-    public let isDislayableOnLifestream: Bool
-    public let bundle, ignoreSaveEnrollment, hasBillAmount, displayNoPendingBillDialog: String?
-    public let serviceParameters, canEditAmount: String?
-    public let isRefresh: Bool
-    public let favoritesDisplayMode, applicableCharges, validateBillAmount, charges: String?
-    public let payerClientID, message, title: String?
-    public let isCyclicService: Bool
-    public let exactPayment, contractualLevel, paymentOptions, categoryID: String?
-    public let category: Category?
-    public let isManualBill: String?
-    public let selected: Bool
+public class MerchantService: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted public var clientName:String?
+    @Persisted public var showAll:String?
+    @Persisted public var serviceName:String?
+    @Persisted public var serviceCode: String?
+    @Persisted public var activeStatus:String?
+    @Persisted public var serviceLogo:String?
+    @Persisted public var receiverSourceAddress:String?
+    @Persisted public var hubServiceID: String?
+    @Persisted public var hubClientID:String?
+    @Persisted public var minAmount:String?
+    @Persisted public var abbreviation:String?
+    @Persisted public var clientCode: String?
+    @Persisted public var maxAmount:String?
+    @Persisted public var referenceInputMask:String?
+    @Persisted public var formatErrorMessage:String?
+    @Persisted public var servicePatternID: String?
+    @Persisted public var isPrepaidService:String?
+    @Persisted public var paybill:String?
+    @Persisted public var networkID:String?
+    @Persisted public var webTemplateID: String?
+    @Persisted public var colorCode:String?
+    @Persisted public var orderID:String?
+    @Persisted public var serviceImage:String?
+    @Persisted public var presentmentType: String?
+    @Persisted public var referenceLabel:String?
+    @Persisted public var inputType:String?
+    @Persisted public var formType:String?
+    @Persisted public var formParameters: String?
+    @Persisted public var paymentLabel:String?
+    @Persisted public var isBundleService:String?
+    @Persisted public var bundleLabel:String?
+    @Persisted public var bundleCategoryLabel: String?
+    @Persisted public var isDislayableOnLifestream: Bool
+    @Persisted public var bundle:String?
+    @Persisted public var ignoreSaveEnrollment:String?
+    @Persisted public var hasBillAmount:String?
+    @Persisted public var displayNoPendingBillDialog: String?
+    @Persisted public var serviceParameters:String?
+    @Persisted public var canEditAmount: String?
+    @Persisted public var isRefresh: Bool
+    @Persisted public var favoritesDisplayMode:String?
+    @Persisted public var applicableCharges:String?
+    @Persisted public var validateBillAmount:String?
+    @Persisted public var charges: String?
+    @Persisted public var payerClientID:String?
+    @Persisted public var message:String?
+    @Persisted public var title: String?
+    @Persisted public var isCyclicService: Bool
+    @Persisted public var exactPayment:String?
+    @Persisted public var contractualLevel:String?
+    @Persisted public var paymentOptions:String?
+    @Persisted public var categoryID: String?
+    @Persisted public var category: Category?
+    @Persisted public var isManualBill: String?
+    @Persisted public var selected: Bool
     
     //service form type dynamic
     public static let GENERIC_FORM = "GENERIC_FORM"

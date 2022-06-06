@@ -6,17 +6,31 @@
 //
 
 import Foundation
+import RealmSwift
 // MARK: - TransactionHistory
-public class TransactionHistory: Identifiable, Codable {
-    public let beepTransactionID: String?
-    public let amount, billAmount: Int
-    public let status, transactionTitle, currencyCode, accountNumber: String?
-    public let serviceID, shortDescription, msisdn, bundleID: String?
-    public let message, requestLogID, narration, dateCreated: String?
-    public let statusCode, payerClientID, invoiceNumber, token: String?
-    public let merchantService: MerchantService?
-    public let merchantPayer: MerchantPayer?
-    public let transferType: String?
+public class TransactionHistory: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted(primaryKey: true) public var beepTransactionID: ObjectId
+    @Persisted public var amount:Int?
+    @Persisted public var billAmount: Int?
+    @Persisted public var status:String?
+    @Persisted public var transactionTitle:String?
+    @Persisted public var currencyCode:String?
+    @Persisted public var accountNumber: String?
+    @Persisted public var serviceID:String?
+    @Persisted public var shortDescription:String?
+    @Persisted public var msisdn:String?
+    @Persisted public var bundleID: String?
+    @Persisted public var message:String?
+    @Persisted public var requestLogID:String?
+    @Persisted public var narration:String?
+    @Persisted public var dateCreated: String?
+    @Persisted public var statusCode:String?
+    @Persisted public var payerClientID:String?
+    @Persisted public var invoiceNumber:String?
+    @Persisted public var token: String?
+    @Persisted public var merchantService: MerchantService?
+    @Persisted public var merchantPayer: MerchantPayer?
+    @Persisted public var transferType: String?
     public static let STATUS_PENDING = "Pending"
     public static let STATUS_SUCCESS = "Success"
     public static let STATUS_FAILED = "Failed"
@@ -38,8 +52,7 @@ public class TransactionHistory: Identifiable, Codable {
         case message, requestLogID, narration, dateCreated, statusCode, payerClientID, invoiceNumber, token, merchantService, merchantPayer, transferType
     }
     
-    init(beepTransactionID: String?, amount: Int, billAmount: Int, status: String?, transactionTitle: String?, currencyCode: String?, accountNumber: String?, serviceID: String?, shortDescription: String?, msisdn: String?, bundleID: String?, message: String?, requestLogID: String?, narration: String?, dateCreated: String?, statusCode: String?, payerClientID: String?, invoiceNumber: String?, token: String?, merchantService: MerchantService?, merchantPayer: MerchantPayer?, transferType: String?) {
-        self.beepTransactionID = beepTransactionID
+    init(amount: Int?, billAmount: Int?, status: String?, transactionTitle: String?, currencyCode: String?, accountNumber: String?, serviceID: String?, shortDescription: String?, msisdn: String?, bundleID: String?, message: String?, requestLogID: String?, narration: String?, dateCreated: String?, statusCode: String?, payerClientID: String?, invoiceNumber: String?, token: String?, merchantService: MerchantService?, merchantPayer: MerchantPayer?, transferType: String?) {
         self.amount = amount
         self.billAmount = billAmount
         self.status = status
