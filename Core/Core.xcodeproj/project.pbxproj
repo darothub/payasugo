@@ -9,6 +9,21 @@
 /* Begin PBXBuildFile section */
 		7108CD3A284DEBF10034EA29 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 7108CD39284DEBF10034EA29 /* Realm */; };
 		7108CD3C284DEBF10034EA29 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7108CD3B284DEBF10034EA29 /* RealmSwift */; };
+		7108CD3F284F39F20034EA29 /* ProfileDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD3E284F39F20034EA29 /* ProfileDao.swift */; };
+		7108CD41284F48200034EA29 /* BaseDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD40284F48200034EA29 /* BaseDao.swift */; };
+		7108CD432850681A0034EA29 /* CardDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD42285068190034EA29 /* CardDao.swift */; };
+		7108CD4528506A360034EA29 /* CategoryDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD4428506A350034EA29 /* CategoryDao.swift */; };
+		7108CD4728506F840034EA29 /* ContactDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD4628506F840034EA29 /* ContactDao.swift */; };
+		7108CD4928506FD70034EA29 /* CountryDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD4828506FD70034EA29 /* CountryDao.swift */; };
+		7108CD4B285070A70034EA29 /* EnrollmentDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD4A285070A70034EA29 /* EnrollmentDao.swift */; };
+		7108CD4D285071750034EA29 /* HighlightDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD4C285071750034EA29 /* HighlightDao.swift */; };
+		7108CD4F285071F10034EA29 /* InvoiceDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD4E285071F10034EA29 /* InvoiceDao.swift */; };
+		7108CD512850727E0034EA29 /* ManualBillDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD502850727E0034EA29 /* ManualBillDao.swift */; };
+		7108CD53285072EA0034EA29 /* MerchantPayerDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD52285072EA0034EA29 /* MerchantPayerDao.swift */; };
+		7108CD552850737C0034EA29 /* MerchantServiceDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD542850737C0034EA29 /* MerchantServiceDao.swift */; };
+		7108CD572850742E0034EA29 /* SecurityQuestionDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD562850742E0034EA29 /* SecurityQuestionDao.swift */; };
+		7108CD592850747C0034EA29 /* SyncDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD582850747C0034EA29 /* SyncDao.swift */; };
+		7108CD5B285074C50034EA29 /* TransactionHistoryDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD5A285074C50034EA29 /* TransactionHistoryDao.swift */; };
 		715393CA284667D8001016E8 /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 715393C9284667D8001016E8 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		715393D228467C88001016E8 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D128467C88001016E8 /* Profile.swift */; };
 		715393D428468405001016E8 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393D328468405001016E8 /* Contact.swift */; };
@@ -31,6 +46,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7108CD3E284F39F20034EA29 /* ProfileDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDao.swift; sourceTree = "<group>"; };
+		7108CD40284F48200034EA29 /* BaseDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseDao.swift; sourceTree = "<group>"; };
+		7108CD42285068190034EA29 /* CardDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDao.swift; sourceTree = "<group>"; };
+		7108CD4428506A350034EA29 /* CategoryDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDao.swift; sourceTree = "<group>"; };
+		7108CD4628506F840034EA29 /* ContactDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDao.swift; sourceTree = "<group>"; };
+		7108CD4828506FD70034EA29 /* CountryDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDao.swift; sourceTree = "<group>"; };
+		7108CD4A285070A70034EA29 /* EnrollmentDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentDao.swift; sourceTree = "<group>"; };
+		7108CD4C285071750034EA29 /* HighlightDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightDao.swift; sourceTree = "<group>"; };
+		7108CD4E285071F10034EA29 /* InvoiceDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceDao.swift; sourceTree = "<group>"; };
+		7108CD502850727E0034EA29 /* ManualBillDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualBillDao.swift; sourceTree = "<group>"; };
+		7108CD52285072EA0034EA29 /* MerchantPayerDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantPayerDao.swift; sourceTree = "<group>"; };
+		7108CD542850737C0034EA29 /* MerchantServiceDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantServiceDao.swift; sourceTree = "<group>"; };
+		7108CD562850742E0034EA29 /* SecurityQuestionDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityQuestionDao.swift; sourceTree = "<group>"; };
+		7108CD582850747C0034EA29 /* SyncDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncDao.swift; sourceTree = "<group>"; };
+		7108CD5A285074C50034EA29 /* TransactionHistoryDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryDao.swift; sourceTree = "<group>"; };
 		715393C6284667D8001016E8 /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		715393C9284667D8001016E8 /* Core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Core.h; sourceTree = "<group>"; };
 		715393D128467C88001016E8 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
@@ -66,6 +96,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7108CD3D284F39C40034EA29 /* DAO */ = {
+			isa = PBXGroup;
+			children = (
+				7108CD3E284F39F20034EA29 /* ProfileDao.swift */,
+				7108CD562850742E0034EA29 /* SecurityQuestionDao.swift */,
+				7108CD40284F48200034EA29 /* BaseDao.swift */,
+				7108CD42285068190034EA29 /* CardDao.swift */,
+				7108CD4428506A350034EA29 /* CategoryDao.swift */,
+				7108CD4628506F840034EA29 /* ContactDao.swift */,
+				7108CD4828506FD70034EA29 /* CountryDao.swift */,
+				7108CD4A285070A70034EA29 /* EnrollmentDao.swift */,
+				7108CD4C285071750034EA29 /* HighlightDao.swift */,
+				7108CD4E285071F10034EA29 /* InvoiceDao.swift */,
+				7108CD502850727E0034EA29 /* ManualBillDao.swift */,
+				7108CD52285072EA0034EA29 /* MerchantPayerDao.swift */,
+				7108CD542850737C0034EA29 /* MerchantServiceDao.swift */,
+				7108CD582850747C0034EA29 /* SyncDao.swift */,
+				7108CD5A285074C50034EA29 /* TransactionHistoryDao.swift */,
+			);
+			path = DAO;
+			sourceTree = "<group>";
+		};
 		715393BC284667D8001016E8 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +137,7 @@
 		715393C8284667D8001016E8 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				7108CD3D284F39C40034EA29 /* DAO */,
 				715393D028467C73001016E8 /* Models */,
 				715393C9284667D8001016E8 /* Core.h */,
 			);
@@ -203,12 +256,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7108CD5B285074C50034EA29 /* TransactionHistoryDao.swift in Sources */,
+				7108CD432850681A0034EA29 /* CardDao.swift in Sources */,
+				7108CD53285072EA0034EA29 /* MerchantPayerDao.swift in Sources */,
 				715393DC2847E80B001016E8 /* ManualBill.swift in Sources */,
 				715393F02848AC17001016E8 /* Bank.swift in Sources */,
+				7108CD4D285071750034EA29 /* HighlightDao.swift in Sources */,
 				715393E228480CDE001016E8 /* MerchantService.swift in Sources */,
+				7108CD41284F48200034EA29 /* BaseDao.swift in Sources */,
 				715393DE2847F82A001016E8 /* PayerOptions.swift in Sources */,
+				7108CD4F285071F10034EA29 /* InvoiceDao.swift in Sources */,
+				7108CD4528506A360034EA29 /* CategoryDao.swift in Sources */,
+				7108CD3F284F39F20034EA29 /* ProfileDao.swift in Sources */,
 				715393D428468405001016E8 /* Contact.swift in Sources */,
 				715393DA284692A0001016E8 /* MerchantPayer.swift in Sources */,
+				7108CD4728506F840034EA29 /* ContactDao.swift in Sources */,
+				7108CD572850742E0034EA29 /* SecurityQuestionDao.swift in Sources */,
 				715393D628468692001016E8 /* Country.swift in Sources */,
 				715393EA2848A1D2001016E8 /* SMSTemplate.swift in Sources */,
 				715393D228467C88001016E8 /* Profile.swift in Sources */,
@@ -217,8 +280,13 @@
 				715393E82848A087001016E8 /* SecurityQuestion.swift in Sources */,
 				715393F22848AD52001016E8 /* Highlight.swift in Sources */,
 				715393EE2848A7CE001016E8 /* TransactionHistory.swift in Sources */,
+				7108CD552850737C0034EA29 /* MerchantServiceDao.swift in Sources */,
+				7108CD4928506FD70034EA29 /* CountryDao.swift in Sources */,
+				7108CD592850747C0034EA29 /* SyncDao.swift in Sources */,
 				715393E02847FB7D001016E8 /* Category.swift in Sources */,
+				7108CD512850727E0034EA29 /* ManualBillDao.swift in Sources */,
 				715393EC2848A6BC001016E8 /* Sync.swift in Sources */,
+				7108CD4B285070A70034EA29 /* EnrollmentDao.swift in Sources */,
 				715393E6284817A8001016E8 /* Invoice.swift in Sources */,
 				715393F42848BB55001016E8 /* ReferralInvite.swift in Sources */,
 			);

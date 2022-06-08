@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 // MARK: - MerchantPayer
-public class MerchantPayer: EmbeddedObject, ObjectKeyIdentifiable, Codable {
+public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var id: ObjectId?
     @Persisted public var hubClientID:String?
     @Persisted public var isDefault: String?

@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 // MARK: - Enrollment
-public class Enrollment: EmbeddedObject,  ObjectKeyIdentifiable, Codable {
+public class Enrollment: Object,  ObjectKeyIdentifiable, Codable {
     @Persisted public var accountAlias:String?
     @Persisted public var accountNumber:String?
     @Persisted public var hubServiceID:String?

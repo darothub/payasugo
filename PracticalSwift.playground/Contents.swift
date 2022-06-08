@@ -50,3 +50,10 @@ var someone = {
 }
 
 someone()
+
+let string:String? = "checkmate"
+if let str = string, str == "checkmate" {
+    print("game over") // match
+} else {
+    print("let's play")
+}
