@@ -9,16 +9,16 @@ import Foundation
 import UIKit
 
 public class ImageCoordinator : NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    var picker: CameraLauncherView
+    var pickerManager: CameraManager
     
-    init(picker:CameraLauncherView){
-        self.picker = picker
+    init(pickerManager:CameraManager){
+        self.pickerManager = pickerManager
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let selectedImage = info[.originalImage] as? UIImage else { return }
-        self.picker.selectedImage = selectedImage
-        self.picker.isPresented.wrappedValue.dismiss()
+        self.pickerManager.cameraLauncherView.selectedImage = selectedImage
+        self.pickerManager.isPresented.wrappedValue.dismiss()
     }
     
 }

@@ -10,6 +10,8 @@
 		7108CD6A2851E04C0034EA29 /* Permissions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7108CD692851E04C0034EA29 /* Permissions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7108CD72285219910034EA29 /* CameraLauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD71285219910034EA29 /* CameraLauncherView.swift */; };
 		7108CD7428521BC70034EA29 /* ImageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD7328521BC70034EA29 /* ImageCoordinator.swift */; };
+		71759D0128527B1A00C374E1 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71759D0028527B1900C374E1 /* CameraManager.swift */; };
+		71759D032852841800C374E1 /* CameraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71759D022852841700C374E1 /* CameraError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +19,8 @@
 		7108CD692851E04C0034EA29 /* Permissions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Permissions.h; sourceTree = "<group>"; };
 		7108CD71285219910034EA29 /* CameraLauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraLauncherView.swift; sourceTree = "<group>"; };
 		7108CD7328521BC70034EA29 /* ImageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCoordinator.swift; sourceTree = "<group>"; };
+		71759D0028527B1900C374E1 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		71759D022852841700C374E1 /* CameraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 			children = (
 				7108CD71285219910034EA29 /* CameraLauncherView.swift */,
 				7108CD7328521BC70034EA29 /* ImageCoordinator.swift */,
+				71759D0028527B1900C374E1 /* CameraManager.swift */,
+				71759D022852841700C374E1 /* CameraError.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -145,7 +151,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7108CD7428521BC70034EA29 /* ImageCoordinator.swift in Sources */,
+				71759D0128527B1A00C374E1 /* CameraManager.swift in Sources */,
 				7108CD72285219910034EA29 /* CameraLauncherView.swift in Sources */,
+				71759D032852841800C374E1 /* CameraError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,7 @@ struct ContentView: View {
     @State var showPicker = false
     @State var source = "Camera"
     @State private var selectedImage: UIImage?
+    @State var photoSourceType = PickerSourceType.library
     var body: some View {
         VStack {
             if selectedImage != nil {
@@ -29,32 +30,26 @@ struct ContentView: View {
                     .frame(width: 300, height: 300)
             }
             Button {
-                self.source = "Camera"
+                self.photoSourceType = PickerSourceType.camera
                 self.showPicker.toggle()
             } label: {
                 Text("Camera")
             }
             Button {
-                self.source = "library"
+                self.photoSourceType = PickerSourceType.library
                 self.showPicker.toggle()
             } label: {
                 Text("Library")
             }
         }
         .sheet(isPresented: $showPicker) {
-            CameraLauncherView(
-                selectedImage: self.$selectedImage,
-                sourceType: .photoLibrary
-            )
-        }.onAppear {
-            requestPermission()
+            let clv = CameraLauncherView(
+               selectedImage: self.$selectedImage,
+               sourceType: $photoSourceType)
+            CameraManager(cameraLauncherView: clv, appName: "TinggIOS")
         }
     }
-    func requestPermission() {
-        AVCaptureDevice.requestAccess(for: .video) { granted in
-            print("Access \(granted)")
-        }
-    }
+
 }
 
 struct ContentView_Previews: PreviewProvider {
