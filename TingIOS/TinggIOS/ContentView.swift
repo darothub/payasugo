@@ -11,9 +11,9 @@ import Permissions
 
 struct ContentView: View {
     @State var showPicker = false
-    @State var source = "Camera"
     @State private var selectedImage: UIImage?
-    @State var photoSourceType = PickerSourceType.library
+    @State var photoSourceType: PickerSourceType?
+    @StateObject var cameraManager: CameraManager = CameraManager.shared
     var body: some View {
         VStack {
             if selectedImage != nil {
@@ -29,27 +29,36 @@ struct ContentView: View {
                     .clipShape(Circle())
                     .frame(width: 300, height: 300)
             }
-            Button {
-                self.photoSourceType = PickerSourceType.camera
-                self.showPicker.toggle()
-            } label: {
-                Text("Camera")
+            Button("Camera") {
+                do {
+                    try cameraManager.requestCameraPermission { granted in
+                        if granted {
+                            photoSourceType = .camera
+                            self.showPicker.toggle()
+                        }
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
             }
-            Button {
-                self.photoSourceType = PickerSourceType.library
-                self.showPicker.toggle()
-            } label: {
-                Text("Library")
+            Button("Library") {
+                cameraManager.requestPhotoLibraryPermission { error in
+                    if error == .available {
+                        photoSourceType = .library
+                        self.showPicker.toggle()
+                        print(error.localizedDescription)
+                    } else {
+                        print(error.localizedDescription)
+                    }
+                }
             }
         }
-        .sheet(isPresented: $showPicker) {
-            let clv = CameraLauncherView(
-               selectedImage: self.$selectedImage,
-               sourceType: $photoSourceType)
-            CameraManager(cameraLauncherView: clv, appName: "TinggIOS")
+        .sheet(isPresented: $showPicker ) {
+            CameraLauncherView(
+                selectedImage: self.$selectedImage,
+                sourceType: $photoSourceType)
         }
     }
-
 }
 
 struct ContentView_Previews: PreviewProvider {

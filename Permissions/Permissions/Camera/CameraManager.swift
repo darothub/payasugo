@@ -7,30 +7,47 @@
 
 import AVFoundation
 import Foundation
+import PhotosUI
 import SwiftUI
 
-public final class CameraManager : UIViewControllerRepresentable {
+
+public final class CameraManager :  ObservableObject {
     @Published var isCameraAvailable : Bool = false
-    var cameraLauncherView: CameraLauncherView
-    var appName:String?
+    @Published public var cameraLauncherView: CameraLauncherView?
+    var appName:String = "this"
     @Environment(\.presentationMode) var isPresented
-    public init (cameraLauncherView: CameraLauncherView, appName:String?) {
-        self.cameraLauncherView = cameraLauncherView
+    public static let shared = CameraManager(appName: "TinggIOS")
+    public init () {}
+    
+    public convenience init(appName:String){
+        self.init()
         self.appName = appName
-        checkSourceTypeAndValidate()
     }
     
-    
-    func checkSourceTypeAndValidate() {
-        requestCameraPermission()
-    }
-    public func requestCameraPermission(){
+        
+    public func requestCameraPermission(onSuccess: @escaping (Bool) -> Void) throws {
+        try checkCameraAvailability()
         AVCaptureDevice.requestAccess(for: .video) { granted in
-            self.isCameraAvailable = granted
-            if granted && self.cameraLauncherView.sourceType.source == .camera {
-                try! self.checkCameraAvailability()
-            }
+            onSuccess(granted)
         }
+    }
+    
+    public func requestPhotoLibraryPermission(onCompletion: @escaping (CameraError) -> Void){
+        let photos = PHPhotoLibrary.authorizationStatus()
+               if photos == .notDetermined {
+                   PHPhotoLibrary.requestAuthorization({status in
+                       switch status {
+                       case .restricted:
+                           onCompletion(CameraError.restricted)
+                       case .denied :
+                           onCompletion(CameraError.denied)
+                       default:
+                           onCompletion(CameraError.available)
+                       }
+                   })
+               } else if photos == .authorized {
+                   onCompletion(CameraError.available)
+               }
     }
     
     public func getCameraAuthorizationState() -> AVAuthorizationStatus {
@@ -38,10 +55,10 @@ public final class CameraManager : UIViewControllerRepresentable {
     }
     
     public func checkCameraAvailability() throws {
-        if UIImagePickerController.isSourceTypeAvailable(self.cameraLauncherView.sourceType.source) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
             switch getCameraAuthorizationState() {
             case .denied :
-                throw CameraError.denied(self.appName ?? "this")
+                throw CameraError.denied
             case .restricted:
                 throw CameraError.restricted
             default:
@@ -52,16 +69,5 @@ public final class CameraManager : UIViewControllerRepresentable {
             throw CameraError.unavailable
         }
     }
-    public func makeUIViewController(context: Context) -> some UIViewController {
-        let cameraLauncher = UIImagePickerController()
-        cameraLauncher.sourceType = self.cameraLauncherView.sourceType.source
-        cameraLauncher.delegate = context.coordinator
-        return cameraLauncher
-    }
     
-    public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-    
-    public func makeCoordinator() -> ImageCoordinator {
-        return ImageCoordinator(pickerManager: self)
-    }
 }

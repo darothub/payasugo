@@ -8,22 +8,29 @@
 import Foundation
 import UIKit
 
-enum CameraError : Error {
-    case unavailable, restricted, denied(String)
+public enum CameraError : Int, Error, LocalizedError {
+    case unavailable = 0
+    case restricted = 1
+    case denied = 2
+    case available = 3
     
-    var errorDescription: String {
+    public var errorDescription: String? {
         switch self {
         case .unavailable:
             return NSLocalizedString("There is no available camera on this device", comment: "")
         case .restricted:
             return NSLocalizedString("You are not allowed to access the camera", comment: "")
-        case .denied(let productname):
-            return NSLocalizedString("You have explicitly turned off your camera permission. Please open pemission/privacy/camera and grant access for \(productname) application", comment: "")
+        case .denied:
+            return NSLocalizedString("You have explicitly turned off your camera permission. Please open pemission/privacy/camera and grant access for this application", comment: "")
+        case .available:
+            break
         }
+        return "Available"
     }
 }
 
-public enum PickerSourceType {
+
+public enum PickerSourceType : String {
     case camera, library
     
     public var source: UIImagePickerController.SourceType  {
@@ -35,3 +42,4 @@ public enum PickerSourceType {
         }
     }
 }
+
