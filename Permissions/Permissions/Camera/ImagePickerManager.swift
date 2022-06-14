@@ -12,10 +12,7 @@ import SwiftUI
 
 
 public final class ImagePickerManager :  ObservableObject {
-    @Published var isCameraAvailable : Bool = false
-    @Published public var cameraLauncherView: ImageLauncherView?
     var appName:String = "this"
-    @Environment(\.presentationMode) var isPresented
     public static let shared = ImagePickerManager(appName: "TinggIOS")
     public init () {}
     
