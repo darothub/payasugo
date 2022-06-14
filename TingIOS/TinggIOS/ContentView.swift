@@ -13,7 +13,7 @@ struct ContentView: View {
     @State var showPicker = false
     @State private var selectedImage: UIImage?
     @State var photoSourceType: PickerSourceType?
-    @StateObject var cameraManager: CameraManager = CameraManager.shared
+    @StateObject var cameraManager: ImagePickerManager = ImagePickerManager.shared
     var body: some View {
         VStack {
             if selectedImage != nil {
@@ -54,7 +54,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showPicker ) {
-            CameraLauncherView(
+            ImageLauncherView(
                 selectedImage: self.$selectedImage,
                 sourceType: $photoSourceType)
         }

@@ -11,12 +11,12 @@ import PhotosUI
 import SwiftUI
 
 
-public final class CameraManager :  ObservableObject {
+public final class ImagePickerManager :  ObservableObject {
     @Published var isCameraAvailable : Bool = false
-    @Published public var cameraLauncherView: CameraLauncherView?
+    @Published public var cameraLauncherView: ImageLauncherView?
     var appName:String = "this"
     @Environment(\.presentationMode) var isPresented
-    public static let shared = CameraManager(appName: "TinggIOS")
+    public static let shared = ImagePickerManager(appName: "TinggIOS")
     public init () {}
     
     public convenience init(appName:String){
@@ -32,21 +32,21 @@ public final class CameraManager :  ObservableObject {
         }
     }
     
-    public func requestPhotoLibraryPermission(onCompletion: @escaping (CameraError) -> Void){
+    public func requestPhotoLibraryPermission(onCompletion: @escaping (PermissionResponse) -> Void){
         let photos = PHPhotoLibrary.authorizationStatus()
                if photos == .notDetermined {
                    PHPhotoLibrary.requestAuthorization({status in
                        switch status {
                        case .restricted:
-                           onCompletion(CameraError.restricted)
+                           onCompletion(PermissionResponse.restricted)
                        case .denied :
-                           onCompletion(CameraError.denied)
+                           onCompletion(PermissionResponse.denied)
                        default:
-                           onCompletion(CameraError.available)
+                           onCompletion(PermissionResponse.available)
                        }
                    })
                } else if photos == .authorized {
-                   onCompletion(CameraError.available)
+                   onCompletion(PermissionResponse.available)
                }
     }
     
@@ -58,15 +58,15 @@ public final class CameraManager :  ObservableObject {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             switch getCameraAuthorizationState() {
             case .denied :
-                throw CameraError.denied
+                throw PermissionResponse.denied
             case .restricted:
-                throw CameraError.restricted
+                throw PermissionResponse.restricted
             default:
                 break
             }
         }
         else{
-            throw CameraError.unavailable
+            throw PermissionResponse.unavailable
         }
     }
     

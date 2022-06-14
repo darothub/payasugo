@@ -11,7 +11,7 @@ import PhotosUI
 import UIKit
 import SwiftUI
 
-public struct CameraLauncherView {
+public struct ImageLauncherView {
     
     @Binding public var selectedImage: UIImage?
     @Environment(\.presentationMode) var isPresented
@@ -24,7 +24,7 @@ public struct CameraLauncherView {
 }
 
 
-extension CameraLauncherView : UIViewControllerRepresentable {
+extension ImageLauncherView : UIViewControllerRepresentable {
     public func makeUIViewController(context: Context) -> some UIViewController {
         let cameraLauncher = UIImagePickerController()
         if let sourceType = sourceType {

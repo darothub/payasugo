@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public enum CameraError : Int, Error, LocalizedError {
+public enum PermissionResponse : Int, Error, LocalizedError {
     case unavailable = 0
     case restricted = 1
     case denied = 2

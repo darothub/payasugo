@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 public class ImageCoordinator : NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    var pickerManager: CameraLauncherView
+    var pickerManager: ImageLauncherView
     
-    init(pickerManager:CameraLauncherView){
+    init(pickerManager:ImageLauncherView){
         self.pickerManager = pickerManager
     }
     
