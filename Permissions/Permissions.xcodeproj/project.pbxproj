@@ -12,6 +12,8 @@
 		7108CD7428521BC70034EA29 /* ImageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7108CD7328521BC70034EA29 /* ImageCoordinator.swift */; };
 		71759D0128527B1A00C374E1 /* ImagePickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71759D0028527B1900C374E1 /* ImagePickerManager.swift */; };
 		71759D032852841800C374E1 /* PermissionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71759D022852841700C374E1 /* PermissionResponse.swift */; };
+		71759D07285A892A00C374E1 /* ContactManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71759D06285A892A00C374E1 /* ContactManager.swift */; };
+		71759D09285A8EF000C374E1 /* ContactPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71759D08285A8EEF00C374E1 /* ContactPermission.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		7108CD7328521BC70034EA29 /* ImageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCoordinator.swift; sourceTree = "<group>"; };
 		71759D0028527B1900C374E1 /* ImagePickerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerManager.swift; sourceTree = "<group>"; };
 		71759D022852841700C374E1 /* PermissionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionResponse.swift; sourceTree = "<group>"; };
+		71759D06285A892A00C374E1 /* ContactManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactManager.swift; sourceTree = "<group>"; };
+		71759D08285A8EEF00C374E1 /* ContactPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPermission.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,7 @@
 		7108CD682851E04C0034EA29 /* Permissions */ = {
 			isa = PBXGroup;
 			children = (
+				71759D05285A7B6200C374E1 /* Contact */,
 				7108CD70285219560034EA29 /* Camera */,
 				7108CD692851E04C0034EA29 /* Permissions.h */,
 			);
@@ -68,6 +73,15 @@
 				71759D022852841700C374E1 /* PermissionResponse.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		71759D05285A7B6200C374E1 /* Contact */ = {
+			isa = PBXGroup;
+			children = (
+				71759D06285A892A00C374E1 /* ContactManager.swift */,
+				71759D08285A8EEF00C374E1 /* ContactPermission.swift */,
+			);
+			path = Contact;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,10 +164,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71759D07285A892A00C374E1 /* ContactManager.swift in Sources */,
 				7108CD7428521BC70034EA29 /* ImageCoordinator.swift in Sources */,
 				71759D0128527B1A00C374E1 /* ImagePickerManager.swift in Sources */,
 				7108CD72285219910034EA29 /* ImageLauncherView.swift in Sources */,
 				71759D032852841800C374E1 /* PermissionResponse.swift in Sources */,
+				71759D09285A8EF000C374E1 /* ContactPermission.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
