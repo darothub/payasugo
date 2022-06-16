@@ -6,8 +6,9 @@
 //
 
 import AVFoundation
-import SwiftUI
+import Combine
 import Permissions
+import SwiftUI
 
 struct ContentView: View {
     @State var showPicker = false
@@ -15,6 +16,7 @@ struct ContentView: View {
     @State var photoSourceType: PickerSourceType?
     @StateObject var cameraManager: ImagePickerManager = ImagePickerManager.shared
     @StateObject var contactPermission = ContactPermission()
+    @StateObject var locationManager = LocationManager.shared
     var body: some View {
         VStack {
             if selectedImage != nil {
@@ -30,23 +32,8 @@ struct ContentView: View {
                     .clipShape(Circle())
                     .frame(width: 300, height: 300)
             }
-            Button("Camera") {
-//                do {
-//                    try cameraManager.requestCameraPermission { granted in
-//                        if granted {
-//                            photoSourceType = .camera
-//                            self.showPicker.toggle()
-//                        }
-//                    }
-//                } catch {
-//                    print(error.localizedDescription)
-//                }
-                contactPermission.requestAccess()
-//                Task.init{
-//                    await ContactManager.shared.fetchContacts { contact in
-//                        print("contacts \(contact.givenName)")
-//                    }
-//                }
+            Button("Location") {
+                locationManager.requestLocationPermission()
             }
             Button("Library") {
                 cameraManager.requestPhotoLibraryPermission { error in
@@ -65,7 +52,7 @@ struct ContentView: View {
                 selectedImage: self.$selectedImage,
                 sourceType: $photoSourceType)
         }
-        .alert(isPresented: self.$contactPermission.invalidPermission) {
+        .alert(isPresented: self.$locationManager.locationPermissionDeniedOrRestricted) {
           Alert(
             title: Text("TITLE"),
             message: Text("Please go to Settings and turn on the permissions"),
