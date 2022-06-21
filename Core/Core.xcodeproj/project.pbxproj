@@ -43,6 +43,7 @@
 		715393F42848BB55001016E8 /* ReferralInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715393F32848BB55001016E8 /* ReferralInvite.swift */; };
 		71AED53F2860636500A4B14F /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED53E2860636500A4B14F /* Realm */; };
 		71AED5412860636500A4B14F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED5402860636500A4B14F /* RealmSwift */; };
+		71AED54428611A1700A4B14F /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED54328611A1700A4B14F /* DeepLinkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +82,7 @@
 		715393EF2848AC17001016E8 /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
 		715393F12848AD52001016E8 /* Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Highlight.swift; sourceTree = "<group>"; };
 		715393F32848BB55001016E8 /* ReferralInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralInvite.swift; sourceTree = "<group>"; };
+		71AED54328611A1700A4B14F /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 		715393C8284667D8001016E8 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				71AED542286119EC00A4B14F /* DeepLink */,
 				7108CD3D284F39C40034EA29 /* DAO */,
 				715393D028467C73001016E8 /* Models */,
 				715393C9284667D8001016E8 /* Core.h */,
@@ -167,6 +170,14 @@
 				715393F32848BB55001016E8 /* ReferralInvite.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		71AED542286119EC00A4B14F /* DeepLink */ = {
+			isa = PBXGroup;
+			children = (
+				71AED54328611A1700A4B14F /* DeepLinkManager.swift */,
+			);
+			path = DeepLink;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,6 +275,7 @@
 				7108CD4D285071750034EA29 /* HighlightDao.swift in Sources */,
 				715393E228480CDE001016E8 /* MerchantService.swift in Sources */,
 				7108CD41284F48200034EA29 /* BaseDao.swift in Sources */,
+				71AED54428611A1700A4B14F /* DeepLinkManager.swift in Sources */,
 				715393DE2847F82A001016E8 /* PayerOptions.swift in Sources */,
 				7108CD4F285071F10034EA29 /* InvoiceDao.swift in Sources */,
 				7108CD4528506A360034EA29 /* CategoryDao.swift in Sources */,

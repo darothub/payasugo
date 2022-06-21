@@ -7,6 +7,7 @@
 
 import AVFoundation
 import Combine
+import Core
 import Permissions
 import SwiftUI
 
@@ -17,6 +18,7 @@ struct ContentView: View {
     @StateObject var cameraManager: ImagePickerManager = ImagePickerManager.shared
     @StateObject var contactPermission = ContactPermission()
     @StateObject var locationManager = LocationManager.shared
+    var deeplinkManager = DeepLinkManager()
     var body: some View {
         VStack {
             if selectedImage != nil {
@@ -51,7 +53,10 @@ struct ContentView: View {
             ImageLauncherView(
                 selectedImage: self.$selectedImage,
                 sourceType: $photoSourceType)
-        }
+        }.onOpenURL(perform: { url in
+            let target = deeplinkManager.manage(url: url)
+            print("urlscheme \(String(describing: url.scheme)) host \(target.rawValue)")
+        })
         .alert(isPresented: self.$locationManager.locationPermissionDeniedOrRestricted) {
           Alert(
             title: Text("TITLE"),

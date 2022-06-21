@@ -15,6 +15,8 @@
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
 		718C629F283ECF45002ADCA8 /* ColourAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C629E283ECF45002ADCA8 /* ColourAssets.xcassets */; };
 		718C62A12840121C002ADCA8 /* ThemeProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C62A02840121B002ADCA8 /* ThemeProperties.swift */; };
+		71AED546286128F500A4B14F /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71AED545286128F400A4B14F /* Core.framework */; };
+		71AED547286128F500A4B14F /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71AED545286128F400A4B14F /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				7108CD78285253E00034EA29 /* Permissions.framework in Embed Frameworks */,
+				71AED547286128F500A4B14F /* Core.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -33,7 +36,6 @@
 
 /* Begin PBXFileReference section */
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		71759D042855F0B700C374E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6291283EBCB4002ADCA8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -42,6 +44,7 @@
 		718C629E283ECF45002ADCA8 /* ColourAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColourAssets.xcassets; sourceTree = "<group>"; };
 		718C62A02840121B002ADCA8 /* ThemeProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProperties.swift; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */,
+				71AED546286128F500A4B14F /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +63,7 @@
 		7108CD75285253DF0034EA29 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				71AED545286128F400A4B14F /* Core.framework */,
 				7108CD76285253E00034EA29 /* Permissions.framework */,
 			);
 			name = Frameworks;
@@ -343,11 +348,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) requires camera permission for profile photo";
-				INFOPLIST_KEY_NSContactsUsageDescription = "$(PRODUCT_NAME) requires contact access for friends invite";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(PRODUCT_NAME) requires your location for closest pay point";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(PRODUCT_NAME) requires your location for closest pay point";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(PRODUCT_NAME) requires camera permission for profile photo";
+				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
+				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -378,11 +383,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) requires camera permission for profile photo";
-				INFOPLIST_KEY_NSContactsUsageDescription = "$(PRODUCT_NAME) requires contact access for friends invite";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(PRODUCT_NAME) requires your location for closest pay point";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(PRODUCT_NAME) requires your location for closest pay point";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(PRODUCT_NAME) requires camera permission for profile photo";
+				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
+				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
