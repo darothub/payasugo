@@ -7,13 +7,14 @@
 
 import Foundation
 
-public class DeepLinkManager {
+public class DeepLinkManager : ObservableObject {
+    @Published public var target : DeeplinkTarget = .home
     public init(){}
     public enum DeeplinkTarget: String, Equatable {
-         case home
-         case screen
-         case checkout
-     }
+        case home
+        case screen
+        case checkout
+    }
     
     public class DeepLinkConstants {
         static let scheme = "tinggios"
@@ -21,9 +22,11 @@ public class DeepLinkManager {
     
     public func manage(url: URL) -> DeeplinkTarget {
         guard url.scheme == DeepLinkConstants.scheme
-        else { return .home }
-       
-        return (url.host?.checkIfItsDeepLinkTarget)!
+        else {
+            return target
+        }
+        target = (url.host?.checkIfItsDeepLinkTarget)!
+        return target
     }
 }
 
@@ -39,15 +42,5 @@ extension String {
 extension URL {
     var isDeeplink: Bool {
         return scheme == DeepLinkManager.DeepLinkConstants.scheme
-    }
-    
-    var screenIdentifier: DeepLinkManager.DeeplinkTarget? {
-      guard isDeeplink else { return nil }
-
-      switch host {
-      case "home": return .home
-      case "screen": return .screen
-      default: return nil
-      }
     }
 }

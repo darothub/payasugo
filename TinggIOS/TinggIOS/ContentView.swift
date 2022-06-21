@@ -18,8 +18,39 @@ struct ContentView: View {
     @StateObject var cameraManager: ImagePickerManager = ImagePickerManager.shared
     @StateObject var contactPermission = ContactPermission()
     @StateObject var locationManager = LocationManager.shared
-    var deeplinkManager = DeepLinkManager()
+    @StateObject var deeplinkManager = DeepLinkManager()
     var body: some View {
+        VStack {
+            switch deeplinkManager.target {
+            case .screen :
+                Text("This is screen")
+            case .checkout:
+                Text("This is checkout")
+            default:
+                homeView()
+            }
+        }
+        .sheet(isPresented: $showPicker ) {
+            ImageLauncherView(
+                selectedImage: self.$selectedImage,
+                sourceType: $photoSourceType)
+        }.onOpenURL(perform: { url in
+            deeplinkManager.target = deeplinkManager.manage(url: url)
+            print("urlscheme \(String(describing: url.scheme)) host \(deeplinkManager.target.rawValue)")
+        })
+        .alert(isPresented: self.$locationManager.locationPermissionDeniedOrRestricted) {
+            Alert(
+                title: Text("TITLE"),
+                message: Text("Please go to Settings and turn on the permissions"),
+                primaryButton: .cancel(Text("Cancel")),
+                secondaryButton: .default(Text("Settings"), action: {if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                }))
+        }
+    }
+    @ViewBuilder
+    func homeView() -> some View {
         VStack {
             if selectedImage != nil {
                 Image(uiImage: selectedImage!)
@@ -48,25 +79,6 @@ struct ContentView: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $showPicker ) {
-            ImageLauncherView(
-                selectedImage: self.$selectedImage,
-                sourceType: $photoSourceType)
-        }.onOpenURL(perform: { url in
-            let target = deeplinkManager.manage(url: url)
-            print("urlscheme \(String(describing: url.scheme)) host \(target.rawValue)")
-        })
-        .alert(isPresented: self.$locationManager.locationPermissionDeniedOrRestricted) {
-          Alert(
-            title: Text("TITLE"),
-            message: Text("Please go to Settings and turn on the permissions"),
-            primaryButton: .cancel(Text("Cancel")),
-            secondaryButton: .default(Text("Settings"), action: {
-              if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-              }
-            }))
         }
     }
 }
