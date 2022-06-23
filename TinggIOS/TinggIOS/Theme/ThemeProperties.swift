@@ -15,11 +15,14 @@ protocol ThemeProperties {
     var textColor: UIColor? { get }
     var primaryColor: UIColor? { get }
     var primaryBgColor: UIColor? { get }
-    var secondaryColor: UIColor? { get }
+    var secondaryColor: Color? { get }
     var smallPadding: CGFloat { get }
     var mediumPadding: CGFloat { get }
     var largePadding: CGFloat { get }
     var skyBlue: UIColor? { get }
+    var cellulantPurple: UIColor? { get }
+    var cellulantRed: UIColor? { get }
+    var splashScreenImage:Image { get }
 }
 
 struct PrimaryTheme: ThemeProperties {
@@ -33,21 +36,24 @@ struct PrimaryTheme: ThemeProperties {
     var textColor: UIColor? = UIColor(named: "textColor")
     var primaryColor: UIColor? = UIColor(named: "primaryColor")
     var primaryBgColor: UIColor? = UIColor(named: "primaryColor")
-    var secondaryColor: UIColor? = UIColor(named: "secondaryColor")
+    var secondaryColor: Color? = Color("secondaryColor")
     var skyBlue: UIColor? = UIColor(named: "cellulantSkyBlue")
+    var cellulantPurple: UIColor? = UIColor(named: "cellulantPurple")
+    var cellulantRed: UIColor? = UIColor(named: "cellulantRed")
+    var splashScreenImage:Image = Image("TinggSplashScreenIcon")
 }
 
 extension ThemeProperties {
     var primaryGradient: LinearGradient {
-        return LinearGradient(gradient:
-                                Gradient(colors: [Color(primaryColor!), Color(secondaryColor!)]),
-                              startPoint: .bottomLeading, endPoint: .topTrailing
+        return LinearGradient(
+            gradient: Gradient(colors: [Color(cellulantPurple!), Color(cellulantRed!)]),
+            startPoint: .top, endPoint: .bottom
         )
     }
     var primaryBgGradient: LinearGradient {
-        return LinearGradient(gradient:
-                                Gradient(colors: [Color(primaryColor!), Color(secondaryColor!)]),
-                              startPoint: .bottomLeading, endPoint: .topTrailing
+        return LinearGradient(
+            gradient: Gradient(colors: [Color(primaryColor!), secondaryColor!]),
+            startPoint: .bottomLeading, endPoint: .topTrailing
         )
     }
 }

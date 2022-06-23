@@ -17,6 +17,7 @@
 		718C62A12840121C002ADCA8 /* ThemeProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C62A02840121B002ADCA8 /* ThemeProperties.swift */; };
 		71AED546286128F500A4B14F /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71AED545286128F400A4B14F /* Core.framework */; };
 		71AED547286128F500A4B14F /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71AED545286128F400A4B14F /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		71AED54A2863BBD500A4B14F /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5492863BBD500A4B14F /* LaunchScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,7 @@
 		718C62A02840121B002ADCA8 /* ThemeProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProperties.swift; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71AED5492863BBD500A4B14F /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
+				71AED5482863BBAF00A4B14F /* Onboarding */,
 				71AED53C285D007300A4B14F /* Info.plist */,
 				718C6291283EBCB4002ADCA8 /* ContentView.swift */,
 				718C629D283ECDF3002ADCA8 /* Theme */,
@@ -114,6 +117,14 @@
 				718C62A02840121B002ADCA8 /* ThemeProperties.swift */,
 			);
 			path = Theme;
+			sourceTree = "<group>";
+		};
+		71AED5482863BBAF00A4B14F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				71AED5492863BBD500A4B14F /* LaunchScreenView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,6 +227,7 @@
 				718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */,
 				718C62A12840121C002ADCA8 /* ThemeProperties.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
+				71AED54A2863BBD500A4B14F /* LaunchScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,7 +367,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -390,7 +401,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
