@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../Theme/Theme.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../Permissions/Permissions.xcodeproj">
    </FileRef>
    <FileRef

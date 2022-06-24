@@ -9,12 +9,15 @@ import SwiftUI
 
 @main
 struct TinggIOSApp: App {
+    @StateObject var enviromentUtils = EnvironmentUtils()
     var body: some Scene {
         WindowGroup {
             ZStack {
-                ContentView()
-                LaunchScreenView()
-            }
+                IntroView()
+                if enviromentUtils.state != .finish {
+                    LaunchScreenView()
+                }
+            }.environmentObject(enviromentUtils)
         }
     }
 }
