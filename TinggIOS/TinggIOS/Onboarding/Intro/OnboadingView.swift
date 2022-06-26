@@ -22,44 +22,43 @@ struct BottomCurve: Shape {
 
 struct OnboadingView: View {
     let onboadingItem: OnboardingItem
-    let primaryTheme = PrimaryTheme()
+    let screenSize: CGSize
+    @EnvironmentObject var theme: EnvironmentUtils
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                ZStack(alignment: .top) {
-                    bottomCurve(geometry: geometry)
-                    VStack {
-                        tinggColoredLogo
-                        gifImage(geometry: geometry)
-                    }
+        VStack {
+            ZStack(alignment: .top) {
+                VStack {
+                    tinggColoredLogo
+                    gifImage(size: screenSize)
                 }
-                pageIntro
-                pageSubIntro
             }
+            pageIntro
+            pageSubIntro
         }
     }
 }
 
 struct OnboadingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboadingView(onboadingItem: exampleOnboarding())
+        OnboadingView(onboadingItem: exampleOnboarding(), screenSize: CGSize(width: 500, height: 500))
+            .environmentObject(EnvironmentUtils())
     }
 }
 
 extension OnboadingView {
-    func bottomCurve(geometry: GeometryProxy) -> some View {
+    func topBackgroundDesign(size: CGSize) -> some View {
         BottomCurve()
-            .fill(primaryTheme.lightGray)
-            .frame(width: geometry.size.width, height: geometry.size.height * 0.6)
+            .fill(theme.primaryTheme.lightGray)
+            .frame(width: size.width, height: size.height * 0.6)
             .edgesIgnoringSafeArea(.all)
     }
-    func gifImage(geometry: GeometryProxy) -> some View {
+    func gifImage(size: CGSize) -> some View {
         GifImage(onboadingItem.centerImage)
-            .frame(width: geometry.size.width * 0.65, height: geometry.size.height * 0.5, alignment: .center)
+            .frame(width: size.width * 0.65, height: size.height * 0.5, alignment: .center)
             .padding(.vertical, 30)
     }
     var tinggColoredLogo: some View {
-        Image(onboadingItem.logo)
+        Image("tinggcoloredicon")
             .resizable()
             .frame(width: 60, height: 60)
             .clipShape(Circle())
@@ -67,14 +66,14 @@ extension OnboadingView {
     }
     var pageIntro: some View {
         Text(onboadingItem.info)
-            .font(.system(size: primaryTheme.largeTextSize))
+            .font(.system(size: theme.primaryTheme.largeTextSize))
             .bold()
             .multilineTextAlignment(.center)
             .padding(.vertical, 10)
     }
     var pageSubIntro: some View {
         Text(onboadingItem.subInfo)
-            .font(.system(size: primaryTheme.mediumTextSize))
+            .font(.system(size: theme.primaryTheme.mediumTextSize))
             .multilineTextAlignment(.center)
     }
 }

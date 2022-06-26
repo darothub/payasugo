@@ -12,12 +12,14 @@ struct TinggIOSApp: App {
     @StateObject var enviromentUtils = EnvironmentUtils()
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                IntroView()
-                if enviromentUtils.state != .finish {
-                    LaunchScreenView()
-                }
-            }.environmentObject(enviromentUtils)
+            NavigationView {
+                ZStack {
+                    IntroView()
+                    if enviromentUtils.state != .finish {
+                        LaunchScreenView()
+                    }
+                }.environmentObject(enviromentUtils)
+            }
         }
     }
 }

@@ -8,30 +8,38 @@
 import SwiftUI
 import Theme
 struct IntroView: View {
-    @EnvironmentObject var theme: EnvironmentUtils
+    @EnvironmentObject var themes: EnvironmentUtils
+    var theme = PrimaryTheme()
+    @State var active = false
     var body: some View {
-        VStack {
-            TabView {
-                ForEach(onboardingItems(), id: \.info) { item in
-                    OnboadingView(onboadingItem: item)
+        GeometryReader { geo in
+            ZStack(alignment: .top) {
+                topBackgroundDesign(size: geo.size)
+                tinggColoredLogo
+                VStack {
+                    TabView {
+                        ForEach(onboardingItems(), id: \.info) { item in
+                            VStack {
+                                OnboadingView(onboadingItem: item, screenSize: geo.size)
+                                Spacer()
+                            }
+                        }
+                    }
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                    Spacer()
+                    NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
+                        UtilViews.button(backgroundColor: theme.primaryColor) {
+                            active.toggle()
+                            print("Continue")
+                        }
+                    }
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-            Button {
-                print("Tapped")
-            } label: {
-                Text("Get started")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(theme.primaryTheme.primaryColor)
-                    .cornerRadius(10)
-                    .padding(30)
+            .navigationBarHidden(true)
+            .onAppear {
+                setPageIndicatorAppearance()
             }
-        }.edgesIgnoringSafeArea(.all)
-        .onAppear {
-            setPageIndicatorAppearance()
         }
     }
 }
@@ -47,5 +55,19 @@ extension IntroView {
     func setPageIndicatorAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .red
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.red.withAlphaComponent(0.2)
+    }
+    func topBackgroundDesign(size: CGSize) -> some View {
+        BottomCurve()
+            .fill(theme.lightGray)
+            .frame(width: size.width, height: size.height * 0.5)
+            .edgesIgnoringSafeArea(.all)
+    }
+
+    var tinggColoredLogo: some View {
+        Image("tinggcoloredicon")
+            .resizable()
+            .frame(width: 60, height: 60)
+            .clipShape(Circle())
+            .shadow(radius: 3)
     }
 }
