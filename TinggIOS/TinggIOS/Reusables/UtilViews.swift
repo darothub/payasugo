@@ -24,7 +24,7 @@ struct UtilViews: View {
                     .foregroundColor(.white)
                     .background(backgroundColor)
                     .cornerRadius(10)
-                    .padding(30)
+                    .padding(.bottom, 30)
             }
         }
     }
@@ -37,7 +37,9 @@ struct UtilTestViews_Previews: PreviewProvider {
 }
 
 extension UtilViews {
-    static func button(backgroundColor:Color = Color.red, buttonLabel:String = "Get started", action:@escaping ()->Void) -> some View {
+    static func button(backgroundColor: Color = Color.red,
+                       buttonLabel: String = "Get started",
+                       action: @escaping ()-> Void) -> some View {
         Button {
             action()
         } label: {
@@ -47,7 +49,7 @@ extension UtilViews {
                 .foregroundColor(.white)
                 .background(backgroundColor)
                 .cornerRadius(10)
-                .padding(30)
+                .padding(20)
         }
     }
 }

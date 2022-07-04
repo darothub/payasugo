@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Theme
+import Domain
 struct IntroView: View {
     @EnvironmentObject var themes: EnvironmentUtils
     var theme = PrimaryTheme()
@@ -21,7 +22,6 @@ struct IntroView: View {
                         ForEach(onboardingItems(), id: \.info) { item in
                             VStack {
                                 OnboadingView(onboadingItem: item, screenSize: geo.size)
-                                Spacer()
                             }
                         }
                     }
@@ -34,6 +34,8 @@ struct IntroView: View {
                             print("Continue")
                         }
                     }
+                }.task {
+                    getCountries()
                 }
             }
             .navigationBarHidden(true)
@@ -41,6 +43,10 @@ struct IntroView: View {
                 setPageIndicatorAppearance()
             }
         }
+    }
+    func getCountries() {
+        let fetch = FetchCountries()
+        fetch.countriesCodesAndCountriesDialCodes()
     }
 }
 
@@ -64,7 +70,7 @@ extension IntroView {
     }
 
     var tinggColoredLogo: some View {
-        Image("tinggcoloredicon")
+        Image("tinggicon")
             .resizable()
             .frame(width: 60, height: 60)
             .clipShape(Circle())

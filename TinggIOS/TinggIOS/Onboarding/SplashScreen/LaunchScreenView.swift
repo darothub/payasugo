@@ -16,7 +16,7 @@ struct LaunchScreenView: View {
             image
         }.onAppear {
             withAnimation {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     splashScreenWatcher.state = .finish
                 }
             }
@@ -35,7 +35,9 @@ private extension LaunchScreenView {
     var background: some View {
         primaryTheme.secondaryColor.edgesIgnoringSafeArea(.all)
     }
-    var image: Image {
+    var image: some View {
         primaryTheme.splashScreenImage
+            .renderingMode(.template)
+            .foregroundColor(Color.white)
     }
 }

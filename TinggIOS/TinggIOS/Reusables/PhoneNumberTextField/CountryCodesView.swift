@@ -6,6 +6,8 @@
 //
 // swiftlint:disable all
 import SwiftUI
+import Combine
+import Domain
 
 public struct CountryCodesView: View {
     @State public var phoneNumber = ""
@@ -14,6 +16,7 @@ public struct CountryCodesView: View {
     @State public var countryFlag = ""
     public var numberLength = 10
     @ObservedObject var codeTextField = ObservableTextField()
+    @StateObject var fetchCountries: FetchCountries = FetchCountries()
     @State public var showPhoneSheet = false
     public init(){}
     public var body: some View {
@@ -37,6 +40,13 @@ public struct CountryCodesView: View {
                             self.phoneNumber = String(newValue.prefix(numberLength))
                         }
                     }
+            }.onAppear {
+                fetchCountries.$phoneFieldDetails
+                    .sink { result in
+//                        countryCode = result
+                        print("Countries map \(result)")
+                    }
+                    .store(in: &fetchCountries.subscription)
             }
         }.sheet(isPresented: $showPhoneSheet) {
             CountryCodes(countryCode: $countryCode, countryFlag: $countryFlag)

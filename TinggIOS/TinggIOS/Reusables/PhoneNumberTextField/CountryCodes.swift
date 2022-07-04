@@ -7,9 +7,12 @@
 // swiftlint:disable all
 import Foundation
 import SwiftUI
+import Domain
 public struct CountryCodes : View {
     @Binding public var countryCode: String
     @Binding public var countryFlag: String
+    @StateObject var fetchCountries: FetchCountries = FetchCountries()
+    @State var countries = [String: String]()
     @Environment(\.dismiss) var dismiss
     
     public init(countryCode: Binding<String>, countryFlag: Binding<String>){
@@ -19,7 +22,7 @@ public struct CountryCodes : View {
     
     public var body: some View {
         GeometryReader { geo in
-            List(CountryCodesView.countryDictionary.sorted(by: <), id: \.key) { key , value in
+            List(countries.sorted(by: <), id: \.key) { key , value in
                 HStack {
                     Text("\(self.flag(country: key))")
                     Text("\(self.countryName(countryCode: key) ?? key)")
@@ -33,11 +36,13 @@ public struct CountryCodes : View {
                         withAnimation(.spring()) {
                             dismiss()
                         }
-                        
                 }
             }
             .padding(.bottom)
-            .frame(width: geo.size.width, height:  geo.size.height)            
+            .frame(width: geo.size.width, height:  geo.size.height)
+            .onAppear {
+                getCountryCode()
+            }
         }
     }
     func countryName(countryCode: String) -> String? {
@@ -54,11 +59,15 @@ public struct CountryCodes : View {
         return flag
     }
     
-    func getCountryCode (_ country : String) -> String {
-        if let key = CountryCodesView.countryDictionary.first(where: { $0.value == country })?.key {
-            return key
-        }
-        return ""
+    func getCountryCode () {
+        self.fetchCountries.$phoneFieldDetails
+            .sink { result in
+                countries = result.reduce(into: [:]) { partialResult, results in
+                    partialResult[results.key] = results.value
+                }
+                print("Countries map \(countries)")
+            }
+            .store(in: &fetchCountries.subscription)
     }
 }
 

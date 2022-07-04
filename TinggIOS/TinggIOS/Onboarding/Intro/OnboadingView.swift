@@ -28,7 +28,6 @@ struct OnboadingView: View {
         VStack {
             ZStack(alignment: .top) {
                 VStack {
-                    tinggColoredLogo
                     gifImage(size: screenSize)
                 }
             }
@@ -46,23 +45,10 @@ struct OnboadingView_Previews: PreviewProvider {
 }
 
 extension OnboadingView {
-    func topBackgroundDesign(size: CGSize) -> some View {
-        BottomCurve()
-            .fill(theme.primaryTheme.lightGray)
-            .frame(width: size.width, height: size.height * 0.6)
-            .edgesIgnoringSafeArea(.all)
-    }
     func gifImage(size: CGSize) -> some View {
         GifImage(onboadingItem.centerImage)
             .frame(width: size.width * 0.65, height: size.height * 0.5, alignment: .center)
             .padding(.vertical, 30)
-    }
-    var tinggColoredLogo: some View {
-        Image("tinggcoloredicon")
-            .resizable()
-            .frame(width: 60, height: 60)
-            .clipShape(Circle())
-            .shadow(radius: 3)
     }
     var pageIntro: some View {
         Text(onboadingItem.info)

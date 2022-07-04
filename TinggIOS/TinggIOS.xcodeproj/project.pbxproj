@@ -14,6 +14,8 @@
 		714D3F722868AAA50024028C /* CountryCodesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714D3F6F2868AAA50024028C /* CountryCodesView.swift */; };
 		714D3F732868AAA50024028C /* CountryCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714D3F702868AAA50024028C /* CountryCodes.swift */; };
 		714D3F772868C82C0024028C /* UtilViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714D3F762868C82B0024028C /* UtilViews.swift */; };
+		715C27E2286D0689003EDB03 /* CheckBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715C27E1286D0689003EDB03 /* CheckBoxView.swift */; };
+		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C6291283EBCB4002ADCA8 /* ContentView.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
@@ -24,12 +26,13 @@
 		71AED5782864F00C00A4B14F /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5772864F00C00A4B14F /* IntroView.swift */; };
 		71AED57A2864F15100A4B14F /* OnboardingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5792864F15100A4B14F /* OnboardingItem.swift */; };
 		71AED57C2864F20D00A4B14F /* OnboadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED57B2864F20D00A4B14F /* OnboadingView.swift */; };
-		71AED57E2865CC7500A4B14F /* ColourAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71AED57D2865CC7400A4B14F /* ColourAssets.xcassets */; };
 		71AED5812865D8DB00A4B14F /* GifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5802865D8DB00A4B14F /* GifImage.swift */; };
 		71AED5852865DC5E00A4B14F /* slideimagetwo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5832865DC5E00A4B14F /* slideimagetwo.gif */; };
 		71AED5862865DC5E00A4B14F /* slideimageone.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5842865DC5E00A4B14F /* slideimageone.gif */; };
 		71AED59228667A9700A4B14F /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59128667A9700A4B14F /* Core */; };
 		71AED59428667AB800A4B14F /* Theme in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59328667AB800A4B14F /* Theme */; };
+		71AF1111286F91F400C96505 /* ApiModule in Frameworks */ = {isa = PBXBuildFile; productRef = 71AF1110286F91F400C96505 /* ApiModule */; };
+		71AF1114286FB0D600C96505 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 71AF1113286FB0D600C96505 /* Domain */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +56,8 @@
 		714D3F6F2868AAA50024028C /* CountryCodesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCodesView.swift; sourceTree = "<group>"; };
 		714D3F702868AAA50024028C /* CountryCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCodes.swift; sourceTree = "<group>"; };
 		714D3F762868C82B0024028C /* UtilViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilViews.swift; sourceTree = "<group>"; };
+		715C27E1286D0689003EDB03 /* CheckBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxView.swift; sourceTree = "<group>"; };
+		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6291283EBCB4002ADCA8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -67,12 +72,13 @@
 		71AED5772864F00C00A4B14F /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		71AED5792864F15100A4B14F /* OnboardingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingItem.swift; sourceTree = "<group>"; };
 		71AED57B2864F20D00A4B14F /* OnboadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboadingView.swift; sourceTree = "<group>"; };
-		71AED57D2865CC7400A4B14F /* ColourAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColourAssets.xcassets; sourceTree = "<group>"; };
 		71AED5802865D8DB00A4B14F /* GifImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifImage.swift; sourceTree = "<group>"; };
 		71AED5832865DC5E00A4B14F /* slideimagetwo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimagetwo.gif; sourceTree = "<group>"; };
 		71AED5842865DC5E00A4B14F /* slideimageone.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimageone.gif; sourceTree = "<group>"; };
 		71AED58C28665C9500A4B14F /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71AED5902866793100A4B14F /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
+		71AF110F286F916900C96505 /* ApiModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ApiModule; sourceTree = "<group>"; };
+		71AF1112286F96A400C96505 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +86,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71AF1114286FB0D600C96505 /* Domain in Frameworks */,
 				71AED59428667AB800A4B14F /* Theme in Frameworks */,
+				71AF1111286F91F400C96505 /* ApiModule in Frameworks */,
 				7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */,
 				71AED59228667A9700A4B14F /* Core in Frameworks */,
 			);
@@ -147,7 +155,7 @@
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
-				71AED57D2865CC7400A4B14F /* ColourAssets.xcassets */,
+				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
 			);
 			path = TinggIOS;
 			sourceTree = "<group>";
@@ -187,6 +195,7 @@
 				714D3F6D2868AA8E0024028C /* PhoneNumberTextField */,
 				71AED5802865D8DB00A4B14F /* GifImage.swift */,
 				714D3F762868C82B0024028C /* UtilViews.swift */,
+				715C27E1286D0689003EDB03 /* CheckBoxView.swift */,
 			);
 			path = Reusables;
 			sourceTree = "<group>";
@@ -205,6 +214,8 @@
 			children = (
 				71AED58C28665C9500A4B14F /* Theme */,
 				71AED5902866793100A4B14F /* Core */,
+				71AF110F286F916900C96505 /* ApiModule */,
+				71AF1112286F96A400C96505 /* Domain */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -230,6 +241,8 @@
 			packageProductDependencies = (
 				71AED59128667A9700A4B14F /* Core */,
 				71AED59328667AB800A4B14F /* Theme */,
+				71AF1110286F91F400C96505 /* ApiModule */,
+				71AF1113286FB0D600C96505 /* Domain */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -277,7 +290,7 @@
 			files = (
 				71AED5862865DC5E00A4B14F /* slideimageone.gif in Resources */,
 				718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */,
-				71AED57E2865CC7500A4B14F /* ColourAssets.xcassets in Resources */,
+				715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */,
 				718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */,
 				71AED5852865DC5E00A4B14F /* slideimagetwo.gif in Resources */,
 			);
@@ -311,6 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */,
+				715C27E2286D0689003EDB03 /* CheckBoxView.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71AED5812865D8DB00A4B14F /* GifImage.swift in Sources */,
 				71AED57C2864F20D00A4B14F /* OnboadingView.swift in Sources */,
@@ -543,6 +557,14 @@
 		71AED59328667AB800A4B14F /* Theme */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Theme;
+		};
+		71AF1110286F91F400C96505 /* ApiModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApiModule;
+		};
+		71AF1113286FB0D600C96505 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

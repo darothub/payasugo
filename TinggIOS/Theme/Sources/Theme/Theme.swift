@@ -33,17 +33,20 @@ public struct PrimaryTheme: ThemeProperties {
     public var largeTextSize: CGFloat = 24.0
     public var navigationTextSize: CGFloat = 18.0
     public var smallPadding: CGFloat = 14.0
-    public var mediumPadding: CGFloat = 16.0
-    public var largePadding: CGFloat = 24.0
-    public var textColor: Color = Color("textColor")
-    public var primaryColor: Color = Color("primaryColor")
-    public var primaryBgColor: Color = Color("primaryColor")
-    public var secondaryColor: Color = Color("secondaryColor")
-    public var skyBlue: Color = Color("cellulantSkyBlue")
-    public var cellulantPurple: Color = Color("cellulantPurple")
-    public var cellulantRed: Color = Color("cellulantRed")
+    public var mediumPadding: CGFloat = 18.0
+    public var largePadding: CGFloat = 25.0
+    public var textColor: Color = getColor("textColor")
+    public var primaryColor: Color = getColor("primaryColor")
+    public var primaryBgColor: Color = getColor("primaryColor")
+    public var secondaryColor: Color = getColor("secondaryColor")
+    public var skyBlue: Color = getColor("cellulantSkyBlue")
+    public var cellulantPurple: Color = getColor("cellulantPurple")
+    public var cellulantRed: Color = getColor("cellulantRed")
     public var splashScreenImage: Image = Image("TinggSplashScreenIcon")
-    public var lightGray: Color = Color("cellulantLightGray")
+    public var lightGray: Color = getColor("cellulantLightGray")
+    static func getColor(_ name: String) -> Color {
+        return  Color(name, bundle: Bundle.module)
+    }
 }
 
 extension ThemeProperties {

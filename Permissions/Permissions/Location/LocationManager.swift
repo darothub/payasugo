@@ -24,7 +24,6 @@ public class LocationManager: NSObject, ObservableObject {
         super.init()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
-       
     }
 
     public func requestLocationPermission(){
