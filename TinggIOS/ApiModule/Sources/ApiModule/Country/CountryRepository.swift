@@ -6,10 +6,17 @@
 //
 
 import Alamofire
+import Core
 import Foundation
+import UIKit
 public class CountryRepository: CountryApiServices {
+    public func getActivationCode(activationCodeRequest: TinggRequest) -> DataRequest {
+//        let activationCode = ActivationCodeRequest(service: "MAK", msisdn: phoneNumber)
+        return AF.request(Utils.baseUrlStaging, method: .post,
+                          parameters: activationCodeRequest, encoder: JSONParameterEncoder.default)
+    }
     public func getCountries() -> DataRequest {
-        return AF.request(Utils.baseUrlStaging, method: .get)
+        return AF.request(Utils.baseUrlStaging+"countries.php/", method: .get)
     }
     public init() {}
 }

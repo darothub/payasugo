@@ -10,19 +10,19 @@ import Combine
 import Domain
 
 public struct CountryCodesView: View {
-    @State public var phoneNumber = ""
-    @State public var y: CGFloat = 250
-    @State public var countryCode = ""
+    @Binding public var phoneNumber: String
+    @Binding public var countryCode: String
     @State public var countryFlag = ""
     public var numberLength = 10
+    @State var countries = [String: String]()
     @ObservedObject var codeTextField = ObservableTextField()
-    @StateObject var fetchCountries: FetchCountries = FetchCountries()
+    @EnvironmentObject var fetchCountries: FetchCountries
     @State public var showPhoneSheet = false
-    public init(){}
+
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text(countryCode.isEmpty ? "🇦🇺 +61" : "\(countryFlag) +\(countryCode)")
+                Text(countryCode.isEmpty ? "🇧🇼 +267" : "\(countryFlag) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
@@ -40,22 +40,38 @@ public struct CountryCodesView: View {
                             self.phoneNumber = String(newValue.prefix(numberLength))
                         }
                     }
-            }.onAppear {
-                fetchCountries.$phoneFieldDetails
-                    .sink { result in
-//                        countryCode = result
-                        print("Countries map \(result)")
-                    }
-                    .store(in: &fetchCountries.subscription)
             }
         }.sheet(isPresented: $showPhoneSheet) {
-            CountryCodes(countryCode: $countryCode, countryFlag: $countryFlag)
+            CountryCodes(countryCode: $countryCode, countryFlag: $countryFlag, countries: countries)
+        }
+        .onAppear {
+            getCountryCode()
+        }
+    }
+    
+    func getCountryCode () {
+        countries = self.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
+            partialResult[country.countryCode!] = country.countryDialCode
+        }
+        let sortedCountries = countries.sorted(by: <)
+        if let flag = sortedCountries.first?.key {
+            countryFlag = getFlag(country: flag)
+        }
+        if let code = sortedCountries.first?.value{
+            countryCode = code
         }
     }
 }
 
 struct SwiftUIView_Previews: PreviewProvider {
+    struct CountryViewHolder: View {
+        @State var number = ""
+        @State var code = ""
+
+        var body: some View {
+            CountryCodesView(phoneNumber: $number, countryCode: $code)        }
+    }
     static var previews: some View {
-        CountryCodesView()
+        CountryViewHolder()
     }
 }

@@ -39,7 +39,7 @@ struct UtilTestViews_Previews: PreviewProvider {
 extension UtilViews {
     static func button(backgroundColor: Color = Color.red,
                        buttonLabel: String = "Get started",
-                       action: @escaping ()-> Void) -> some View {
+                       action: @escaping () -> Void) -> some View {
         Button {
             action()
         } label: {
@@ -51,5 +51,12 @@ extension UtilViews {
                 .cornerRadius(10)
                 .padding(20)
         }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func someShadow(showShadow: Binding<Bool>) -> some View {
+        shadow(color: showShadow.wrappedValue ? .green : .red, radius: 1)
     }
 }

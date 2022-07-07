@@ -5,8 +5,7 @@
 //  Created by Abdulrasaq on 01/07/2022.
 //
 
-struct CountryDTO: BaseDTO, Codable {
-    typealias Model = [Country]
+struct CountryDTO: BaseDTOprotocol, Codable {
     var statusCode: Int
     var statusMessage: String
     var data: [Country]

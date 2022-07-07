@@ -6,7 +6,10 @@
 //
 
 import Alamofire
+import Core
 import Foundation
+
 public protocol CountryApiServices {
     func getCountries() -> DataRequest
+    func getActivationCode(activationCodeRequest: TinggRequest) -> DataRequest
 }

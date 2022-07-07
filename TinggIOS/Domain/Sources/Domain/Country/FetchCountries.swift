@@ -12,7 +12,9 @@ public class FetchCountries: ObservableObject {
     let countryApiServices: CountryApiServices
     @Published public var phoneFieldDetails = [String: String]()
     public var subscription = Set<AnyCancellable>()
-//    @ObservedResults(Person.self) var countries
+    @Published public var countriesInfo = [Country]()
+    @ObservedResults(Country.self) public var countriesDb
+
     public init() {
         self.countryApiServices = CountryRepository()
         countriesCodesAndCountriesDialCodes()
@@ -21,7 +23,7 @@ public class FetchCountries: ObservableObject {
         countryApiServices.getCountries()
             .responseDecodable(of: CountryDTO.self) {response in
                 switch response.result {
-                case .failure(_):
+                case .failure:
                     onCompletion(.failure(.networkError))
                 case .success(let countries):
                     onCompletion(.success(countries))
@@ -29,23 +31,22 @@ public class FetchCountries: ObservableObject {
             }
     }
     public func countriesCodesAndCountriesDialCodes() {
-        Future<[String: String], Never> { promise in
-            self.getCountries { results in
+        Future<[Country], Never> { promise in
+            self.getCountries { [self] results in
                 do {
                     let countriesInfo = try results.get().data
-//                    print("CountriesInfo \(countriesInfo)")
-                    let dict = countriesInfo
-                        .reduce(into: [:]) { partialResult, country in
-                            partialResult[country.countryCode! as String] = country.countryDialCode! as String
+                    DispatchQueue.main.async {
+                        for country in countriesInfo {
+                            self.$countriesDb.append(country)
                         }
-                    print("FetcCountriesSucces \(dict)")
-                    promise(.success(dict))
+                    }
+                    promise(.success(countriesInfo))
                 } catch {
                     print("FetcCountriesError \(error.localizedDescription)")
                 }
             }
         }
-        .assign(to: \.phoneFieldDetails, on: self)
+        .assign(to: \.countriesInfo, on: self)
         .store(in: &subscription)
     }
 }
