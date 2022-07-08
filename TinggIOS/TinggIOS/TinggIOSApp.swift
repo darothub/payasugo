@@ -10,6 +10,8 @@ import SwiftUI
 @main
 struct TinggIOSApp: App {
     @StateObject var enviromentUtils = EnvironmentUtils()
+    @State var fieldSize = 4
+    @State var otp = ""
     var body: some Scene {
         WindowGroup {
             NavigationView {

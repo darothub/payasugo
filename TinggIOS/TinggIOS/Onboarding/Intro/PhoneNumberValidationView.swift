@@ -13,17 +13,19 @@ import SwiftUI
 import Theme
 
 struct PhoneNumberValidationView: View {
-   var theme = PrimaryTheme()
+    var theme: PrimaryTheme = .init()
     @State var phoneNumber = ""
     @State var countryCode = "267"
     @State var isEditing = false
     @State var isCheckedTermsAndPolicy = false
     @State var showSupportTeamContact = false
-    @State var country: Country = Country()
-    @State var isValidPhoneNumber = true
-    @State var showTermsAndPolicyAlert = false
-    @StateObject var fetchCountries: FetchCountries = FetchCountries()
-    @StateObject var getActivationCode: GetActivationCode = GetActivationCode()
+    @State var showOTPView = false
+    @State var country: Country = .init()
+    @State var isValidPhoneNumber = false
+    @State var showAlert = false
+    @State var countries: [String: String] = [String: String]()
+    @StateObject var fetchCountries: FetchCountries = .init()
+    @StateObject var getActivationCode: GetActivationCode = .init()
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     let termsAndConditionWarning = "You must accept terms of use and privacy policy to proceed!"
@@ -38,19 +40,18 @@ struct PhoneNumberValidationView: View {
                 Text("Mobile Number")
                     .bold()
                     .padding(.leading, theme.largePadding)
-                CountryCodesView(phoneNumber: $phoneNumber, countryCode: $countryCode)
-                    .padding(EdgeInsets(top: 3, leading: 10, bottom: 3, trailing: 10))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(lineWidth: 0.5)
-                            .foregroundColor(theme.cellulantRed)
-                    )
-                    .padding(.horizontal, theme.largePadding)
-                    .someShadow(showShadow: $isValidPhoneNumber)
-                    .onReceive(Just(phoneNumber)) { number in
+                CountryCodesView(phoneNumber: $phoneNumber, countryCode: $countryCode, countries: $countries)
+                    .countryFieldViewStyle(CountryViewDropDownStyle(theme: theme,
+                                                                    isValidPhoneNumber: $isValidPhoneNumber))
+                    .onChange(of: phoneNumber) { number in
                         let phoneNumber = "+\(countryCode)\(number)"
                         let regex = getSelectedCountryRegex()
-                        guard validatePhoneNumberWith(regex: regex, phoneNumber: phoneNumber) != nil else {
+                        guard validatePhoneNumberWith(regex: regex, phoneNumber: phoneNumber) != nil
+                        else {
+                            isValidPhoneNumber = false
+                            return
+                        }
+                        if number.count < 8 {
                             isValidPhoneNumber = false
                             return
                         }
@@ -78,37 +79,39 @@ struct PhoneNumberValidationView: View {
                             .foregroundColor(Color.green)
                         Text("CONTACT TINGG SUPPORT TEAM")
                     }
+                    .frame(width: geometry.size.width)
+                    .font(.system(size: theme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
                 NavigationLink(destination: IntroView(), isActive: $isEditing) {
                     UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
                         let fullPhoneNumber = "+\(countryCode)\(phoneNumber)"
-                        print("Phone \(fullPhoneNumber)")
                         if !isCheckedTermsAndPolicy {
-                            showTermsAndPolicyAlert.toggle()
+                            showAlert.toggle()
                             return
                         }
-                        var request = TinggRequest()
-                        request.change(service: "MAK", msisdn: fullPhoneNumber, clientId: self.country.mulaClientID!)
-                        print("Request \(request)")
-                        getActivationCode.getCode(activationCodeRequest: request) { result in
-                            print("Result \(result)")
-                        }
+                        makeActivationCodeRequest(fullPhoneNumber)
                     }
                 }
-            }.alert(termsAndConditionWarning, isPresented: $showTermsAndPolicyAlert) {
+            }.task {
+                getCountries()
+            }
+            .alert(termsAndConditionWarning, isPresented: $showAlert) {
                 Button("OK", role: .cancel) { }
             }
             .navigationBarTitleDisplayMode(.inline)
-                .popover(isPresented: $showSupportTeamContact) {
-                    VStack {
-                        Text("Call Ting Support")
-                            .padding()
-                        Text("Chat Ting Support")
-                            .padding()
-                    }
+            .popover(isPresented: $showSupportTeamContact) {
+                VStack {
+                    Text("Call Ting Support")
+                        .padding()
+                    Text("Chat Ting Support")
+                        .padding()
                 }
-                .environmentObject(fetchCountries)
+            }
+            .popover(isPresented: $showOTPView) {
+                OtpConfirmationView()
+            }
+            .environmentObject(fetchCountries)
         }
     }
     func getSelectedCountryRegex() -> String {
@@ -137,6 +140,19 @@ struct PhoneNumberValidationView: View {
             range: sourceRange
         )
         return result
+    }
+    fileprivate func makeActivationCodeRequest(_ fullPhoneNumber: String) {
+        var request = TinggRequest()
+        request.change(service: "MAK", msisdn: fullPhoneNumber, clientId: self.country.mulaClientID!)
+        Task {
+            getActivationCode.getCode(activationCodeRequest: request) { result in
+                if result is Error {
+                    print("ResultError \(result)")
+                    return
+                }
+                showOTPView = true
+            }
+        }
     }
 }
 
@@ -170,5 +186,10 @@ extension PhoneNumberValidationView {
             .alignmentGuide(VerticalAlignment.top) { align in
                 -align[VerticalAlignment.center] * 0.5
             }
+    }
+    func getCountries() {
+        countries = self.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
+            partialResult[country.countryCode!] = country.countryDialCode
+        }
     }
 }

@@ -59,4 +59,8 @@ extension View {
     func someShadow(showShadow: Binding<Bool>) -> some View {
         shadow(color: showShadow.wrappedValue ? .green : .red, radius: 1)
     }
+    @ViewBuilder
+    func someForegroundColor(condition: Binding<Bool>) -> some View {
+        shadow(color: condition.wrappedValue ? .green : .red, radius: 1)
+    }
 }

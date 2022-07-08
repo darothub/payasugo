@@ -8,17 +8,18 @@
 import SwiftUI
 import Combine
 import Domain
+import Theme
 
 public struct CountryCodesView: View {
     @Binding public var phoneNumber: String
     @Binding public var countryCode: String
     @State public var countryFlag = ""
     public var numberLength = 10
-    @State var countries = [String: String]()
+    @Binding var countries: [String: String]
     @ObservedObject var codeTextField = ObservableTextField()
     @EnvironmentObject var fetchCountries: FetchCountries
     @State public var showPhoneSheet = false
-
+    var theme: PrimaryTheme = .init()
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
@@ -44,15 +45,12 @@ public struct CountryCodesView: View {
         }.sheet(isPresented: $showPhoneSheet) {
             CountryCodes(countryCode: $countryCode, countryFlag: $countryFlag, countries: countries)
         }
-        .onAppear {
+        .task {
             getCountryCode()
         }
     }
     
     func getCountryCode () {
-        countries = self.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
-            partialResult[country.countryCode!] = country.countryDialCode
-        }
         let sortedCountries = countries.sorted(by: <)
         if let flag = sortedCountries.first?.key {
             countryFlag = getFlag(country: flag)
@@ -67,11 +65,34 @@ struct SwiftUIView_Previews: PreviewProvider {
     struct CountryViewHolder: View {
         @State var number = ""
         @State var code = ""
+        @State var countries = [String:String]()
 
         var body: some View {
-            CountryCodesView(phoneNumber: $number, countryCode: $code)        }
+            CountryCodesView(phoneNumber: $number, countryCode: $code, countries: $countries)
+        }
     }
     static var previews: some View {
         CountryViewHolder()
+    }
+}
+extension CountryCodesView {
+    func countryFieldViewStyle<Style: ViewModifier>(_ style: Style) -> some View {
+        ModifiedContent(content: self, modifier: style)
+    }
+}
+
+struct CountryViewDropDownStyle: ViewModifier {
+    var theme: PrimaryTheme
+    @Binding var isValidPhoneNumber: Bool
+    func body(content: Content) -> some View {
+        content
+            .padding(EdgeInsets(top: 3, leading: 10, bottom: 3, trailing: 10))
+            .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(lineWidth: 0.5)
+                .someForegroundColor(condition: _isValidPhoneNumber)
+            )
+            .padding(.horizontal, theme.largePadding)
+            
     }
 }

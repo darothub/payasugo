@@ -11,7 +11,8 @@ public struct TinggRequest: Encodable {
     public var service: String?
     public var msisdn: String?
     public var clientId: String?
-    public var uuid: UUID = UUID()
+    public var activationCode: String?
+    public var uuid: String = uuidForVendor
     public var osVersion: String = deviceOSVersion()
     public var deviceName: String = modelIdentifier()
     public var osType: String = "iOS"
@@ -28,6 +29,12 @@ public struct TinggRequest: Encodable {
         self.msisdn = msisdn
         self.clientId = clientId
     }
+    public mutating func confirmActivationCode(service: String, msisdn: String, clientId: String, code: String) {
+        self.service = service
+        self.msisdn = msisdn
+        self.clientId = clientId
+        self.activationCode = code
+    }
     enum CodingKeys: String, CodingKey {
         case service = "SERVICE"
         case msisdn = "MSISDN"
@@ -43,6 +50,7 @@ public struct TinggRequest: Encodable {
         case profileInfo = "PROFILE_INFO"
         case apiLevel = "API_LEVEL"
         case isExplicit = "IS_EXPLICIT"
+        case activationCode = "ACTIVATION_CODE"
     }
 }
 
@@ -57,4 +65,10 @@ func modelIdentifier() -> String {
 
 func deviceOSVersion() -> String {
     return UIDevice.current.systemVersion
+}
+var uuidForVendor: String {
+    if let uuid = UIDevice.current.identifierForVendor?.uuidString {
+        return uuid
+    }
+    return ""
 }

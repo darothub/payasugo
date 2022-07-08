@@ -38,13 +38,6 @@ public struct CountryCodes : View {
       
         }
     }
-
-    
-//    func getCountryCode () {
-//        countries = self.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
-//            partialResult[country.countryCode!] = country.countryDialCode
-//        }
-//    }
 }
 
 func getCountryName(countryCode: String) -> String? {
