@@ -11,7 +11,10 @@ import Foundation
 import UIKit
 public class CountryRepository: CountryApiServices {
     public func getActivationCode(activationCodeRequest: TinggRequest) -> DataRequest {
-//        let activationCode = ActivationCodeRequest(service: "MAK", msisdn: phoneNumber)
+        return AF.request(Utils.baseUrlStaging, method: .post,
+                          parameters: activationCodeRequest, encoder: JSONParameterEncoder.default)
+    }
+    public func confirmActivationCode(activationCodeRequest: TinggRequest) -> DataRequest {
         return AF.request(Utils.baseUrlStaging, method: .post,
                           parameters: activationCodeRequest, encoder: JSONParameterEncoder.default)
     }

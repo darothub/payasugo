@@ -85,12 +85,13 @@ struct PhoneNumberValidationView: View {
                 .frame(width: geometry.size.width)
                 NavigationLink(destination: IntroView(), isActive: $isEditing) {
                     UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
-                        let fullPhoneNumber = "+\(countryCode)\(phoneNumber)"
+//                        let fullPhoneNumber = "+\(countryCode)\(phoneNumber)"
+                        phoneNumber = "+\(countryCode)\(phoneNumber)"
                         if !isCheckedTermsAndPolicy {
                             showAlert.toggle()
                             return
                         }
-                        makeActivationCodeRequest(fullPhoneNumber)
+                        makeActivationCodeRequest(phoneNumber)
                     }
                 }
             }.task {
@@ -100,16 +101,19 @@ struct PhoneNumberValidationView: View {
                 Button("OK", role: .cancel) { }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .popover(isPresented: $showSupportTeamContact) {
-                VStack {
-                    Text("Call Ting Support")
-                        .padding()
-                    Text("Chat Ting Support")
-                        .padding()
+            .confirmationDialog("Contact", isPresented: $showSupportTeamContact) {
+                Button("Call Ting Support") {
+                    print("Call")
                 }
+                Button("Chat Ting Support") {
+                    print("Chat")
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Contact us")
             }
-            .popover(isPresented: $showOTPView) {
-                OtpConfirmationView()
+            .customDialog(isPresented: $showOTPView) {
+                OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
             }
             .environmentObject(fetchCountries)
         }
@@ -192,4 +196,44 @@ extension PhoneNumberValidationView {
             partialResult[country.countryCode!] = country.countryDialCode
         }
     }
+}
+
+
+struct CustomDialog<DialogContent: View>: ViewModifier {
+  @Binding var isPresented: Bool // set this to show/hide the dialog
+  let dialogContent: DialogContent
+
+  init(isPresented: Binding<Bool>,
+        @ViewBuilder dialogContent: () -> DialogContent) {
+    _isPresented = isPresented
+     self.dialogContent = dialogContent()
+  }
+
+  func body(content: Content) -> some View {
+   // wrap the view being modified in a ZStack and render dialog on top of it
+    ZStack {
+      content
+      if isPresented {
+        // the semi-transparent overlay
+        Rectangle().foregroundColor(Color.black.opacity(0.6))
+        // the dialog content is in a ZStack to pad it from the edges
+        // of the screen
+        ZStack {
+          dialogContent
+            .background(
+              RoundedRectangle(cornerRadius: 8)
+                .foregroundColor(.white))
+        }.padding(40)
+      }
+    }
+  }
+}
+
+extension View {
+  func customDialog<DialogContent: View>(
+    isPresented: Binding<Bool>,
+    @ViewBuilder dialogContent: @escaping () -> DialogContent
+  ) -> some View {
+    self.modifier(CustomDialog(isPresented: isPresented, dialogContent: dialogContent))
+  }
 }
