@@ -93,6 +93,5 @@ struct CountryViewDropDownStyle: ViewModifier {
                 .someForegroundColor(condition: _isValidPhoneNumber)
             )
             .padding(.horizontal, theme.largePadding)
-            
     }
 }

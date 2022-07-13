@@ -24,7 +24,7 @@ public struct TinggRequest: Encodable {
     public var apiLevel: String = "13"
     public var isExplicit = "1"
     public init() {}
-    public mutating func change(service: String, msisdn: String, clientId: String) {
+    public mutating func getActivationCode(service: String, msisdn: String, clientId: String) {
         self.service = service
         self.msisdn = msisdn
         self.clientId = clientId

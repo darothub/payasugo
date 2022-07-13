@@ -9,8 +9,7 @@ import SwiftUI
 import Theme
 import Domain
 struct IntroView: View {
-    @EnvironmentObject var themes: EnvironmentUtils
-    var theme = PrimaryTheme()
+    @EnvironmentObject var theme: EnvironmentUtils
     @State var active = false
     var body: some View {
         GeometryReader { geo in
@@ -29,9 +28,8 @@ struct IntroView: View {
                     .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
                     Spacer()
                     NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
-                        UtilViews.button(backgroundColor: theme.primaryColor) {
+                        UtilViews.button(backgroundColor: theme.primaryTheme.primaryColor) {
                             active.toggle()
-                            print("Continue")
                         }
                     }
                 }.task {
@@ -64,7 +62,7 @@ extension IntroView {
     }
     func topBackgroundDesign(size: CGSize) -> some View {
         BottomCurve()
-            .fill(theme.lightGray)
+            .fill(theme.primaryTheme.lightGray)
             .frame(width: size.width, height: size.height * 0.5)
             .edgesIgnoringSafeArea(.all)
     }

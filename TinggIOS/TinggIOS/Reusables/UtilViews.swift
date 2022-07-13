@@ -9,7 +9,7 @@ import SwiftUI
 import Theme
 
 struct UtilViews: View {
-    var theme = PrimaryTheme()
+    static var theme = PrimaryTheme()
     var backgroundColor = Color.red
     var buttonLabel = "Get started"
     var action = {}
@@ -49,18 +49,7 @@ extension UtilViews {
                 .foregroundColor(.white)
                 .background(backgroundColor)
                 .cornerRadius(10)
-                .padding(20)
+                .padding(.horizontal, theme.largePadding)
         }
-    }
-}
-
-extension View {
-    @ViewBuilder
-    func someShadow(showShadow: Binding<Bool>) -> some View {
-        shadow(color: showShadow.wrappedValue ? .green : .red, radius: 1)
-    }
-    @ViewBuilder
-    func someForegroundColor(condition: Binding<Bool>) -> some View {
-        shadow(color: condition.wrappedValue ? .green : .red, radius: 1)
     }
 }

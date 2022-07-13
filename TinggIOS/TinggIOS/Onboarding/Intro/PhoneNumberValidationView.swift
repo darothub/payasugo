@@ -23,12 +23,15 @@ struct PhoneNumberValidationView: View {
     @State var country: Country = .init()
     @State var isValidPhoneNumber = false
     @State var showAlert = false
+    @State var showLoader = false
     @State var countries: [String: String] = [String: String]()
+    @State var warning = "You must accept terms of use and privacy policy to proceed!"
     @StateObject var fetchCountries: FetchCountries = .init()
     @StateObject var getActivationCode: GetActivationCode = .init()
+    @StateObject var onboardingViewModel: OnboardingViewModel = .init()
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
-    let termsAndConditionWarning = "You must accept terms of use and privacy policy to proceed!"
+    @Environment(\.openURL) var openURL
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 10) {
@@ -83,42 +86,55 @@ struct PhoneNumberValidationView: View {
                     .font(.system(size: theme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
-                NavigationLink(destination: IntroView(), isActive: $isEditing) {
-                    UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
-//                        let fullPhoneNumber = "+\(countryCode)\(phoneNumber)"
-                        phoneNumber = "+\(countryCode)\(phoneNumber)"
-                        if !isCheckedTermsAndPolicy {
-                            showAlert.toggle()
-                            return
-                        }
-                        makeActivationCodeRequest(phoneNumber)
+                UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
+                    if phoneNumber.isEmpty {
+                        warning = "Phone number can not be empty"
+                        showAlert.toggle()
+                        return
                     }
+                    if !isCheckedTermsAndPolicy {
+                        showAlert.toggle()
+                        return
+                    }
+                    let number = "+\(countryCode)\(phoneNumber)"
+                    onboardingViewModel.makeActivationCodeRequest(
+                        msisdn: number, clientId: country.mulaClientID!
+                    )
                 }
             }.task {
                 getCountries()
             }
-            .alert(termsAndConditionWarning, isPresented: $showAlert) {
+            .alert(warning, isPresented: $showAlert) {
                 Button("OK", role: .cancel) { }
             }
             .navigationBarTitleDisplayMode(.inline)
             .confirmationDialog("Contact", isPresented: $showSupportTeamContact) {
                 Button("Call Ting Support") {
-                    print("Call")
+                    callSupport()
                 }
                 Button("Chat Ting Support") {
                     print("Chat")
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Contact us")
+                Text("Support")
             }
-            .customDialog(isPresented: $showOTPView) {
+            .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
+            .popover(isPresented: $onboardingViewModel.showOTPView) {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
+                    .environmentObject(onboardingViewModel)
             }
             .environmentObject(fetchCountries)
         }
     }
-    func getSelectedCountryRegex() -> String {
+    fileprivate func callSupport() {
+        let tel = "tel://"
+        let supportNumber = "+254708802299"
+        let formattedPhoneNumber = tel+supportNumber
+        guard let url = URL(string: formattedPhoneNumber) else {return}
+        openURL(url)
+    }
+    fileprivate func getSelectedCountryRegex() -> String {
         let data = fetchCountries.$countriesDb.wrappedValue
         let country = data.first { country in
             country.countryDialCode == self.countryCode
@@ -129,7 +145,7 @@ struct PhoneNumberValidationView: View {
         guard let regex = country?.countryMobileRegex else { return ""}
         return regex
     }
-    func validatePhoneNumberWith(regex: String, phoneNumber: String) -> [NSTextCheckingResult]? {
+    fileprivate func validatePhoneNumberWith(regex: String, phoneNumber: String) -> [NSTextCheckingResult]? {
         let phoneRegex = try? NSRegularExpression(
             pattern: regex,
             options: []
@@ -144,19 +160,6 @@ struct PhoneNumberValidationView: View {
             range: sourceRange
         )
         return result
-    }
-    fileprivate func makeActivationCodeRequest(_ fullPhoneNumber: String) {
-        var request = TinggRequest()
-        request.change(service: "MAK", msisdn: fullPhoneNumber, clientId: self.country.mulaClientID!)
-        Task {
-            getActivationCode.getCode(activationCodeRequest: request) { result in
-                if result is Error {
-                    print("ResultError \(result)")
-                    return
-                }
-                showOTPView = true
-            }
-        }
     }
 }
 
@@ -196,44 +199,4 @@ extension PhoneNumberValidationView {
             partialResult[country.countryCode!] = country.countryDialCode
         }
     }
-}
-
-
-struct CustomDialog<DialogContent: View>: ViewModifier {
-  @Binding var isPresented: Bool // set this to show/hide the dialog
-  let dialogContent: DialogContent
-
-  init(isPresented: Binding<Bool>,
-        @ViewBuilder dialogContent: () -> DialogContent) {
-    _isPresented = isPresented
-     self.dialogContent = dialogContent()
-  }
-
-  func body(content: Content) -> some View {
-   // wrap the view being modified in a ZStack and render dialog on top of it
-    ZStack {
-      content
-      if isPresented {
-        // the semi-transparent overlay
-        Rectangle().foregroundColor(Color.black.opacity(0.6))
-        // the dialog content is in a ZStack to pad it from the edges
-        // of the screen
-        ZStack {
-          dialogContent
-            .background(
-              RoundedRectangle(cornerRadius: 8)
-                .foregroundColor(.white))
-        }.padding(40)
-      }
-    }
-  }
-}
-
-extension View {
-  func customDialog<DialogContent: View>(
-    isPresented: Binding<Bool>,
-    @ViewBuilder dialogContent: @escaping () -> DialogContent
-  ) -> some View {
-    self.modifier(CustomDialog(isPresented: isPresented, dialogContent: dialogContent))
-  }
 }

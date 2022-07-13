@@ -7,8 +7,8 @@
 
 import Foundation
 public struct BaseDTO: BaseDTOprotocol, Codable {
-    var statusCode: Int
-    var statusMessage: String
+    public var statusCode: Int
+    public var statusMessage: String
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
         case statusMessage = "STATUS_MESSAGE"

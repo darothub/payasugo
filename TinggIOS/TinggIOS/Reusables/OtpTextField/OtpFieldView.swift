@@ -30,6 +30,7 @@ struct OtpFieldView: View {
                 .textContentType(.oneTimeCode)
                 .multilineTextAlignment(.center)
                 .focused($cursor, equals: index)
+                .textContentType(.oneTimeCode)
             Rectangle()
                 .fill(cursor == index ? theme.primaryColor : .gray.opacity(3))
                 .frame(height: 3)

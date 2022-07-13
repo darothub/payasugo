@@ -18,6 +18,11 @@
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
 		716F061328777F8900A766A3 /* OtpFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716F061228777F8900A766A3 /* OtpFieldView.swift */; };
 		716F06172878A6F200A766A3 /* OtpConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716F06162878A6F200A766A3 /* OtpConfirmationView.swift */; };
+		71874838287EB88C003B203F /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874837287EB88C003B203F /* ViewModifiers.swift */; };
+		7187483A287EB8F0003B203F /* SmallTextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874839287EB8F0003B203F /* SmallTextStyle.swift */; };
+		7187483C287EBF69003B203F /* CustomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7187483B287EBF69003B203F /* CustomDialog.swift */; };
+		71874841287EDC4E003B203F /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874840287EDC4E003B203F /* OnboardingViewModel.swift */; };
+		71874843287EEC51003B203F /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874842287EEC51003B203F /* ViewState.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C6291283EBCB4002ADCA8 /* ContentView.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
@@ -62,6 +67,11 @@
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		716F061228777F8900A766A3 /* OtpFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpFieldView.swift; sourceTree = "<group>"; };
 		716F06162878A6F200A766A3 /* OtpConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpConfirmationView.swift; sourceTree = "<group>"; };
+		71874837287EB88C003B203F /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
+		71874839287EB8F0003B203F /* SmallTextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallTextStyle.swift; sourceTree = "<group>"; };
+		7187483B287EBF69003B203F /* CustomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDialog.swift; sourceTree = "<group>"; };
+		71874840287EDC4E003B203F /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		71874842287EEC51003B203F /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6291283EBCB4002ADCA8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -138,6 +148,25 @@
 			path = OtpTextField;
 			sourceTree = "<group>";
 		};
+		71874836287EB861003B203F /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				71874837287EB88C003B203F /* ViewModifiers.swift */,
+				71874839287EB8F0003B203F /* SmallTextStyle.swift */,
+				7187483B287EBF69003B203F /* CustomDialog.swift */,
+				71874842287EEC51003B203F /* ViewState.swift */,
+			);
+			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		7187483F287EDC39003B203F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				71874840287EDC4E003B203F /* OnboardingViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		718C6283283EBCB4002ADCA8 = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +212,7 @@
 		71AED5482863BBAF00A4B14F /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				7187483F287EDC39003B203F /* ViewModel */,
 				714D3F4E28683AD70024028C /* SplashScreen */,
 				71AED5762864EFD600A4B14F /* Intro */,
 				71AED5742864E0C200A4B14F /* EnvironmentUtils.swift */,
@@ -205,6 +235,7 @@
 		71AED57F2865D8B300A4B14F /* Reusables */ = {
 			isa = PBXGroup;
 			children = (
+				71874836287EB861003B203F /* Modifiers */,
 				716F060F28777F3400A766A3 /* OtpTextField */,
 				714D3F6D2868AA8E0024028C /* PhoneNumberTextField */,
 				71AED5802865D8DB00A4B14F /* GifImage.swift */,
@@ -339,9 +370,12 @@
 			files = (
 				716F06172878A6F200A766A3 /* OtpConfirmationView.swift in Sources */,
 				718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */,
+				7187483A287EB8F0003B203F /* SmallTextStyle.swift in Sources */,
 				715C27E2286D0689003EDB03 /* CheckBoxView.swift in Sources */,
+				71874838287EB88C003B203F /* ViewModifiers.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71AED5812865D8DB00A4B14F /* GifImage.swift in Sources */,
+				71874843287EEC51003B203F /* ViewState.swift in Sources */,
 				71AED57C2864F20D00A4B14F /* OnboadingView.swift in Sources */,
 				714D3F732868AAA50024028C /* CountryCodes.swift in Sources */,
 				71AED5732864E08B00A4B14F /* SplashScreenState.swift in Sources */,
@@ -350,8 +384,10 @@
 				714D3F772868C82C0024028C /* UtilViews.swift in Sources */,
 				71AED57A2864F15100A4B14F /* OnboardingItem.swift in Sources */,
 				71AED5752864E0C200A4B14F /* EnvironmentUtils.swift in Sources */,
+				7187483C287EBF69003B203F /* CustomDialog.swift in Sources */,
 				71AED5782864F00C00A4B14F /* IntroView.swift in Sources */,
 				714D3F5028683BE40024028C /* PhoneNumberValidationView.swift in Sources */,
+				71874841287EDC4E003B203F /* OnboardingViewModel.swift in Sources */,
 				714D3F712868AAA50024028C /* ObservableTextField.swift in Sources */,
 				716F061328777F8900A766A3 /* OtpFieldView.swift in Sources */,
 			);
