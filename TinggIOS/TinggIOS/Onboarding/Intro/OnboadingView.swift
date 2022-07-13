@@ -52,14 +52,14 @@ extension OnboadingView {
     }
     var pageIntro: some View {
         Text(onboadingItem.info)
-            .font(.system(size: theme.primaryTheme.largeTextSize))
+            .font(.system(size: theme.primaryTheme.mediumTextSize))
             .bold()
             .multilineTextAlignment(.center)
             .padding(.vertical, 10)
     }
     var pageSubIntro: some View {
         Text(onboadingItem.subInfo)
-            .font(.system(size: theme.primaryTheme.mediumTextSize))
+            .font(.system(size: theme.primaryTheme.smallTextSize))
             .multilineTextAlignment(.center)
     }
 }

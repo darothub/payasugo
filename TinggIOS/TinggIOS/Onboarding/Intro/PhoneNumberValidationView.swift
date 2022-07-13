@@ -41,6 +41,7 @@ struct PhoneNumberValidationView: View {
                 }
                 .frame(width: geometry.size.width, height: abs(geometry.size.height * 0.25))
                 Text("Mobile Number")
+                    .font(.system(size: theme.smallTextSize))
                     .bold()
                     .padding(.leading, theme.largePadding)
                 CountryCodesView(phoneNumber: $phoneNumber, countryCode: $countryCode, countries: $countries)
@@ -62,6 +63,7 @@ struct PhoneNumberValidationView: View {
                     }
                 Text("We'll send verification code to this number")
                     .bold()
+                    .font(.system(size: theme.smallTextSize))
                     .padding(.leading, theme.largePadding)
                 HStack(alignment: .top) {
                     Group {
@@ -120,10 +122,12 @@ struct PhoneNumberValidationView: View {
                 Text("Support")
             }
             .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
-            .popover(isPresented: $onboardingViewModel.showOTPView) {
+            .sheet(isPresented: $onboardingViewModel.showOTPView, onDismiss: {
+                onboardingViewModel.resetMessage()
+            }, content: {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
                     .environmentObject(onboardingViewModel)
-            }
+            })
             .environmentObject(fetchCountries)
         }
     }

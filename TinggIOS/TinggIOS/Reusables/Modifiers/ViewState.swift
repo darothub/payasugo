@@ -15,7 +15,6 @@ struct ViewState: ViewModifier {
         _message = message
     }
     func body(content: Content) -> some View {
-        // wrap the view being modified in a ZStack and render dialog on top of it
         ZStack {
             content
             if isLoading {
@@ -26,7 +25,8 @@ struct ViewState: ViewModifier {
             if !message.isEmpty {
                 ZStack {
                     Text(message)
-                        .foregroundColor(.red)
+                        .padding(.vertical, 5)
+                        .foregroundColor(.red) // Would be refactor in the future for success message display
                 }
             }
         }

@@ -28,7 +28,7 @@ class OnboardingViewModel: ObservableObject {
         getActivationCode.getCode(activationCodeRequest: tinggRequest) { [unowned self] result in
             handleResultState(result)
             self.showOTPView = true
-            message = ""
+            resetMessage()
         }
     }
     func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) {
@@ -49,5 +49,9 @@ class OnboardingViewModel: ObservableObject {
         case .success(let data):
             message = data.statusMessage
         }
+    }
+    
+    func resetMessage() {
+        self.message = ""
     }
 }
