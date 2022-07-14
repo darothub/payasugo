@@ -25,7 +25,7 @@ struct PhoneNumberValidationView: View {
     @State var showAlert = false
     @State var showLoader = false
     @State var countries: [String: String] = [String: String]()
-    @State var warning = "You must accept terms of use and privacy policy to proceed!"
+    @State var warning = ""
     @StateObject var fetchCountries: FetchCountries = .init()
     @StateObject var getActivationCode: GetActivationCode = .init()
     @StateObject var onboardingViewModel: OnboardingViewModel = .init()
@@ -95,6 +95,7 @@ struct PhoneNumberValidationView: View {
                         return
                     }
                     if !isCheckedTermsAndPolicy {
+                        warning = "You must accept terms of use and privacy policy to proceed!"
                         showAlert.toggle()
                         return
                     }
