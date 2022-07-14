@@ -5,6 +5,12 @@
       location = "group:../Permissions/Permissions.xcodeproj">
    </FileRef>
    <FileRef
+<<<<<<< HEAD
+=======
+      location = "group:../Core/Core.xcodeproj">
+   </FileRef>
+   <FileRef
+>>>>>>> a838e93 (added untracked tinggIOS folder)
       location = "group:TinggIOS.xcodeproj">
    </FileRef>
 </Workspace>
