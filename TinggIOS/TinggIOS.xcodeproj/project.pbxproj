@@ -18,6 +18,9 @@
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
 		716F061328777F8900A766A3 /* OtpFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716F061228777F8900A766A3 /* OtpFieldView.swift */; };
 		716F06172878A6F200A766A3 /* OtpConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716F06162878A6F200A766A3 /* OtpConfirmationView.swift */; };
+		717C6D4E28807A10004B5FBA /* UserHome in Frameworks */ = {isa = PBXBuildFile; productRef = 717C6D4D28807A10004B5FBA /* UserHome */; };
+		717C6D512880C862004B5FBA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717C6D502880C862004B5FBA /* HomeView.swift */; };
+		717C6D532880C884004B5FBA /* ActivateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717C6D522880C884004B5FBA /* ActivateCardView.swift */; };
 		71874838287EB88C003B203F /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874837287EB88C003B203F /* ViewModifiers.swift */; };
 		7187483A287EB8F0003B203F /* SmallTextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874839287EB8F0003B203F /* SmallTextStyle.swift */; };
 		7187483C287EBF69003B203F /* CustomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7187483B287EBF69003B203F /* CustomDialog.swift */; };
@@ -67,6 +70,9 @@
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		716F061228777F8900A766A3 /* OtpFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpFieldView.swift; sourceTree = "<group>"; };
 		716F06162878A6F200A766A3 /* OtpConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpConfirmationView.swift; sourceTree = "<group>"; };
+		717C6D4C288079DE004B5FBA /* UserHome */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UserHome; sourceTree = "<group>"; };
+		717C6D502880C862004B5FBA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		717C6D522880C884004B5FBA /* ActivateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateCardView.swift; sourceTree = "<group>"; };
 		71874837287EB88C003B203F /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		71874839287EB8F0003B203F /* SmallTextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallTextStyle.swift; sourceTree = "<group>"; };
 		7187483B287EBF69003B203F /* CustomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDialog.swift; sourceTree = "<group>"; };
@@ -104,6 +110,7 @@
 				71AED59428667AB800A4B14F /* Theme in Frameworks */,
 				71AF1111286F91F400C96505 /* ApiModule in Frameworks */,
 				7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */,
+				717C6D4E28807A10004B5FBA /* UserHome in Frameworks */,
 				71AED59228667A9700A4B14F /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,6 +155,15 @@
 			path = OtpTextField;
 			sourceTree = "<group>";
 		};
+		717C6D4F2880C847004B5FBA /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				717C6D502880C862004B5FBA /* HomeView.swift */,
+				717C6D522880C884004B5FBA /* ActivateCardView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		71874836287EB861003B203F /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,6 +204,7 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
+				717C6D4F2880C847004B5FBA /* Home */,
 				71AED5822865DC2C00A4B14F /* GifImages */,
 				71AED57F2865D8B300A4B14F /* Reusables */,
 				71AED5482863BBAF00A4B14F /* Onboarding */,
@@ -261,6 +278,7 @@
 				71AED5902866793100A4B14F /* Core */,
 				71AF110F286F916900C96505 /* ApiModule */,
 				71AF1112286F96A400C96505 /* Domain */,
+				717C6D4C288079DE004B5FBA /* UserHome */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -288,6 +306,7 @@
 				71AED59328667AB800A4B14F /* Theme */,
 				71AF1110286F91F400C96505 /* ApiModule */,
 				71AF1113286FB0D600C96505 /* Domain */,
+				717C6D4D28807A10004B5FBA /* UserHome */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -389,7 +408,9 @@
 				714D3F5028683BE40024028C /* PhoneNumberValidationView.swift in Sources */,
 				71874841287EDC4E003B203F /* OnboardingViewModel.swift in Sources */,
 				714D3F712868AAA50024028C /* ObservableTextField.swift in Sources */,
+				717C6D512880C862004B5FBA /* HomeView.swift in Sources */,
 				716F061328777F8900A766A3 /* OtpFieldView.swift in Sources */,
+				717C6D532880C884004B5FBA /* ActivateCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,6 +623,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		717C6D4D28807A10004B5FBA /* UserHome */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserHome;
+		};
 		71AED59128667A9700A4B14F /* Core */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Core;
