@@ -2,18 +2,18 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../Theme/Theme.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:../Permissions/Permissions.xcodeproj">
    </FileRef>
    <FileRef
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       location = "group:../Core/Core.xcodeproj">
    </FileRef>
    <FileRef
 >>>>>>> a838e93 (added untracked tinggIOS folder)
+=======
+>>>>>>> b571c8e (disabled linting errors in some files)
       location = "group:TinggIOS.xcodeproj">
    </FileRef>
 </Workspace>

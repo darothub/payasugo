@@ -13,8 +13,6 @@
 		718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C6291283EBCB4002ADCA8 /* ContentView.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71AED546286128F500A4B14F /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71AED545286128F400A4B14F /* Core.framework */; };
-		71AED547286128F500A4B14F /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71AED545286128F400A4B14F /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		71AED54A2863BBD500A4B14F /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5492863BBD500A4B14F /* LaunchScreenView.swift */; };
 		71AED5732864E08B00A4B14F /* SplashScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5722864E08A00A4B14F /* SplashScreenState.swift */; };
 		71AED5752864E0C200A4B14F /* EnvironmentUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5742864E0C200A4B14F /* EnvironmentUtils.swift */; };
@@ -25,6 +23,8 @@
 		71AED5812865D8DB00A4B14F /* GifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5802865D8DB00A4B14F /* GifImage.swift */; };
 		71AED5852865DC5E00A4B14F /* slideimagetwo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5832865DC5E00A4B14F /* slideimagetwo.gif */; };
 		71AED5862865DC5E00A4B14F /* slideimageone.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5842865DC5E00A4B14F /* slideimageone.gif */; };
+		71AED59228667A9700A4B14F /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59128667A9700A4B14F /* Core */; };
+		71AED59428667AB800A4B14F /* Theme in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59328667AB800A4B14F /* Theme */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,7 +35,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				7108CD78285253E00034EA29 /* Permissions.framework in Embed Frameworks */,
-				71AED547286128F500A4B14F /* Core.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +62,7 @@
 		71AED5832865DC5E00A4B14F /* slideimagetwo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimagetwo.gif; sourceTree = "<group>"; };
 		71AED5842865DC5E00A4B14F /* slideimageone.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimageone.gif; sourceTree = "<group>"; };
 		71AED58C28665C9500A4B14F /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
+		71AED5902866793100A4B14F /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,8 +70,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71AED59428667AB800A4B14F /* Theme in Frameworks */,
 				7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */,
-				71AED546286128F500A4B14F /* Core.framework in Frameworks */,
+				71AED59228667A9700A4B14F /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				71AED58C28665C9500A4B14F /* Theme */,
+				71AED5902866793100A4B14F /* Core */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -195,6 +197,8 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
+				71AED59128667A9700A4B14F /* Core */,
+				71AED59328667AB800A4B14F /* Theme */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -494,6 +498,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71AED59128667A9700A4B14F /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Core;
+		};
+		71AED59328667AB800A4B14F /* Theme */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Theme;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 718C6284283EBCB4002ADCA8 /* Project object */;
 }
