@@ -16,25 +16,11 @@ struct IntroView: View {
             ZStack(alignment: .top) {
                 UtilViews.topBackgroundDesign(height: geo.size.height * 0.5, color: theme.primaryTheme.lightGray)
                 UtilViews.tinggColoredLogo
-                VStack {
-                    TabView {
-                        ForEach(onboardingItems(), id: \.info) { item in
-                            VStack {
-                                OnboadingView(onboadingItem: item, screenSize: geo.size)
-                            }
-                        }
+                IntroTabView(geo: geo, active: $active)
+                    .environmentObject(theme)
+                    .task {
+                        getCountries()
                     }
-                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                    Spacer()
-                    NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
-                        UtilViews.button(backgroundColor: theme.primaryTheme.primaryColor) {
-                            active.toggle()
-                        }
-                    }
-                }.task {
-                    getCountries()
-                }
             }
             .navigationBarHidden(true)
             .onAppear {
@@ -46,11 +32,37 @@ struct IntroView: View {
         let fetch = FetchCountries()
         fetch.countriesCodesAndCountriesDialCodes()
     }
+
 }
 
 struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
             .environmentObject(EnvironmentUtils())
+    }
+}
+
+struct IntroTabView: View {
+    @EnvironmentObject var theme: EnvironmentUtils
+    var geo: GeometryProxy
+    @Binding var active: Bool
+    var body: some View {
+        VStack {
+            TabView {
+                ForEach(onboardingItems(), id: \.info) { item in
+                    VStack {
+                        OnboadingView(onboadingItem: item, screenSize: geo.size)
+                    }
+                }
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+            Spacer()
+            NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
+                UtilViews.button(backgroundColor: theme.primaryTheme.primaryColor) {
+                    active.toggle()
+                }
+            }
+        }
     }
 }

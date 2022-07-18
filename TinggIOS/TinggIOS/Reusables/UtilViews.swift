@@ -15,17 +15,10 @@ struct UtilViews: View {
     var action = {}
     var body: some View {
         VStack {
-            Button {
-                action()
-            } label: {
-                Text(buttonLabel)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(backgroundColor)
-                    .cornerRadius(10)
-                    .padding(.bottom, 30)
-            }
+            BottomCurve()
+                .fill(Color.red)
+                .frame(height: 50)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
@@ -35,7 +28,17 @@ struct UtilTestViews_Previews: PreviewProvider {
         UtilViews()
     }
 }
-
+struct BottomCurve: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.addRect(rect)
+        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.addCurve(to: CGPoint(x: rect.width, y: rect.height),
+                      control1: CGPoint(x: rect.width * 0.35, y: rect.height + 40),
+                      control2: CGPoint(x: rect.width * 0.65, y: rect.height + 40))
+        return path
+    }
+}
 extension UtilViews {
     static func button(backgroundColor: Color = Color.red,
                        buttonLabel: String = "Get started",

@@ -8,29 +8,13 @@
 import SwiftUI
 import Theme
 
-struct BottomCurve: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addRect(rect)
-        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.addCurve(to: CGPoint(x: rect.width, y: rect.height),
-                      control1: CGPoint(x: rect.width * 0.35, y: rect.height + 50),
-                      control2: CGPoint(x: rect.width * 0.65, y: rect.height + 50))
-        return path
-    }
-}
-
 struct OnboadingView: View {
     let onboadingItem: OnboardingItem
     let screenSize: CGSize
     @EnvironmentObject var theme: EnvironmentUtils
     var body: some View {
         VStack {
-            ZStack(alignment: .top) {
-                VStack {
-                    gifImage(size: screenSize)
-                }
-            }
+            gifImage(size: screenSize)
             pageIntro
             pageSubIntro
         }
@@ -47,15 +31,14 @@ struct OnboadingView_Previews: PreviewProvider {
 extension OnboadingView {
     func gifImage(size: CGSize) -> some View {
         GifImage(onboadingItem.centerImage)
-            .frame(width: size.width * 0.65, height: size.height * 0.5, alignment: .center)
-            .padding(.vertical, 30)
+            .frame(width: size.width * 0.6, height: size.height * 0.6, alignment: .center)
     }
     var pageIntro: some View {
         Text(onboadingItem.info)
             .font(.system(size: theme.primaryTheme.mediumTextSize))
             .bold()
             .multilineTextAlignment(.center)
-            .padding(.vertical, 10)
+            .padding(.vertical, 5)
     }
     var pageSubIntro: some View {
         Text(onboadingItem.subInfo)
