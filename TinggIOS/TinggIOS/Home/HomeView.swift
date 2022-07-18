@@ -16,13 +16,16 @@ struct HomeView: View {
                 VStack(spacing: 25) {
                     HomeTopViewDesign(geo: geo)
                     ActivateCardView(theme: themeUtils.primaryTheme, parentSize: geo) {}
-                        .padding(.top, 30)
                     ActiveCategoryTabView()
                         .background(.white)
-                        .shadow(radius: 5, y: 5)
+                        .shadow(radius: 0, y: 3)
                         .padding(.top, 10)
                     AddNewBillCardView()
-                }
+                }.background(
+                    RoundedRectangle(cornerRadius: 0)
+                        .frame(height: geo.size.height * 0.3)
+                        .foregroundColor(.white)
+                )
             }.ignoresSafeArea()
         }
         .background(themeUtils.primaryTheme.lightGray)

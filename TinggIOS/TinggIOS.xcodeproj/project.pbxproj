@@ -21,6 +21,7 @@
 		717C6D4E28807A10004B5FBA /* UserHome in Frameworks */ = {isa = PBXBuildFile; productRef = 717C6D4D28807A10004B5FBA /* UserHome */; };
 		717C6D512880C862004B5FBA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717C6D502880C862004B5FBA /* HomeView.swift */; };
 		717C6D532880C884004B5FBA /* ActivateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717C6D522880C884004B5FBA /* ActivateCardView.swift */; };
+		717DF31A28859E2100C8D684 /* HomeBottomNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717DF31928859E2100C8D684 /* HomeBottomNavView.swift */; };
 		71874838287EB88C003B203F /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874837287EB88C003B203F /* ViewModifiers.swift */; };
 		7187483A287EB8F0003B203F /* SmallTextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874839287EB8F0003B203F /* SmallTextStyle.swift */; };
 		7187483C287EBF69003B203F /* CustomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7187483B287EBF69003B203F /* CustomDialog.swift */; };
@@ -79,6 +80,7 @@
 		717C6D4C288079DE004B5FBA /* UserHome */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UserHome; sourceTree = "<group>"; };
 		717C6D502880C862004B5FBA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		717C6D522880C884004B5FBA /* ActivateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateCardView.swift; sourceTree = "<group>"; };
+		717DF31928859E2100C8D684 /* HomeBottomNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBottomNavView.swift; sourceTree = "<group>"; };
 		71874837287EB88C003B203F /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		71874839287EB8F0003B203F /* SmallTextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallTextStyle.swift; sourceTree = "<group>"; };
 		7187483B287EBF69003B203F /* CustomDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDialog.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				7192C7E12884063F008697E8 /* ActiveCategoryListView.swift */,
 				7192C7E3288418B7008697E8 /* ActiveCategoryTabView.swift */,
 				7192C7E528842FEA008697E8 /* AddNewBillCardView.swift */,
+				717DF31928859E2100C8D684 /* HomeBottomNavView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				71874843287EEC51003B203F /* ViewState.swift in Sources */,
 				71AED57C2864F20D00A4B14F /* OnboadingView.swift in Sources */,
 				714D3F732868AAA50024028C /* CountryCodes.swift in Sources */,
+				717DF31A28859E2100C8D684 /* HomeBottomNavView.swift in Sources */,
 				7192C7E028840290008697E8 /* ActiveCategoryView.swift in Sources */,
 				71AED5732864E08B00A4B14F /* SplashScreenState.swift in Sources */,
 				71AED54A2863BBD500A4B14F /* LaunchScreenView.swift in Sources */,

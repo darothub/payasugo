@@ -62,7 +62,7 @@ extension UtilViews {
     static func topBackgroundDesign(height: CGFloat, color: Color) -> some View {
         BottomCurve()
             .fill(color)
-            .frame(width: .infinity, height: height)
+            .frame(height: height)
             .edgesIgnoringSafeArea(.all)
     }
 }

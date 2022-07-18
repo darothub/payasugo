@@ -40,7 +40,7 @@ struct ActivateCardView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .frame(width: .infinity, height: parentSize.size.height * 0.13)
+                .frame(height: parentSize.size.height * 0.13)
                 .foregroundColor(.white)
                 .padding()
                 .shadow(radius: 3, x: 0, y: 3)

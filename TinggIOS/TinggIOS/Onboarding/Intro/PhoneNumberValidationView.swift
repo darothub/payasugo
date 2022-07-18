@@ -88,7 +88,7 @@ struct PhoneNumberValidationView: View {
                     .font(.system(size: theme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
-                NavigationLink(destination: HomeView(), isActive: $navigate) {
+                NavigationLink(destination: HomeBottomNavView(), isActive: $navigate) {
                     UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
                         if phoneNumber.isEmpty {
                             warning = "Phone number can not be empty"
