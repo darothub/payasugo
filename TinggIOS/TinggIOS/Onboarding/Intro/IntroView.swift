@@ -14,8 +14,8 @@ struct IntroView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
-                topBackgroundDesign(size: geo.size)
-                tinggColoredLogo
+                UtilViews.topBackgroundDesign(height: geo.size.height * 0.5, color: theme.primaryTheme.lightGray)
+                UtilViews.tinggColoredLogo
                 VStack {
                     TabView {
                         ForEach(onboardingItems(), id: \.info) { item in
@@ -52,26 +52,5 @@ struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
             .environmentObject(EnvironmentUtils())
-    }
-}
-
-extension IntroView {
-    func setPageIndicatorAppearance() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = .red
-        UIPageControl.appearance().pageIndicatorTintColor = UIColor.red.withAlphaComponent(0.2)
-    }
-    func topBackgroundDesign(size: CGSize) -> some View {
-        BottomCurve()
-            .fill(theme.primaryTheme.lightGray)
-            .frame(width: size.width, height: size.height * 0.5)
-            .edgesIgnoringSafeArea(.all)
-    }
-
-    var tinggColoredLogo: some View {
-        Image("tinggicon")
-            .resizable()
-            .frame(width: 60, height: 60)
-            .clipShape(Circle())
-            .shadow(radius: 3)
     }
 }

@@ -52,4 +52,36 @@ extension UtilViews {
                 .padding(.horizontal, theme.largePadding)
         }
     }
+    static var tinggColoredLogo: some View {
+        Image("tinggicon")
+            .resizable()
+            .frame(width: 60, height: 60)
+            .clipShape(Circle())
+            .shadow(radius: 3)
+    }
+    static func topBackgroundDesign(height: CGFloat, color: Color) -> some View {
+        BottomCurve()
+            .fill(color)
+            .frame(width: .infinity, height: height)
+            .edgesIgnoringSafeArea(.all)
+    }
+}
+
+extension View {
+    func setPageIndicatorAppearance() {
+        UIPageControl.appearance().currentPageIndicatorTintColor = .red
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor.red.withAlphaComponent(0.2)
+    }
+}
+
+struct BottoMCurveBackground: View {
+    var proxy: GeometryProxy
+    var height: CGFloat
+    var color: Color
+    var body: some View {
+        BottomCurve()
+            .fill(color)
+            .frame(width: proxy.size.width, height: height)
+            .edgesIgnoringSafeArea(.all)
+    }
 }

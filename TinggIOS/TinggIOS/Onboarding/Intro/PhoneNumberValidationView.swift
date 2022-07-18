@@ -23,7 +23,7 @@ struct PhoneNumberValidationView: View {
     @State var country: Country = .init()
     @State var isValidPhoneNumber = false
     @State var showAlert = false
-    @State var showLoader = false
+    @State var navigate = false
     @State var countries: [String: String] = [String: String]()
     @State var warning = ""
     @StateObject var fetchCountries: FetchCountries = .init()
@@ -88,21 +88,23 @@ struct PhoneNumberValidationView: View {
                     .font(.system(size: theme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
-                UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
-                    if phoneNumber.isEmpty {
-                        warning = "Phone number can not be empty"
-                        showAlert.toggle()
-                        return
+                NavigationLink(destination: HomeView(), isActive: $navigate) {
+                    UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
+                        if phoneNumber.isEmpty {
+                            warning = "Phone number can not be empty"
+                            showAlert.toggle()
+                            return
+                        }
+                        if !isCheckedTermsAndPolicy {
+                            warning = "You must accept terms of use and privacy policy to proceed!"
+                            showAlert.toggle()
+                            return
+                        }
+                        let number = "+\(countryCode)\(phoneNumber)"
+                        onboardingViewModel.makeActivationCodeRequest(
+                            msisdn: number, clientId: country.mulaClientID!
+                        )
                     }
-                    if !isCheckedTermsAndPolicy {
-                        warning = "You must accept terms of use and privacy policy to proceed!"
-                        showAlert.toggle()
-                        return
-                    }
-                    let number = "+\(countryCode)\(phoneNumber)"
-                    onboardingViewModel.makeActivationCodeRequest(
-                        msisdn: number, clientId: country.mulaClientID!
-                    )
                 }
             }.task {
                 getCountries()
@@ -124,6 +126,7 @@ struct PhoneNumberValidationView: View {
             }
             .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
             .sheet(isPresented: $onboardingViewModel.showOTPView, onDismiss: {
+                navigate = true
                 onboardingViewModel.resetMessage()
             }, content: {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)

@@ -15,11 +15,11 @@ struct OtpConfirmationView: View {
     @State var otp = ""
     @State var timeLeft = 60
     @State var timeAdvice = ""
-    @State var showLoader = false
     @Binding var activeCountry: Country
     @Binding var phoneNumber: String
     @StateObject var confirmActivationCode: ConfirmActivationCode = .init()
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
+    @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var theme: PrimaryTheme = .init()
     var body: some View {
@@ -40,10 +40,10 @@ struct OtpConfirmationView: View {
             .disabled(timeLeft > 0)
             .opacity(timeAdvice.isEmpty  ? 1 : 0.5)
             UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Confirm") {
-                showLoader.toggle()
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
+                dismiss()
             }
         }
         .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
