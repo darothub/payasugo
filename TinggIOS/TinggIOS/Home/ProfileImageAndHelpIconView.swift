@@ -19,7 +19,9 @@ struct ProfileImageAndHelpIconView: View {
                     .clipShape(Circle())
                     .padding()
             } placeholder: {
-                UtilViews.tinggColoredLogo
+                PrimaryTheme.getImage(image: .tinggIcon)
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
                     .padding()
             }
             Spacer()

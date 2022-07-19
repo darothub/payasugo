@@ -56,7 +56,7 @@ extension UtilViews {
         }
     }
     static var tinggColoredLogo: some View {
-        Image("tinggicon")
+        PrimaryTheme.getImage(image: .tinggIcon)
             .resizable()
             .frame(width: 60, height: 60)
             .clipShape(Circle())

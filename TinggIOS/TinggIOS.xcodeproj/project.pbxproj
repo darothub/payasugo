@@ -48,7 +48,6 @@
 		71AED5862865DC5E00A4B14F /* slideimageone.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5842865DC5E00A4B14F /* slideimageone.gif */; };
 		71AED59228667A9700A4B14F /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59128667A9700A4B14F /* Core */; };
 		71AED59428667AB800A4B14F /* Theme in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59328667AB800A4B14F /* Theme */; };
-		71AF1111286F91F400C96505 /* ApiModule in Frameworks */ = {isa = PBXBuildFile; productRef = 71AF1110286F91F400C96505 /* ApiModule */; };
 		71AF1114286FB0D600C96505 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 71AF1113286FB0D600C96505 /* Domain */; };
 /* End PBXBuildFile section */
 
@@ -111,7 +110,6 @@
 		71AED5842865DC5E00A4B14F /* slideimageone.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimageone.gif; sourceTree = "<group>"; };
 		71AED58C28665C9500A4B14F /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71AED5902866793100A4B14F /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
-		71AF110F286F916900C96505 /* ApiModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ApiModule; sourceTree = "<group>"; };
 		71AF1112286F96A400C96505 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,7 +120,6 @@
 			files = (
 				71AF1114286FB0D600C96505 /* Domain in Frameworks */,
 				71AED59428667AB800A4B14F /* Theme in Frameworks */,
-				71AF1111286F91F400C96505 /* ApiModule in Frameworks */,
 				7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */,
 				717C6D4E28807A10004B5FBA /* UserHome in Frameworks */,
 				71AED59228667A9700A4B14F /* Core in Frameworks */,
@@ -297,7 +294,6 @@
 			children = (
 				71AED58C28665C9500A4B14F /* Theme */,
 				71AED5902866793100A4B14F /* Core */,
-				71AF110F286F916900C96505 /* ApiModule */,
 				71AF1112286F96A400C96505 /* Domain */,
 				717C6D4C288079DE004B5FBA /* UserHome */,
 			);
@@ -325,7 +321,6 @@
 			packageProductDependencies = (
 				71AED59128667A9700A4B14F /* Core */,
 				71AED59328667AB800A4B14F /* Theme */,
-				71AF1110286F91F400C96505 /* ApiModule */,
 				71AF1113286FB0D600C96505 /* Domain */,
 				717C6D4D28807A10004B5FBA /* UserHome */,
 			);
@@ -662,10 +657,6 @@
 		71AED59328667AB800A4B14F /* Theme */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Theme;
-		};
-		71AF1110286F91F400C96505 /* ApiModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ApiModule;
 		};
 		71AF1113286FB0D600C96505 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;

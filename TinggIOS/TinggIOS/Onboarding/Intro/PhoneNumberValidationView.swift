@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 26/06/2022.
 //
 
-import ApiModule
+
 import Combine
 import Core
 import Domain
@@ -25,9 +25,7 @@ struct PhoneNumberValidationView: View {
     @State var navigate = false
     @State var countries: [String: String] = [String: String]()
     @State var warning = ""
-    @StateObject var fetchCountries: FetchCountries = .init()
-    @StateObject var getActivationCode: GetActivationCode = .init()
-    @StateObject var onboardingViewModel: OnboardingViewModel = .init()
+    @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
@@ -135,7 +133,6 @@ struct PhoneNumberValidationView: View {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
                     .environmentObject(onboardingViewModel)
             })
-            .environmentObject(fetchCountries)
         }
     }
     fileprivate func callSupport() {
@@ -146,7 +143,7 @@ struct PhoneNumberValidationView: View {
         openURL(url)
     }
     fileprivate func getSelectedCountryRegex() -> String {
-        let data = fetchCountries.$countriesDb.wrappedValue
+        let data = onboardingViewModel.fetchCountries.$countriesDb.wrappedValue
         let country = data.first { country in
             country.countryDialCode == self.countryCode
         }
@@ -177,8 +174,6 @@ struct PhoneNumberValidationView: View {
 struct PhoneNumberValidationView_Previews: PreviewProvider {
     static var previews: some View {
         PhoneNumberValidationView()
-            .environmentObject(FetchCountries())
-            .environmentObject(GetActivationCode())
     }
 }
 
@@ -206,7 +201,7 @@ extension PhoneNumberValidationView {
             }
     }
     func getCountries() {
-        countries = self.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
+        countries = onboardingViewModel.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
             partialResult[country.countryCode!] = country.countryDialCode
         }
     }

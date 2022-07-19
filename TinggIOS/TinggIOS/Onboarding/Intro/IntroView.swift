@@ -10,6 +10,7 @@ import Theme
 import Domain
 struct IntroView: View {
     @State var active = false
+    @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
@@ -20,7 +21,7 @@ struct IntroView: View {
                 UtilViews.tinggColoredLogo
                 IntroTabView(geo: geo, active: $active)
                     .task {
-                        getCountries()
+                        onboardingViewModel.allCountries()
                     }
             }
             .navigationBarHidden(true)
@@ -29,11 +30,6 @@ struct IntroView: View {
             }
         }
     }
-    func getCountries() {
-        let fetch = FetchCountries()
-        fetch.countriesCodesAndCountriesDialCodes()
-    }
-
 }
 
 struct IntroView_Previews: PreviewProvider {

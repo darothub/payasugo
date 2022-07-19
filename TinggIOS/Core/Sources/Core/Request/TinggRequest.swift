@@ -35,6 +35,11 @@ public struct TinggRequest: Encodable {
         self.clientId = clientId
         self.activationCode = code
     }
+    public mutating func makePARRequesr(service: String, msisdn: String, clientId: String) {
+        self.service = service
+        self.msisdn = msisdn
+        self.clientId = clientId
+    }
     enum CodingKeys: String, CodingKey {
         case service = "SERVICE"
         case msisdn = "MSISDN"

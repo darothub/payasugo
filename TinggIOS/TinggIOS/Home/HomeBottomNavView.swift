@@ -35,7 +35,6 @@ struct HomeBottomNavView: View {
                         Text("Group")
                     } icon: {
                         PrimaryTheme.getImage(image: .group)
-                           
                     }
                 }
                 Text("Explore").tabItem {

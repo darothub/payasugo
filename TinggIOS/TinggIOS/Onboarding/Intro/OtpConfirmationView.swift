@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 08/07/2022.
 //
-import ApiModule
+
 import Core
 import Domain
 import SwiftUI
@@ -74,6 +74,6 @@ struct OtpConfirmationView_Previews: PreviewProvider {
     }
     static var previews: some View {
         OtpConfirmationViewHolder()
-            .environmentObject(OnboardingViewModel())
+            .environmentObject(OnboardingViewModel(tinggApiServices: BaseRepository()))
     }
 }
