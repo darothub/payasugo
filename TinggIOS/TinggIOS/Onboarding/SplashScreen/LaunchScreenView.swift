@@ -9,7 +9,6 @@ import SwiftUI
 import Theme
 struct LaunchScreenView: View {
     @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
-    var primaryTheme = PrimaryTheme()
     var body: some View {
         ZStack {
             background
@@ -33,10 +32,11 @@ struct LaunchScreenView_Previews: PreviewProvider {
 
 private extension LaunchScreenView {
     var background: some View {
-        primaryTheme.secondaryColor.edgesIgnoringSafeArea(.all)
+        PrimaryTheme.getColor(.secondaryColor)
+            .edgesIgnoringSafeArea(.all)
     }
     var image: some View {
-        primaryTheme.splashScreenImage
+        PrimaryTheme.getImage(image: .tinggSplashScreenIcon)
             .renderingMode(.template)
             .foregroundColor(Color.white)
     }

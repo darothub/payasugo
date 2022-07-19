@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Theme
 
 struct ProfileImageAndHelpIconView: View {
     var imageUrl: String = ""
@@ -14,7 +15,7 @@ struct ProfileImageAndHelpIconView: View {
         HStack {
             AsyncImage(url: URL(string: imageUrl)) { image in
                 image.resizable()
-                    .frame(width: 50, height: 50)
+                    .frame(width: 40, height: 40)
                     .clipShape(Circle())
                     .padding()
             } placeholder: {
@@ -22,9 +23,9 @@ struct ProfileImageAndHelpIconView: View {
                     .padding()
             }
             Spacer()
-            Image(systemName: helpIconString)
+            PrimaryTheme.getImage(image: .tinggAssistImage)
                 .resizable()
-                .frame(width: 50, height: 50)
+                .frame(width: 40, height: 40)
                 .clipShape(Circle())
                 .padding()
         }

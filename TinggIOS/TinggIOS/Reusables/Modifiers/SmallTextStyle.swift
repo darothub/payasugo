@@ -15,11 +15,10 @@ extension Text {
 }
 
 struct SmallTextStyle: ViewModifier {
-    var theme: PrimaryTheme
     func body(content: Content) -> some View {
         content
-            .font(.system(size: theme.smallTextSize))
-            .padding(theme.smallPadding)
+            .font(.system(size: PrimaryTheme.smallTextSize))
+            .padding(PrimaryTheme.smallPadding)
             .multilineTextAlignment(.center)
     }
 }

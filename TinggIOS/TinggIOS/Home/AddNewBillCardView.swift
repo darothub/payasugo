@@ -6,28 +6,27 @@
 //
 
 import SwiftUI
+import Theme
 
 struct AddNewBillCardView: View {
-    @EnvironmentObject var themeUtils: EnvironmentUtils
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: "camera.fill")
-                    .resizable()
-                    .frame(width: 50, height: 40)
+                PrimaryTheme.getImage(image: .addBillImage)
+                    .padding(.horizontal, 10)
                 Text("Pay for bills, food, and enjoy cashless shopping with TinggPay wallet")
-                    .font(.system(size: themeUtils.primaryTheme.smallTextSize))
+                    .font(.system(size: PrimaryTheme.smallTextSize))
             }.padding(20)
             Divider()
             Text("Add a new bill")
-                .foregroundColor(themeUtils.primaryTheme.cellulantRed)
-                .font(.system(size: themeUtils.primaryTheme.smallTextSize))
+                .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+                .font(.system(size: PrimaryTheme.smallTextSize))
         }
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 4)
                 .foregroundColor(.white)
-                .padding(.horizontal, themeUtils.primaryTheme.largePadding)
+                .padding(.horizontal, PrimaryTheme.largePadding)
                 .shadow(radius: 10, x: 0, y: 5)
         )
     }
@@ -36,6 +35,5 @@ struct AddNewBillCardView: View {
 struct AddNewBillCardView_Previews: PreviewProvider {
     static var previews: some View {
         AddNewBillCardView()
-            .environmentObject(EnvironmentUtils())
     }
 }

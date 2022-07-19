@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "tingglogo.svg",
+      "filename" : "addbillimage.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "addbillimage@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "addbillimage@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

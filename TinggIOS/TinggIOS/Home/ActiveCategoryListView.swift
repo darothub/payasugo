@@ -8,11 +8,10 @@
 import SwiftUI
 import Theme
 struct ActiveCategoryListView: View {
-    var theme: PrimaryTheme = .init()
     var body: some View {
         HStack {
             ForEach(0..<4, id: \.self) { ele in
-                ActiveCategoryView(theme: theme, title: "\(ele)")
+                ActiveCategoryView(title: "\(ele)")
             }
         }
     }

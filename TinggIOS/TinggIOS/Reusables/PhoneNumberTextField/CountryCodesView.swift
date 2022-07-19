@@ -82,7 +82,6 @@ extension CountryCodesView {
 }
 
 struct CountryViewDropDownStyle: ViewModifier {
-    var theme: PrimaryTheme
     @Binding var isValidPhoneNumber: Bool
     func body(content: Content) -> some View {
         content
@@ -92,6 +91,6 @@ struct CountryViewDropDownStyle: ViewModifier {
                 .stroke(lineWidth: 0.5)
                 .someForegroundColor(condition: _isValidPhoneNumber)
             )
-            .padding(.horizontal, theme.largePadding)
+            .padding(.horizontal, PrimaryTheme.largePadding)
     }
 }

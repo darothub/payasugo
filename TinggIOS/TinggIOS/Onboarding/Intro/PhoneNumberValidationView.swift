@@ -13,7 +13,6 @@ import SwiftUI
 import Theme
 
 struct PhoneNumberValidationView: View {
-    var theme: PrimaryTheme = .init()
     @State var phoneNumber = ""
     @State var countryCode = "267"
     @State var isEditing = false
@@ -41,12 +40,13 @@ struct PhoneNumberValidationView: View {
                 }
                 .frame(width: geometry.size.width, height: abs(geometry.size.height * 0.25))
                 Text("Mobile Number")
-                    .font(.system(size: theme.smallTextSize))
+                    .font(.system(size: PrimaryTheme.smallTextSize))
                     .bold()
-                    .padding(.leading, theme.largePadding)
+                    .padding(.leading, PrimaryTheme.largePadding)
                 CountryCodesView(phoneNumber: $phoneNumber, countryCode: $countryCode, countries: $countries)
-                    .countryFieldViewStyle(CountryViewDropDownStyle(theme: theme,
-                                                                    isValidPhoneNumber: $isValidPhoneNumber))
+                    .countryFieldViewStyle(
+                        CountryViewDropDownStyle(isValidPhoneNumber: $isValidPhoneNumber)
+                    )
                     .onChange(of: phoneNumber) { number in
                         let phoneNumber = "+\(countryCode)\(number)"
                         let regex = getSelectedCountryRegex()
@@ -63,8 +63,8 @@ struct PhoneNumberValidationView: View {
                     }
                 Text("We'll send verification code to this number")
                     .bold()
-                    .font(.system(size: theme.smallTextSize))
-                    .padding(.leading, theme.largePadding)
+                    .font(.system(size: PrimaryTheme.smallTextSize))
+                    .padding(.leading, PrimaryTheme.largePadding)
                 HStack(alignment: .top) {
                     Group {
                         CheckBoxView(checkboxChecked: $isCheckedTermsAndPolicy)
@@ -72,9 +72,9 @@ struct PhoneNumberValidationView: View {
                         + Text(.init(termOfAgreementLink))
                             .underline()
                         + Text(" and ") + Text(.init(privacyPolicy)).underline()
-                    }.font(.system(size: theme.smallTextSize))
+                    }.font(.system(size: PrimaryTheme.smallTextSize))
                 }
-                .padding(.horizontal, theme.largePadding)
+                .padding(.horizontal, PrimaryTheme.largePadding)
                 Spacer()
                 Button {
                     showSupportTeamContact.toggle()
@@ -85,11 +85,14 @@ struct PhoneNumberValidationView: View {
                         Text("CONTACT TINGG SUPPORT TEAM")
                     }
                     .frame(width: geometry.size.width)
-                    .font(.system(size: theme.smallTextSize))
+                    .font(.system(size: PrimaryTheme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
                 NavigationLink(destination: HomeBottomNavView(), isActive: $navigate) {
-                    UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Continue") {
+                    UtilViews.button(
+                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                        buttonLabel: "Continue"
+                    ) {
                         if phoneNumber.isEmpty {
                             warning = "Phone number can not be empty"
                             showAlert.toggle()
@@ -182,7 +185,7 @@ struct PhoneNumberValidationView_Previews: PreviewProvider {
 extension PhoneNumberValidationView {
     fileprivate func topRectangleBackground(geometry: GeometryProxy) -> some View {
         Rectangle()
-            .fill(theme.lightGray)
+            .fill(PrimaryTheme.getColor(.cellulantLightGray))
             .frame(width: geometry.size.width, height: abs(geometry.size.height * 1.4 * 0.25))
             .edgesIgnoringSafeArea(.all)
     }
@@ -192,7 +195,7 @@ extension PhoneNumberValidationView {
                    height: geometry.size.height * 0.1,
                    alignment: .center)
             .scaleEffect(1.5)
-            .foregroundColor(theme.cellulantRed)
+            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
             .background(.white)
             .clipShape(Circle())
             .padding(EdgeInsets(top: 15, leading: 10, bottom: 15, trailing: 10))

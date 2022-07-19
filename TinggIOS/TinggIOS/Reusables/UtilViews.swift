@@ -52,7 +52,7 @@ extension UtilViews {
                 .foregroundColor(.white)
                 .background(backgroundColor)
                 .cornerRadius(10)
-                .padding(.horizontal, theme.largePadding)
+                .padding(.horizontal, PrimaryTheme.largePadding)
         }
     }
     static var tinggColoredLogo: some View {

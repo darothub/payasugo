@@ -9,7 +9,6 @@ import SwiftUI
 import Theme
 
 struct ActiveCategoryView: View {
-    var theme: PrimaryTheme = .init()
     var title: String = ""
     var body: some View {
         VStack {
@@ -18,8 +17,8 @@ struct ActiveCategoryView: View {
                        height: 65,
                        alignment: .center)
                 .scaleEffect(1)
-                .foregroundColor(theme.cellulantRed)
-                .background(theme.cellulantRed.opacity(0.08))
+                .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+                .background(PrimaryTheme.getColor(.cellulantRed).opacity(0.08))
                 .clipShape(Circle())
                 .padding(10)
                 .shadow(radius: 3)

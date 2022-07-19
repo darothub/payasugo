@@ -9,5 +9,4 @@ import Foundation
 import Theme
 class EnvironmentUtils: ObservableObject {
     @Published var state = SplashScreenState.start
-    let primaryTheme = PrimaryTheme()
 }

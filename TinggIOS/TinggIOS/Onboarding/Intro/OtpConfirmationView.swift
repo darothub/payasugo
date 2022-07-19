@@ -21,25 +21,30 @@ struct OtpConfirmationView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    var theme: PrimaryTheme = .init()
     var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
                 .fontWeight(.bold)
             Divider()
             Text("Enter the code received via SMS\nto confirm request")
-                .smallTextViewStyle(SmallTextStyle(theme: theme))
-            OtpFieldView(fieldSize: $otpSize, otpValue: $otp)
+                .smallTextViewStyle(SmallTextStyle())
+            OtpFieldView(fieldSize: $otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
                 .padding(.vertical, 20)
             Text(timeAdvice)
-                .smallTextViewStyle(SmallTextStyle(theme: theme))
-            UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Resend") {
+                .smallTextViewStyle(SmallTextStyle())
+            UtilViews.button(
+                backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                buttonLabel: "Resend"
+            ) {
                 print("Otp \(otp)")
                 timeLeft = 60
             }
             .disabled(timeLeft > 0)
             .opacity(timeAdvice.isEmpty  ? 1 : 0.5)
-            UtilViews.button(backgroundColor: theme.primaryColor, buttonLabel: "Confirm") {
+            UtilViews.button(
+                backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                buttonLabel: "Confirm"
+            ) {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )

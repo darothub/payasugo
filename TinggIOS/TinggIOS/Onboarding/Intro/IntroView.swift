@@ -9,15 +9,16 @@ import SwiftUI
 import Theme
 import Domain
 struct IntroView: View {
-    @EnvironmentObject var theme: EnvironmentUtils
     @State var active = false
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
-                UtilViews.topBackgroundDesign(height: geo.size.height * 0.5, color: theme.primaryTheme.lightGray)
+                UtilViews.topBackgroundDesign(
+                    height: geo.size.height * 0.5,
+                    color: PrimaryTheme.getColor(.cellulantLightGray)
+                )
                 UtilViews.tinggColoredLogo
                 IntroTabView(geo: geo, active: $active)
-                    .environmentObject(theme)
                     .task {
                         getCountries()
                     }
@@ -38,12 +39,10 @@ struct IntroView: View {
 struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
-            .environmentObject(EnvironmentUtils())
     }
 }
 
 struct IntroTabView: View {
-    @EnvironmentObject var theme: EnvironmentUtils
     var geo: GeometryProxy
     @Binding var active: Bool
     var body: some View {
@@ -59,7 +58,7 @@ struct IntroTabView: View {
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
             Spacer()
             NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
-                UtilViews.button(backgroundColor: theme.primaryTheme.primaryColor) {
+                UtilViews.button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
                     active.toggle()
                 }
             }

@@ -50,7 +50,6 @@ class OnboardingViewModel: ObservableObject {
             message = data.statusMessage
         }
     }
-    
     func resetMessage() {
         self.message = ""
     }

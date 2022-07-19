@@ -10,12 +10,14 @@ import Theme
 struct OtpFieldView: View {
     @Binding var fieldSize: Int
     @Binding var otpValue: String
+    var focusColor: Color
     @State fileprivate var fields = Array(repeating: "", count: 6)
     @FocusState fileprivate var cursor: Int?
     fileprivate var theme: PrimaryTheme = .init()
-    init(fieldSize: Binding<Int>, otpValue: Binding<String>) {
+    init(fieldSize: Binding<Int>, otpValue: Binding<String>, focusColor: Color) {
         self._fieldSize = fieldSize
         self._otpValue = otpValue
+        self.focusColor = focusColor
         fields = Array(repeating: "", count: self.fieldSize)
     }
     var body: some View {
@@ -32,7 +34,7 @@ struct OtpFieldView: View {
                 .focused($cursor, equals: index)
                 .textContentType(.oneTimeCode)
             Rectangle()
-                .fill(cursor == index ? theme.primaryColor : .gray.opacity(3))
+                .fill(cursor == index ? focusColor : .gray.opacity(3))
                 .frame(height: 3)
         }
     }
@@ -69,8 +71,9 @@ struct OtpFieldView_Previews: PreviewProvider {
     struct OtpFieldViewHolder: View {
         @State var fieldSize = 4
         @State var otp = ""
+        var focusColor: Color = .green
         var body: some View {
-            OtpFieldView(fieldSize: $fieldSize, otpValue: $otp)
+            OtpFieldView(fieldSize: $fieldSize, otpValue: $otp, focusColor: focusColor)
         }
     }
     static var previews: some View {

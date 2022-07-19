@@ -9,15 +9,12 @@ import SwiftUI
 import Theme
 
 struct ActivateCardView: View {
-    var theme: PrimaryTheme
     var parentSize: GeometryProxy
     var activateAction: () -> Void
     var body: some View {
         HStack {
-            Image(systemName: "camera.fill")
-                .resizable()
-                .frame(width: parentSize.size.height * 0.05, height: parentSize.size.height * 0.04 )
-                .padding(.leading, theme.largePadding)
+            PrimaryTheme.getImage(image: .moneyImage)
+                .padding(.leading, PrimaryTheme.largePadding)
             Text("Enjoy cashless shopping with Tingg Wallet and earn rewards")
                 .font(.system(size: 14))
                 .minimumScaleFactor(0.05)
@@ -28,14 +25,14 @@ struct ActivateCardView: View {
             } label: {
                 Text("ACTIVATE")
                     .frame(maxWidth: .infinity)
-                    .font(.system(size: theme.mediumTextSize))
+                    .font(.system(size: PrimaryTheme.mediumTextSize))
                     .padding(10)
                     .foregroundColor(.red)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(.black, lineWidth: 0.5)
                     )
-                    .padding(.trailing, theme.largePadding)
+                    .padding(.trailing, PrimaryTheme.largePadding)
             }
         }
         .background(
@@ -51,7 +48,7 @@ struct ActivateCardView: View {
 struct ActivateCardView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
-            ActivateCardView(theme: PrimaryTheme(), parentSize: geo) {}
+            ActivateCardView(parentSize: geo) {}
         }
     }
 }

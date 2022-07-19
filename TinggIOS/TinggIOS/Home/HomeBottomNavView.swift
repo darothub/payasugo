@@ -6,22 +6,46 @@
 //
 
 import SwiftUI
-
+import Theme
 struct HomeBottomNavView: View {
     var body: some View {
         GeometryReader { _ in
             TabView {
                 HomeView().tabItem {
-                    Label("Home", systemImage: "house")
+                    Label {
+                        Text("Home")
+                    } icon: {
+                        PrimaryTheme.getImage(image: .home)
+                            .renderingMode(.template)
+                            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+                    }
                 }
                 Text("Bill").tabItem {
-                    Label("Bill", systemImage: "menucard")
+                    Label {
+                        Text("Bill")
+                    } icon: {
+                        PrimaryTheme.getImage(image: .bill)
+                            .renderingMode(.template)
+                            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+                    }
+
                 }
                 Text("Group").tabItem {
-                    Label("Group", systemImage: "person.3")
+                    Label {
+                        Text("Group")
+                    } icon: {
+                        PrimaryTheme.getImage(image: .group)
+                           
+                    }
                 }
                 Text("Explore").tabItem {
-                    Label("Explore", systemImage: "airplane.departure")
+                    Label {
+                        Text("Explore")
+                    } icon: {
+                        PrimaryTheme.getImage(image: .explore)
+                            .renderingMode(.template)
+                            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+                    }
                 }
             }
         }.navigationBarBackButtonHidden(true)

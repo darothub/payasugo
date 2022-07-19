@@ -25,9 +25,7 @@ struct ActivateCardView: View {
                     .minimumScaleFactor(0.05)
                     .lineLimit(3)
                     .padding()
-                Button {
-                    
-                } label: {
+                Button {} label: {
                     Text("ACTIVATE")
                         .frame(maxWidth: .infinity)
                         .font(.system(size: 18))
@@ -37,7 +35,6 @@ struct ActivateCardView: View {
                         .background(Color(.white))
                         .cornerRadius(10)
                         .padding(.trailing, 30)
-                        
                 }
             }
         }

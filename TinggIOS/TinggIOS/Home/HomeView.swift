@@ -9,13 +9,12 @@ import SwiftUI
 import Theme
 
 struct HomeView: View {
-    @StateObject var themeUtils: EnvironmentUtils = .init()
     var body: some View {
         GeometryReader { geo in
             ScrollView {
                 VStack(spacing: 25) {
                     HomeTopViewDesign(geo: geo)
-                    ActivateCardView(theme: themeUtils.primaryTheme, parentSize: geo) {}
+                    ActivateCardView(parentSize: geo) {}
                     ActiveCategoryTabView()
                         .background(.white)
                         .shadow(radius: 0, y: 3)
@@ -28,14 +27,13 @@ struct HomeView: View {
                 )
             }.ignoresSafeArea()
         }
-        .background(themeUtils.primaryTheme.lightGray)
+        .background(PrimaryTheme.getColor(.cellulantLightGray))
         .navigationBarHidden(true)
-        .environmentObject(themeUtils)
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(themeUtils: EnvironmentUtils())
+        HomeView()
     }
 }
