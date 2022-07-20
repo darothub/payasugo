@@ -34,32 +34,41 @@ struct OtpConfirmationView: View {
                 .smallTextViewStyle(SmallTextStyle())
             UtilViews.button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Resend"
-            ) {
-                print("Otp \(otp)")
-                timeLeft = 60
-            }
-            .disabled(timeLeft > 0)
-            .opacity(timeAdvice.isEmpty  ? 1 : 0.5)
-            UtilViews.button(
-                backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm"
             ) {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
+            }.onReceive(onboardingViewModel.$message) { message in
+                if !message.contains("Success") {
+                    return
+                }
                 dismiss()
             }
         }
         .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
         .padding(20)
         .onReceive(timer) { _ in
-            if timeLeft > 0 {
-                timeLeft -= 1
-                timeAdvice = "Resend code in 0:\(timeLeft)"
+            handleCountDown()
+        }
+    }
+    fileprivate func resetTimer() {
+        timeLeft = 60
+    }
+    fileprivate func handleCountDown() {
+        if timeLeft > 0 {
+            timeLeft -= 1
+            if timeLeft < 10 {
+                timeAdvice = "Resend code in 00:0\(timeLeft)"
             } else {
-                timeAdvice = ""
+                timeAdvice = "Resend code in 00:\(timeLeft)"
             }
+        } else {
+            onboardingViewModel.makeActivationCodeRequest(
+                msisdn: phoneNumber, clientId: activeCountry.mulaClientID!
+            )
+            timeAdvice = "Code resent"
+            resetTimer()
         }
     }
 }

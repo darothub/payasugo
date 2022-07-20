@@ -22,8 +22,9 @@ struct ViewState: ViewModifier {
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(3)
             }
-            if !message.isEmpty {
-                ZStack {
+            if !message.isEmpty && !message.contains("Success") {
+                VStack {
+                    Spacer()
                     Text(message)
                         .padding(.vertical, 5)
                         .foregroundColor(.red) // Would be refactor in the future for success message display
