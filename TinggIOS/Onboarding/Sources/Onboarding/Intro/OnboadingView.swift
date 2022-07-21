@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
-
+import Common
 import SwiftUI
 import Theme
 
@@ -30,7 +30,8 @@ struct OnboadingView_Previews: PreviewProvider {
 
 extension OnboadingView {
     func gifImage(size: CGSize) -> some View {
-        GifImage(onboadingItem.centerImage)
+        let url = Bundle.module.url(forResource: onboadingItem.centerImage, withExtension: "gif")!
+        return GifImage(url)
             .frame(width: size.width * 0.6, height: size.height * 0.6, alignment: .center)
     }
     var pageIntro: some View {

@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 25/05/2022.
 //
-
+import Onboarding
 import SwiftUI
 
 @main

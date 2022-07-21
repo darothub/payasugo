@@ -8,14 +8,13 @@
 import Foundation
 import SwiftUI
 import WebKit
-struct GifImage: UIViewRepresentable {
-    private let name: String
-    init(_ name: String) {
-        self.name = name
+public struct GifImage: UIViewRepresentable {
+    private let url: URL
+    public init(_ url: URL) {
+        self.url = url
     }
-    func makeUIView(context: Context) -> some WKWebView {
+    public func makeUIView(context: Context) -> some WKWebView {
         let webView = WKWebView()
-        let url = Bundle.main.url(forResource: name, withExtension: "gif")!
         do {
             let data = try Data(contentsOf: url)
             webView.load(
@@ -32,7 +31,7 @@ struct GifImage: UIViewRepresentable {
         }
         return webView
     }
-    func updateUIView(_ uiView: UIViewType, context: Context) {
+    public func updateUIView(_ uiView: UIViewType, context: Context) {
         uiView.reload()
     }
 }

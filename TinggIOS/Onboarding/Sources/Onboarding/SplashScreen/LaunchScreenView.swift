@@ -4,12 +4,13 @@
 //
 //  Created by Abdulrasaq on 22/06/2022.
 //
-
+import Common
 import SwiftUI
 import Theme
-struct LaunchScreenView: View {
+public struct LaunchScreenView: View {
     @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
-    var body: some View {
+    public init() {}
+    public var body: some View {
         ZStack {
             background
             image

@@ -9,25 +9,14 @@
 /* Begin PBXBuildFile section */
 		7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7108CD76285253E00034EA29 /* Permissions.framework */; };
 		7108CD78285253E00034EA29 /* Permissions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7108CD76285253E00034EA29 /* Permissions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		714D3F5028683BE40024028C /* PhoneNumberValidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714D3F4F28683BE40024028C /* PhoneNumberValidationView.swift */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
-		716F06172878A6F200A766A3 /* OtpConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716F06162878A6F200A766A3 /* OtpConfirmationView.swift */; };
-		71874841287EDC4E003B203F /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874840287EDC4E003B203F /* OnboardingViewModel.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C6291283EBCB4002ADCA8 /* ContentView.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71AED54A2863BBD500A4B14F /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5492863BBD500A4B14F /* LaunchScreenView.swift */; };
-		71AED5732864E08B00A4B14F /* SplashScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5722864E08A00A4B14F /* SplashScreenState.swift */; };
-		71AED5752864E0C200A4B14F /* EnvironmentUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5742864E0C200A4B14F /* EnvironmentUtils.swift */; };
-		71AED5782864F00C00A4B14F /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5772864F00C00A4B14F /* IntroView.swift */; };
-		71AED57A2864F15100A4B14F /* OnboardingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5792864F15100A4B14F /* OnboardingItem.swift */; };
-		71AED57C2864F20D00A4B14F /* OnboadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED57B2864F20D00A4B14F /* OnboadingView.swift */; };
-		71AED5812865D8DB00A4B14F /* GifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AED5802865D8DB00A4B14F /* GifImage.swift */; };
-		71AED5852865DC5E00A4B14F /* slideimagetwo.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5832865DC5E00A4B14F /* slideimagetwo.gif */; };
-		71AED5862865DC5E00A4B14F /* slideimageone.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71AED5842865DC5E00A4B14F /* slideimageone.gif */; };
 		71AED59228667A9700A4B14F /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 71AED59128667A9700A4B14F /* Core */; };
 		71AF1114286FB0D600C96505 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 71AF1113286FB0D600C96505 /* Domain */; };
+		71B0D96C2889800400569C31 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71B0D96B2889800400569C31 /* Onboarding */; };
 		71BEB0322889472200F5443A /* Theme in Frameworks */ = {isa = PBXBuildFile; productRef = 71BEB0312889472200F5443A /* Theme */; };
 		71BEB0352889486300F5443A /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71BEB0342889486300F5443A /* Home */; };
 		71BEB0382889577300F5443A /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 71BEB0372889577300F5443A /* Common */; };
@@ -49,10 +38,7 @@
 
 /* Begin PBXFileReference section */
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		714D3F4F28683BE40024028C /* PhoneNumberValidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidationView.swift; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
-		716F06162878A6F200A766A3 /* OtpConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpConfirmationView.swift; sourceTree = "<group>"; };
-		71874840287EDC4E003B203F /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6291283EBCB4002ADCA8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -60,18 +46,10 @@
 		718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		71AED5492863BBD500A4B14F /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		71AED5722864E08A00A4B14F /* SplashScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenState.swift; sourceTree = "<group>"; };
-		71AED5742864E0C200A4B14F /* EnvironmentUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentUtils.swift; sourceTree = "<group>"; };
-		71AED5772864F00C00A4B14F /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
-		71AED5792864F15100A4B14F /* OnboardingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingItem.swift; sourceTree = "<group>"; };
-		71AED57B2864F20D00A4B14F /* OnboadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboadingView.swift; sourceTree = "<group>"; };
-		71AED5802865D8DB00A4B14F /* GifImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifImage.swift; sourceTree = "<group>"; };
-		71AED5832865DC5E00A4B14F /* slideimagetwo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimagetwo.gif; sourceTree = "<group>"; };
-		71AED5842865DC5E00A4B14F /* slideimageone.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = slideimageone.gif; sourceTree = "<group>"; };
 		71AED5902866793100A4B14F /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 		71AF1112286F96A400C96505 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
+		71B0D96A28897F8B00569C31 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
 		71BEB0302889470500F5443A /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71BEB0332889484D00F5443A /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
 		71BEB0362889576200F5443A /* Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Common; sourceTree = "<group>"; };
@@ -86,6 +64,7 @@
 				71BEB0322889472200F5443A /* Theme in Frameworks */,
 				7108CD77285253E00034EA29 /* Permissions.framework in Frameworks */,
 				71BEB0352889486300F5443A /* Home in Frameworks */,
+				71B0D96C2889800400569C31 /* Onboarding in Frameworks */,
 				71AED59228667A9700A4B14F /* Core in Frameworks */,
 				71BEB0382889577300F5443A /* Common in Frameworks */,
 			);
@@ -102,23 +81,6 @@
 				7108CD76285253E00034EA29 /* Permissions.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		714D3F4E28683AD70024028C /* SplashScreen */ = {
-			isa = PBXGroup;
-			children = (
-				71AED5492863BBD500A4B14F /* LaunchScreenView.swift */,
-				71AED5722864E08A00A4B14F /* SplashScreenState.swift */,
-			);
-			path = SplashScreen;
-			sourceTree = "<group>";
-		};
-		7187483F287EDC39003B203F /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				71874840287EDC4E003B203F /* OnboardingViewModel.swift */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		718C6283283EBCB4002ADCA8 = {
@@ -142,9 +104,6 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
-				71AED5822865DC2C00A4B14F /* GifImages */,
-				71AED57F2865D8B300A4B14F /* Reusables */,
-				71AED5482863BBAF00A4B14F /* Onboarding */,
 				71AED53C285D007300A4B14F /* Info.plist */,
 				718C6291283EBCB4002ADCA8 /* ContentView.swift */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
@@ -163,46 +122,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		71AED5482863BBAF00A4B14F /* Onboarding */ = {
-			isa = PBXGroup;
-			children = (
-				7187483F287EDC39003B203F /* ViewModel */,
-				714D3F4E28683AD70024028C /* SplashScreen */,
-				71AED5762864EFD600A4B14F /* Intro */,
-				71AED5742864E0C200A4B14F /* EnvironmentUtils.swift */,
-			);
-			path = Onboarding;
-			sourceTree = "<group>";
-		};
-		71AED5762864EFD600A4B14F /* Intro */ = {
-			isa = PBXGroup;
-			children = (
-				71AED5772864F00C00A4B14F /* IntroView.swift */,
-				71AED5792864F15100A4B14F /* OnboardingItem.swift */,
-				71AED57B2864F20D00A4B14F /* OnboadingView.swift */,
-				714D3F4F28683BE40024028C /* PhoneNumberValidationView.swift */,
-				716F06162878A6F200A766A3 /* OtpConfirmationView.swift */,
-			);
-			path = Intro;
-			sourceTree = "<group>";
-		};
-		71AED57F2865D8B300A4B14F /* Reusables */ = {
-			isa = PBXGroup;
-			children = (
-				71AED5802865D8DB00A4B14F /* GifImage.swift */,
-			);
-			path = Reusables;
-			sourceTree = "<group>";
-		};
-		71AED5822865DC2C00A4B14F /* GifImages */ = {
-			isa = PBXGroup;
-			children = (
-				71AED5842865DC5E00A4B14F /* slideimageone.gif */,
-				71AED5832865DC5E00A4B14F /* slideimagetwo.gif */,
-			);
-			path = GifImages;
-			sourceTree = "<group>";
-		};
 		71AED58B28665C9400A4B14F /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,6 +130,7 @@
 				71BEB0302889470500F5443A /* Theme */,
 				71BEB0332889484D00F5443A /* Home */,
 				71BEB0362889576200F5443A /* Common */,
+				71B0D96A28897F8B00569C31 /* Onboarding */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -239,6 +159,7 @@
 				71BEB0312889472200F5443A /* Theme */,
 				71BEB0342889486300F5443A /* Home */,
 				71BEB0372889577300F5443A /* Common */,
+				71B0D96B2889800400569C31 /* Onboarding */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -284,11 +205,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71AED5862865DC5E00A4B14F /* slideimageone.gif in Resources */,
 				718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */,
 				715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */,
 				718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */,
-				71AED5852865DC5E00A4B14F /* slideimagetwo.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,18 +238,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				716F06172878A6F200A766A3 /* OtpConfirmationView.swift in Sources */,
 				718C6292283EBCB4002ADCA8 /* ContentView.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
-				71AED5812865D8DB00A4B14F /* GifImage.swift in Sources */,
-				71AED57C2864F20D00A4B14F /* OnboadingView.swift in Sources */,
-				71AED5732864E08B00A4B14F /* SplashScreenState.swift in Sources */,
-				71AED54A2863BBD500A4B14F /* LaunchScreenView.swift in Sources */,
-				71AED57A2864F15100A4B14F /* OnboardingItem.swift in Sources */,
-				71AED5752864E0C200A4B14F /* EnvironmentUtils.swift in Sources */,
-				71AED5782864F00C00A4B14F /* IntroView.swift in Sources */,
-				714D3F5028683BE40024028C /* PhoneNumberValidationView.swift in Sources */,
-				71874841287EDC4E003B203F /* OnboardingViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,6 +459,10 @@
 		71AF1113286FB0D600C96505 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		71B0D96B2889800400569C31 /* Onboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Onboarding;
 		};
 		71BEB0312889472200F5443A /* Theme */ = {
 			isa = XCSwiftPackageProductDependency;

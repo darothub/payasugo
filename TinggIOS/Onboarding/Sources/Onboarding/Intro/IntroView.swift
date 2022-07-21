@@ -11,6 +11,7 @@ import Theme
 public struct IntroView: View {
     @State var active = false
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
+    public init() {}
     public var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {

@@ -4,9 +4,8 @@
 //
 //  Created by Abdulrasaq on 17/07/2022.
 //
-
-import SwiftUI
 import Common
+import SwiftUI
 struct ActiveCategoryTabView: View {
     var body: some View {
         TabView {
