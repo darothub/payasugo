@@ -4,21 +4,21 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
-
+import Common
+import Domain
 import SwiftUI
 import Theme
-import Domain
-struct IntroView: View {
+public struct IntroView: View {
     @State var active = false
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
-    var body: some View {
+    public var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
-                UtilViews.topBackgroundDesign(
+                topBackgroundDesign(
                     height: geo.size.height * 0.5,
                     color: PrimaryTheme.getColor(.cellulantLightGray)
                 )
-                UtilViews.tinggColoredLogo
+                tinggColoredLogo
                 IntroTabView(geo: geo, active: $active)
                     .task {
                         onboardingViewModel.allCountries()
@@ -54,7 +54,7 @@ struct IntroTabView: View {
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
             Spacer()
             NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
-                UtilViews.button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
+                button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
                     active.toggle()
                 }
             }

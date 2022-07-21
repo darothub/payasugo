@@ -1,11 +1,11 @@
 import XCTest
-@testable import Theme
+@testable import Common
 
-final class ThemeTests: XCTestCase {
+final class CommonTests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(Theme().text, "Hello, World!")
+        XCTAssertEqual(Common().text, "Hello, World!")
     }
 }

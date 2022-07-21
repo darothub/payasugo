@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 08/07/2022.
 //
-
+import Common
 import Core
 import Domain
 import SwiftUI
@@ -17,7 +17,6 @@ struct OtpConfirmationView: View {
     @State var timeAdvice = ""
     @Binding var activeCountry: Country
     @Binding var phoneNumber: String
-    @StateObject var confirmActivationCode: ConfirmActivationCode = .init()
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -32,7 +31,7 @@ struct OtpConfirmationView: View {
                 .padding(.vertical, 20)
             Text(timeAdvice)
                 .smallTextViewStyle(SmallTextStyle())
-            UtilViews.button(
+            button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm"
             ) {

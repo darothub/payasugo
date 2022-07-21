@@ -5,13 +5,13 @@
 //  Created by Abdulrasaq on 26/06/2022.
 //
 
-
 import Combine
+import Common
 import Core
 import Domain
+import Home
 import SwiftUI
 import Theme
-
 struct PhoneNumberValidationView: View {
     @State var phoneNumber = ""
     @State var countryCode = "267"
@@ -87,7 +87,7 @@ struct PhoneNumberValidationView: View {
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
                 NavigationLink(destination: HomeBottomNavView(), isActive: $navigate) {
-                    UtilViews.button(
+                    button(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Continue"
                     ) {

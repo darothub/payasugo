@@ -8,7 +8,6 @@
 import Alamofire
 import Foundation
 
-
 public protocol TinggApiServices {
     func getCountries() -> DataRequest
     func request(tinggRequest: TinggRequest) -> DataRequest

@@ -12,8 +12,10 @@ public class BaseRequest: ObservableObject {
     public init(countryServices: TinggApiServices) {
         self.countryApiServices = countryServices
     }
-    public func makeRequest<T: BaseDTOprotocol>(tinggRequest: TinggRequest,
-                        onCompletion: @escaping(Result<T, ApiError>) -> Void) {
+    public func makeRequest<T: BaseDTOprotocol>(
+        tinggRequest: TinggRequest,
+        onCompletion: @escaping(Result<T, ApiError>) -> Void
+    ) {
         countryApiServices.request(tinggRequest: tinggRequest)
             .validate(statusCode: 200..<300)
             .responseDecodable(of: T.self, emptyResponseCodes: [200, 204, 205]) { response in
