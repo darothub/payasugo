@@ -4,6 +4,7 @@
 //
 //  Created by Abdulrasaq on 08/07/2022.
 //
+import Combine
 import Common
 import Core
 import Domain
@@ -15,9 +16,10 @@ struct OtpConfirmationView: View {
     @State var otp = ""
     @State var timeLeft = 60
     @State var timeAdvice = ""
+    @State private var subscriptions = Set<AnyCancellable>()
     @Binding var activeCountry: Country
     @Binding var phoneNumber: String
-    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
+    @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var body: some View {
@@ -38,32 +40,27 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-            }.onReceive(onboardingViewModel.$results) { result in
-                switch result {
-                case .success(let data):
-                    onboardingViewModel.retainActiveCountry(country: self.activeCountry.country!)
-                    onboardingViewModel.makePARRequest(
-                        msisdn: phoneNumber, clientId: activeCountry.mulaClientID!
-                    )
-                    onboardingViewModel.resetMessage()
-                    dismiss()
-                case .failure(let err):
-                    print("Error \(err.localizedDescription)")
-                    return
-                }
-//                if !message.contains("Success") {
-//                    return
-//                }
-                print("Activo \(self.activeCountry)")
-                
+                onboardingViewModel.$results.sink { result in
+                    switch result {
+                    case .success(let data):
+                        if data.statusMessage.contains("Invalid") {
+                            return
+                        }
+                        dismiss()
+                    case .failure(let err):
+                        return
+                    }
+                }.store(in: &subscriptions)
             }
         }
         .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
-        }.onAppear {
-            onboardingViewModel.results = Result.failure(.networkError)
+        }
+        .onReceive(onboardingViewModel.$results) { result in
+            print("OTPScreen \(result)")
+           
         }
     }
     fileprivate func resetTimer() {

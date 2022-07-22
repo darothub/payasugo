@@ -20,7 +20,7 @@ public struct ViewState: ViewModifier {
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(3)
             }
-            if !message.isEmpty && !message.contains("Success") {
+            if !message.isEmpty && !message.contains("Su") {
                 VStack {
                     Spacer()
                     Text(message)

@@ -25,6 +25,7 @@ struct PhoneNumberValidationView: View {
     @State var navigate = false
     @State var countries: [String: String] = [String: String]()
     @State var warning = ""
+    @State private var subscriptions = Set<AnyCancellable>()
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
@@ -105,7 +106,17 @@ struct PhoneNumberValidationView: View {
                         onboardingViewModel.makeActivationCodeRequest(
                             msisdn: number, clientId: country.mulaClientID!
                         )
+                        onboardingViewModel.$results.sink { result in
+                            switch result {
+                            case .success(let data):
+                                showOTPView = true
+                            case .failure(let err):
+                                return
+                            }
+                        }.store(in: &subscriptions)
                     }
+                }.onReceive(onboardingViewModel.$results) { result in
+                    print("PhoneScreen \(result)")
                 }
             }.task {
                 getCountries()
@@ -126,16 +137,20 @@ struct PhoneNumberValidationView: View {
                 Text("Support")
             }
             .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
-            .sheet(isPresented: $onboardingViewModel.showOTPView, onDismiss: {
+            .sheet(isPresented: $showOTPView, onDismiss: {
+                onboardingViewModel.retainActiveCountry(country: self.country.country!)
+                onboardingViewModel.makePARRequest(
+                    msisdn: phoneNumber, clientId: country.mulaClientID!
+                )
                 onboardingViewModel.$results.sink { result in
                     switch result {
                     case .success(let data):
-                        navigate.toggle()
+                        print("navigate")
                     case .failure(let err):
+                        print("Error here")
                         return
                     }
-                }
-                
+                }.store(in: &subscriptions)
             }, content: {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
                     .environmentObject(onboardingViewModel)

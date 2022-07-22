@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 13/07/2022.
 //
-
+import Combine
 import Core
 import Domain
 import Foundation
@@ -16,6 +16,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var message = ""
     @Published var statusCode = 0
     @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
+    var subscriptions = Set<AnyCancellable>()
     var tinggRequest: TinggRequest
     var fetchCountries: FetchCountries
     var baseRequest: BaseRequest
@@ -25,15 +26,16 @@ class OnboardingViewModel: ObservableObject {
         self.baseRequest = .init(apiServices: tinggApiServices)
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
+        resetViewmodelResult()
         showLoader.toggle()
         tinggRequest.getActivationCode(service: "MAK", msisdn: msisdn, clientId: clientId)
         baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<BaseDTO, ApiError>) in
             handleResultState(result)
-            self.showOTPView = true
             resetMessage()
         }
     }
     func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) {
+        resetViewmodelResult()
         showLoader.toggle()
         tinggRequest.confirmActivationCode(
             service: "VAK",
@@ -46,6 +48,7 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     func makePARRequest(msisdn: String, clientId: String) {
+        resetViewmodelResult()
         showLoader.toggle()
         let activeCountry = Auth.getActiveCountry()
 //        guard let country = active.country else { fatalError("Active country is nil")}
@@ -72,11 +75,13 @@ class OnboardingViewModel: ObservableObject {
         case .success(let data):
             print("Success \(data)")
             message = data.statusMessage
-            statusCode = data.statusCode
             results = Result.success(data)
         }
     }
     func resetMessage() {
         self.message = ""
+    }
+    fileprivate func resetViewmodelResult(){
+        self.results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
     }
 }
