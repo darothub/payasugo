@@ -127,9 +127,15 @@ struct PhoneNumberValidationView: View {
             }
             .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
             .sheet(isPresented: $onboardingViewModel.showOTPView, onDismiss: {
-                print("PhoneView message \(onboardingViewModel.message)")
-                navigate = onboardingViewModel.message.contains("Success")
-                onboardingViewModel.resetMessage()
+                onboardingViewModel.$results.sink { result in
+                    switch result {
+                    case .success(let data):
+                        navigate.toggle()
+                    case .failure(let err):
+                        return
+                    }
+                }
+                
             }, content: {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
                     .environmentObject(onboardingViewModel)

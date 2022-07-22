@@ -8,15 +8,15 @@
 import Core
 import Foundation
 public class BaseRequest: ObservableObject {
-    let countryApiServices: TinggApiServices
-    public init(countryServices: TinggApiServices) {
-        self.countryApiServices = countryServices
+    let apiServices: TinggApiServices
+    public init(apiServices: TinggApiServices) {
+        self.apiServices = apiServices
     }
     public func makeRequest<T: BaseDTOprotocol>(
         tinggRequest: TinggRequest,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
-        countryApiServices.request(tinggRequest: tinggRequest)
+        apiServices.request(tinggRequest: tinggRequest)
             .validate(statusCode: 200..<300)
             .responseDecodable(of: T.self, emptyResponseCodes: [200, 204, 205]) { response in
                 switch response.result {

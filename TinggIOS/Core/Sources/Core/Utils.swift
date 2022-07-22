@@ -7,5 +7,5 @@
 
 import Foundation
 public enum Utils {
-    public static let baseUrlStaging = "https://mula.staging.cellulant.com:9001/hub/api/mulaProxy/"
+    public static let baseUrlStaging = "https://kartana.tingg.africa/pci/mula_ke/api/v1/"
 }

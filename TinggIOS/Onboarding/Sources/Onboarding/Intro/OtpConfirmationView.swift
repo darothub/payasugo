@@ -38,17 +38,32 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-            }.onReceive(onboardingViewModel.$message) { message in
-                if !message.contains("Success") {
+            }.onReceive(onboardingViewModel.$results) { result in
+                switch result {
+                case .success(let data):
+                    onboardingViewModel.retainActiveCountry(country: self.activeCountry.country!)
+                    onboardingViewModel.makePARRequest(
+                        msisdn: phoneNumber, clientId: activeCountry.mulaClientID!
+                    )
+                    onboardingViewModel.resetMessage()
+                    dismiss()
+                case .failure(let err):
+                    print("Error \(err.localizedDescription)")
                     return
                 }
-                dismiss()
+//                if !message.contains("Success") {
+//                    return
+//                }
+                print("Activo \(self.activeCountry)")
+                
             }
         }
         .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
+        }.onAppear {
+            onboardingViewModel.results = Result.failure(.networkError)
         }
     }
     fileprivate func resetTimer() {

@@ -14,13 +14,15 @@ class OnboardingViewModel: ObservableObject {
     @Published var showOTPView = false
     @Published var showError = false
     @Published var message = ""
+    @Published var statusCode = 0
+    @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
     var tinggRequest: TinggRequest
     var fetchCountries: FetchCountries
     var baseRequest: BaseRequest
     init(tinggApiServices: TinggApiServices) {
         self.tinggRequest = .init()
         self.fetchCountries = .init(countryServices: tinggApiServices)
-        self.baseRequest = .init(countryServices: tinggApiServices)
+        self.baseRequest = .init(apiServices: tinggApiServices)
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
         showLoader.toggle()
@@ -45,24 +47,33 @@ class OnboardingViewModel: ObservableObject {
     }
     func makePARRequest(msisdn: String, clientId: String) {
         showLoader.toggle()
-        tinggRequest.getActivationCode(service: "MAK", msisdn: msisdn, clientId: clientId)
-        baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<BaseDTO, ApiError>) in
+        let activeCountry = Auth.getActiveCountry()
+//        guard let country = active.country else { fatalError("Active country is nil")}
+        tinggRequest.makePARRequesr(dataSource: activeCountry, msisdn: msisdn, clientId: clientId)
+        baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<PARAndFSUDTO, ApiError>) in
+            print("PAR result \(result)")
             handleResultState(result)
-            self.showOTPView = true
-            resetMessage()
+//            resetMessage()
         }
     }
     func allCountries() {
         fetchCountries.countriesCodesAndCountriesDialCodes()
     }
-    fileprivate func handleResultState(_ result: Result<BaseDTO, ApiError>) {
+    func retainActiveCountry(country: String) {
+        Auth.retainActiveCountry(country: country)
+    }
+    fileprivate func handleResultState<T: BaseDTOprotocol>(_ result: Result<T, ApiError>) {
         self.showLoader = false
         switch result {
         case .failure(let err):
+            print("Success \(err.localizedDescription)")
             message = err.localizedDescription
+            results = Result.failure(err)
         case .success(let data):
             print("Success \(data)")
             message = data.statusMessage
+            statusCode = data.statusCode
+            results = Result.success(data)
         }
     }
     func resetMessage() {
