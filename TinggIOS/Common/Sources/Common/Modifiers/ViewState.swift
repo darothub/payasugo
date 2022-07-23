@@ -4,29 +4,45 @@
 //
 //  Created by Abdulrasaq on 13/07/2022.
 //
+import Core
 import SwiftUI
+
 public struct ViewState: ViewModifier {
-    @Binding var isLoading: Bool
-    @Binding var message: String
-    public init(isLoading: Binding<Bool>, message: Binding<String>) {
-        _isLoading = isLoading
-        _message = message
+    @Binding var uiModel: UIModel
+    @State var showAlert = false
+    @State var error = ""
+    public init(uiModel: Binding<UIModel>) {
+        _uiModel = uiModel
     }
     public func body(content: Content) -> some View {
         ZStack {
             content
-            if isLoading {
+            switch uiModel {
+            case .loading:
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(3)
-            }
-            if !message.isEmpty && !message.contains("Su") {
-                VStack {
-                    Spacer()
-                    Text(message)
-                        .padding(.vertical, 5)
-                        .foregroundColor(.red) // Would be refactor in the future for success message display
+            case .content(let data):
+                if data.statusCode > 200 {
+                    VStack {
+                        Text(data.statusMessage)
+                            .padding(.vertical, 5)
+                            .foregroundColor(.red)
+                        Spacer()
+                    }
                 }
+            case .error(let err):
+                VStack {}
+                    .edgesIgnoringSafeArea(.all)
+                    .opacity(0)
+                    .onAppear {
+                        showAlert.toggle()
+                    }
+                .alert(err, isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                }
+            case .nothing:
+                EmptyView()
             }
         }
     }

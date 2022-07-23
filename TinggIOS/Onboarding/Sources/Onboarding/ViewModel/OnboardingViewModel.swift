@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 13/07/2022.
 //
 import Combine
+import Common
 import Core
 import Domain
 import Foundation
@@ -16,6 +17,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var message = ""
     @Published var statusCode = 0
     @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
+    @Published var uiModel = UIModel.nothing
     var subscriptions = Set<AnyCancellable>()
     var tinggRequest: TinggRequest
     var fetchCountries: FetchCountries
@@ -26,17 +28,17 @@ class OnboardingViewModel: ObservableObject {
         self.baseRequest = .init(apiServices: tinggApiServices)
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
-        resetViewmodelResult()
+//        resetViewmodelResult()
+        uiModel = UIModel.loading
         showLoader.toggle()
         tinggRequest.getActivationCode(service: "MAK", msisdn: msisdn, clientId: clientId)
         baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<BaseDTO, ApiError>) in
             handleResultState(result)
-            resetMessage()
+//            resetMessage()
         }
     }
     func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) {
-        resetViewmodelResult()
-        showLoader.toggle()
+        uiModel = UIModel.loading
         tinggRequest.confirmActivationCode(
             service: "VAK",
             msisdn: msisdn,
@@ -48,8 +50,7 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     func makePARRequest(msisdn: String, clientId: String) {
-        resetViewmodelResult()
-        showLoader.toggle()
+        uiModel = UIModel.loading
         let activeCountry = Auth.getActiveCountry()
 //        guard let country = active.country else { fatalError("Active country is nil")}
         tinggRequest.makePARRequesr(dataSource: activeCountry, msisdn: msisdn, clientId: clientId)
@@ -69,13 +70,15 @@ class OnboardingViewModel: ObservableObject {
         self.showLoader = false
         switch result {
         case .failure(let err):
+            uiModel = UIModel.error(err.localizedDescription)
             print("Success \(err.localizedDescription)")
             message = err.localizedDescription
-            results = Result.failure(err)
+//            results = Result.failure(err)
         case .success(let data):
             print("Success \(data)")
             message = data.statusMessage
-            results = Result.success(data)
+//            results = Result.success(data)
+            uiModel = UIModel.content(data)
         }
     }
     func resetMessage() {

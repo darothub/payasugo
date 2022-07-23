@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 13/07/2022.
 //
-
+import Core
 import SwiftUI
 public extension View {
     @ViewBuilder
@@ -22,10 +22,9 @@ public extension View {
       self.modifier(CustomDialog(isPresented: isPresented, dialogContent: dialogContent))
     }
     func handleViewState(
-      isLoading: Binding<Bool>,
-      message: Binding<String>
+        uiModel: Binding<UIModel>
     ) -> some View {
-      self.modifier(ViewState(isLoading: isLoading, message: message))
+      self.modifier(ViewState(uiModel: uiModel))
     }
     func setPageIndicatorAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .red

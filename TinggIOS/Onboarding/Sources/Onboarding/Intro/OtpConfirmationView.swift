@@ -19,6 +19,7 @@ struct OtpConfirmationView: View {
     @State private var subscriptions = Set<AnyCancellable>()
     @Binding var activeCountry: Country
     @Binding var phoneNumber: String
+    @Binding var otpConfirmed: Bool
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -40,27 +41,29 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.$results.sink { result in
-                    switch result {
-                    case .success(let data):
+                onboardingViewModel.$uiModel.sink { uiModel in
+                    switch uiModel {
+                    case .content(let data):
+                        print("loadingStateOTP")
                         if data.statusMessage.contains("Invalid") {
                             return
                         }
+                        otpConfirmed = true
                         dismiss()
-                    case .failure(let err):
-                        return
+                    case .loading:
+                        print("loadingStateOTP")
+                    case .error(_):
+                        print("errorStateOTP")
+                    case .nothing:
+                        print("nothingStateOTP")
                     }
                 }.store(in: &subscriptions)
             }
         }
-        .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
+        .handleViewState(uiModel: $onboardingViewModel.uiModel)
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
-        }
-        .onReceive(onboardingViewModel.$results) { result in
-            print("OTPScreen \(result)")
-           
         }
     }
     fileprivate func resetTimer() {
@@ -88,8 +91,9 @@ struct OtpConfirmationView_Previews: PreviewProvider {
     struct  OtpConfirmationViewHolder: View {
         @State var country: Country = .init()
         @State var phoneNumber: String = ""
+        @State var confirmedOTP: Bool = false
         var body: some View {
-            OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
+            OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber, otpConfirmed: $confirmedOTP)
         }
     }
     static var previews: some View {

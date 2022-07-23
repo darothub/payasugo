@@ -22,9 +22,11 @@ struct PhoneNumberValidationView: View {
     @State var country: Country = .init()
     @State var isValidPhoneNumber = false
     @State var showAlert = false
+    @State var showError = false
     @State var navigate = false
     @State var countries: [String: String] = [String: String]()
     @State var warning = ""
+    @State var confirmedOTP = false
     @State private var subscriptions = Set<AnyCancellable>()
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
@@ -106,12 +108,18 @@ struct PhoneNumberValidationView: View {
                         onboardingViewModel.makeActivationCodeRequest(
                             msisdn: number, clientId: country.mulaClientID!
                         )
-                        onboardingViewModel.$results.sink { result in
-                            switch result {
-                            case .success(let data):
+                        onboardingViewModel.$uiModel.sink { uiModel in
+                            switch uiModel {
+                            case .content(let data):
+                                print("dataState")
                                 showOTPView = true
-                            case .failure(let err):
-                                return
+                            case .loading:
+                                print("loadingState")
+                            case .error(let err):
+                                warning = err
+                                print("errorState")
+                            case .nothing:
+                                print("nothingState")
                             }
                         }.store(in: &subscriptions)
                     }
@@ -136,25 +144,31 @@ struct PhoneNumberValidationView: View {
             } message: {
                 Text("Support")
             }
-            .handleViewState(isLoading: $onboardingViewModel.showLoader, message: $onboardingViewModel.message)
             .sheet(isPresented: $showOTPView, onDismiss: {
-                onboardingViewModel.retainActiveCountry(country: self.country.country!)
-                onboardingViewModel.makePARRequest(
-                    msisdn: phoneNumber, clientId: country.mulaClientID!
-                )
-                onboardingViewModel.$results.sink { result in
-                    switch result {
-                    case .success(let data):
-                        print("navigate")
-                    case .failure(let err):
-                        print("Error here")
-                        return
-                    }
-                }.store(in: &subscriptions)
+                if confirmedOTP {
+                    onboardingViewModel.retainActiveCountry(country: self.country.country!)
+                    onboardingViewModel.makePARRequest(
+                        msisdn: phoneNumber, clientId: country.mulaClientID!
+                    )
+                    onboardingViewModel.$uiModel.sink { uiModel in
+                        switch uiModel {
+                        case .content(let data):
+                            print("dataState navigate")
+                        case .loading:
+                            print("loadingState")
+                        case .error(_):
+                            print("errorState")
+                        case .nothing:
+                            print("nothingState")
+                        }
+                    }.store(in: &subscriptions)
+                }
+             
             }, content: {
-                OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber)
+                OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber, otpConfirmed: $confirmedOTP)
                     .environmentObject(onboardingViewModel)
             })
+            .handleViewState(uiModel: $onboardingViewModel.uiModel)
         }
     }
     fileprivate func callSupport() {
