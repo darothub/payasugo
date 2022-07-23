@@ -4,10 +4,8 @@
 //
 //  Created by Abdulrasaq on 22/07/2022.
 //
-
-import SwiftUI
 import Core
-import Domain
+import SwiftUI
 
 public enum UIModel {
     

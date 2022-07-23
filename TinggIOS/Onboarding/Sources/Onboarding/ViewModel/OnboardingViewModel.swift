@@ -18,7 +18,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var statusCode = 0
     @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
     @Published var uiModel = UIModel.nothing
-    var subscriptions = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
     var tinggRequest: TinggRequest
     var fetchCountries: FetchCountries
     var baseRequest: BaseRequest
@@ -28,13 +28,10 @@ class OnboardingViewModel: ObservableObject {
         self.baseRequest = .init(apiServices: tinggApiServices)
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
-//        resetViewmodelResult()
         uiModel = UIModel.loading
-        showLoader.toggle()
         tinggRequest.getActivationCode(service: "MAK", msisdn: msisdn, clientId: clientId)
         baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<BaseDTO, ApiError>) in
             handleResultState(result)
-//            resetMessage()
         }
     }
     func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) {
@@ -52,12 +49,10 @@ class OnboardingViewModel: ObservableObject {
     func makePARRequest(msisdn: String, clientId: String) {
         uiModel = UIModel.loading
         let activeCountry = Auth.getActiveCountry()
-//        guard let country = active.country else { fatalError("Active country is nil")}
         tinggRequest.makePARRequesr(dataSource: activeCountry, msisdn: msisdn, clientId: clientId)
         baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<PARAndFSUDTO, ApiError>) in
             print("PAR result \(result)")
             handleResultState(result)
-//            resetMessage()
         }
     }
     func allCountries() {
@@ -72,19 +67,23 @@ class OnboardingViewModel: ObservableObject {
         case .failure(let err):
             uiModel = UIModel.error(err.localizedDescription)
             print("Success \(err.localizedDescription)")
-            message = err.localizedDescription
-//            results = Result.failure(err)
         case .success(let data):
             print("Success \(data)")
-            message = data.statusMessage
-//            results = Result.success(data)
             uiModel = UIModel.content(data)
         }
     }
-    func resetMessage() {
-        self.message = ""
-    }
-    fileprivate func resetViewmodelResult(){
-        self.results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
+    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
+        $uiModel.sink { uiModel in
+            switch uiModel {
+            case .content(let data):
+               action(data)
+            case .loading:
+                print("loadingState")
+            case .error(_):
+                print("errorState")
+            case .nothing:
+                print("nothingState")
+            }
+        }.store(in: &subscriptions)
     }
 }

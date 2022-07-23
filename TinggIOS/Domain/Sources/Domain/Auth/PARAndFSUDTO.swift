@@ -15,7 +15,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var services: [MerchantService]
     public var smsRegex: [SMSRegex]
     public var merchantPayers: [MerchantPayer]
-    public var categories: [Category]
+    public var categories: [Categorys]
     public var contactInfo: [Contact]
     public var nominationInfo: [NominationInfo]
     public var updateStatusCode: Int
@@ -25,7 +25,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var transactionSummaryInfo: [[String: String?]]
     public var inviteMessage: String
     public var invitesVisibility: Int
-//    public var defaultNetworkServiceID: JSONNull?
+    public var defaultNetworkServiceID: String?
     public var manualBillsSetup: ManualBillsSetup
     public var manualBillAccounts: [ManualBill]
     public var bundleData: [BundleDatum]
@@ -35,7 +35,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var cardDetails: [Card]
     public var scanEnabled: Int
     public var bannerData: [BannerDatum]
-//    public var groupType: [JSONAny]
+    public var groupType: [String]
     public var isInGroupWhitelist: Int
     public var virtualCards: [VirtualCard]
     public var isTinggRetailEnabled, hasWallet, hasVirtualCard: Int
@@ -73,7 +73,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
         case transactionSummaryInfo = "TRANSACTION_SUMMARY_INFO"
         case inviteMessage = "INVITE_MESSAGE"
         case invitesVisibility = "INVITES_VISIBILITY"
-//        case defaultNetworkServiceID = "DEFAULT_NETWORK_SERVICE_ID"
+        case defaultNetworkServiceID = "DEFAULT_NETWORK_SERVICE_ID"
         case manualBillsSetup = "MANUAL_BILLS_SETUP"
         case manualBillAccounts = "MANUAL_BILL_ACCOUNTS"
         case bundleData = "BUNDLE_DATA"
@@ -84,7 +84,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
         case cardDetails = "CARD_DETAILS"
         case scanEnabled = "SCAN_ENABLED"
         case bannerData = "BANNER_DATA"
-//        case groupType = "GROUP_TYPE"
+        case groupType = "GROUP_TYPE"
         case isInGroupWhitelist = "IS_IN_GROUP_WHITELIST"
         case virtualCards = "VIRTUAL_CARDS"
         case isTinggRetailEnabled = "IS_TINGG_RETAIL_ENABLED"
@@ -489,22 +489,23 @@ public struct BritamWalletDatum: Codable {
 
 // MARK: - MulaProfile
 public struct MulaProfile: Codable {
-//    public var profileID: JSONNull?
+    public var profileID: String?
     public var msisdn, firstName, lastName, emailAddress: String
     public var photoURL: String
     public var postalAddress: String
     public var hasValidatedCard: Int
-//    public var simSerialNumber: JSONNull?
-    public var isMain: Int
-//    public var pinRequestType, isMulaPinSet, freshchatRestorationID, acceptedTacVersion: JSONNull?
-//    public var dateAcceptedTac: JSONNull?
+    public var simSerialNumber: String?
+    public var isMain: String?
+    public var pinRequestType, isMulaPinSet, freshchatRestorationID: String?
+//    public var acceptedTacVersion: String?
+    public var dateAcceptedTac: String?
     public var creditLimit, hasOptedOut, hasActivatedAssist: String
     public var currentUsage, loanBalance: Int
     public var identity, walletAccountID, walletAccountNumber, hasActivatedWallet: String
     public var walletBalance: String
 
     enum CodingKeys: String, CodingKey {
-//        case profileID = "PROFILE_ID"
+        case profileID = "PROFILE_ID"
         case msisdn = "MSISDN"
         case firstName = "FIRST_NAME"
         case lastName = "LAST_NAME"
@@ -512,13 +513,13 @@ public struct MulaProfile: Codable {
         case photoURL = "PHOTO_URL"
         case postalAddress = "POSTAL_ADDRESS"
         case hasValidatedCard = "HAS_VALIDATED_CARD"
-//        case simSerialNumber = "SIM_SERIAL_NUMBER"
+        case simSerialNumber = "SIM_SERIAL_NUMBER"
         case isMain = "IS_MAIN"
-//        case pinRequestType = "PIN_REQUEST_TYPE"
-//        case isMulaPinSet = "IS_MULA_PIN_SET"
-//        case freshchatRestorationID = "FRESHCHAT_RESTORATION_ID"
+        case pinRequestType = "PIN_REQUEST_TYPE"
+        case isMulaPinSet = "IS_MULA_PIN_SET"
+        case freshchatRestorationID = "FRESHCHAT_RESTORATION_ID"
 //        case acceptedTacVersion = "ACCEPTED_TAC_VERSION"
-//        case dateAcceptedTac = "DATE_ACCEPTED_TAC"
+        case dateAcceptedTac = "DATE_ACCEPTED_TAC"
         case creditLimit = "CREDIT_LIMIT"
         case hasOptedOut = "HAS_OPTED_OUT"
         case hasActivatedAssist = "HAS_ACTIVATED_ASSIST"
@@ -685,7 +686,8 @@ public struct Service: Codable {
 //    public var serviceParameters: SERVICEPARAMETERSUnion
 //    public var bundleLabel: BundleLabel
 //    public var bundleCategoryLabel: BundleCategoryLabel
-    public var displayNoPendingBillDialog, canEditAmount, isCyclicService, isDislayableOnLifestream: String
+    public var displayNoPendingBillDialog, canEditAmount, isCyclicService : String
+    public var isDislayableOnLifestream: Bool
 //    public var favoritesDisplayMode: FavoritesDisplayMode
 //    public var isRefresh: RoundUpAmounts
 //    public var applicableCharges: [JSONAny]

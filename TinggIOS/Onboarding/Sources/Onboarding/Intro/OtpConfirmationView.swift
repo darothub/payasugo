@@ -41,23 +41,13 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.$uiModel.sink { uiModel in
-                    switch uiModel {
-                    case .content(let data):
-                        print("loadingStateOTP")
-                        if data.statusMessage.contains("Invalid") {
-                            return
-                        }
-                        otpConfirmed = true
-                        dismiss()
-                    case .loading:
-                        print("loadingStateOTP")
-                    case .error(_):
-                        print("errorStateOTP")
-                    case .nothing:
-                        print("nothingStateOTP")
+                onboardingViewModel.observeUIModel { data in
+                    if data.statusMessage.contains("Invalid") {
+                        return
                     }
-                }.store(in: &subscriptions)
+                    otpConfirmed = true
+                    dismiss()
+                }
             }
         }
         .handleViewState(uiModel: $onboardingViewModel.uiModel)

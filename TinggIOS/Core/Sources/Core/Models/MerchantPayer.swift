@@ -11,77 +11,78 @@ import RealmSwift
 public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var id: ObjectId?
     @Persisted public var hubClientID: String? = ""
+    @Persisted public var clientName: String? = ""
+    @Persisted public var clientCode: String? = ""
+    @Persisted public var countryID: String? = ""
+    @Persisted public var country: String? = ""
+//    @Persisted public var activeStatus: String? = ""
+    @Persisted public var canPay: String? = ""
+//    @Persisted public var viewable: String? = ""
+    @Persisted public var statusMessage: String? = ""
+    @Persisted public var logo: String? = ""
+    @Persisted public var webTemplateID: String? = ""
+    @Persisted public var paybill: String? = ""
+    @Persisted public var networkID: String? = ""
+    @Persisted public var referenceLabel: String? = ""
+    @Persisted public var isSelected: String? = ""
+    @Persisted public var paymentInstructions: String? = ""
     @Persisted public var isDefault: String? = ""
-    @Persisted public var orderID: Int? = 0
-    @Persisted public var isChargingPayer:Bool = false
-    @Persisted public var isSelectedOnAdapter: Bool = false
-    @Persisted public var merchantPayerDEFAULT: String? = ""
-    @Persisted public var selected: String? = ""
-    @Persisted public var unSelected: String? = ""
-    @Persisted public var chargeTypeFixed: String? = ""
-    @Persisted public var chargeTypePercentage: String? = ""
-    @Persisted public var checkoutInApp: String? = ""
-    @Persisted public var checkoutUssdPush: String? = ""
-    @Persisted public var checkoutStkLaunch: String? = ""
-    @Persisted public var checkoutCard: String? = ""
-    @Persisted public var checkoutBankViaCard: String? = ""
-    @Persisted public var checkoutPinAuth: String? = ""
-    @Persisted public var checkoutMulaWallet: String? = ""
-    @Persisted public var checkoutTinggWallet: String? = ""
-    @Persisted public var checkoutTinggFundsTransfer: String? = ""
-    @Persisted public var checkoutMnoPinAuth: String? = ""
+    @Persisted public var orderID: String? = ""
+    @Persisted public var paymentInstruction: String? = ""
+    @Persisted public var abbreviation: String? = ""
+    @Persisted public var colorCode: String? = ""
+    @Persisted public var shortName: String? = ""
+    @Persisted public var showLogo: String? = ""
+    @Persisted public var checkoutType: String? = ""
+    @Persisted public var canPayForOther: String? = ""
+    @Persisted public var payerReference: String? = ""
+    @Persisted public var chargeSyncMode: String? = ""
+    @Persisted public var paymentCount: String? = ""
+    @Persisted public var isChargingPayer: String? = ""
+    @Persisted public var payerCharge: String? = ""
+    @Persisted public var title: String? = ""
+    @Persisted public var message: String? = ""
+    @Persisted public var paymentActivationDesc: String? = ""
     
     enum CodingKeys: String, CodingKey {
         case id
         case hubClientID = "HUB_CLIENT_ID"
+        case clientName = "CLIENT_NAME"
+        case clientCode = "CLIENT_CODE"
+        case countryID = "COUNTRY_ID"
+        case country = "COUNTRY"
+//        case activeStatus = "ACTIVE_STATUS"
+        case canPay = "CAN_PAY"
+//        case viewable = "VIEWABLE"
+        case statusMessage = "STATUS_MESSAGE"
+        case logo = "LOGO"
+        case webTemplateID = "WEB_TEMPLATE_ID"
+        case paybill = "PAYBILL"
+        case networkID = "NETWORK_ID"
+        case referenceLabel = "REFERENCE_LABEL"
+        case isSelected = "IS_SELECTED"
+        case paymentInstructions = "PAYMENT_INSTRUCTIONS"
         case isDefault = "IS_DEFAULT"
         case orderID = "ORDER_ID"
+        case paymentInstruction = "PAYMENT_INSTRUCTION"
+        case abbreviation = "ABBREVIATION"
+        case colorCode = "COLOR_CODE"
+        case shortName = "SHORT_NAME"
+        case showLogo = "SHOW_LOGO"
+        case checkoutType = "CHECKOUT_TYPE"
+        case canPayForOther = "CAN_PAY_FOR_OTHER"
+        case payerReference = "PAYER_REFERENCE"
+        case chargeSyncMode = "CHARGE_SYNC_MODE"
+        case paymentCount = "PAYMENT_COUNT"
         case isChargingPayer = "IS_CHARGING_PAYER"
-        case isSelectedOnAdapter
-        case merchantPayerDEFAULT = "DEFAULT"
-        case selected = "SELECTED"
-        case unSelected = "UN_SELECTED"
-        case chargeTypeFixed = "CHARGE_TYPE_FIXED"
-        case chargeTypePercentage = "CHARGE_TYPE_PERCENTAGE"
-        case checkoutInApp = "CHECKOUT_IN_APP"
-        case checkoutUssdPush = "CHECKOUT_USSD_PUSH"
-        case checkoutStkLaunch = "CHECKOUT_STK_LAUNCH"
-        case checkoutCard = "CHECKOUT_CARD"
-        case checkoutBankViaCard = "CHECKOUT_BANK_VIA_CARD"
-        case checkoutPinAuth = "CHECKOUT_PIN_AUTH"
-        case checkoutMulaWallet = "CHECKOUT_MULA_WALLET"
-        case checkoutTinggWallet = "CHECKOUT_TINGG_WALLET"
-        case checkoutTinggFundsTransfer = "CHECKOUT_TINGG_FUNDS_TRANSFER"
-        case checkoutMnoPinAuth = "CHECKOUT_MNO_PIN_AUTH"
+        case payerCharge = "PAYER_CHARGE"
+        case title = "TITLE"
+        case message = "MESSAGE"
+        case paymentActivationDesc = "PAYMENT_ACTIVATION_DESC"
     }
-//    init(
-//        hubClientID: String?, isDefault: String?, orderID: Int,
-//          isChargingPayer: Bool, isSelectedOnAdapter: Bool, merchantPayerDEFAULT: String?,
-//          selected: String?, unSelected: String?, chargeTypeFixed: String?,
-//          chargeTypePercentage: String?, checkoutInApp: String?, checkoutUssdPush: String?,
-//          checkoutStkLaunch: String?, checkoutCard: String?, checkoutBankViaCard: String?,
-//          checkoutPinAuth: String?, checkoutMulaWallet: String?, checkoutTinggWallet: String?,
-//          checkoutTinggFundsTransfer: String?, checkoutMnoPinAuth: String?
-//    ) {
-//        self.hubClientID = hubClientID
-//        self.isDefault = isDefault
-//        self.orderID = orderID
-//        self.isChargingPayer = isChargingPayer
-//        self.isSelectedOnAdapter = isSelectedOnAdapter
-//        self.merchantPayerDEFAULT = merchantPayerDEFAULT
-//        self.selected = selected
-//        self.unSelected = unSelected
-//        self.chargeTypeFixed = chargeTypeFixed
-//        self.chargeTypePercentage = chargeTypePercentage
-//        self.checkoutInApp = checkoutInApp
-//        self.checkoutUssdPush = checkoutUssdPush
-//        self.checkoutStkLaunch = checkoutStkLaunch
-//        self.checkoutCard = checkoutCard
-//        self.checkoutBankViaCard = checkoutBankViaCard
-//        self.checkoutPinAuth = checkoutPinAuth
-//        self.checkoutMulaWallet = checkoutMulaWallet
-//        self.checkoutTinggWallet = checkoutTinggWallet
-//        self.checkoutTinggFundsTransfer = checkoutTinggFundsTransfer
-//        self.checkoutMnoPinAuth = checkoutMnoPinAuth
-//    }
 }
+
+//enum RoundUpAmounts: String, Codable {
+//    case no = "NO"
+//    case yes = "YES"
+//}

@@ -108,23 +108,7 @@ struct PhoneNumberValidationView: View {
                         onboardingViewModel.makeActivationCodeRequest(
                             msisdn: number, clientId: country.mulaClientID!
                         )
-                        onboardingViewModel.$uiModel.sink { uiModel in
-                            switch uiModel {
-                            case .content(let data):
-                                print("dataState")
-                                showOTPView = true
-                            case .loading:
-                                print("loadingState")
-                            case .error(let err):
-                                warning = err
-                                print("errorState")
-                            case .nothing:
-                                print("nothingState")
-                            }
-                        }.store(in: &subscriptions)
                     }
-                }.onReceive(onboardingViewModel.$results) { result in
-                    print("PhoneScreen \(result)")
                 }
             }.task {
                 getCountries()
@@ -150,25 +134,26 @@ struct PhoneNumberValidationView: View {
                     onboardingViewModel.makePARRequest(
                         msisdn: phoneNumber, clientId: country.mulaClientID!
                     )
-                    onboardingViewModel.$uiModel.sink { uiModel in
-                        switch uiModel {
-                        case .content(let data):
-                            print("dataState navigate")
-                        case .loading:
-                            print("loadingState")
-                        case .error(_):
-                            print("errorState")
-                        case .nothing:
-                            print("nothingState")
-                        }
-                    }.store(in: &subscriptions)
                 }
-             
             }, content: {
                 OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber, otpConfirmed: $confirmedOTP)
-                    .environmentObject(onboardingViewModel)
             })
             .handleViewState(uiModel: $onboardingViewModel.uiModel)
+            .onAppear {
+                onboardingViewModel.observeUIModel { data in
+                    if showOTPView {
+                        showOTPView.toggle()
+                        print("SHowOTPView")
+                    } else if !showOTPView && confirmedOTP {
+                        if let parResponse = data as? PARAndFSUDTO {
+                            print("parResponse \(parResponse)")
+                        }
+                        print("BACKFROMOTPView")
+                    } else {
+                        showOTPView = true
+                    }
+                }
+            }
         }
     }
     fileprivate func callSupport() {

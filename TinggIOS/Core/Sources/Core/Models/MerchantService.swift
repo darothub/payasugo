@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 01/06/2022.
 //
-
+// swiftlint:disable all
 import Foundation
 import RealmSwift
 
@@ -38,36 +38,33 @@ public class MerchantService: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var referenceLabel: String? = ""
     @Persisted public var inputType: String? = ""
     @Persisted public var formType: String? = ""
-    @Persisted public var formParameters: String? = ""
+//    @Persisted public var formParameters: String? = ""
     @Persisted public var paymentLabel: String? = ""
     @Persisted public var isBundleService: String? = ""
     @Persisted public var bundleLabel: String? = ""
     @Persisted public var bundleCategoryLabel: String? = ""
-    @Persisted public var isDislayableOnLifestream: Bool
+    @Persisted public var isDislayableOnLifestream: String? = ""
     @Persisted public var bundle: String? = ""
     @Persisted public var ignoreSaveEnrollment: String? = ""
     @Persisted public var hasBillAmount: String? = ""
     @Persisted public var displayNoPendingBillDialog: String? = ""
-    @Persisted public var serviceParameters: String? = ""
+//    @Persisted public var serviceParameters: ServiceParameters? = nil
     @Persisted public var canEditAmount: String? = ""
-    @Persisted public var isRefresh: Bool = false
+    @Persisted public var isRefresh: String? = ""
     @Persisted public var favoritesDisplayMode: String? = ""
-    @Persisted public var applicableCharges: String? = ""
+    @Persisted public var applicableCharges = RealmSwift.List<String>()
     @Persisted public var validateBillAmount: String? = ""
     @Persisted public var charges: String? = ""
     @Persisted public var payerClientID: String? = ""
     @Persisted public var message: String? = ""
     @Persisted public var title: String? = ""
-    @Persisted public var isCyclicService: Bool = false
+    @Persisted public var isCyclicService: String? = ""
     @Persisted public var exactPayment: String? = ""
     @Persisted public var contractualLevel: String? = ""
     @Persisted public var paymentOptions: String? = ""
     @Persisted public var categoryID: String? = ""
-    @Persisted public var category: Category?
+    @Persisted public var category: Categorys?
     @Persisted public var isManualBill: String? = ""
-    @Persisted public var selected: Bool = false
-
-    // swiftlint:disable all
     // service form type dynamic
     public static let GENERIC_FORM = "GENERIC_FORM"
     // service form type dynamic
@@ -108,7 +105,7 @@ public class MerchantService: Object, ObjectKeyIdentifiable, Codable {
         case referenceLabel = "REFERENCE_LABEL"
         case inputType = "INPUT_TYPE"
         case formType = "FORM_TYPE"
-        case formParameters = "FORM_PARAMETERS"
+//        case formParameters = "FORM_PARAMETERS"
         case paymentLabel = "PAYMENT_LABEL"
         case isBundleService = "IS_BUNDLE_SERVICE"
         case bundleLabel = "BUNDLE_LABEL"
@@ -118,7 +115,7 @@ public class MerchantService: Object, ObjectKeyIdentifiable, Codable {
         case ignoreSaveEnrollment = "IGNORE_SAVE_ENROLLMENT"
         case hasBillAmount = "HAS_BILL_AMOUNT"
         case displayNoPendingBillDialog = "DISPLAY_NO_PENDING_BILL_DIALOG"
-        case serviceParameters = "SERVICE_PARAMETERS"
+//        case serviceParameters = "SERVICE_PARAMETERS"
         case canEditAmount = "CAN_EDIT_AMOUNT"
         case isRefresh = "IS_REFRESH"
         case favoritesDisplayMode = "FAVORITES_DISPLAY_MODE"
@@ -133,64 +130,26 @@ public class MerchantService: Object, ObjectKeyIdentifiable, Codable {
         case contractualLevel = "CONTRACTUAL_LEVEL"
         case paymentOptions = "PAYMENT_OPTIONS"
         case categoryID = "CATEGORY_ID"
-        case category, isManualBill, selected
+        case category, isManualBill
     }
+}
 
-//    init(clientName: String?, showAll: String?, serviceName: String?, serviceCode: String?, activeStatus: String?, serviceLogo: String?, receiverSourceAddress: String?, hubServiceID: String?, hubClientID: String?, minAmount: String?, abbreviation: String?, clientCode: String?, maxAmount: String?, referenceInputMask: String?, formatErrorMessage: String?, servicePatternID: String?, isPrepaidService: String?, paybill: String?, networkID: String?, webTemplateID: String?, colorCode: String?, orderID: String?, serviceImage: String?, presentmentType: String?, referenceLabel: String?, inputType: String?, formType: String?, formParameters: String?, paymentLabel: String?, isBundleService: String?, bundleLabel: String?, bundleCategoryLabel: String?, isDislayableOnLifestream: Bool, bundle: String?, ignoreSaveEnrollment: String?, hasBillAmount: String?, displayNoPendingBillDialog: String?, serviceParameters: String?, canEditAmount: String?, isRefresh: Bool, favoritesDisplayMode: String?, applicableCharges: String?, validateBillAmount: String?, charges: String?, payerClientID: String?, message: String?, title: String?, isCyclicService: Bool, exactPayment: String?, contractualLevel: String?, paymentOptions: String?, categoryID: String?, category: Category?) {
-//        self.clientName = clientName
-//        self.showAll = showAll
-//        self.serviceName = serviceName
-//        self.serviceCode = serviceCode
-//        self.activeStatus = activeStatus
-//        self.serviceLogo = serviceLogo
-//        self.receiverSourceAddress = receiverSourceAddress
-//        self.hubServiceID = hubServiceID
-//        self.hubClientID = hubClientID
-//        self.minAmount = minAmount
-//        self.abbreviation = abbreviation
-//        self.clientCode = clientCode
-//        self.maxAmount = maxAmount
-//        self.referenceInputMask = referenceInputMask
-//        self.formatErrorMessage = formatErrorMessage
-//        self.servicePatternID = servicePatternID
-//        self.isPrepaidService = isPrepaidService
-//        self.paybill = paybill
-//        self.networkID = networkID
-//        self.webTemplateID = webTemplateID
-//        self.colorCode = colorCode
-//        self.orderID = orderID
-//        self.serviceImage = serviceImage
-//        self.presentmentType = presentmentType
-//        self.referenceLabel = referenceLabel
-//        self.inputType = inputType
-//        self.formType = formType
-//        self.formParameters = formParameters
-//        self.paymentLabel = paymentLabel
-//        self.isBundleService = isBundleService
-//        self.bundleLabel = bundleLabel
-//        self.bundleCategoryLabel = bundleCategoryLabel
-//        self.isDislayableOnLifestream = isDislayableOnLifestream
-//        self.bundle = bundle
-//        self.ignoreSaveEnrollment = ignoreSaveEnrollment
-//        self.hasBillAmount = hasBillAmount
-//        self.displayNoPendingBillDialog = displayNoPendingBillDialog
-//        self.serviceParameters = serviceParameters
-//        self.canEditAmount = canEditAmount
-//        self.isRefresh = isRefresh
-//        self.favoritesDisplayMode = favoritesDisplayMode
-//        self.applicableCharges = applicableCharges
-//        self.validateBillAmount = validateBillAmount
-//        self.charges = charges
-//        self.payerClientID = payerClientID
-//        self.message = message
-//        self.title = title
-//        self.isCyclicService = isCyclicService
-//        self.exactPayment = exactPayment
-//        self.contractualLevel = contractualLevel
-//        self.paymentOptions = paymentOptions
-//        self.categoryID = categoryID
-//        self.category = category
-//        isManualBill = "0"
-//        selected = false
-//    }
+// MARK: - SERVICEPARAMETERS
+public class ServiceParameters: Object, ObjectKeyIdentifiable, Codable {
+    @Persisted public var servicesData = RealmSwift.List<ServicesDatum>()
+
+    enum CodingKeys: String, CodingKey {
+        case servicesData = "SERVICES_DATA"
+    }
+}
+
+// MARK: - ServicesDatum
+public class ServicesDatum: Object, ObjectKeyIdentifiable, Codable {
+    @Persisted public var serviceID: Int
+    @Persisted public var serviceName: String
+
+    enum CodingKeys: String, CodingKey {
+        case serviceID = "SERVICE_ID"
+        case serviceName = "SERVICE_NAME"
+    }
 }

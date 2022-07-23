@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 // MARK: - Category
-public class Category: Object,  ObjectKeyIdentifiable, Codable {
+public class Categorys: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var categoryID: String? = ""
     @Persisted public var categoryName: String? = ""
     @Persisted public var categoryLogo: String? = ""
