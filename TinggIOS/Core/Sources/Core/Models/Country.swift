@@ -11,7 +11,7 @@ import RealmSwift
 // MARK: - Country
 public class Country: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var country: String? = ""
-    @Persisted public var countryCode: String? = ""
+    @Persisted(primaryKey: true) public var countryCode: String? = ""
     @Persisted public var countryURLNew: String? = ""
     @Persisted public var status: String? = ""
     @Persisted public var currency: String? = ""

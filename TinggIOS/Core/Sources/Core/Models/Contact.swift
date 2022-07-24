@@ -10,20 +10,9 @@ import RealmSwift
 // MARK: - Contact
 public class Contact: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var id: ObjectId
-    //    @Persisted public var email: String? = ""
-    //    @Persisted public var facebook: String? = ""
-    //    @Persisted public var phone: String? = ""
-    //    @Persisted public var link: String? = ""
-    //    @Persisted public var twitter: String? = ""
-    //    @Persisted public var countryID: String? = ""
-    //    @Persisted public var website: String? = ""
-    //    @Persisted public var address: String? = ""
-    //    @Persisted public var location: String? = ""
-    //    @Persisted public var contactTitle: String? = ""
-    //    @Persisted public var dateCreate: String? = ""
     @Persisted public var contactTitle: String
     @Persisted public var location: String
-    @Persisted public var phone: String
+    @Persisted(primaryKey: true) public var phone: String
     @Persisted public var address: String
     @Persisted public var email: String
     @Persisted public var twitter: String

@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - Profile
 public class Profile: Object,  ObjectKeyIdentifiable, Codable {
-    @Persisted(primaryKey: true) public var profileID: Int = 0
+    @Persisted(primaryKey: true) public var profileID: String = ""
     @Persisted public var msisdn: String? = ""
     @Persisted public var firstName: String? = ""
     @Persisted public var lastName: String? = ""
@@ -29,12 +29,12 @@ public class Profile: Object,  ObjectKeyIdentifiable, Codable {
     @Persisted public var isMulaPinSet: String? = ""
     @Persisted public var isMain: String? = ""
     @Persisted public var simSerialNumber: String? = ""
-    @Persisted public var hasValidatedCard: String? = ""
+    @Persisted public var hasValidatedCard: Int? = 0
     @Persisted public var creditLimit: String? = ""
     @Persisted public var hasActivatedAssist: String? = ""
     @Persisted public var hasOptedOut: String? = ""
-    @Persisted public var currentUsage: String? = ""
-    @Persisted public var loanBalance: String? = ""
+    @Persisted public var currentUsage: Int? = 0
+    @Persisted public var loanBalance: Int? = 0
     @Persisted public var hasActivatedWallet: String? = ""
     @Persisted public var walletAccountID: String? = ""
     @Persisted public var walletAccountNumber: String? = ""
@@ -43,7 +43,7 @@ public class Profile: Object,  ObjectKeyIdentifiable, Codable {
     @Persisted public var loyaltyPoints: String? = ""
     @Persisted public var identity: String? = ""
     @Persisted public var postalAddress: String? = ""
-    @Persisted public var acceptedTacVersion: String? = ""
+    @Persisted public var acceptedTacVersion: Int? = 0
     @Persisted public var dateAcceptedTac: String? = ""
     @Persisted public var nationalid: String? = ""
     @Persisted public var hasBritamAccount: String? = ""

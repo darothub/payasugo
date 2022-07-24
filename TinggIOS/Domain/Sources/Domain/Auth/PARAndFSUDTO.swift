@@ -11,18 +11,18 @@ import Core
 public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var statusCode: Int
     public var statusMessage, activationKey: String
-    public var profileInfo: [Profile]
+    public var profileInfo: [CoreProfileInfo]
     public var services: [MerchantService]
     public var smsRegex: [SMSRegex]
     public var merchantPayers: [MerchantPayer]
     public var categories: [Categorys]
     public var contactInfo: [Contact]
-    public var nominationInfo: [NominationInfo]
+    public var nominationInfo: [Enrollment]
     public var updateStatusCode: Int
     public var checksum, dateLastSynched: String
     public var mulaProfileInfo: MulaProfileInfo
     public var showcaseData: [ShowcaseDatum]
-    public var transactionSummaryInfo: [[String: String?]]
+    public var transactionSummaryInfo: [TransactionHistory]
     public var inviteMessage: String
     public var invitesVisibility: Int
     public var defaultNetworkServiceID: String?
@@ -30,14 +30,14 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var manualBillAccounts: [ManualBill]
     public var bundleData: [BundleDatum]
     public var bundleChecksum, bundleSyncDate: String
-    public var countriesExtraInfo: CountriesExtraInfo
+    public var countriesExtraInfo: Country
     public var securityQuestions: [SecurityQuestion]
     public var cardDetails: [Card]
     public var scanEnabled: Int
-    public var bannerData: [BannerDatum]
+    public var bannerData: [Highlight]
     public var groupType: [String]
     public var isInGroupWhitelist: Int
-    public var virtualCards: [VirtualCard]
+    public var virtualCards: [Card]
     public var isTinggRetailEnabled, hasWallet, hasVirtualCard: Int
     public var smilePartnerID: String
     public var gasDetailsURL: String
@@ -431,7 +431,7 @@ public struct PaymentFrequency: Codable {
 
 // MARK: - MulaProfileInfo
 public struct MulaProfileInfo: Codable {
-    public var mulaProfile: [MulaProfile]
+    public var mulaProfile: [Profile]
     public var paymentOptions: [MulaProfileInfoPaymentOption]
     public var wishlist: [Wishlist]
     public var cardInfo: CardInfo
@@ -581,15 +581,15 @@ public enum Name: String, Codable {
 public struct NominationInfo: Codable {
     public var merchantName: String
     public var merchantID: Int?
-//    public var merchantCode: MerchantCode?
+    public var merchantCode: String?
     public var serviceName: String
     public var hubServiceID: Int
     public var serviceCode: String?
     public var accountNumber: String
     public var accountName, accountAlias: String?
-//    public var accountID: JSONNull?
+    public var accountID: String?
     public var clientProfileAccountID: Int?
-//    public var isExplicit: IsExplicit
+    public var isExplicit: String?
 //    public var extraData: JSONNull?
     public var serviceCategoryID: ActiveStatus
     public var isReminder: String
@@ -603,16 +603,16 @@ public struct NominationInfo: Codable {
     enum CodingKeys: String, CodingKey {
         case merchantName = "MERCHANT_NAME"
         case merchantID = "MERCHANT_ID"
-//        case merchantCode = "MERCHANT_CODE"
+        case merchantCode = "MERCHANT_CODE"
         case serviceName = "SERVICE_NAME"
         case hubServiceID = "HUB_SERVICE_ID"
         case serviceCode = "SERVICE_CODE"
         case accountNumber = "ACCOUNT_NUMBER"
         case accountName = "ACCOUNT_NAME"
         case accountAlias = "ACCOUNT_ALIAS"
-//        case accountID = "ACCOUNT_ID"
+        case accountID = "ACCOUNT_ID"
         case clientProfileAccountID
-//        case isExplicit = "IS_EXPLICIT"
+        case isExplicit = "IS_EXPLICIT"
 //        case extraData
         case serviceCategoryID = "SERVICE_CATEGORY_ID"
         case isReminder = "IS_REMINDER"
@@ -636,7 +636,7 @@ enum MerchantCode: String, Codable {
 }
 
 // MARK: - ProfileInfo
-public struct ProfileInfo: Codable {
+public struct CoreProfileInfo: Codable {
     public var profileID: Int
     public var firstName, lastName: String
     public var photoURL: String

@@ -10,6 +10,7 @@ import Foundation
 import RealmSwift
 // MARK: - Card
 public class Card: Object,  ObjectKeyIdentifiable, Codable {
+    @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var firstName: String? = ""
     @Persisted public var middleName: String? = ""
     @Persisted public var idPassport: String? = ""
@@ -46,34 +47,6 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
         case cardType = "CARD_TYPE"
         case countryDialCode, merchantPayer
     }
-//    init(
-//        firstName: String?, middleName: String?, idPassport: String?,
-//         phoneNumber: String?, email: String?, customerAddress: String?,
-//         currencyCode: String?, customerCity: String?, countryCode: String?,
-//         cardAlias: String?, nameType: String?, payerClientID: String?,
-//         suffix: String?, activeStatus: String?, validationServiceID: String?,
-//         cardType: String?, countryDialCode: String?, merchantPayer: MerchantPayer?
-//    ) {
-//        self.firstName = firstName
-//        self.middleName = middleName
-//        self.idPassport = idPassport
-//        self.phoneNumber = phoneNumber
-//        self.email = email
-//        self.customerAddress = customerAddress
-//        self.currencyCode = currencyCode
-//        self.customerCity = customerCity
-//        self.countryCode = countryCode
-//        self.cardAlias = cardAlias
-//        self.nameType = nameType
-//        self.payerClientID = payerClientID
-//        self.suffix = suffix
-//        self.activeStatus = activeStatus
-//        self.validationServiceID = validationServiceID
-//        self.cardType = cardType
-//        self.countryDialCode = countryDialCode
-//        self.merchantPayer = merchantPayer
-//    }
-    
     func isInActive() -> Bool {
         return self.activeStatus == Card.STATUS_INACTIVE
     }

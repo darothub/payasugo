@@ -9,6 +9,7 @@ import SwiftUI
 import Theme
 
 struct HomeView: View {
+    @StateObject var homeViewModel: HomeViewModel = .init()
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -25,6 +26,7 @@ struct HomeView: View {
                         .frame(height: geo.size.height * 0.3)
                         .foregroundColor(.white)
                 )
+                .environmentObject(homeViewModel)
             }.ignoresSafeArea()
         }
         .background(PrimaryTheme.getColor(.cellulantLightGray))

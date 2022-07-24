@@ -20,7 +20,8 @@ class OnboardingViewModel: ObservableObject {
     @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
     @Published var uiModel = UIModel.nothing
     private var subscriptions = Set<AnyCancellable>()
-    
+    private var dbTransaction = DBTransactions()
+    @ObservedResults(Country.self) public var countriesDb
     var tinggRequest: TinggRequest
     var fetchCountries: FetchCountries
     var baseRequest: BaseRequest
@@ -88,6 +89,12 @@ class OnboardingViewModel: ObservableObject {
             }
         }.store(in: &subscriptions)
     }
+    func save<O: Object>(data: O){
+        dbTransaction.save(data: data)
+    }
+    func saveObjects<O: Object>(data: [O]) {
+        dbTransaction.saveObjects(data: data)
+    }
 }
 
 
@@ -107,9 +114,15 @@ class DBTransactions {
 //    @ObservedResults(VirtualCard.self) var virtualCards
 //    @ObservedResults(MulaProfileInfo.self) var mulaProfileInfo
     @ObservedResults(ManualBill.self) var manualBills
+    private var realmManager: RealmManager = .init()
     init() {}
-    
     func saveCategories(category: Categorys) {
         $categorys.append(category)
+    }
+    func save<O: Object>(data: O){
+        realmManager.save(data: data)
+    }
+    func saveObjects<O: Object>(data: [O]) {
+        realmManager.save(data: data)
     }
 }

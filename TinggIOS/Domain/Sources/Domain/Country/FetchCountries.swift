@@ -15,7 +15,7 @@ public class FetchCountries: ObservableObject {
     public var subscription = Set<AnyCancellable>()
     @Published public var countriesInfo = [Country]()
     @ObservedResults(Country.self) public var countriesDb
-
+    private(set) var realmManager = RealmManager()
     public init(countryServices: TinggApiServices) {
         self.countryApiServices = countryServices
         countriesCodesAndCountriesDialCodes()
@@ -36,11 +36,12 @@ public class FetchCountries: ObservableObject {
             self.getCountries { [self] results in
                 do {
                     let countriesInfo = try results.get().data
-                    DispatchQueue.main.async {
-                        for country in countriesInfo {
-                            self.$countriesDb.append(country)
-                        }
-                    }
+                    realmManager.save(data: countriesInfo)
+//                    DispatchQueue.main.async {
+//                        for country in countriesInfo {
+//                            self.$countriesDb.append(country)
+//                        }
+//                    }
                     promise(.success(countriesInfo))
                 } catch {
                     print("FetcCountriesError \(error.localizedDescription)")

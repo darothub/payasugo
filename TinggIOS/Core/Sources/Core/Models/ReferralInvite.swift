@@ -18,10 +18,4 @@ public class ReferralInvite: Object,  ObjectKeyIdentifiable, Codable {
     enum CodingKeys: String, CodingKey {
         case inviteID, invitedMSISDN, invitedName, status
     }
-
-//    init(invitedMSISDN: String?, invitedName: String?, status: Int) {
-//        self.invitedMSISDN = invitedMSISDN
-//        self.invitedName = invitedName
-//        self.status = status
-//    }
 }

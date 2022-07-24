@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 // MARK: - Category
 public class Categorys: Object, ObjectKeyIdentifiable, Codable {
-    @Persisted public var categoryID: String? = ""
+    @Persisted(primaryKey: true) public var categoryID: String? = ""
     @Persisted public var categoryName: String? = ""
     @Persisted public var categoryLogo: String? = ""
     @Persisted public var activeStatus: String? = ""
@@ -45,29 +45,4 @@ public class Categorys: Object, ObjectKeyIdentifiable, Codable {
         case otherID = "OTHER_ID"
         case investID = "INVEST_ID"
     }
-//    init(
-//        categoryID: String?, categoryName: String?, categoryLogo: String?,
-//        activeStatus: String?, categoryOrderID: String?, quickAction: String?,
-//        showInHomepage: String?, parkingID: String?, payTvID: String?,
-//        powerID: String?, internetID: String?, waterID: String?,
-//        airtimeID: String?, gasID: String?, otherID: String?,
-//        investID: String?
-//    ) {
-//        self.categoryID = categoryID
-//        self.categoryName = categoryName
-//        self.categoryLogo = categoryLogo
-//        self.activeStatus = activeStatus
-//        self.categoryOrderID = categoryOrderID
-//        self.quickAction = quickAction
-//        self.showInHomepage = showInHomepage
-//        self.parkingID = parkingID
-//        self.payTvID = payTvID
-//        self.powerID = powerID
-//        self.internetID = internetID
-//        self.waterID = waterID
-//        self.airtimeID = airtimeID
-//        self.gasID = gasID
-//        self.otherID = otherID
-//        self.investID = investID
-//    }
 }

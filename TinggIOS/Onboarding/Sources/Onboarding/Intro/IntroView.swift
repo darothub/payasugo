@@ -21,9 +21,6 @@ public struct IntroView: View {
                 )
                 tinggColoredLogo
                 IntroTabView(geo: geo, active: $active)
-                    .task {
-                        onboardingViewModel.allCountries()
-                    }
             }
             .navigationBarHidden(true)
             .onAppear {

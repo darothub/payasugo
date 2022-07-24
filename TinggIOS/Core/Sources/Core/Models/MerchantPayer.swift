@@ -9,7 +9,6 @@ import Foundation
 import RealmSwift
 // MARK: - MerchantPayer
 public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
-    @Persisted public var id: ObjectId?
     @Persisted public var hubClientID: String? = ""
     @Persisted public var clientName: String? = ""
     @Persisted public var clientCode: String? = ""
@@ -27,7 +26,7 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var isSelected: String? = ""
     @Persisted public var paymentInstructions: String? = ""
     @Persisted public var isDefault: String? = ""
-    @Persisted public var orderID: String? = ""
+    @Persisted(primaryKey: true) public var orderID: String? = ""
     @Persisted public var paymentInstruction: String? = ""
     @Persisted public var abbreviation: String? = ""
     @Persisted public var colorCode: String? = ""
@@ -45,7 +44,6 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var paymentActivationDesc: String? = ""
     
     enum CodingKeys: String, CodingKey {
-        case id
         case hubClientID = "HUB_CLIENT_ID"
         case clientName = "CLIENT_NAME"
         case clientCode = "CLIENT_CODE"
@@ -60,7 +58,7 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
         case paybill = "PAYBILL"
         case networkID = "NETWORK_ID"
         case referenceLabel = "REFERENCE_LABEL"
-        case isSelected = "IS_SELECTED"
+//        case isSelected = "IS_SELECTED"
         case paymentInstructions = "PAYMENT_INSTRUCTIONS"
         case isDefault = "IS_DEFAULT"
         case orderID = "ORDER_ID"

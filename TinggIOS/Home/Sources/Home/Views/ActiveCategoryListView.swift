@@ -10,10 +10,11 @@ import SwiftUI
 import Theme
 struct ActiveCategoryListView: View {
     @ObservedResults(Categorys.self, where: {$0.activeStatus == "1"}) var categories
+    @State var index: Int = 0
+    @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
-        HStack {
-            ForEach(0..<3, id: \.self) { index in
-                let eachCategory = categories[index]
+        HStack(alignment: .top) {
+            ForEach(homeViewModel.processedCategories[index], id: \.categoryID) { eachCategory in
                 if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo {
                     ActiveCategoryView(
                         title: name,

@@ -47,7 +47,3 @@ struct ActiveCategoryView_Previews: PreviewProvider {
         ActiveCategoryView(title: "Hello", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/internet.png")    }
 }
 
-
-
-
-

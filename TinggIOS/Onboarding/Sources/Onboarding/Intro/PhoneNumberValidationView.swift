@@ -29,7 +29,7 @@ struct PhoneNumberValidationView: View {
     @State var confirmedOTP = false
     @State private var subscriptions = Set<AnyCancellable>()
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
-    var dbTransactionController:DBTransactions = .init()
+    var dbTransactionController: DBTransactions = .init()
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
@@ -150,10 +150,13 @@ struct PhoneNumberValidationView: View {
                             print("parResponse \(parResponse)")
                             Task {
                                 print("Saving ")
-                                for category in parResponse.categories {
-                                    dbTransactionController.$categorys.append(category)
-                                    print("Saved \(category)")
-                                }
+                                onboardingViewModel.saveObjects(data: parResponse.categories)
+                                let profile = parResponse.mulaProfileInfo.mulaProfile[0]
+                                onboardingViewModel.save(data: profile)
+//                                for category in parResponse.categories {
+//                                    dbTransactionController.$categorys.append(category)
+//                                    print("Saved \(category)")
+//                                }
                                 print("Saving done")
                                 navigate.toggle()
                             }
@@ -232,7 +235,7 @@ extension PhoneNumberValidationView {
             }
     }
     func getCountries() {
-        countries = onboardingViewModel.fetchCountries.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
+        countries = onboardingViewModel.$countriesDb.wrappedValue.reduce(into: [:]) { partialResult, country in
             partialResult[country.countryCode!] = country.countryDialCode
         }
     }
