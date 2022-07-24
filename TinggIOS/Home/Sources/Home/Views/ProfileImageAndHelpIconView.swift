@@ -9,7 +9,7 @@ import SwiftUI
 import Theme
 
 struct ProfileImageAndHelpIconView: View {
-    var imageUrl: String = ""
+    @State var imageUrl: String = ""
     var helpIconString =  "camera.fill"
     var body: some View {
         HStack {

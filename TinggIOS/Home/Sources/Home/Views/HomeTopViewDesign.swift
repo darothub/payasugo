@@ -14,7 +14,7 @@ struct HomeTopViewDesign: View {
     var geo: GeometryProxy
     var body: some View {
         VStack {
-            ProfileImageAndHelpIconView()
+            ProfileImageAndHelpIconView(imageUrl: homeViewModel.getProfile().photoURL!)
                 .padding(.top, 30)
             Text("Welcome back, \(homeViewModel.getProfile().firstName!)")
                 .foregroundColor(.white)
@@ -23,6 +23,7 @@ struct HomeTopViewDesign: View {
                 .foregroundColor(.white)
                 .font(.system(size: PrimaryTheme.largeTextSize))
         }
+        .environmentObject(homeViewModel)
         .background(
             topBackgroundDesign(
                 height: geo.size.height * 0.4,
