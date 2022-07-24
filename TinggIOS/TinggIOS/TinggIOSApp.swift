@@ -17,6 +17,10 @@ struct TinggIOSApp: App {
             NavigationView {
                 ZStack {
                     IntroView()
+                        .onAppear {
+                            UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+                            print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
+                        }
                     if enviromentUtils.state != .finish {
                         LaunchScreenView()
                     }

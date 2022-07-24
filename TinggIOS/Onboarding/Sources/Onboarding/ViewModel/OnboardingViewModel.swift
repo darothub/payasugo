@@ -9,6 +9,7 @@ import Common
 import Core
 import Domain
 import Foundation
+import RealmSwift
 import SwiftUI
 class OnboardingViewModel: ObservableObject {
     @Published var showLoader = false
@@ -19,6 +20,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
     @Published var uiModel = UIModel.nothing
     private var subscriptions = Set<AnyCancellable>()
+    
     var tinggRequest: TinggRequest
     var fetchCountries: FetchCountries
     var baseRequest: BaseRequest
@@ -85,5 +87,29 @@ class OnboardingViewModel: ObservableObject {
                 print("nothingState")
             }
         }.store(in: &subscriptions)
+    }
+}
+
+
+class DBTransactions {
+    @ObservedResults(Profile.self) var profiles
+    @ObservedResults(Categorys.self) var categorys
+    @ObservedResults(MerchantService.self) var merchantServices
+    @ObservedResults(MerchantPayer.self) var merchantPayers
+    @ObservedResults(Enrollment.self) var enrollments
+    @ObservedResults(Contact.self) var contacts
+    @ObservedResults(TransactionHistory.self) var transactions
+    @ObservedResults(SMSTemplate.self) var smsTemplates
+//    @ObservedResults(BundleDatum.self) var bundleData
+    @ObservedResults(SecurityQuestion.self) var securityQuestions
+    @ObservedResults(Card.self) var cards
+    @ObservedResults(Highlight.self) var highlights
+//    @ObservedResults(VirtualCard.self) var virtualCards
+//    @ObservedResults(MulaProfileInfo.self) var mulaProfileInfo
+    @ObservedResults(ManualBill.self) var manualBills
+    init() {}
+    
+    func saveCategories(category: Categorys) {
+        $categorys.append(category)
     }
 }

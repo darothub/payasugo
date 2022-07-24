@@ -29,6 +29,7 @@ struct PhoneNumberValidationView: View {
     @State var confirmedOTP = false
     @State private var subscriptions = Set<AnyCancellable>()
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
+    var dbTransactionController:DBTransactions = .init()
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
@@ -147,8 +148,17 @@ struct PhoneNumberValidationView: View {
                     } else if !showOTPView && confirmedOTP {
                         if let parResponse = data as? PARAndFSUDTO {
                             print("parResponse \(parResponse)")
+                            Task {
+                                print("Saving ")
+                                for category in parResponse.categories {
+                                    dbTransactionController.$categorys.append(category)
+                                    print("Saved \(category)")
+                                }
+                                print("Saving done")
+                                navigate.toggle()
+                            }
                         }
-                        print("BACKFROMOTPView")
+                        print("Done ")
                     } else {
                         showOTPView = true
                     }
