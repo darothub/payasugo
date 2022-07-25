@@ -9,7 +9,6 @@ import RealmSwift
 import SwiftUI
 import Theme
 struct ActiveCategoryListView: View {
-    @ObservedResults(Categorys.self, where: {$0.activeStatus == "1"}) var categories
     @State var index: Int = 0
     @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {

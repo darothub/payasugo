@@ -30,6 +30,7 @@ struct PhoneNumberValidationView: View {
     @State private var subscriptions = Set<AnyCancellable>()
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     var dbTransactionController: DBTransactions = .init()
+    let key = KeyEquivalent("p")
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
@@ -109,7 +110,7 @@ struct PhoneNumberValidationView: View {
                         onboardingViewModel.makeActivationCodeRequest(
                             msisdn: number, clientId: country.mulaClientID!
                         )
-                    }
+                    }.keyboardShortcut(.return)
                 }
             }.task {
                 getCountries()
@@ -142,28 +143,27 @@ struct PhoneNumberValidationView: View {
             .handleViewState(uiModel: $onboardingViewModel.uiModel)
             .onAppear {
                 onboardingViewModel.observeUIModel { data in
-                    if showOTPView {
-                        showOTPView.toggle()
-                        print("SHowOTPView")
-                    } else if !showOTPView && confirmedOTP {
+                    if data is BaseDTO {
+                        showOTPView = true
+                    }
+                    else {
+                        showOTPView = false
+                    }
+                    if !showOTPView && confirmedOTP {
                         if let parResponse = data as? PARAndFSUDTO {
                             print("parResponse \(parResponse)")
                             Task {
-                                print("Saving ")
-                                onboardingViewModel.saveObjects(data: parResponse.categories)
+                                let sortedCategories = parResponse.categories.sorted { c1, c2 in
+                                    Int(c1.categoryOrderID!)! < Int(c2.categoryOrderID!)!
+                                }.filter { category in
+                                    category.activeStatus == "1"
+                                }
+                                onboardingViewModel.saveObjects(data: sortedCategories)
                                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                                 onboardingViewModel.save(data: profile)
-//                                for category in parResponse.categories {
-//                                    dbTransactionController.$categorys.append(category)
-//                                    print("Saved \(category)")
-//                                }
-                                print("Saving done")
                                 navigate.toggle()
                             }
                         }
-                        print("Done ")
-                    } else {
-                        showOTPView = true
                     }
                 }
             }

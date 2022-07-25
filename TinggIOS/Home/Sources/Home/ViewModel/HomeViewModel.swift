@@ -8,13 +8,14 @@ import Core
 import Foundation
 import RealmSwift
 class HomeViewModel: ObservableObject {
-    @ObservedResults(Categorys.self, where: {$0.activeStatus == "1"}) private var categories
+    @ObservedResults(
+        Categorys.self
+    ) var categories
     @ObservedResults(Profile.self) private var profiles
     @Published var processedCategories = [[Categorys]]()
     init() {
        processedCategories = categories.reversed().reversed().chunked(into: 4)
     }
-    
     func getProfile() -> Profile {
         guard let profile = profiles.first else {
             fatalError("No profile found")

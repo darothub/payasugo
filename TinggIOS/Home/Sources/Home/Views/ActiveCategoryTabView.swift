@@ -11,7 +11,6 @@ import Foundation
 import RealmSwift
 import SwiftUI
 struct ActiveCategoryTabView: View {
-    @ObservedResults(Categorys.self, where: {$0.activeStatus == "1"}) var categories
     @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
         TabView {
@@ -41,5 +40,3 @@ extension Array {
         }
     }
 }
-
-
