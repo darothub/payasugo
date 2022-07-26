@@ -37,11 +37,6 @@ public class FetchCountries: ObservableObject {
                 do {
                     let countriesInfo = try results.get().data
                     realmManager.save(data: countriesInfo)
-//                    DispatchQueue.main.async {
-//                        for country in countriesInfo {
-//                            self.$countriesDb.append(country)
-//                        }
-//                    }
                     promise(.success(countriesInfo))
                 } catch {
                     print("FetcCountriesError \(error.localizedDescription)")

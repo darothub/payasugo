@@ -21,11 +21,6 @@ public class RealmManager: ObservableObject {
             print("RealmManager \(error.localizedDescription)")
         }
     }
-    public func addObject<S: Object>(data: Results<S>) {
-        let cat: [Categorys] = [Categorys]()
-        localDb?.add(cat)
-        localDb?.add(data)
-    }
     public func save<S: Object>(data: [S]) {
         do {
             try  localDb?.write {
