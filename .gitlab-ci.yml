@@ -1,6 +1,6 @@
 .macos_buildcloud_runners:
   tags:
-    - shared-macos-amd64
+    - ma2-jd-t6.mau.cellulant.com
   image: macos-11-xcode-12
 
 stages:
