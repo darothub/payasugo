@@ -1,6 +1,6 @@
 .macos_buildcloud_runners:
   tags:
-    - ma2-jd-t6.mau.cellulant.com
+    - tinggios
   image: macos-11-xcode-12
 
 stages:
