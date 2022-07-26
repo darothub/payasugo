@@ -1,10 +1,26 @@
+.macos_buildcloud_runners:
+  tags:
+    - shared-macos-amd64
+  image: macos-11-xcode-12
+
 stages:
   - build
+  - test
 
-build_project:
+before_script:
+ - echo "started by ${GITLAB_USER_NAME}"
+
+build:
+  extends:
+    - .macos_buildcloud_runners
   stage: build
   script:
-    - xcodebuild clean -workspace TinggIOS.xcworkspace -scheme TinggIOS | xcpretty
-    - xcodebuild test -workspace TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=15' | xcpretty -s
-  tags:
-    - tinggios_stage
+    - echo "running scripts in the build job"
+
+test:
+  extends:
+    - .macos_buildcloud_runners
+  stage: test
+  script:
+    - echo "running scripts in the test job"
+
