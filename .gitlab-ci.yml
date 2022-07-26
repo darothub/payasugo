@@ -1,10 +1,17 @@
 stages:
   - build
+  
+before_script:
+ - echo "started by ${GITLAB_USER_NAME}"
 
 build_project:
+  extends:
+    - .macos_buildcloud_runners
   stage: build
   script:
     - xcodebuild clean -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS | xcpretty
-    - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=15' | xcpretty -s
+#    - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=15' | xcpretty -s
   tags:
     - stage
+  image: macos-11-xcode-12
+
