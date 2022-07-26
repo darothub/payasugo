@@ -5,6 +5,6 @@ build_project:
   stage: build
   script:
     - xcodebuild clean -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS | xcpretty
-    - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=15' | xcpretty -
+    - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=15' | xcpretty -s
   tags:
     - stage
