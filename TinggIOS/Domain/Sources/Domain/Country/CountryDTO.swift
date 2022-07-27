@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 01/07/2022.
 //
-
+import Core
 struct CountryDTO: BaseDTOprotocol, Codable {
     var statusCode: Int
     var statusMessage: String

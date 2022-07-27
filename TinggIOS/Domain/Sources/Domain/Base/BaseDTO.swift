@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 05/07/2022.
 //
-
+import Core
 import Foundation
 public struct BaseDTO: BaseDTOprotocol, Codable {
     public var statusCode: Int

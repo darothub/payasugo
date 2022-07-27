@@ -23,6 +23,7 @@ public struct TinggRequest: Encodable {
     public var profileInfo: String? = ""
     public var apiLevel: String = "13"
     public var isExplicit = "1"
+    public var dataSource: String? = ""
     public init() {}
     public mutating func getActivationCode(service: String, msisdn: String, clientId: String) {
         self.service = service
@@ -34,6 +35,12 @@ public struct TinggRequest: Encodable {
         self.msisdn = msisdn
         self.clientId = clientId
         self.activationCode = code
+    }
+    public mutating func makePARRequesr(dataSource: String, msisdn: String, clientId: String) {
+        self.service = "PAR"
+        self.dataSource = dataSource
+        self.msisdn = msisdn
+        self.clientId = clientId
     }
     enum CodingKeys: String, CodingKey {
         case service = "SERVICE"
@@ -51,6 +58,7 @@ public struct TinggRequest: Encodable {
         case apiLevel = "API_LEVEL"
         case isExplicit = "IS_EXPLICIT"
         case activationCode = "ACTIVATION_CODE"
+        case dataSource = "DATA_SOURCE"
     }
 }
 
