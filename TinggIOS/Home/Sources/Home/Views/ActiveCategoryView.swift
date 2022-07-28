@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
+import Core
 import Theme
-
 struct ActiveCategoryView: View {
     @State var title: String = ""
     @State var imageUrl: String = ""

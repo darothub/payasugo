@@ -21,6 +21,9 @@ public class RealmManager: ObservableObject {
             print("RealmManager \(error.localizedDescription)")
         }
     }
+    public func getLocalDbConfig() -> Realm? {
+        return localDb
+    }
     public func save<S: Object>(data: [S]) {
         do {
             try  localDb?.write {
@@ -32,7 +35,7 @@ public class RealmManager: ObservableObject {
     }
     public func save<S: Object>(data: S) {
         do {
-            try  localDb?.write {
+            try localDb?.write {
                 self.localDb?.add(data, update: .modified)
             }
         } catch {

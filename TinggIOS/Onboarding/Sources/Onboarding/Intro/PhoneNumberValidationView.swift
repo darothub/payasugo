@@ -6,10 +6,8 @@
 //
 
 import Combine
-import Common
 import Core
-import Domain
-import Home
+//import Home
 import SwiftUI
 import Theme
 struct PhoneNumberValidationView: View {
@@ -75,7 +73,8 @@ struct PhoneNumberValidationView: View {
                         + Text(.init(termOfAgreementLink))
                             .underline()
                         + Text(" and ") + Text(.init(privacyPolicy)).underline()
-                    }.font(.system(size: PrimaryTheme.smallTextSize))
+                    }
+                    .font(.system(size: PrimaryTheme.smallTextSize))
                 }
                 .padding(.horizontal, PrimaryTheme.largePadding)
                 Spacer()
@@ -91,27 +90,25 @@ struct PhoneNumberValidationView: View {
                     .font(.system(size: PrimaryTheme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
-                NavigationLink(destination: HomeBottomNavView(), isActive: $navigate) {
-                    button(
-                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                        buttonLabel: "Continue"
-                    ) {
-                        if phoneNumber.isEmpty {
-                            warning = "Phone number can not be empty"
-                            showAlert.toggle()
-                            return
-                        }
-                        if !isCheckedTermsAndPolicy {
-                            warning = "You must accept terms of use and privacy policy to proceed!"
-                            showAlert.toggle()
-                            return
-                        }
-                        let number = "+\(countryCode)\(phoneNumber)"
-                        onboardingViewModel.makeActivationCodeRequest(
-                            msisdn: number, clientId: country.mulaClientID!
-                        )
-                    }.keyboardShortcut(.return)
-                }
+                button(
+                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                    buttonLabel: "Continue"
+                ) {
+                    if phoneNumber.isEmpty {
+                        warning = "Phone number can not be empty"
+                        showAlert.toggle()
+                        return
+                    }
+                    if !isCheckedTermsAndPolicy {
+                        warning = "You must accept terms of use and privacy policy to proceed!"
+                        showAlert.toggle()
+                        return
+                    }
+                    let number = "+\(countryCode)\(phoneNumber)"
+                    onboardingViewModel.makeActivationCodeRequest(
+                        msisdn: number, clientId: country.mulaClientID!
+                    )
+                }.keyboardShortcut(.return)
             }.task {
                 getCountries()
             }
@@ -121,7 +118,7 @@ struct PhoneNumberValidationView: View {
             .navigationBarTitleDisplayMode(.inline)
             .confirmationDialog("Contact", isPresented: $showSupportTeamContact) {
                 Button("Call Ting Support") {
-                    callSupport()
+//                    callSupport()
                 }
                 Button("Chat Ting Support") {
                     print("Chat")
@@ -142,29 +139,29 @@ struct PhoneNumberValidationView: View {
             })
             .handleViewState(uiModel: $onboardingViewModel.uiModel)
             .onAppear {
-                onboardingViewModel.observeUIModel { data in
-                    if data is BaseDTO {
-                        showOTPView = true
-                    }
-                    else {
-                        showOTPView = false
-                    }
-                    if !showOTPView && confirmedOTP {
-                        if let parResponse = data as? PARAndFSUDTO {
-                            print("parResponse \(parResponse)")
-                            Task {
-                                let sortedCategories = parResponse.categories.sorted { c1, c2 in
-                                    Int(c1.categoryOrderID!)! < Int(c2.categoryOrderID!)!
-                                }.filter { category in
-                                    category.activeStatus == "1"
-                                }
-                                onboardingViewModel.saveObjects(data: sortedCategories)
-                                let profile = parResponse.mulaProfileInfo.mulaProfile[0]
-                                onboardingViewModel.save(data: profile)
-                                navigate.toggle()
-                            }
-                        }
-                    }
+                onboardingViewModel.observeUIModel {
+//                    if data is BaseDTO {
+//                        showOTPView = true
+//                    }
+//                    else {
+//                        showOTPView = false
+//                    }
+//                    if !showOTPView && confirmedOTP {
+//                        if let parResponse = data as? PARAndFSUDTO {
+//                            print("parResponse \(parResponse)")
+//                            Task {
+//                                let sortedCategories = parResponse.categories.sorted { c1, c2 in
+//                                    Int(c1.categoryOrderID!)! < Int(c2.categoryOrderID!)!
+//                                }.filter { category in
+//                                    category.activeStatus == "1"
+//                                }
+//                                onboardingViewModel.saveObjects(data: sortedCategories)
+//                                let profile = parResponse.mulaProfileInfo.mulaProfile[0]
+//                                onboardingViewModel.save(data: profile)
+//                                navigate.toggle()
+//                            }
+//                        }
+//                    }
                 }
             }
         }

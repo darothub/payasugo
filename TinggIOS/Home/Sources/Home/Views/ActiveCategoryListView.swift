@@ -7,7 +7,7 @@
 import Core
 import RealmSwift
 import SwiftUI
-import Theme
+//import Theme
 struct ActiveCategoryListView: View {
     @State var index: Int = 0
     @EnvironmentObject var homeViewModel: HomeViewModel

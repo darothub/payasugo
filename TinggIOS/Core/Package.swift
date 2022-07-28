@@ -10,7 +10,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Core",
-            targets: ["Core"])
+            targets: ["Core"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -22,7 +22,8 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Core",
-            dependencies: [.product(name: "Alamofire", package: "Alamofire"), .product(name: "RealmSwift", package: "realm-swift")]),
+            dependencies: [.product(name: "Alamofire", package: "Alamofire"), .product(name: "RealmSwift", package: "realm-swift")]
+        ),
         .testTarget(
             name: "CoreTests",
             dependencies: ["Core"]),

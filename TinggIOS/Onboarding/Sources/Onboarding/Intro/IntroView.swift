@@ -4,8 +4,7 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
-import Common
-import Domain
+import Core
 import SwiftUI
 import Theme
 public struct IntroView: View {

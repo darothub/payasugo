@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Core
 import Theme
 public struct HomeBottomNavView: View {
     public init() {}

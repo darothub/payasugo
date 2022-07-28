@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Theme
+//import Theme
 public class EnvironmentUtils: ObservableObject {
     @Published public var state = SplashScreenState.start
     public init() {}

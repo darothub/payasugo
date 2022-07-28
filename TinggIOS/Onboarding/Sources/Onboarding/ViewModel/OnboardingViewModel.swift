@@ -5,9 +5,7 @@
 //  Created by Abdulrasaq on 13/07/2022.
 //
 import Combine
-import Common
 import Core
-import Domain
 import Foundation
 import RealmSwift
 import SwiftUI
@@ -72,14 +70,14 @@ class OnboardingViewModel: ObservableObject {
             print("Success \(err.localizedDescription)")
         case .success(let data):
             print("Success \(data)")
-            uiModel = UIModel.content(data)
+            uiModel = UIModel.content
         }
     }
-    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
+    func observeUIModel(action: @escaping () -> Void) {
         $uiModel.sink { uiModel in
             switch uiModel {
-            case .content(let data):
-               action(data)
+            case .content:
+               action()
             case .loading:
                 print("loadingState")
             case .error(_):

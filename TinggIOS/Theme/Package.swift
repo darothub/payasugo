@@ -1,16 +1,16 @@
 // swift-tools-version: 5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
-// swiftlint:disable all
+
 import PackageDescription
 
 let package = Package(
     name: "Theme",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Theme",
-            targets: ["Theme"])
+            targets: ["Theme"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -26,6 +26,6 @@ let package = Package(
         ),
         .testTarget(
             name: "ThemeTests",
-            dependencies: ["Theme"])
+            dependencies: ["Theme"]),
     ]
 )

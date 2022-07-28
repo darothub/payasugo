@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Theme
+import Core
 
 struct HomeView: View {
     @StateObject var homeViewModel: HomeViewModel = .init()
@@ -29,7 +29,7 @@ struct HomeView: View {
                 .environmentObject(homeViewModel)
             }.ignoresSafeArea()
         }
-        .background(PrimaryTheme.getColor(.cellulantLightGray))
+//        .background(PrimaryTheme.getColor(.cellulantLightGray))
         .navigationBarHidden(true)
     }
 }

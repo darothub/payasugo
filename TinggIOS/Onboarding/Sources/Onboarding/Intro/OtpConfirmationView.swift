@@ -5,9 +5,8 @@
 //  Created by Abdulrasaq on 08/07/2022.
 //
 import Combine
-import Common
+//import Common
 import Core
-import Domain
 import SwiftUI
 import Theme
 
@@ -41,10 +40,10 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.observeUIModel { data in
-                    if data.statusMessage.contains("Invalid") {
-                        return
-                    }
+                onboardingViewModel.observeUIModel {
+//                    if data.statusMessage.contains("Invalid") {
+//                        return
+//                    }
                     otpConfirmed = true
                     dismiss()
                 }
@@ -83,6 +82,7 @@ struct OtpConfirmationView_Previews: PreviewProvider {
         @State var phoneNumber: String = ""
         @State var confirmedOTP: Bool = false
         var body: some View {
+            Text("")
             OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber, otpConfirmed: $confirmedOTP)
         }
     }
