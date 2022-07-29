@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Core
 public class LocalCategory: ObservableObject {
     @Published var realmManager: RealmManager
     public init(realmManager: RealmManager) {

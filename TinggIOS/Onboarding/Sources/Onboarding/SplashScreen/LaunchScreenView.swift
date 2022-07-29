@@ -6,19 +6,19 @@
 //
 //import Common
 import SwiftUI
-//import Theme
+import Theme
 public struct LaunchScreenView: View {
     @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
     public init() {}
     public var body: some View {
         ZStack {
-//            background
-//            image
+            background
+            image
         }.onAppear {
             withAnimation {
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                    splashScreenWatcher.state = .finish
-//                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    splashScreenWatcher.state = .finish
+                }
             }
         }
     }
@@ -32,13 +32,13 @@ struct LaunchScreenView_Previews: PreviewProvider {
 }
 
 private extension LaunchScreenView {
-//    var background: some View {
-//        PrimaryTheme.getColor(.secondaryColor)
-//            .edgesIgnoringSafeArea(.all)
-//    }
-//    var image: some View {
-//        PrimaryTheme.getImage(image: .tinggSplashScreenIcon)
-//            .renderingMode(.template)
-//            .foregroundColor(Color.white)
-//    }
+    var background: some View {
+        PrimaryTheme.getColor(.secondaryColor)
+            .edgesIgnoringSafeArea(.all)
+    }
+    var image: some View {
+        PrimaryTheme.getImage(image: .tinggSplashScreenIcon)
+            .renderingMode(.template)
+            .foregroundColor(Color.white)
+    }
 }

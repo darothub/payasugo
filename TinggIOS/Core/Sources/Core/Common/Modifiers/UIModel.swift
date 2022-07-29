@@ -8,14 +8,14 @@ import SwiftUI
 
 public enum UIModel {
     
-//    public class Content<T: BaseDTOprotocol> : ObservableObject {
-//        @State public var data: T
-//        public init(data: T) {
-//            self.data = data
-//        }
-//    }
+    public class Content<T: BaseDTOprotocol> : ObservableObject {
+        @State public var data: T
+        public init(data: T) {
+            self.data = data
+        }
+    }
     case loading
-    case content
+    case content(BaseDTOprotocol)
     case error(String)
     case nothing
 }

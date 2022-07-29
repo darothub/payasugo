@@ -5,7 +5,6 @@
 //  Created by Abdulrasaq on 19/07/2022.
 //
 
-import Core
 import Foundation
 public class BaseRequest: ObservableObject {
     let apiServices: TinggApiServices

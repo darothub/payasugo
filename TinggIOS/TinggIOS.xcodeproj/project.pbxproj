@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
+		71867FB928946E0B008A5411 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71867FB828946E0B008A5411 /* Onboarding */; };
+		71867FBD28946FCF008A5411 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71867FBC28946FCF008A5411 /* Home */; };
+		71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71867FBE289479BC008A5411 /* ViewHouse.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
@@ -28,8 +31,11 @@
 
 /* Begin PBXFileReference section */
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7111A18E2891939B00AC150B /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
+		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
+		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
+		71867FBA28946EF0008A5411 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
+		71867FBE289479BC008A5411 /* ViewHouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHouse.swift; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6293283EBCB8002ADCA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -37,8 +43,6 @@
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		71B0D96A28897F8B00569C31 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
-		71BEB0332889484D00F5443A /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71867FB928946E0B008A5411 /* Onboarding in Frameworks */,
+				71867FBD28946FCF008A5411 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,11 +89,12 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
-				71AED53C285D007300A4B14F /* Info.plist */,
+				71867FBE289479BC008A5411 /* ViewHouse.swift */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
-				718C6295283EBCB8002ADCA8 /* Preview Content */,
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
+				718C6295283EBCB8002ADCA8 /* Preview Content */,
+				71AED53C285D007300A4B14F /* Info.plist */,
 			);
 			path = TinggIOS;
 			sourceTree = "<group>";
@@ -103,9 +110,9 @@
 		71AED58B28665C9400A4B14F /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				71BEB0332889484D00F5443A /* Home */,
-				71B0D96A28897F8B00569C31 /* Onboarding */,
-				7111A18E2891939B00AC150B /* Core */,
+				71867FB628946D8E008A5411 /* Theme */,
+				71867FB728946DCB008A5411 /* Onboarding */,
+				71867FBA28946EF0008A5411 /* Home */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -129,6 +136,8 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
+				71867FB828946E0B008A5411 /* Onboarding */,
+				71867FBC28946FCF008A5411 /* Home */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -208,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
+				71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,7 +349,6 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
@@ -430,6 +439,17 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71867FB828946E0B008A5411 /* Onboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Onboarding;
+		};
+		71867FBC28946FCF008A5411 /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 718C6284283EBCB4002ADCA8 /* Project object */;
 }

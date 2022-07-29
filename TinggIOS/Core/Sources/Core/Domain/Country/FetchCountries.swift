@@ -8,7 +8,6 @@
 import Combine
 import Foundation
 import RealmSwift
-import Core
 public class FetchCountries: ObservableObject {
     let countryApiServices: TinggApiServices
     @Published public var phoneFieldDetails = [String: String]()

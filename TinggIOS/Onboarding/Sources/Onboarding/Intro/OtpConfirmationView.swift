@@ -10,7 +10,7 @@ import Core
 import SwiftUI
 import Theme
 
-struct OtpConfirmationView: View {
+public struct OtpConfirmationView: View {
     @State var otpSize = 4
     @State var otp = ""
     @State var timeLeft = 60
@@ -22,7 +22,7 @@ struct OtpConfirmationView: View {
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
                 .fontWeight(.bold)
@@ -40,10 +40,10 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.observeUIModel {
-//                    if data.statusMessage.contains("Invalid") {
-//                        return
-//                    }
+                onboardingViewModel.observeUIModel {data in 
+                    if data.statusMessage.contains("Invalid") {
+                        return
+                    }
                     otpConfirmed = true
                     dismiss()
                 }
@@ -82,7 +82,6 @@ struct OtpConfirmationView_Previews: PreviewProvider {
         @State var phoneNumber: String = ""
         @State var confirmedOTP: Bool = false
         var body: some View {
-            Text("")
             OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber, otpConfirmed: $confirmedOTP)
         }
     }

@@ -10,6 +10,7 @@ import Theme
 public struct IntroView: View {
     @State var active = false
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
+    @EnvironmentObject var navigation: NavigationUtils
     public init() {}
     public var body: some View {
         GeometryReader { geo in
@@ -20,6 +21,7 @@ public struct IntroView: View {
                 )
                 tinggColoredLogo
                 IntroTabView(geo: geo, active: $active)
+                    .environmentObject(navigation)
             }
             .navigationBarHidden(true)
             .onAppear {
@@ -32,12 +34,14 @@ public struct IntroView: View {
 struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
+            .environmentObject(NavigationUtils())
     }
 }
 
 struct IntroTabView: View {
     var geo: GeometryProxy
     @Binding var active: Bool
+    @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
         VStack {
             TabView {
@@ -50,11 +54,16 @@ struct IntroTabView: View {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
             Spacer()
-            NavigationLink(destination: PhoneNumberValidationView(), isActive: $active) {
-                button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
-                    active.toggle()
-                }
+            button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
+                navigation.rooms = .phone
             }
         }
     }
+}
+public var tinggColoredLogo: some View {
+    PrimaryTheme.getImage(image: .tinggIcon)
+        .resizable()
+        .frame(width: 60, height: 60)
+        .clipShape(Circle())
+        .shadow(radius: 3)
 }

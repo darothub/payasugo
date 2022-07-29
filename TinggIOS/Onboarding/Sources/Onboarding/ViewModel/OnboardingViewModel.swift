@@ -70,14 +70,14 @@ class OnboardingViewModel: ObservableObject {
             print("Success \(err.localizedDescription)")
         case .success(let data):
             print("Success \(data)")
-            uiModel = UIModel.content
+            uiModel = UIModel.content(data)
         }
     }
-    func observeUIModel(action: @escaping () -> Void) {
+    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
         $uiModel.sink { uiModel in
             switch uiModel {
-            case .content:
-               action()
+            case .content(let data):
+               action(data)
             case .loading:
                 print("loadingState")
             case .error(_):
