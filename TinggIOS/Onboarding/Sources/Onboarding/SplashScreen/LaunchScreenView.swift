@@ -4,11 +4,12 @@
 //
 //  Created by Abdulrasaq on 22/06/2022.
 //
-//import Common
+import Core
 import SwiftUI
 import Theme
 public struct LaunchScreenView: View {
     @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
+    @EnvironmentObject var navigation: NavigationUtils
     public init() {}
     public var body: some View {
         ZStack {
@@ -17,7 +18,8 @@ public struct LaunchScreenView: View {
         }.onAppear {
             withAnimation {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    splashScreenWatcher.state = .finish
+                    navigation.rooms = .intro
+                    navigation.navigatePermission.toggle()
                 }
             }
         }

@@ -20,18 +20,34 @@ struct TinggIOSApp: App {
         WindowGroup {
             NavigationView {
                 ZStack {
-                    ViewHouse()
-                        .environmentObject(navigation)
-                        .isModularNavigation($modulaNavigation)
-                        .onAppear {
-                            print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
-                        }
-                    if enviromentUtils.state != .finish {
-                        LaunchScreenView()
+                    NavigationLink(destination: destination, isActive: $navigation.navigatePermission){
+                        ViewHouse()
+                            .environmentObject(navigation)
                     }
-                }
-                .environmentObject(enviromentUtils)
+                    if navigation.rooms != .launch {
+                        LaunchScreenView()
+                            .environmentObject(navigation)
+                    }
+                }                
             }
+        }
+    }
+    @ViewBuilder
+    var destination: some View {
+        switch navigation.rooms {
+        case .phone:
+            PhoneNumberValidationView()
+                .environmentObject(navigation)
+                .navigationBarHidden(false)
+        case .home:
+            HomeBottomNavView()
+        case .intro:
+            IntroView()
+                .navigationBarHidden(true)
+                .environmentObject(navigation)
+        case .launch:
+            LaunchScreenView()
+                .environmentObject(navigation)
         }
     }
 }

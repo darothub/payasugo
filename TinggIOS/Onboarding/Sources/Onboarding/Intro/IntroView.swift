@@ -23,7 +23,6 @@ public struct IntroView: View {
                 IntroTabView(geo: geo, active: $active)
                     .environmentObject(navigation)
             }
-            .navigationBarHidden(true)
             .onAppear {
                 setPageIndicatorAppearance()
             }

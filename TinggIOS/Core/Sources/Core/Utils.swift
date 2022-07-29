@@ -12,10 +12,11 @@ public enum Utils {
 
 
 public enum ViewRooms {
-    case intro, home, phone
+    case launch, intro, home, phone
 }
 
 public class NavigationUtils: ObservableObject {
     @Published public var rooms = ViewRooms.intro
+    @Published public var navigatePermission = false
     public init() {}
 }

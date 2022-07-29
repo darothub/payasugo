@@ -14,22 +14,9 @@ struct ViewHouse: View {
     @EnvironmentObject var navigation: NavigationUtils
     @State var navigate = true
     var body: some View {
-        NavigationLink(destination: destination, isActive: $navigate) {
-            IntroView()
-                .environmentObject(navigation)
-        }
-    }
-    @ViewBuilder
-    var destination: some View {
-        switch navigation.rooms {
-        case .phone:
-            PhoneNumberValidationView()
-        case .home:
-            HomeBottomNavView()
-        case .intro:
-            IntroView()
-                .environmentObject(navigation)
-        }
+        IntroView()
+            .navigationBarHidden(true)
+            .environmentObject(navigation)
     }
 }
 

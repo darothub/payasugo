@@ -32,6 +32,7 @@ public struct PhoneNumberValidationView: View {
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
+    @EnvironmentObject var navigation: NavigationUtils
     public init(){}
     public var body: some View {
         GeometryReader { geometry in
@@ -164,6 +165,7 @@ public struct PhoneNumberValidationView: View {
                                 onboardingViewModel.saveObjects(data: sortedCategories)
                                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                                 onboardingViewModel.save(data: profile)
+                                navigation.rooms = .home
                             }
                         }
                     }
