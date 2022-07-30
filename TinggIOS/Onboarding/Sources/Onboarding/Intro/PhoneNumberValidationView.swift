@@ -33,7 +33,7 @@ public struct PhoneNumberValidationView: View {
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
-    public init(){}
+    public init() {}
     public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 10) {
@@ -163,9 +163,10 @@ public struct PhoneNumberValidationView: View {
                                     category.activeStatus == "1"
                                 }
                                 onboardingViewModel.saveObjects(data: sortedCategories)
+                                onboardingViewModel.saveObjects(data: parResponse.services)
                                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                                 onboardingViewModel.save(data: profile)
-                                navigation.rooms = .home
+                                navigation.screen = .home
                             }
                         }
                     }

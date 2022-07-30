@@ -5,28 +5,26 @@
 //  Created by Abdulrasaq on 17/07/2022.
 //
 import Core
-import RealmSwift
 import SwiftUI
 import Theme
 
 struct HomeTopViewDesign: View {
-    @EnvironmentObject var homeViewModel: HomeViewModel
-    var geo: GeometryProxy
+    var parentSize: GeometryProxy
+    @State var profile: Profile = .init()
     var body: some View {
         VStack {
-            ProfileImageAndHelpIconView(imageUrl: homeViewModel.getProfile().photoURL!)
+            ProfileImageAndHelpIconView(imageUrl: profile.photoURL!)
                 .padding(.top, 30)
-            Text("Welcome back, \(homeViewModel.getProfile().firstName!)")
+            Text("Welcome back, \(profile.firstName!)")
                 .foregroundColor(.white)
                 .font(.system(size: PrimaryTheme.smallTextSize))
             Text("What would you like to do?")
                 .foregroundColor(.white)
                 .font(.system(size: PrimaryTheme.largeTextSize))
         }
-        .environmentObject(homeViewModel)
         .background(
             topBackgroundDesign(
-                height: geo.size.height * 0.4,
+                height: parentSize.size.height * 0.4,
                 color: PrimaryTheme.getColor(.secondaryColor)
             )
         )
@@ -35,9 +33,14 @@ struct HomeTopViewDesign: View {
 
 struct HomeTopViewDesign_Previews: PreviewProvider {
     static var previews: some View {
-        GeometryReader {geo in
-            HomeTopViewDesign(geo: geo)
-                .environmentObject(HomeViewModel())
+        GeometryReader { geo in
+            HomeTopViewDesign(parentSize: geo, profile: previewProfile)
         }
     }
+}
+var previewProfile: Profile {
+    let prof = Profile()
+    prof.firstName = "Test"
+    prof.photoURL = ""
+    return prof
 }

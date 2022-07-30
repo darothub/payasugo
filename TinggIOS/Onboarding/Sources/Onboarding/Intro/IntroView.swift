@@ -53,8 +53,14 @@ struct IntroTabView: View {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
             Spacer()
-            button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
-                navigation.rooms = .phone
+            NavigationLink(
+                destination: PhoneNumberValidationView()
+                    .environmentObject(navigation),
+                isActive: $active
+            ) {
+                button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
+                    active.toggle()
+                }
             }
         }
     }

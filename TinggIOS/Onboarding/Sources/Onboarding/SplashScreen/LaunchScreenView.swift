@@ -16,11 +16,9 @@ public struct LaunchScreenView: View {
             background
             image
         }.onAppear {
-            withAnimation {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.rooms = .intro
-                    navigation.navigatePermission.toggle()
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                navigation.screen = .intro
+                navigation.navigatePermission.toggle()
             }
         }
     }

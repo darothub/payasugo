@@ -6,20 +6,27 @@
 //
 import Core
 import Foundation
-import RealmSwift
-class HomeViewModel: ObservableObject {
-    @ObservedResults(
-        Categorys.self
-    ) var categories
-    @ObservedResults(Profile.self) private var profiles
-    @Published var processedCategories = [[Categorys]]()
-    init() {
+//import RealmSwift
+public class HomeViewModel: ObservableObject {
+    @Published public var categories = Observer<Categorys>().objects
+    @Published public var profiles = Observer<Profile>().objects
+    @Published public var services = Observer<MerchantService>().objects
+
+    @Published public var processedCategories = [[Categorys]]()
+    public init() {
        processedCategories = categories.reversed().reversed().chunked(into: 4)
     }
-    func getProfile() -> Profile {
+    public func getProfile() -> Profile {
         guard let profile = profiles.first else {
             fatalError("No profile found")
         }
         return profile
+    }
+    
+    public func getQuickTopups() -> [MerchantService] {
+        let airtimes = categories.filter {$0.categoryName == "Airtime"}
+        print("Airtimes \(airtimes) Categories \(categories)")
+        let theAirtimeCategory = airtimes[0]
+        return services.filter { $0.categoryID == theAirtimeCategory.categoryID}
     }
 }

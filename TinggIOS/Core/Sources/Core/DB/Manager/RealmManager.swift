@@ -14,7 +14,7 @@ public class RealmManager: ObservableObject {
     }
     private func openRealmDb() {
         do {
-            let config = Realm.Configuration(schemaVersion: 1)
+            let config = Realm.Configuration(schemaVersion: 0)
             Realm.Configuration.defaultConfiguration = config
             localDb = try Realm()
         } catch {
@@ -42,4 +42,10 @@ public class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
+}
+
+
+public class Observer<T> where T: Object, T: ObjectKeyIdentifiable{
+    @ObservedResults(T.self) public var objects
+    public init() {}
 }

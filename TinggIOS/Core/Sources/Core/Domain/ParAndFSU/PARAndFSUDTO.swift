@@ -6,7 +6,6 @@
 //
 // swiftlint:disable all
 
-import Core
 // MARK: - ParResponse
 public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var statusCode: Int

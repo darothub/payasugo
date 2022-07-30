@@ -5,18 +5,15 @@
 //  Created by Abdulrasaq on 17/07/2022.
 //
 import Combine
-//import Common
 import Core
 import Foundation
-import RealmSwift
 import SwiftUI
 struct ActiveCategoryTabView: View {
-    @EnvironmentObject var homeViewModel: HomeViewModel
+    @State var processedCategories = [[Categorys]]()
     var body: some View {
         TabView {
-            ForEach(0..<homeViewModel.processedCategories.count, id: \.self) { eachChunkIndex in
-                ActiveCategoryListView(index: eachChunkIndex)
-                    .environmentObject(homeViewModel)
+            ForEach(0..<processedCategories.count, id: \.self) { eachChunkIndex in
+                ActiveCategoryListView(categories: processedCategories[eachChunkIndex])
             }
         }
         .frame(height: 165)
@@ -29,10 +26,19 @@ struct ActiveCategoryTabView: View {
 
 struct ActiveCategoryTabView_Previews: PreviewProvider {
     static var previews: some View {
-        ActiveCategoryTabView()
-            .environmentObject(HomeViewModel())
+        ActiveCategoryTabView(processedCategories: previewProcessedCategories)
     }
 }
+
+var previewProcessedCategories: [[Categorys]] {
+    let list = [
+        previewCategories,
+        previewCategories,
+        previewCategories
+    ]
+    return list
+}
+
 extension Array {
     func chunked(into size: Int) -> [[Element]] {
         return stride(from: 0, to: count, by: size).map {

@@ -13,18 +13,18 @@ import Theme
 struct TinggIOSApp: App {
     @StateObject var enviromentUtils = EnvironmentUtils()
     @StateObject var navigation = NavigationUtils()
-    @State var modulaNavigation = false
+    @StateObject var hvm: HomeViewModel = .init()
+    @State var profile: Profile = .init()
+    @State var categories: [[Categorys]] = [[]]
+    @State var quicktops: [MerchantService] = [MerchantService]()
     @State var fieldSize = 4
     @State var otp = ""
     var body: some Scene {
         WindowGroup {
             NavigationView {
                 ZStack {
-                    NavigationLink(destination: destination, isActive: $navigation.navigatePermission){
-                        ViewHouse()
-                            .environmentObject(navigation)
-                    }
-                    if navigation.rooms != .launch {
+                    NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
+                    if navigation.screen != .launch {
                         LaunchScreenView()
                             .environmentObject(navigation)
                     }
@@ -34,13 +34,19 @@ struct TinggIOSApp: App {
     }
     @ViewBuilder
     var destination: some View {
-        switch navigation.rooms {
-        case .phone:
-            PhoneNumberValidationView()
-                .environmentObject(navigation)
-                .navigationBarHidden(false)
+        switch navigation.screen {
         case .home:
-            HomeBottomNavView()
+            HomeBottomNavView(
+                profile: $profile,
+                categories: $categories,
+                quickTopups: $quicktops
+            ).onAppear {
+                withAnimation {
+                    profile = hvm.getProfile()
+                    categories = hvm.processedCategories
+                    quicktops = hvm.getQuickTopups()
+                }
+            }
         case .intro:
             IntroView()
                 .navigationBarHidden(true)
@@ -51,3 +57,4 @@ struct TinggIOSApp: App {
         }
     }
 }
+
