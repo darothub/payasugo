@@ -21,6 +21,7 @@ public struct LaunchScreenView: View {
                 navigation.navigatePermission.toggle()
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
