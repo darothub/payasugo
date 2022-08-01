@@ -21,7 +21,6 @@ struct ActiveCategoryListView: View {
         }
     }
 }
-
 struct ActiveCategoryListView_Previews: PreviewProvider {
     static var previews: some View {
         ActiveCategoryListView(categories: previewCategories)
