@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 public enum SplashScreenState {
     case start
     case finish

@@ -6,13 +6,11 @@
 //
 
 import Combine
-import Common
 import Core
-import Domain
-import Home
+//import Home
 import SwiftUI
 import Theme
-struct PhoneNumberValidationView: View {
+public struct PhoneNumberValidationView: View {
     @State var phoneNumber = ""
     @State var countryCode = "267"
     @State var isEditing = false
@@ -34,7 +32,9 @@ struct PhoneNumberValidationView: View {
     let termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     let privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @Environment(\.openURL) var openURL
-    var body: some View {
+    @EnvironmentObject var navigation: NavigationUtils
+    public init() {}
+    public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 10) {
                 ZStack(alignment: .top) {
@@ -75,7 +75,8 @@ struct PhoneNumberValidationView: View {
                         + Text(.init(termOfAgreementLink))
                             .underline()
                         + Text(" and ") + Text(.init(privacyPolicy)).underline()
-                    }.font(.system(size: PrimaryTheme.smallTextSize))
+                    }
+                    .font(.system(size: PrimaryTheme.smallTextSize))
                 }
                 .padding(.horizontal, PrimaryTheme.largePadding)
                 Spacer()
@@ -91,27 +92,30 @@ struct PhoneNumberValidationView: View {
                     .font(.system(size: PrimaryTheme.smallTextSize))
                 }.padding(.horizontal, 50)
                 .frame(width: geometry.size.width)
-                NavigationLink(destination: HomeBottomNavView(), isActive: $navigate) {
-                    button(
-                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                        buttonLabel: "Continue"
-                    ) {
-                        if phoneNumber.isEmpty {
-                            warning = "Phone number can not be empty"
-                            showAlert.toggle()
-                            return
-                        }
-                        if !isCheckedTermsAndPolicy {
-                            warning = "You must accept terms of use and privacy policy to proceed!"
-                            showAlert.toggle()
-                            return
-                        }
-                        let number = "+\(countryCode)\(phoneNumber)"
-                        onboardingViewModel.makeActivationCodeRequest(
-                            msisdn: number, clientId: country.mulaClientID!
-                        )
-                    }.keyboardShortcut(.return)
+                NavigationLink(
+                    destination: IntroView(),
+                    isActive: $navigate) {
+                  button(
+                      backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                      buttonLabel: "Continue"
+                  ) {
+                      if phoneNumber.isEmpty {
+                          warning = "Phone number can not be empty"
+                          showAlert.toggle()
+                          return
+                      }
+                      if !isCheckedTermsAndPolicy {
+                          warning = "You must accept terms of use and privacy policy to proceed!"
+                          showAlert.toggle()
+                          return
+                      }
+                      let number = "+\(countryCode)\(phoneNumber)"
+                      onboardingViewModel.makeActivationCodeRequest(
+                          msisdn: number, clientId: country.mulaClientID!
+                      )
+                  }.keyboardShortcut(.return)
                 }
+
             }.task {
                 getCountries()
             }
@@ -159,9 +163,10 @@ struct PhoneNumberValidationView: View {
                                     category.activeStatus == "1"
                                 }
                                 onboardingViewModel.saveObjects(data: sortedCategories)
+                                onboardingViewModel.saveObjects(data: parResponse.services)
                                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                                 onboardingViewModel.save(data: profile)
-                                navigate.toggle()
+                                navigation.screen = .home
                             }
                         }
                     }

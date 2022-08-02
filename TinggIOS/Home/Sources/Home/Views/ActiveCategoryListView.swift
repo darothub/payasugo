@@ -5,15 +5,12 @@
 //  Created by Abdulrasaq on 17/07/2022.
 //
 import Core
-import RealmSwift
 import SwiftUI
-import Theme
 struct ActiveCategoryListView: View {
-    @State var index: Int = 0
-    @EnvironmentObject var homeViewModel: HomeViewModel
+    @State var categories = [Categorys]()
     var body: some View {
         HStack(alignment: .top) {
-            ForEach(homeViewModel.processedCategories[index], id: \.categoryID) { eachCategory in
+            ForEach(categories, id: \.categoryID) { eachCategory in
                 if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo {
                     ActiveCategoryView(
                         title: name,
@@ -24,9 +21,21 @@ struct ActiveCategoryListView: View {
         }
     }
 }
-
 struct ActiveCategoryListView_Previews: PreviewProvider {
     static var previews: some View {
-        ActiveCategoryListView()
+        ActiveCategoryListView(categories: previewCategories)
     }
+}
+
+var previewCategories: [Categorys] {
+    let catergory = Categorys()
+    catergory.categoryID = "0"
+    catergory.categoryName = "Test"
+    let categories = [
+        catergory,
+        catergory,
+        catergory,
+        catergory
+    ]
+    return categories
 }

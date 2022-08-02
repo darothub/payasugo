@@ -5,9 +5,7 @@
 //  Created by Abdulrasaq on 13/07/2022.
 //
 import Combine
-import Common
 import Core
-import Domain
 import Foundation
 import RealmSwift
 import SwiftUI

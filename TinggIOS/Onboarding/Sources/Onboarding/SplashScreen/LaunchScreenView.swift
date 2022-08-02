@@ -4,23 +4,24 @@
 //
 //  Created by Abdulrasaq on 22/06/2022.
 //
-import Common
+import Core
 import SwiftUI
 import Theme
 public struct LaunchScreenView: View {
     @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
+    @EnvironmentObject var navigation: NavigationUtils
     public init() {}
     public var body: some View {
         ZStack {
             background
             image
         }.onAppear {
-            withAnimation {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    splashScreenWatcher.state = .finish
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                navigation.screen = .intro
+                navigation.navigatePermission.toggle()
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

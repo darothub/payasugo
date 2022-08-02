@@ -11,6 +11,7 @@ import RealmSwift
 // MARK: - MerchantService
 
 public class MerchantService: Object, ObjectKeyIdentifiable, Codable {
+    @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var clientName: String? = ""
     @Persisted public var showAll: String? = ""
     @Persisted public var serviceName: String? = ""
@@ -143,7 +144,7 @@ public class ServiceParameters: Object, ObjectKeyIdentifiable, Codable {
     }
 }
 
-// MARK: - ServicesDatum
+ //MARK: - ServicesDatum
 public class ServicesDatum: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var serviceID: Int
     @Persisted public var serviceName: String

@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
+import Core
 import Theme
-
 struct ProfileImageAndHelpIconView: View {
     @State var imageUrl: String = ""
     var helpIconString =  "camera.fill"

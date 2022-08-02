@@ -5,13 +5,12 @@
 //  Created by Abdulrasaq on 08/07/2022.
 //
 import Combine
-import Common
+//import Common
 import Core
-import Domain
 import SwiftUI
 import Theme
 
-struct OtpConfirmationView: View {
+public struct OtpConfirmationView: View {
     @State var otpSize = 4
     @State var otp = ""
     @State var timeLeft = 60
@@ -23,7 +22,7 @@ struct OtpConfirmationView: View {
     @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
                 .fontWeight(.bold)
@@ -41,7 +40,7 @@ struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.observeUIModel { data in
+                onboardingViewModel.observeUIModel {data in 
                     if data.statusMessage.contains("Invalid") {
                         return
                     }

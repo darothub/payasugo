@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
+import Core
 import Theme
-
 struct AddNewBillCardView: View {
     var body: some View {
         VStack {
