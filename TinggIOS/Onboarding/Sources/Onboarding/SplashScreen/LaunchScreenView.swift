@@ -15,6 +15,7 @@ public struct LaunchScreenView: View {
         ZStack {
             background
             image
+                .accessibility(identifier: "tinggsplashscreenlogo")
         }.onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 navigation.screen = .intro

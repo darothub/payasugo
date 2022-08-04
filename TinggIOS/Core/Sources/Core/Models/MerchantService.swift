@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - MerchantService
 
-public class MerchantService: Object, ObjectKeyIdentifiable, Codable {
+public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var clientName: String? = ""
     @Persisted public var showAll: String? = ""

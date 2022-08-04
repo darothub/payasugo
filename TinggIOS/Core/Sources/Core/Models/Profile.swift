@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Profile
-public class Profile: Object,  ObjectKeyIdentifiable, Codable {
+public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted(primaryKey: true) public var profileID: String = ""
     @Persisted public var msisdn: String? = ""
     @Persisted public var firstName: String? = ""

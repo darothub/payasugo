@@ -25,7 +25,6 @@ public class HomeViewModel: ObservableObject {
     
     public func getQuickTopups() -> [MerchantService] {
         let airtimes = categories.filter {$0.categoryName == "Airtime"}
-        print("Airtimes \(airtimes) Categories \(categories)")
         let theAirtimeCategory = airtimes[0]
         return services.filter { $0.categoryID == theAirtimeCategory.categoryID}
     }

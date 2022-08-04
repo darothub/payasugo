@@ -18,7 +18,9 @@ public struct CountryCodes : View {
             List(countries.sorted(by: <), id: \.key) { key , value in
                 HStack {
                     Text("\(getFlag(country: key))")
+                        .accessibility(identifier: "countryflag")
                     Text("\(getCountryName(countryCode: key) ?? key)")
+                        .accessibility(identifier: "countrydialcode")
                     Spacer()
                     Text("+\(value)").foregroundColor(.secondary)
                 }.background(Color.white)

@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Country
-public class Country: Object, ObjectKeyIdentifiable, Codable {
+public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var country: String? = ""
     @Persisted(primaryKey: true) public var countryCode: String? = ""
     @Persisted public var countryURLNew: String? = ""
@@ -116,86 +116,4 @@ public class Country: Object, ObjectKeyIdentifiable, Codable {
         case fetchBearerTokenURL = "FETCH_BEARER_TOKEN_URL"
         case privacyPolicyURL = "PRIVACY_POLICY_URL"
     }
-    // swiftlint:disable all
-//    init(
-//        country: String?, countryCode: String?,
-//        countryURLNew: String?, status: String?,
-//        currency: String?, mulaClientID: String?,
-//        countryMobileRegex: String?, genericAccountNumberRegex: String?,
-//        extractSMSOnProfiling: String?, countryCurrencyRegex: String?,
-//        excludedSMSSourceAddresses: [String]?, countryDialCode: String?,
-//        confirmedAccountLimits: String?, hotlineAppID: String?,
-//        hotlineAppKey: String?, freshchatAppID: String?,
-//        freshchatAppKey: String?, faqURL: String?,
-//        tacURL: String?, alphanumericRegexes: String?,
-//        minimumProfiledAccounts: String?, smsProfilingTimeout: String?,
-//        roundUpAmounts: String?, maximumCards: String?,
-//        countryFlag: String?, hasWallet: Int,
-//        hasGroups: Int, hasFloatingButton: Int,
-//        hasDiscover: Int, useSmileSDK: Int? = 0,
-//        hasReferral: Int, isManualKycRegistration: Int,
-//        countrySourceAddresses: String?, isDefault: Bool,
-//        successCallBackURL: String?, payerClientCode: String?,
-//        isSecureCardPayment: String?, failedCallBackURL: String?,
-//        webCheckoutURL: String?, clevertapAccountID: String?,
-//        clevertapToken: String?, showAssist: String?,
-//        mulaAssistInterestType: String?,
-//        mulaAssistDurationType: String?, mulaAssistInterestRate: String?,
-//        mulaAssistDuration: String?, mulaAssistLoanTermDuration: String?,
-//        accessKey: String?, checkoutServiceCode: String?,
-//        webHookURL: String?, fetchBearerTokenURL: String?,
-//        privacyPolicyURL: String?
-//    ) {
-//        self.country = country
-//        self.countryCode = countryCode
-//        self.countryURLNew = countryURLNew
-//        self.status = status
-//        self.currency = currency
-//        self.mulaClientID = mulaClientID
-//        self.countryMobileRegex = countryMobileRegex
-//        self.genericAccountNumberRegex = genericAccountNumberRegex
-//        self.extractSMSOnProfiling = extractSMSOnProfiling
-//        self.countryCurrencyRegex = countryCurrencyRegex
-//        self.countryDialCode = countryDialCode
-//        self.confirmedAccountLimits = confirmedAccountLimits
-//        self.hotlineAppID = hotlineAppID
-//        self.hotlineAppKey = hotlineAppKey
-//        self.freshchatAppID = freshchatAppID
-//        self.freshchatAppKey = freshchatAppKey
-//        self.faqURL = faqURL
-//        self.tacURL = tacURL
-//        self.alphanumericRegexes = alphanumericRegexes
-//        self.minimumProfiledAccounts = minimumProfiledAccounts
-//        self.smsProfilingTimeout = smsProfilingTimeout
-//        self.roundUpAmounts = roundUpAmounts
-//        self.maximumCards = maximumCards
-//        self.countryFlag = countryFlag
-//        self.hasWallet = hasWallet
-//        self.hasGroups = hasGroups
-//        self.hasFloatingButton = hasFloatingButton
-//        self.hasDiscover = hasDiscover
-//        self.useSmileSDK = useSmileSDK
-//        self.hasReferral = hasReferral
-//        self.isManualKycRegistration = isManualKycRegistration
-//        self.countrySourceAddresses = countrySourceAddresses
-//        self.isDefault = isDefault
-//        self.successCallBackURL = successCallBackURL
-//        self.payerClientCode = payerClientCode
-//        self.isSecureCardPayment = isSecureCardPayment
-//        self.failedCallBackURL = failedCallBackURL
-//        self.webCheckoutURL = webCheckoutURL
-//        self.clevertapAccountID = clevertapAccountID
-//        self.clevertapToken = clevertapToken
-//        self.showAssist = showAssist
-//        self.mulaAssistInterestType = mulaAssistInterestType
-//        self.mulaAssistDurationType = mulaAssistDurationType
-//        self.mulaAssistInterestRate = mulaAssistInterestRate
-//        self.mulaAssistDuration = mulaAssistDuration
-//        self.mulaAssistLoanTermDuration = mulaAssistLoanTermDuration
-//        self.accessKey = accessKey
-//        self.checkoutServiceCode = checkoutServiceCode
-//        self.webHookURL = webHookURL
-//        self.fetchBearerTokenURL = fetchBearerTokenURL
-//        self.privacyPolicyURL = privacyPolicyURL
-//    }
 }

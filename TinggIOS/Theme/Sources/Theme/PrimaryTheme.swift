@@ -28,7 +28,8 @@ public struct PrimaryTheme {
     }
     public enum AppColors: String {
         case secondaryColor, primaryColor, cellulantPurple,
-             cellulantRed, skyBlue, cellulantLightGray, textColor
+             cellulantRed, skyBlue, cellulantLightGray, textColor, tinggwhite,
+        tinggblack
         public static func getColor(_ name: String) -> Color {
             return  Color(name, bundle: .myModule)
         }

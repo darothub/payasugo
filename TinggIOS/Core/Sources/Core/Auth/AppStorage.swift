@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-public struct Auth {
+public struct AppStorageManager {
 //    static var activeCountry: String = ""
-    @AppStorage(AuthProperties.activeCountry.rawValue) public static var activeCountry: Data = .init()
-    @AppStorage(AuthProperties.activeCountry.rawValue) static var userCountry: String = ""
+    @AppStorage(LocalProperties.activeCountry.rawValue) public static var activeCountry: Data = .init()
+    @AppStorage(LocalProperties.activeCountry.rawValue) static var userCountry: String = ""
     public static func retainActiveCountry(country: String) {
 //        guard let data = try? JSONEncoder().encode(country) else { return }
 //        activeCountry = data
@@ -24,6 +24,6 @@ public struct Auth {
     }
 }
 
-public enum AuthProperties: String {
+public enum LocalProperties: String {
     case activeCountry
 }

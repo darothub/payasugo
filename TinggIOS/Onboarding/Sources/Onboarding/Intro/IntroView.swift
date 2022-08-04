@@ -20,9 +20,11 @@ public struct IntroView: View {
                     color: PrimaryTheme.getColor(.cellulantLightGray)
                 )
                 tinggColoredLogo
+                    .accessibility(identifier: "tingggreenlogo")
                 IntroTabView(geo: geo, active: $active)
                     .environmentObject(navigation)
             }
+            .background(.white)
             .onAppear {
                 setPageIndicatorAppearance()
             }
@@ -52,6 +54,7 @@ struct IntroTabView: View {
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+            .accessibility(identifier: "onboardingtabview")
             Spacer()
             NavigationLink(
                 destination: PhoneNumberValidationView()
@@ -61,6 +64,7 @@ struct IntroTabView: View {
                 button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
                     active.toggle()
                 }
+                .accessibility(identifier: "getstarted")
             }
         }
     }

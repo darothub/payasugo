@@ -7,14 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
+		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
-		71867FB928946E0B008A5411 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71867FB828946E0B008A5411 /* Onboarding */; };
 		71867FBD28946FCF008A5411 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71867FBC28946FCF008A5411 /* Home */; };
 		71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71867FBE289479BC008A5411 /* ViewHouse.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
+		71E2BE28289BF2B40025ED12 /* DependenciesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E2BE27289BF2B40025ED12 /* DependenciesManager.swift */; };
+		71E2BE2A289C127A0025ED12 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71E2BE29289C127A0025ED12 /* Onboarding */; };
+		71E2BE2B289C127A0025ED12 /* Onboarding in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 71E2BE29289C127A0025ED12 /* Onboarding */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		714B15AD2899D5C6005338EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 718C6284283EBCB4002ADCA8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 718C628B283EBCB4002ADCA8;
+			remoteInfo = TinggIOS;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		717903752892EBB200451190 /* Embed Frameworks */ = {
@@ -23,6 +37,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				71E2BE2B289C127A0025ED12 /* Onboarding in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -31,6 +46,9 @@
 
 /* Begin PBXFileReference section */
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		714B15A72899D5C6005338EB /* OnboardingUITest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnboardingUITest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		714B15A92899D5C6005338EB /* OnboardingUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITest.swift; sourceTree = "<group>"; };
+		714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITestLaunchTests.swift; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
@@ -43,15 +61,24 @@
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
+		71E2BE27289BF2B40025ED12 /* DependenciesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependenciesManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		714B15A42899D5C6005338EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		718C6289283EBCB4002ADCA8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71867FB928946E0B008A5411 /* Onboarding in Frameworks */,
 				71867FBD28946FCF008A5411 /* Home in Frameworks */,
+				71E2BE2A289C127A0025ED12 /* Onboarding in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,11 +95,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		714B15A82899D5C6005338EB /* OnboardingUITest */ = {
+			isa = PBXGroup;
+			children = (
+				714B15A92899D5C6005338EB /* OnboardingUITest.swift */,
+				714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */,
+			);
+			path = OnboardingUITest;
+			sourceTree = "<group>";
+		};
 		718C6283283EBCB4002ADCA8 = {
 			isa = PBXGroup;
 			children = (
 				71AED58B28665C9400A4B14F /* Packages */,
 				718C628E283EBCB4002ADCA8 /* TinggIOS */,
+				714B15A82899D5C6005338EB /* OnboardingUITest */,
 				718C628D283EBCB4002ADCA8 /* Products */,
 				7108CD75285253DF0034EA29 /* Frameworks */,
 			);
@@ -82,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				718C628C283EBCB4002ADCA8 /* TinggIOS.app */,
+				714B15A72899D5C6005338EB /* OnboardingUITest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,6 +129,7 @@
 			children = (
 				71867FBE289479BC008A5411 /* ViewHouse.swift */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
+				71E2BE27289BF2B40025ED12 /* DependenciesManager.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
@@ -113,6 +152,7 @@
 				71867FB628946D8E008A5411 /* Theme */,
 				71867FB728946DCB008A5411 /* Onboarding */,
 				71867FBA28946EF0008A5411 /* Home */,
+				71E2BE26289BE97A0025ED12 /* Core */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -120,6 +160,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		714B15A62899D5C6005338EB /* OnboardingUITest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 714B15AF2899D5C6005338EB /* Build configuration list for PBXNativeTarget "OnboardingUITest" */;
+			buildPhases = (
+				714B15A32899D5C6005338EB /* Sources */,
+				714B15A42899D5C6005338EB /* Frameworks */,
+				714B15A52899D5C6005338EB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				714B15AE2899D5C6005338EB /* PBXTargetDependency */,
+			);
+			name = OnboardingUITest;
+			productName = OnboardingUITest;
+			productReference = 714B15A72899D5C6005338EB /* OnboardingUITest.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		718C628B283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 718C629A283EBCB8002ADCA8 /* Build configuration list for PBXNativeTarget "TinggIOS" */;
@@ -136,8 +194,8 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
-				71867FB828946E0B008A5411 /* Onboarding */,
 				71867FBC28946FCF008A5411 /* Home */,
+				71E2BE29289C127A0025ED12 /* Onboarding */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -153,6 +211,10 @@
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					714B15A62899D5C6005338EB = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 718C628B283EBCB4002ADCA8;
+					};
 					718C628B283EBCB4002ADCA8 = {
 						CreatedOnToolsVersion = 13.4;
 					};
@@ -174,11 +236,19 @@
 			projectRoot = "";
 			targets = (
 				718C628B283EBCB4002ADCA8 /* TinggIOS */,
+				714B15A62899D5C6005338EB /* OnboardingUITest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		714B15A52899D5C6005338EB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		718C628A283EBCB4002ADCA8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -212,18 +282,70 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		714B15A32899D5C6005338EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */,
+				714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		718C6288283EBCB4002ADCA8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */,
+				71E2BE28289BF2B40025ED12 /* DependenciesManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		714B15AE2899D5C6005338EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 718C628B283EBCB4002ADCA8 /* TinggIOS */;
+			targetProxy = 714B15AD2899D5C6005338EB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		714B15B02899D5C6005338EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DNS8AZ6368;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.cellullant.TinggIOS.OnboardingUITest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TinggIOS;
+			};
+			name = Debug;
+		};
+		714B15B12899D5C6005338EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DNS8AZ6368;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.cellullant.TinggIOS.OnboardingUITest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TinggIOS;
+			};
+			name = Release;
+		};
 		718C6298283EBCB8002ADCA8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -420,6 +542,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		714B15AF2899D5C6005338EB /* Build configuration list for PBXNativeTarget "OnboardingUITest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				714B15B02899D5C6005338EB /* Debug */,
+				714B15B12899D5C6005338EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		718C6287283EBCB4002ADCA8 /* Build configuration list for PBXProject "TinggIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -441,13 +572,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		71867FB828946E0B008A5411 /* Onboarding */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Onboarding;
-		};
 		71867FBC28946FCF008A5411 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
+		};
+		71E2BE29289C127A0025ED12 /* Onboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Onboarding;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

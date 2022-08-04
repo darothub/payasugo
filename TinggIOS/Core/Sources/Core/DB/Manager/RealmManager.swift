@@ -8,6 +8,7 @@
 import Foundation
 import RealmSwift
 public class RealmManager: ObservableObject {
+    @ObservedResults(Country.self) public var countries
     private(set) var localDb: Realm?
     public init() {
         openRealmDb()
@@ -24,7 +25,7 @@ public class RealmManager: ObservableObject {
     public func getLocalDbConfig() -> Realm? {
         return localDb
     }
-    public func save<S: Object>(data: [S]) {
+    public func save<S>(data: [S]) where S: Object {
         do {
             try  localDb?.write {
                 self.localDb?.add(data, update: .modified)
@@ -33,7 +34,7 @@ public class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
-    public func save<S: Object>(data: S) {
+    public func save<S>(data: S) where S: Object {
         do {
             try localDb?.write {
                 self.localDb?.add(data, update: .modified)
@@ -42,10 +43,19 @@ public class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
+    public func filterCountryByDialCode(dialCode: String) -> Country? {
+        return countries.first { country in
+            country.countryDialCode == dialCode
+        }
+    }
 }
 
-
-public class Observer<T> where T: Object, T: ObjectKeyIdentifiable{
+public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     public init() {}
+    
+}
+
+public protocol DBObject: Object {
+    
 }

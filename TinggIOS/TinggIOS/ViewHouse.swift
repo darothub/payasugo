@@ -17,6 +17,7 @@ struct ViewHouse: View {
         IntroView()
             .navigationBarHidden(true)
             .environmentObject(navigation)
+            .accessibility(identifier: "introview")
     }
 }
 

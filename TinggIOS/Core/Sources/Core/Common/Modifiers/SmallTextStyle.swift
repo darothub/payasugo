@@ -17,7 +17,9 @@ public struct SmallTextStyle: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .font(.system(size: 12))
+            .foregroundColor(.black)
             .padding(12)
             .multilineTextAlignment(.center)
+            
     }
 }
