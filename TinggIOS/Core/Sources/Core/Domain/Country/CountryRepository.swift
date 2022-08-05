@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import RealmSwift
 public class CountryRepository {
-    var apiService: TinggApiServices
-    var realmManager: RealmManager
+    @ObservedResults(Country.self) var countries
+    public var apiService: TinggApiServices
+    public var realmManager: RealmManager
     public init(apiService: TinggApiServices, realmManager: RealmManager) {
         self.apiService = apiService
         self.realmManager = realmManager
     }
-
     func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
         apiService.getCountries()
             .responseDecodable(of: CountryDTO.self) {response in
@@ -31,5 +32,30 @@ public class CountryRepository {
                 continuation.resume(with: result)
             }
         }
+    }
+    public func getCountryByDialCode(dialCode: String) -> Country? {
+        guard let country = realmManager.filterCountryByDialCode(dialCode: dialCode) else {
+            return nil
+        }
+        return country
+    }
+    public func getCountriesAndDialCode() async throws -> [String: String] {
+        let countries = try await getCountries()
+        print("Countries \(countries)")
+        let countryDictionary = countries.reduce(into: [:]) { partialResult, country in
+            partialResult[country.countryCode!] = country.countryDialCode
+        }
+        return countryDictionary
+    }
+    func getCountries() async throws -> [Country] {
+        let localDb = try await Realm()
+        if countries.isEmpty {
+            let remoteData = try await getRemoteCountries().data
+            localDb.writeAsync {
+                localDb.add(remoteData, update: .modified)
+            }
+            return remoteData
+        }
+        return countries.reversed()
     }
 }

@@ -32,19 +32,17 @@ public class OnboardingViewModel: ObservableObject {
     @Published public var countryDictionary = [String: String]()
     @Published public var countriesDb = Observer<Country>().objects
     var tinggRequest: TinggRequest = .init()
-    var fetchCountries: FetchCountries
+    var countryRepository: CountryRepository
     var baseRequest: BaseRequest
     var name = "OnboardingViewModel"
-    public init(tinggApiServices: TinggApiServices) {
-        self.fetchCountries = .init(countryServices: tinggApiServices)
-        self.baseRequest = .init(apiServices: tinggApiServices)
-    }
-    public convenience init(fetchCountries: FetchCountries, tinggApiServices: TinggApiServices) {
-        self.init(tinggApiServices: tinggApiServices)
-        self.fetchCountries = fetchCountries
-        Task {
-            await getCountryDictionary()
-        }
+//    public init(tinggApiServices: TinggApiServices) {
+//        self.fetchCountries = .init(countryServices: tinggApiServices)
+//        self.baseRequest = .init(apiServices: tinggApiServices)
+//    }
+    public init(countryRepository: CountryRepository) {
+        self.countryRepository = countryRepository
+        self.baseRequest = .init(apiServices: countryRepository.apiService)
+        getCountryDictionary()
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
         uiModel = UIModel.loading
@@ -74,18 +72,14 @@ public class OnboardingViewModel: ObservableObject {
             handleResultState(result)
         }
     }
-    func getCountryDictionary() async {
-        do {
-            let result = try await fetchCountries.getCountriesAndDialCode()
-            countryDictionary = result
-        } catch {
-            printLn(methodName: "getCountryDictionary", message: error.localizedDescription)
+    func getCountryDictionary() {
+        Task {
+            countryDictionary = try await countryRepository.getCountriesAndDialCode()
         }
     }
     func allCountries() {
-        fetchCountries.countriesCodesAndCountriesDialCodes()
+//        countryRepository.countriesCodesAndCountriesDialCodes()
     }
-    
     fileprivate func handleResultState<T: BaseDTOprotocol>(_ result: Result<T, ApiError>) {
         self.showLoader = false
         switch result {
@@ -104,7 +98,7 @@ public class OnboardingViewModel: ObservableObject {
                 action(data)
             case .loading:
                 print("loadingState")
-            case .error(_):
+            case .error:
                 print("errorState")
             case .nothing:
                 print("nothingState")
@@ -127,9 +121,13 @@ class DBTransactions {
     init() {}
     
     func save(data: DBObject) {
-        realmManager.save(data: data)
+        Task {
+            await realmManager.save(data: data)
+        }
     }
     func saveObjects(data: [DBObject]) {
-        realmManager.save(data: data)
+        Task {
+            await realmManager.save(data: data)
+        }
     }
 }

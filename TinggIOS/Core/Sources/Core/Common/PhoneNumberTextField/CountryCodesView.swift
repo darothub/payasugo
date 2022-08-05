@@ -32,7 +32,8 @@ public struct CountryCodesView: View {
                         withAnimation (.spring()) {
                             showPhoneSheet.toggle()
                         }
-                    }.accessibility(identifier: "countrycodeandflag")
+                    }
+                    .accessibility(identifier: "countrycodeandflag")
                 
                 TextField("Phone Number", text: $phoneNumber)
                     .padding()
@@ -45,7 +46,11 @@ public struct CountryCodesView: View {
                     .accessibility(identifier: "countrytextfield")
             }
         }.sheet(isPresented: $showPhoneSheet) {
-            CountryCodes(countryCode: $countryCode, countryFlag: $countryFlag, countries: countries)
+            CountryCodes(
+                countryCode: $countryCode,
+                countryFlag: $countryFlag,
+                countries: countries
+            )
         }
         .task {
             getCountryCode()

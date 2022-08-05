@@ -11,7 +11,6 @@ struct PolicySectionView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
-
     var body: some View {
         HStack(alignment: .top) {
             Group {
@@ -32,7 +31,13 @@ struct PolicySectionView_Previews: PreviewProvider {
     struct PolicySectionViewHolder: View {
         var body: some View {
             PolicySectionView()
-                .environmentObject(OnboardingViewModel(tinggApiServices: BaseRepository()))
+                .environmentObject(OnboardingViewModel(
+                    countryRepository: CountryRepository(
+                        apiService: BaseRepository(),
+                        realmManager: RealmManager()
+                    )
+                )
+            )
         }
     }
     static var previews: some View {

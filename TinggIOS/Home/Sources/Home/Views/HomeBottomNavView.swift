@@ -9,18 +9,13 @@ import SwiftUI
 import Core
 import Theme
 public struct HomeBottomNavView: View {
-    @Binding var profile: Profile
-    @Binding var processedCategories: [[Categorys]]
-    @Binding var quickTopups: [MerchantService]
-    public init(profile: Binding<Profile>, categories: Binding<[[Categorys]]>, quickTopups: Binding<[MerchantService]>) {
-        _profile = profile
-        _processedCategories = categories
-        _quickTopups = quickTopups
-    }
+    @StateObject var hvm: HomeViewModel = .init()
+    public init() {}
     public var body: some View {
         GeometryReader { _ in
             TabView {
-                HomeView(profile: profile, processedCategories: processedCategories, quickTopups: quickTopups)
+                HomeView()
+                    .environmentObject(hvm)
                     .tabItem {
                     Label {
                         Text("Home")
@@ -63,11 +58,8 @@ public struct HomeBottomNavView: View {
 
 struct HomeBottomNavView_Previews: PreviewProvider {
     struct HBNPReviewHolder : View {
-        @State var profile: Profile = previewProfile
-        @State var processedCategories:[[Categorys]] = previewProcessedCategories
-        @State var quickTopups: [MerchantService] = services
         public var body: some View {
-            HomeBottomNavView(profile: $profile, categories: $processedCategories, quickTopups: $quickTopups)
+            HomeBottomNavView()
         }
     }
     static var previews: some View {

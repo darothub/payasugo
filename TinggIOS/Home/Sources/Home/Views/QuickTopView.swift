@@ -9,17 +9,17 @@ import SwiftUI
 import Theme
 import Core
 struct QuickTopupView: View {
-    @State var listOfServices = [MerchantService]()
+    @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
-        GeometryReader { geometry in
+        Section {
             VStack(alignment: .leading) {
                 Text("Quick Top up")
                     .font(.system(size: PrimaryTheme.mediumTextSize))
                 Text("Recharge or pay instantly")
                     .font(.system(size: PrimaryTheme.smallTextSize))
-                ScrollView(.horizontal, showsIndicators: false){
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(listOfServices, id: \.id) { service in
+                        ForEach(hvm.airTimeServices, id: \.id) { service in
                             QuickTopupCard(imageUrl: service.serviceLogo!)
                                 .padding(.vertical)
                         }
@@ -39,7 +39,8 @@ struct QuickTopupView: View {
 
 struct QuickTopupView_Previews: PreviewProvider {
     static var previews: some View {
-        QuickTopupView(listOfServices: services)
+        QuickTopupView()
+            .environmentObject(HomeViewModel())
     }
 }
 

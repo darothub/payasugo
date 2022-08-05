@@ -10,7 +10,11 @@ import Core
 import SwiftUI
 import Theme
 public struct PhoneNumberValidationView: View {
-    @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
+    @State var phoneNumber = ""
+    @State var countryCode = "267"
+    @State var countries: [String: String] = [String: String]()
+    @StateObject var vm = OnboardingViewModel(
+        countryRepository: CountryRepository(apiService: BaseRepository(), realmManager: RealmManager()))
     var dbTransactionController: DBTransactions = .init()
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
@@ -21,37 +25,33 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 ZStack(alignment: .top) {
                     topRectangleBackground(geometry: geometry)
-                    topCameraImage(geometry: geometry)
+//                    topCameraImage(geometry: geometry)
                 }
                 .frame(width: geometry.size.width, height: abs(geometry.size.height * 0.25))
                 MobileNumberView()
-                CountryCodesView(
-                    phoneNumber: $onboardingViewModel.phoneNumber,
-                    countryCode: $onboardingViewModel.countryCode,
-                    countries: $onboardingViewModel.countryDictionary)
+                CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countries: $vm.countryDictionary)
                     .countryFieldViewStyle(
                         CountryViewDropDownStyle(
-                            isValidPhoneNumber: $onboardingViewModel.isValidPhoneNumber
+                            isValidPhoneNumber: $vm.isValidPhoneNumber
                         )
                     )
-                    .onChange(of: onboardingViewModel.phoneNumber) { number in
-                        onboardingViewModel.verifyPhoneNumber(number: number)
+                    .onChange(of: vm.phoneNumber) { number in
+                        vm.verifyPhoneNumber(number: number)
                     }
                 VerificationCodeAdviceTextView()
                 PolicySectionView()
-                    .environmentObject(onboardingViewModel)
+                    .environmentObject(vm)
                 Spacer()
                 TinggSupportSectionView(geometry: geometry)
-                    .environmentObject(onboardingViewModel)
+                    .environmentObject(vm)
                 SubmitButtonView()
-                    .environmentObject(onboardingViewModel)
-                
+                    .environmentObject(vm)
             }
-            .alert(onboardingViewModel.warning, isPresented: $onboardingViewModel.showAlert) {
+            .alert(vm.warning, isPresented: $vm.showAlert) {
                 Button("OK", role: .cancel) { }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .confirmationDialog("Contact", isPresented: $onboardingViewModel.showSupportTeamContact) {
+            .confirmationDialog("Contact", isPresented: $vm.showSupportTeamContact) {
                 Button("Call Ting Support") {
                     callSupport()
                 }
@@ -62,27 +62,27 @@ public struct PhoneNumberValidationView: View {
             } message: {
                 Text("Support")
             }
-            .sheet(isPresented: $onboardingViewModel.showOTPView, onDismiss: {
-                if onboardingViewModel.confirmedOTP {
-                    onboardingViewModel.retainActiveCountry(
-                        country: onboardingViewModel.currentCountry.country!
+            .sheet(isPresented: $vm.showOTPView, onDismiss: {
+                if vm.confirmedOTP {
+                    vm.retainActiveCountry(
+                        country: vm.currentCountry.country!
                     )
-                    onboardingViewModel.makePARRequest(
-                        msisdn: $onboardingViewModel.phoneNumber.wrappedValue,
-                        clientId: $onboardingViewModel.currentCountry.wrappedValue.mulaClientID!
+                    vm.makePARRequest(
+                        msisdn: $vm.phoneNumber.wrappedValue,
+                        clientId: $vm.currentCountry.wrappedValue.mulaClientID!
                     )
                 }
             }, content: {
                 OtpConfirmationView(
-                    activeCountry: $onboardingViewModel.currentCountry,
-                    phoneNumber: $onboardingViewModel.phoneNumber,
-                    otpConfirmed: $onboardingViewModel.confirmedOTP
-                )
+                    activeCountry: $vm.currentCountry,
+                    phoneNumber: $vm.phoneNumber,
+                    otpConfirmed: $vm.confirmedOTP
+                ).environmentObject(vm)
             })
             .background(PrimaryTheme.getColor(.tinggwhite))
-            .handleViewState(uiModel: $onboardingViewModel.uiModel)
+            .handleViewState(uiModel: $vm.uiModel)
             .onAppear {
-                onboardingViewModel.observeUIModel { data in
+                vm.observeUIModel { data in
                     confirmRegistration(data: data)
                 }
             }
@@ -100,6 +100,13 @@ public struct PhoneNumberValidationView: View {
 struct PhoneNumberValidationView_Previews: PreviewProvider {
     static var previews: some View {
         PhoneNumberValidationView()
+            .environmentObject(OnboardingViewModel(
+                countryRepository: CountryRepository(
+                    apiService: BaseRepository(),
+                    realmManager: RealmManager()
+                )
+            )
+        )
     }
 }
 
@@ -128,11 +135,11 @@ extension PhoneNumberValidationView {
     }
     func confirmRegistration(data: BaseDTOprotocol) {
         if data is BaseDTO {
-            $onboardingViewModel.showOTPView.wrappedValue = true
+            $vm.showOTPView.wrappedValue = true
         } else {
-            $onboardingViewModel.showOTPView.wrappedValue = true
+            $vm.showOTPView.wrappedValue = false
         }
-        if !onboardingViewModel.showOTPView && onboardingViewModel.confirmedOTP {
+        if !vm.showOTPView && vm.confirmedOTP {
             if let parResponse = data as? PARAndFSUDTO {
                 Task {
                     let sortedCategories = parResponse.categories.sorted { category1, category2 in
@@ -140,10 +147,10 @@ extension PhoneNumberValidationView {
                     }.filter { category in
                         category.activeStatus == "1"
                     }
-                    onboardingViewModel.saveObjects(data: sortedCategories)
-                    onboardingViewModel.saveObjects(data: parResponse.services)
+                    vm.saveObjects(data: sortedCategories)
+                    vm.saveObjects(data: parResponse.services)
                     let profile = parResponse.mulaProfileInfo.mulaProfile[0]
-                    onboardingViewModel.save(data: profile)
+                    vm.save(data: profile)
                     navigation.screen = .home
                 }
             }
@@ -168,11 +175,13 @@ extension OnboardingViewModel {
     }
     func getSelectedCountryRegex() -> String {
         Task {
-            guard let country = await fetchCountries.getCountryByDialCode(dialCode: countryCode) else {
+            guard let country = await countryRepository.getCountryByDialCode(dialCode: countryCode) else {
                 printLn(methodName: "getSelectedCountryRegex", message: "country is nil")
                 return
             }
-            currentCountry = country
+            DispatchQueue.main.async {
+                self.currentCountry = country
+            }
         }
         guard let regex = currentCountry.countryMobileRegex else { return ""}
         return regex

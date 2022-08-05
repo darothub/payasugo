@@ -18,7 +18,7 @@ public struct OtpConfirmationView: View {
     @Binding var activeCountry: Country
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
-    @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
+    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     public var body: some View {
@@ -86,6 +86,12 @@ struct OtpConfirmationView_Previews: PreviewProvider {
     }
     static var previews: some View {
         OtpConfirmationViewHolder()
-            .environmentObject(OnboardingViewModel(tinggApiServices: BaseRepository()))
+            .environmentObject(OnboardingViewModel(
+                countryRepository: CountryRepository(
+                    apiService: BaseRepository(),
+                    realmManager: RealmManager()
+                )
+            )
+        )
     }
 }

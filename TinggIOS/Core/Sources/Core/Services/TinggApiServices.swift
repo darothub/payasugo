@@ -7,8 +7,34 @@
 
 import Alamofire
 import Foundation
-
+import SwiftUI
 public protocol TinggApiServices {
-    func getCountries() -> DataRequest
     func request(tinggRequest: TinggRequest) -> DataRequest
+}
+
+extension TinggApiServices {
+    public func request(tinggRequest: TinggRequest) -> DataRequest {
+        return AF.request(Utils.baseUrlStaging, method: .post,
+                          parameters: tinggRequest, encoder: JSONParameterEncoder.default)
+    }
+    public func getCountries() -> DataRequest {
+        return AF.request(Utils.baseUrlStaging+"countries.php/", method: .get)
+    }
+}
+
+public struct TinggApiServicesKey: EnvironmentKey {
+    public static let defaultValue: TinggApiServices = BaseRepository()
+}
+
+public extension EnvironmentValues {
+    var tinggApiServices: TinggApiServices {
+        get { self[TinggApiServicesKey.self] }
+        set { self[TinggApiServicesKey.self] = newValue }
+    }
+}
+
+extension View {
+    public func tinggApiServices(_ tinggApiServices: TinggApiServices) -> some View {
+        environment(\.tinggApiServices, tinggApiServices)
+    }
 }

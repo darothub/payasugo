@@ -22,11 +22,13 @@ public struct ViewState: ViewModifier {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(3)
-            case .content:
+            case .content(let data):
                 VStack {
-                    Text("Successful")
+                    Text(data.statusMessage)
                         .padding(.vertical, 5)
-                        .foregroundColor(.red)
+                        .foregroundColor(
+                            data.statusMessage.lowercased().contains("succ") ? .green : .red
+                        )
                     Spacer()
                 }
             case .error(let err):

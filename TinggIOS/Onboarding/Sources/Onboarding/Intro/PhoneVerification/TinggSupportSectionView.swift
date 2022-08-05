@@ -22,7 +22,7 @@ struct TinggSupportSectionView: View {
             .frame(width: geometry.size.width)
             .font(.system(size: PrimaryTheme.smallTextSize))
         }.padding(.horizontal, 50)
-        .frame(width: geometry.size.width)
+            .frame(width: geometry.size.width)
     }
 }
 
@@ -30,7 +30,14 @@ struct TinggSupportSectionView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
             TinggSupportSectionView(geometry: geo)
-                .environmentObject(OnboardingViewModel(tinggApiServices: BaseRepository()))
+                .environmentObject(OnboardingViewModel(
+                    countryRepository: CountryRepository(
+                        apiService: BaseRepository(),
+                        realmManager: RealmManager()
+                    )
+                )
+            )
         }
     }
 }
+

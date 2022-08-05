@@ -9,21 +9,16 @@ import Combine
 import Foundation
 import RealmSwift
 public class FetchCountries: ObservableObject {
-    public var countryApiServices: TinggApiServices
     public var subscription = Set<AnyCancellable>()
+    @ObservedResults(Country.self) var countries
     @Published public var countriesInfo = [Country]()
     public var countryRepository: CountryRepository
-    public init(countryServices: TinggApiServices) {
-        self.countryApiServices = countryServices
-        self.countryRepository = CountryRepository(apiService: BaseRepository(), realmManager: RealmManager())
+    public init(countryRepository: CountryRepository) {
+        self.countryRepository = countryRepository
         countriesCodesAndCountriesDialCodes()
     }
-    public convenience init(countryRepository: CountryRepository, countryServices: TinggApiServices){
-        self.init(countryServices: countryServices)
-        self.countryRepository = countryRepository
-    }
     func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
-        countryApiServices.getCountries()
+        self.countryRepository.apiService.getCountries()
             .responseDecodable(of: CountryDTO.self) {response in
                 switch response.result {
                 case .failure:
@@ -36,10 +31,10 @@ public class FetchCountries: ObservableObject {
     @available(*, renamed: "getCountriesAndDialCode()")
     public func countriesCodesAndCountriesDialCodes() {
         Future<[Country], Never> { promise in
-            self.getCountries { [unowned self] results in
+            self.getCountries { results in
                 do {
                     let countriesInfo = try results.get().data
-                    countryRepository.realmManager.save(data: countriesInfo)
+//                    countryRepository.realmManager.save(data: countriesInfo)
                     promise(.success(countriesInfo))
                 } catch {
                     print("FetcCountriesError \(error.localizedDescription)")
@@ -50,25 +45,22 @@ public class FetchCountries: ObservableObject {
         .store(in: &subscription)
     }
     public func getCountriesAndDialCode() async throws -> [String: String] {
-        var countryDictionary =  [String: String]()
-        let dBCountries = await countryRepository.realmManager.countries
-        if dBCountries.isEmpty {
-            let countries = try await countryRepository.getRemoteCountries().data
-            await countryRepository.realmManager.save(data: countries)
-            countryDictionary = countries.reduce(into: [:]) { partialResult, country in
-                partialResult[country.countryCode!] = country.countryDialCode
-            }
-            return countryDictionary
-        }
-        return dBCountries.reduce(into: [:]) { partialResult, country in
+        let countries = try await getCountries()
+        print("Countries \(countries)")
+        let countryDictionary = countries.reduce(into: [:]) { partialResult, country in
             partialResult[country.countryCode!] = country.countryDialCode
         }
+        return countryDictionary
     }
-    
-    public func getCountryByDialCode(dialCode: String) async -> Country? {
-        guard let country = await countryRepository.realmManager.filterCountryByDialCode(dialCode: dialCode) else {
-            return nil
+    func getCountries() async throws -> [Country] {
+        let localDb = try await Realm()
+        if countries.isEmpty {
+            let remoteData = try await countryRepository.getRemoteCountries().data
+            localDb.writeAsync {
+                localDb.add(remoteData, update: .modified)
+            }
+            return remoteData
         }
-        return country
+        return countries.reversed()
     }
 }

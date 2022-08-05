@@ -10,14 +10,13 @@
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
-		71867FBD28946FCF008A5411 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71867FBC28946FCF008A5411 /* Home */; };
 		71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71867FBE289479BC008A5411 /* ViewHouse.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71E2BE28289BF2B40025ED12 /* DependenciesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E2BE27289BF2B40025ED12 /* DependenciesManager.swift */; };
-		71E2BE2A289C127A0025ED12 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71E2BE29289C127A0025ED12 /* Onboarding */; };
-		71E2BE2B289C127A0025ED12 /* Onboarding in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 71E2BE29289C127A0025ED12 /* Onboarding */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		71C1AE4B289C3A1000FE2E33 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE4A289C3A1000FE2E33 /* Onboarding */; };
+		71C1AE4D289C3A1500FE2E33 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE4C289C3A1500FE2E33 /* Home */; };
+		71E2BE28289BF2B40025ED12 /* DIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E2BE27289BF2B40025ED12 /* DIManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +36,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				71E2BE2B289C127A0025ED12 /* Onboarding in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,7 +60,7 @@
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
-		71E2BE27289BF2B40025ED12 /* DependenciesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependenciesManager.swift; sourceTree = "<group>"; };
+		71E2BE27289BF2B40025ED12 /* DIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +75,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71867FBD28946FCF008A5411 /* Home in Frameworks */,
-				71E2BE2A289C127A0025ED12 /* Onboarding in Frameworks */,
+				71C1AE4B289C3A1000FE2E33 /* Onboarding in Frameworks */,
+				71C1AE4D289C3A1500FE2E33 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +127,7 @@
 			children = (
 				71867FBE289479BC008A5411 /* ViewHouse.swift */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
-				71E2BE27289BF2B40025ED12 /* DependenciesManager.swift */,
+				71E2BE27289BF2B40025ED12 /* DIManager.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
@@ -194,8 +192,8 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
-				71867FBC28946FCF008A5411 /* Home */,
-				71E2BE29289C127A0025ED12 /* Onboarding */,
+				71C1AE4A289C3A1000FE2E33 /* Onboarding */,
+				71C1AE4C289C3A1500FE2E33 /* Home */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -297,7 +295,7 @@
 			files = (
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */,
-				71E2BE28289BF2B40025ED12 /* DependenciesManager.swift in Sources */,
+				71E2BE28289BF2B40025ED12 /* DIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,13 +570,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		71867FBC28946FCF008A5411 /* Home */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Home;
-		};
-		71E2BE29289C127A0025ED12 /* Onboarding */ = {
+		71C1AE4A289C3A1000FE2E33 /* Onboarding */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Onboarding;
+		};
+		71C1AE4C289C3A1500FE2E33 /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

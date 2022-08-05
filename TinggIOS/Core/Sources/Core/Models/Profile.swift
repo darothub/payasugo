@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - Profile
 public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
-    @Persisted(primaryKey: true) public var profileID: String = ""
+    @Persisted(primaryKey: true) public var profileID: String? = ""
     @Persisted public var msisdn: String? = ""
     @Persisted public var firstName: String? = ""
     @Persisted public var lastName: String? = ""
@@ -27,7 +27,7 @@ public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var currencyNumber: String? = ""
     @Persisted public var pinRequestType: String? = ""
     @Persisted public var isMulaPinSet: String? = ""
-    @Persisted public var isMain: String? = ""
+    @Persisted public var isMain: Int? = 0
     @Persisted public var simSerialNumber: String? = ""
     @Persisted public var hasValidatedCard: Int? = 0
     @Persisted public var creditLimit: String? = ""

@@ -31,7 +31,13 @@ struct SubmitButtonView: View {
 struct SubmitButtonView_Previews: PreviewProvider {
     static var previews: some View {
         SubmitButtonView()
-            .environmentObject(OnboardingViewModel(tinggApiServices: BaseRepository()))
+            .environmentObject(OnboardingViewModel(
+                countryRepository: CountryRepository(
+                    apiService: BaseRepository(),
+                    realmManager: RealmManager()
+                )
+            )
+            )
     }
 }
 

@@ -13,7 +13,7 @@ import Theme
 struct TinggIOSApp: App {
     @StateObject var enviromentUtils = EnvironmentUtils()
     @StateObject var navigation = NavigationUtils()
-    @StateObject var hvm: HomeViewModel = .init()
+    @StateObject var ovm = DIManager.createOnboardingViewModel()
     @State var profile: Profile = .init()
     @State var categories: [[Categorys]] = [[]]
     @State var quicktops: [MerchantService] = [MerchantService]()
@@ -28,7 +28,12 @@ struct TinggIOSApp: App {
                         LaunchScreenView()
                             .environmentObject(navigation)
                     }
-                }                
+                }
+                .onAppear {
+                      UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+                      print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
+                }
+
             }
         }
     }
@@ -36,21 +41,12 @@ struct TinggIOSApp: App {
     var destination: some View {
         switch navigation.screen {
         case .home:
-            HomeBottomNavView(
-                profile: $profile,
-                categories: $categories,
-                quickTopups: $quicktops
-            ).onAppear {
-                withAnimation {
-                    profile = hvm.getProfile()
-                    categories = hvm.processedCategories
-                    quicktops = hvm.getQuickTopups()
-                }
-            }
+            HomeBottomNavView()
         case .intro:
             IntroView()
                 .navigationBarHidden(true)
                 .environmentObject(navigation)
+                .environmentObject(ovm)
         case .launch:
             LaunchScreenView()
                 .environmentObject(navigation)
