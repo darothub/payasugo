@@ -1,6 +1,6 @@
 stages:
   - build
-  - analyse
+  - analyze
   
 before_script:
  - echo "started by ${GITLAB_USER_NAME}"
@@ -15,7 +15,7 @@ build_project:
   image: macos-11-xcode-12
 
 sonarqube-check:
-  stage: analyse
+  stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: ["."]
