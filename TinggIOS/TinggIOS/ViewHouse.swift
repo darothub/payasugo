@@ -27,10 +27,11 @@ struct ViewHouse_Previews: PreviewProvider {
     static var previews: some View {
         ViewHouse()
             .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepository(
+                countryRepository: CountryRepositoryImpl(
                     apiService: BaseRepository(),
                     realmManager: RealmManager()
-                )
+                ),
+                baseRequest: BaseRequest(apiServices: BaseRepository())
             )
         )
     }

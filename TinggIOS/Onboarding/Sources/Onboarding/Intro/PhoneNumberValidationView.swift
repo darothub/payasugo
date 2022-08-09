@@ -13,8 +13,13 @@ public struct PhoneNumberValidationView: View {
     @State var phoneNumber = ""
     @State var countryCode = "267"
     @State var countries: [String: String] = [String: String]()
+    // swiftlint:disable all
     @StateObject var vm = OnboardingViewModel(
-        countryRepository: CountryRepository(apiService: BaseRepository(), realmManager: RealmManager()))
+        countryRepository: CountryRepositoryImpl(
+            apiService: BaseRepository(),
+            realmManager: RealmManager()),
+        baseRequest: BaseRequest(apiServices: BaseRepository())
+    )
     var dbTransactionController: DBTransactions = .init()
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
@@ -25,7 +30,6 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 ZStack(alignment: .top) {
                     topRectangleBackground(geometry: geometry)
-//                    topCameraImage(geometry: geometry)
                 }
                 .frame(width: geometry.size.width, height: abs(geometry.size.height * 0.25))
                 MobileNumberView()
@@ -49,6 +53,7 @@ public struct PhoneNumberValidationView: View {
             }
             .alert(vm.warning, isPresented: $vm.showAlert) {
                 Button("OK", role: .cancel) { }
+                    .accessibility(identifier: "warningbutton")
             }
             .navigationBarTitleDisplayMode(.inline)
             .confirmationDialog("Contact", isPresented: $vm.showSupportTeamContact) {
@@ -101,10 +106,11 @@ struct PhoneNumberValidationView_Previews: PreviewProvider {
     static var previews: some View {
         PhoneNumberValidationView()
             .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepository(
+                countryRepository: CountryRepositoryImpl(
                     apiService: BaseRepository(),
                     realmManager: RealmManager()
-                )
+                ),
+                baseRequest: BaseRequest(apiServices: BaseRepository())
             )
         )
     }

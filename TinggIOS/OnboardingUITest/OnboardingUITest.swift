@@ -57,17 +57,66 @@ class OnboardingUITest: XCTestCase {
         XCTAssert(button.waitForExistence(timeout: 5))
         button.tap()
         let countrycodeandflag = app.staticTexts["countrycodeandflag"]
-        XCTAssert(countrycodeandflag.waitForExistence(timeout: 5))
         countrycodeandflag.tap()
         let countryflag = app.staticTexts["countryflag"]
         XCTAssert(countryflag.waitForExistence(timeout: 5))
-        
                 
+    }
+    func testWarningShowsUpWhenPolicyIsNotChecked(){
+        let button = app.buttons["getstarted"]
+        XCTAssert(button.waitForExistence(timeout: 5))
+        button.tap()
+        let countrytextfield = app.textFields["Phone Number"]
+        countrytextfield.tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        let continueButton = app.buttons["Continue"]
+        XCTAssert(continueButton.waitForExistence(timeout: 5))
+        continueButton.tap()
+        let warningText = app.staticTexts["You must accept terms of use and privacy policy to proceed!"]
+        XCTAssert(warningText.waitForExistence(timeout: 5))
+        let warningButton = app.buttons["OK"]
+        XCTAssert(warningButton.waitForExistence(timeout: 5))
+                
+    }
+    func testWarningShowsUpWhenUserTriesToSubmitAndEmptyPhoneNumber(){
+        let button = app.buttons["getstarted"]
+        XCTAssert(button.waitForExistence(timeout: 5))
+        button.tap()
+        let continueButton = app.buttons["Continue"]
+        continueButton.tap()
+        let warningText = app.staticTexts["Phone number can not be empty"]
+        XCTAssert(warningText.waitForExistence(timeout: 5))
+        let warningButton = app.buttons["OK"]
+        XCTAssert(warningButton.waitForExistence(timeout: 5))
+                
+    }
+    func testUserInputCorrectPhoneNumberAndCheckedPolicyThenOTPViewShows(){
+        let button = app.buttons["getstarted"]
+        XCTAssert(button.waitForExistence(timeout: 5))
+        button.tap()
+        let countrytextfield = app.textFields["Phone Number"]
+        XCTAssert(countrytextfield.waitForExistence(timeout: 5))
+        countrytextfield.tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app.keys["7"].tap()
+        app/*@START_MENU_TOKEN@*/.images["policycheckbox"]/*[[".images[\"Square\"]",".images[\"policycheckbox\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.buttons["Continue"].tap()
+        let OTVHeadingtext = app.staticTexts["Confirm OTP"]
+        XCTAssert(OTVHeadingtext.waitForExistence(timeout: 5))
                 
     }
 }
-//        let tabView = app.collectionViews["onboardingtabview"]
-//        tabView/*@START_MENU_TOKEN@*/.cells/*[[".scrollViews.cells",".cells"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.children(matching: .other)
-//            .element.children(matching: .other).element.swipeRight()
-//        XCTAssert(button.waitForExistence(timeout: 5))
-//        app.navigationBars["_TtGC7SwiftUI19UIHosting"].buttons["Back"].tap()
+

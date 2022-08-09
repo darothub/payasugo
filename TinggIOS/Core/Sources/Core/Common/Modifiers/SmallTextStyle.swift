@@ -20,6 +20,5 @@ public struct SmallTextStyle: ViewModifier {
             .foregroundColor(.black)
             .padding(12)
             .multilineTextAlignment(.center)
-            
     }
 }

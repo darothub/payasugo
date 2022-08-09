@@ -4,6 +4,7 @@
 //
 //  Created by Abdulrasaq on 21/07/2022.
 //
+// swiftlint:disable all
 import SwiftUI
 //import Theme
 //public var tinggColoredLogo: some View {

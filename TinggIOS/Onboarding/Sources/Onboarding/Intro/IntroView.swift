@@ -38,12 +38,13 @@ struct IntroView_Previews: PreviewProvider {
         IntroView()
             .environmentObject(NavigationUtils())
             .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepository(
+                countryRepository: CountryRepositoryImpl(
                     apiService: BaseRepository(),
                     realmManager: RealmManager()
-                )
+                ),
+                baseRequest: BaseRequest(apiServices: BaseRepository())
             )
-            )
+        )
     }
 }
 

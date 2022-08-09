@@ -19,7 +19,7 @@ public struct OtpConfirmationView: View {
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     public var body: some View {
         VStack(alignment: .center) {
@@ -39,12 +39,11 @@ public struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.observeUIModel {data in 
-                    if data.statusMessage.contains("Invalid") {
-                        return
+                onboardingViewModel.observeUIModel { _ in
+                    DispatchQueue.main.async {
+                        otpConfirmed = true
+                        $onboardingViewModel.showOTPView.wrappedValue = false
                     }
-                    otpConfirmed = true
-                    dismiss()
                 }
             }
         }
@@ -87,10 +86,11 @@ struct OtpConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
         OtpConfirmationViewHolder()
             .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepository(
+                countryRepository: CountryRepositoryImpl(
                     apiService: BaseRepository(),
                     realmManager: RealmManager()
-                )
+                ),
+                baseRequest: BaseRequest(apiServices: BaseRepository())
             )
         )
     }

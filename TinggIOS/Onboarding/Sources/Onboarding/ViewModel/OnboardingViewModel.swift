@@ -16,7 +16,7 @@ public class OnboardingViewModel: ObservableObject {
     @Published var showOTPView = false
     @Published var showError = false
     @Published var navigate = false
-    @Published var currentCountry:Country = .init()
+    @Published var currentCountry: Country = .init()
     @Published var isValidPhoneNumber = false
     @Published var isCheckedTermsAndPolicy = false
     @Published var showAlert = false
@@ -32,16 +32,12 @@ public class OnboardingViewModel: ObservableObject {
     @Published public var countryDictionary = [String: String]()
     @Published public var countriesDb = Observer<Country>().objects
     var tinggRequest: TinggRequest = .init()
-    var countryRepository: CountryRepository
+    var countryRepository: CountryRepositoryImpl
     var baseRequest: BaseRequest
     var name = "OnboardingViewModel"
-//    public init(tinggApiServices: TinggApiServices) {
-//        self.fetchCountries = .init(countryServices: tinggApiServices)
-//        self.baseRequest = .init(apiServices: tinggApiServices)
-//    }
-    public init(countryRepository: CountryRepository) {
+    public init(countryRepository: CountryRepositoryImpl, baseRequest: BaseRequest) {
         self.countryRepository = countryRepository
-        self.baseRequest = .init(apiServices: countryRepository.apiService)
+        self.baseRequest = baseRequest
         getCountryDictionary()
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
@@ -77,9 +73,6 @@ public class OnboardingViewModel: ObservableObject {
             countryDictionary = try await countryRepository.getCountriesAndDialCode()
         }
     }
-    func allCountries() {
-//        countryRepository.countriesCodesAndCountriesDialCodes()
-    }
     fileprivate func handleResultState<T: BaseDTOprotocol>(_ result: Result<T, ApiError>) {
         self.showLoader = false
         switch result {
@@ -95,7 +88,9 @@ public class OnboardingViewModel: ObservableObject {
         $uiModel.sink { uiModel in
             switch uiModel {
             case .content(let data):
-                action(data)
+                if data.statusMessage.lowercased().contains("succ") {
+                    action(data)
+                }
             case .loading:
                 print("loadingState")
             case .error:
@@ -111,7 +106,7 @@ public class OnboardingViewModel: ObservableObject {
     func saveObjects(data: [DBObject]) {
         dbTransaction.saveObjects(data: data)
     }
-    func printLn(methodName: String, message:String){
+    func printLn(methodName: String, message: String) {
         print("\(name) \(methodName) \(message)")
     }
 }
@@ -119,7 +114,6 @@ public class OnboardingViewModel: ObservableObject {
 class DBTransactions {
     private var realmManager: RealmManager = .init()
     init() {}
-    
     func save(data: DBObject) {
         Task {
             await realmManager.save(data: data)

@@ -7,8 +7,7 @@
 import SwiftUI
 
 public enum UIModel {
-    
-    public class Content<T: BaseDTOprotocol> : ObservableObject {
+    public class Content<T: BaseDTOprotocol>: ObservableObject {
         @State public var data: T
         public init(data: T) {
             self.data = data

@@ -17,13 +17,16 @@ struct SubmitButtonView: View {
               backgroundColor: PrimaryTheme.getColor(.primaryColor),
               buttonLabel: "Continue"
           ) {
-              onboardingViewModel.validatePhoneNumberIsNotEmpty()
-              let number = "+\($onboardingViewModel.countryCode)\($onboardingViewModel.phoneNumber)"
-              onboardingViewModel.makeActivationCodeRequest(
-                msisdn: number,
-                clientId: $onboardingViewModel.currentCountry.wrappedValue.mulaClientID!
-              )
+              let isValidated = onboardingViewModel.validatePhoneNumberIsNotEmpty()
+              if isValidated {
+                  let number = "+\($onboardingViewModel.countryCode)\($onboardingViewModel.phoneNumber)"
+                  onboardingViewModel.makeActivationCodeRequest(
+                    msisdn: number,
+                    clientId: $onboardingViewModel.currentCountry.wrappedValue.mulaClientID!
+                  )
+              }
           }.keyboardShortcut(.return)
+            .accessibility(identifier: "continuebtn")
         }
     }
 }
@@ -32,27 +35,28 @@ struct SubmitButtonView_Previews: PreviewProvider {
     static var previews: some View {
         SubmitButtonView()
             .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepository(
+                countryRepository: CountryRepositoryImpl(
                     apiService: BaseRepository(),
                     realmManager: RealmManager()
-                )
+                ),
+                baseRequest: BaseRequest(apiServices: BaseRepository())
             )
-            )
+        )
     }
 }
 
-
 extension OnboardingViewModel {
-    func validatePhoneNumberIsNotEmpty() {
+    func validatePhoneNumberIsNotEmpty() -> Bool {
         if phoneNumber.isEmpty {
             warning = "Phone number can not be empty"
             showAlert.toggle()
-            return
+            return false
         }
         if !isCheckedTermsAndPolicy {
             warning = "You must accept terms of use and privacy policy to proceed!"
             showAlert.toggle()
-            return
+            return false
         }
+        return true
     }
 }

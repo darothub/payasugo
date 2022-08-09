@@ -4,7 +4,6 @@
 //
 //  Created by Abdulrasaq on 13/07/2022.
 //
-//import Core
 import SwiftUI
 public extension View {
     @ViewBuilder

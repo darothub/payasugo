@@ -14,8 +14,8 @@
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71C1AE4B289C3A1000FE2E33 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE4A289C3A1000FE2E33 /* Onboarding */; };
-		71C1AE4D289C3A1500FE2E33 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE4C289C3A1500FE2E33 /* Home */; };
+		71C1AE4F289DB9AB00FE2E33 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE4E289DB9AB00FE2E33 /* Home */; };
+		71C1AE51289DB9B000FE2E33 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE50289DB9B000FE2E33 /* Onboarding */; };
 		71E2BE28289BF2B40025ED12 /* DIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E2BE27289BF2B40025ED12 /* DIManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,8 +75,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71C1AE4B289C3A1000FE2E33 /* Onboarding in Frameworks */,
-				71C1AE4D289C3A1500FE2E33 /* Home in Frameworks */,
+				71C1AE4F289DB9AB00FE2E33 /* Home in Frameworks */,
+				71C1AE51289DB9B000FE2E33 /* Onboarding in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,8 +192,8 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
-				71C1AE4A289C3A1000FE2E33 /* Onboarding */,
-				71C1AE4C289C3A1500FE2E33 /* Home */,
+				71C1AE4E289DB9AB00FE2E33 /* Home */,
+				71C1AE50289DB9B000FE2E33 /* Onboarding */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -570,13 +570,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		71C1AE4A289C3A1000FE2E33 /* Onboarding */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Onboarding;
-		};
-		71C1AE4C289C3A1500FE2E33 /* Home */ = {
+		71C1AE4E289DB9AB00FE2E33 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
+		};
+		71C1AE50289DB9B000FE2E33 /* Onboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Onboarding;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

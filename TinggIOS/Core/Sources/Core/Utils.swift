@@ -19,4 +19,3 @@ public class NavigationUtils: ObservableObject {
     @Published public var navigatePermission = false
     public init() {}
 }
-

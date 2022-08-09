@@ -17,9 +17,6 @@ extension TinggApiServices {
         return AF.request(Utils.baseUrlStaging, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }
-    public func getCountries() -> DataRequest {
-        return AF.request(Utils.baseUrlStaging+"countries.php/", method: .get)
-    }
 }
 
 public struct TinggApiServicesKey: EnvironmentKey {

@@ -15,6 +15,7 @@ struct PolicySectionView: View {
         HStack(alignment: .top) {
             Group {
                 CheckBoxView(checkboxChecked: $onboardingViewModel.isCheckedTermsAndPolicy)
+                    .accessibility(identifier: "policycheckbox")
                 Text("By proceeding you agree with the ")
                 + Text(.init(termOfAgreementLink))
                     .underline()
@@ -32,10 +33,11 @@ struct PolicySectionView_Previews: PreviewProvider {
         var body: some View {
             PolicySectionView()
                 .environmentObject(OnboardingViewModel(
-                    countryRepository: CountryRepository(
+                    countryRepository: CountryRepositoryImpl(
                         apiService: BaseRepository(),
                         realmManager: RealmManager()
-                    )
+                    ),
+                    baseRequest: BaseRequest(apiServices: BaseRepository())
                 )
             )
         }

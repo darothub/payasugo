@@ -17,19 +17,17 @@ struct DIManager {
     static func createRealmManager() -> RealmManager {
         return RealmManager()
     }
-    static func createCountryRepository() -> CountryRepository {
-        return CountryRepository(
+    static func createBaseRequest() -> BaseRequest {
+        return BaseRequest(apiServices: BaseRepository())
+    }
+    static func createCountryRepository() -> CountryRepositoryImpl {
+        return CountryRepositoryImpl(
             apiService: createApiServices(),
             realmManager: createRealmManager()
         )
     }
-    static func createFetchCountries() -> FetchCountries {
-        return FetchCountries(
-            countryRepository: createCountryRepository()
-        )
-    }
     static func createOnboardingViewModel() -> OnboardingViewModel {
-        return OnboardingViewModel(countryRepository: createCountryRepository())
+        return OnboardingViewModel(countryRepository: createCountryRepository(), baseRequest: createBaseRequest())
     }
 
 }

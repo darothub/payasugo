@@ -57,7 +57,7 @@ public struct HomeBottomNavView: View {
 }
 
 struct HomeBottomNavView_Previews: PreviewProvider {
-    struct HBNPReviewHolder : View {
+    struct HBNPReviewHolder: View {
         public var body: some View {
             HomeBottomNavView()
         }

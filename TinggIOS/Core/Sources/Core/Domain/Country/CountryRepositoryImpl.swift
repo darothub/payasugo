@@ -7,7 +7,7 @@
 
 import Foundation
 import RealmSwift
-public class CountryRepository {
+public class CountryRepositoryImpl: CountryRepository {
     @ObservedResults(Country.self) var countries
     public var apiService: TinggApiServices
     public var realmManager: RealmManager
@@ -47,7 +47,7 @@ public class CountryRepository {
         }
         return countryDictionary
     }
-    func getCountries() async throws -> [Country] {
+    public func getCountries() async throws -> [Country] {
         let localDb = try await Realm()
         if countries.isEmpty {
             let remoteData = try await getRemoteCountries().data
@@ -58,4 +58,9 @@ public class CountryRepository {
         }
         return countries.reversed()
     }
+}
+
+
+public protocol CountryRepository {
+    func getCountries() async throws -> [Country]
 }

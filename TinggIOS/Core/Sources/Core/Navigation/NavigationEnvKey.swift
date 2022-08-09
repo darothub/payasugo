@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-private struct NavigationEnvKey : EnvironmentKey {
+private struct NavigationEnvKey: EnvironmentKey {
     static let defaultValue: Binding<Bool> = .constant(false)
 }
 
@@ -24,22 +24,3 @@ extension View {
         environment(\.modularNavigation, modularNavigation)
     }
 }
-
-//
-//private struct NavigationEnvKeys : EnvironmentKey  {
-//    static let defaultValue: GoingTo = EmptyView() as! GoingTo
-//}
-//
-//extension EnvironmentValues {
-//    public var modularNavigations: View {
-//        get { self[NavigationEnvKeys.self]}
-//        set { self[NavigationEnvKeys.self] = newValue }
-//    }
-//}
-//
-//extension View {
-//    @ViewBuilder
-//    public func isModularNavigations(_ modularNavigations: Binding<Bool>) -> some View {
-//        environment(\.modularNavigations, modularNavigations)
-//    }
-//}

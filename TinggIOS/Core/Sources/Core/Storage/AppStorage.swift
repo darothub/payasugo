@@ -19,7 +19,8 @@ public struct AppStorageManager {
     public static func getActiveCountry() -> String {
         print("ActiveCountry \(userCountry)")
         return userCountry
-//        guard let activeCountry = try? JSONDecoder().decode(Country.self, from: activeCountry) else { fatalError("Country decode error") }
+//        guard let activeCountry = try? JSONDecoder().decode(Country.self, from: activeCountry)
+//        else { fatalError("Country decode error") }
 //        return activeCountry
     }
 }

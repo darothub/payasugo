@@ -31,13 +31,13 @@ struct TinggSupportSectionView_Previews: PreviewProvider {
         GeometryReader { geo in
             TinggSupportSectionView(geometry: geo)
                 .environmentObject(OnboardingViewModel(
-                    countryRepository: CountryRepository(
+                    countryRepository: CountryRepositoryImpl(
                         apiService: BaseRepository(),
                         realmManager: RealmManager()
-                    )
+                    ),
+                    baseRequest: BaseRequest(apiServices: BaseRepository())
                 )
             )
         }
     }
 }
-

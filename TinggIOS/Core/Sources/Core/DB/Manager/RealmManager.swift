@@ -58,13 +58,9 @@ public final class RealmManager: ObservableObject {
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     public init() {}
-    
 }
 
-public protocol DBObject: Object {
-    
-}
-
+public protocol DBObject: Object {}
 
 public struct RealmManagerKey: EnvironmentKey {
     public static let defaultValue: RealmManager = RealmManager()

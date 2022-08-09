@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 13/07/2022.
 //
-//import Core
+
 import SwiftUI
 
 public struct ViewState: ViewModifier {
@@ -23,11 +23,12 @@ public struct ViewState: ViewModifier {
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(3)
             case .content(let data):
+                let message = data.statusMessage.lowercased().contains("succ") ? "" : data.statusMessage
                 VStack {
-                    Text(data.statusMessage)
+                    Text(message)
                         .padding(.vertical, 5)
                         .foregroundColor(
-                            data.statusMessage.lowercased().contains("succ") ? .green : .red
+                            .red
                         )
                     Spacer()
                 }

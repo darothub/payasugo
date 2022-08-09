@@ -27,7 +27,7 @@ public class HomeViewModel: ObservableObject {
         }
         self.profile = profile
     }
-    public func getQuickTopups(){
+    public func getQuickTopups() {
         Future<[MerchantService], Never> { [unowned self] promise in
             let airtimes = categories.filter {$0.categoryName == "Airtime"}
             let theAirtimeCategory = airtimes[0]
@@ -35,7 +35,6 @@ public class HomeViewModel: ObservableObject {
         }
         .assign(to: \.airTimeServices, on: self)
         .store(in: &subscription)
-        
         return
     }
 }
