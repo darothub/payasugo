@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   
 before_script:
  - echo "started by ${GITLAB_USER_NAME}"
