@@ -24,7 +24,7 @@ class CountryRepositoryTest: XCTestCase {
     
     func testThatCountryNameIsCorrect() async {
         let countries = try? await countryRepository?.getCountries()
-        XCTAssertEqual(observedDbCountries.first?.country, countries?.first?.country,
+        XCTAssertEqual(observedDbCountries.first?.name, countries?.first?.name,
                        "Country was not properly updated from server.")
     }
 
