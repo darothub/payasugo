@@ -102,7 +102,7 @@ class OnboardingUITest: XCTestCase {
         XCTAssert(button.waitForExistence(timeout: 5))
         button.tap()
         let countrytextfield = app.textFields["Phone Number"]
-        XCTAssert(countrytextfield.waitForExistence(timeout: 5))
+        XCTAssert(countrytextfield.waitForExistence(timeout: 3))
         countrytextfield.tap()
         app.keys["7"].tap()
         app.keys["7"].tap()

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Common
 import Core
 import SwiftUI
 import Theme
@@ -24,24 +25,16 @@ public struct PhoneNumberValidationView: View {
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
+    
     public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 10) {
-                ZStack(alignment: .top) {
-                    topRectangleBackground(geometry: geometry)
-                }
-                .frame(width: geometry.size.width, height: abs(geometry.size.height * 0.25))
+                topView(geo: geometry)
                 MobileNumberView()
-                CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countries: $vm.countryDictionary)
-                    .countryFieldViewStyle(
-                        CountryViewDropDownStyle(
-                            isValidPhoneNumber: $vm.isValidPhoneNumber
-                        )
-                    )
-                    .onChange(of: vm.phoneNumber) { number in
-                        vm.verifyPhoneNumber(number: number)
-                    }
+                countryCodeViewActions()
                 VerificationCodeAdviceTextView()
                 PolicySectionView()
                     .environmentObject(vm)
@@ -52,25 +45,18 @@ public struct PhoneNumberValidationView: View {
                     .environmentObject(vm)
             }
             .alert(vm.warning, isPresented: $vm.showAlert) {
-                Button("OK", role: .cancel) { }
-                    .accessibility(identifier: "warningbutton")
+                warningButtonAction()
             }
             .navigationBarTitleDisplayMode(.inline)
             .confirmationDialog("Contact", isPresented: $vm.showSupportTeamContact) {
-                Button("Call Ting Support") {
-                    callSupport()
-                }
-                Button("Chat Ting Support") {
-                    print("Chat")
-                }
-                Button("Cancel", role: .cancel) {}
+               callSupportActions()
             } message: {
                 Text("Support")
             }
             .sheet(isPresented: $vm.showOTPView, onDismiss: {
                 if vm.confirmedOTP {
                     vm.retainActiveCountry(
-                        country: vm.currentCountry.country!
+                        country: vm.currentCountry.name!
                     )
                     vm.makePARRequest(
                         msisdn: $vm.phoneNumber.wrappedValue,
@@ -87,11 +73,34 @@ public struct PhoneNumberValidationView: View {
             .background(PrimaryTheme.getColor(.tinggwhite))
             .handleViewState(uiModel: $vm.uiModel)
             .onAppear {
-                vm.observeUIModel { data in
-                    confirmRegistration(data: data)
-                }
+                observingUIModel()
             }
         }
+    }
+    
+    fileprivate func observingUIModel() {
+        vm.observeUIModel { data in
+            confirmRegistration(data: data)
+        }
+    }
+    @ViewBuilder
+    fileprivate func countryCodeViewActions() -> some View {
+        CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countries: $vm.countryDictionary)
+            .countryFieldViewStyle(
+                CountryViewDropDownStyle(
+                    isValidPhoneNumber: $vm.isValidPhoneNumber
+                )
+            )
+            .onChange(of: vm.phoneNumber) { number in
+                vm.verifyPhoneNumber(number: number)
+            }
+    }
+    @ViewBuilder
+    fileprivate func topView(geo: GeometryProxy) -> some View {
+        ZStack(alignment: .top) {
+            topRectangleBackground(geometry: geo)
+        }
+        .frame(width: geo.size.width, height: abs(geo.size.height * 0.25))
     }
     fileprivate func callSupport() {
         let tel = "tel://"
@@ -99,6 +108,24 @@ public struct PhoneNumberValidationView: View {
         let formattedPhoneNumber = tel+supportNumber
         guard let url = URL(string: formattedPhoneNumber) else {return}
         openURL(url)
+    }
+    @ViewBuilder
+    fileprivate func warningButtonAction() -> some View {
+        Button("OK", role: .cancel) {
+            //todo action
+        }.accessibility(identifier: "warningbutton")
+    }
+    @ViewBuilder
+    fileprivate func callSupportActions() -> some View {
+        Button("Call Ting Support") {
+            callSupport()
+        }
+        Button("Chat Ting Support") {
+            print("Chat")
+        }
+        Button("Cancel", role: .cancel) {
+            // Intentionally unimplemented...no cancel action
+        }
     }
 }
 
@@ -145,20 +172,18 @@ extension PhoneNumberValidationView {
         } else {
             $vm.showOTPView.wrappedValue = false
         }
-        if !vm.showOTPView && vm.confirmedOTP {
-            if let parResponse = data as? PARAndFSUDTO {
-                Task {
-                    let sortedCategories = parResponse.categories.sorted { category1, category2 in
-                        Int(category1.categoryOrderID!)! < Int(category2.categoryOrderID!)!
-                    }.filter { category in
-                        category.activeStatus == "1"
-                    }
-                    vm.saveObjects(data: sortedCategories)
-                    vm.saveObjects(data: parResponse.services)
-                    let profile = parResponse.mulaProfileInfo.mulaProfile[0]
-                    vm.save(data: profile)
-                    navigation.screen = .home
+        if let parResponse = data as? PARAndFSUDTO, !vm.showOTPView && vm.confirmedOTP  {
+            Task {
+                let sortedCategories = parResponse.categories.sorted { category1, category2 in
+                    Int(category1.categoryOrderID!)! < Int(category2.categoryOrderID!)!
+                }.filter { category in
+                    category.activeStatus == "1"
                 }
+                vm.saveObjects(data: sortedCategories)
+                vm.saveObjects(data: parResponse.services)
+                let profile = parResponse.mulaProfileInfo.mulaProfile[0]
+                vm.save(data: profile)
+                navigation.screen = .home
             }
         }
     }

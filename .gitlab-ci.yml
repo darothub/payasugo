@@ -10,7 +10,7 @@ build_project:
   script:
     - xcodebuild clean -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS | xcpretty
     - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 11 Pro Max,OS=15' -enableCodeCoverage YES | xcpretty -s
-    - bash xccov-to-sonarqube-generic.sh Build/Logs/Test/*.xcresult/ > sonarqube-generic-coverage.xml
+#    - bash xccov-to-sonarqube-generic.sh Build/Logs/Test/*.xcresult/ > sonarqube-generic-coverage.xml
   tags:
     - stage
   image: macos-11-xcode-12
@@ -33,7 +33,6 @@ sonarqube-check:
   only:
     - merge_requests
     - feature/unit-test # or the name of your main branch
-    - develop
   tags:
     - stage
 

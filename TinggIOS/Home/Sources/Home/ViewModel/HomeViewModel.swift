@@ -23,7 +23,9 @@ public class HomeViewModel: ObservableObject {
     }
     public func getProfile() {
         guard let profile = profiles.first else {
-            fatalError("No profile found")
+//            fatalError("No profile found")
+            return
+            
         }
         self.profile = profile
     }

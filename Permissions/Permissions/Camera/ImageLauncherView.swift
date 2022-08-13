@@ -34,7 +34,9 @@ extension ImageLauncherView : UIViewControllerRepresentable {
         return cameraLauncher
     }
     
-    public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+    public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        // Intentionally unimplemented...
+    }
     
     public func makeCoordinator() -> ImageCoordinator {
         return ImageCoordinator(pickerManager: self)

@@ -9,7 +9,9 @@ import Foundation
 
 public class DeepLinkManager: ObservableObject {
     @Published public var target: DeeplinkTarget = .home
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...needed for modular accessibility
+    }
     public enum DeeplinkTarget: String, Equatable {
         case home
         case screen

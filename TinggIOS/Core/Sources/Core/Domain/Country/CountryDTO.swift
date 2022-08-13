@@ -9,7 +9,9 @@ public struct CountryDTO: BaseDTOprotocol, Codable {
     public var statusCode: Int = 0
     public var statusMessage: String = ""
     public var data: [Country] = []
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...needed for modular accessibility
+    }
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
         case statusMessage = "STATUS_MESSAGE"

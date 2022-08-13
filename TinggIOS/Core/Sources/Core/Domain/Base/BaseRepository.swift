@@ -11,5 +11,7 @@ public class BaseRepository: TinggApiServices {
         return AF.request(Utils.baseUrlStaging, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...needed for modular accessibility
+    }
 }

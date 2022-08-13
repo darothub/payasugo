@@ -25,7 +25,9 @@ public struct TinggRequest: Encodable {
     public var isExplicit = "1"
     public var dataSource: String? = ""
     
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...needed for modular accessibility
+    }
     public mutating func getActivationCode(service: String, msisdn: String, clientId: String) {
         self.service = service
         self.msisdn = msisdn

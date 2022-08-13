@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - Country
 public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
-    @Persisted public var country: String? = ""
+    @Persisted public var name: String? = ""
     @Persisted(primaryKey: true) public var countryCode: String? = ""
     @Persisted public var countryURLNew: String? = ""
     @Persisted public var status: String? = ""
@@ -63,7 +63,7 @@ public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var fetchBearerTokenURL: String? = ""
     @Persisted public var privacyPolicyURL: String? = ""
     enum CodingKeys: String, CodingKey {
-        case country = "COUNTRY"
+        case name = "COUNTRY"
         case countryCode = "COUNTRY_CODE"
         case countryURLNew = "COUNTRY_URL"
         case status = "STATUS"

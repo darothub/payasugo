@@ -19,10 +19,7 @@ struct QuickTopupView: View {
                     .font(.system(size: PrimaryTheme.smallTextSize))
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(hvm.airTimeServices, id: \.id) { service in
-                            QuickTopupCard(imageUrl: service.serviceLogo!)
-                                .padding(.vertical)
-                        }
+                        quickTopViewBody(airtimeServices: hvm.airTimeServices)
                     }
                 }
             }
@@ -33,6 +30,13 @@ struct QuickTopupView: View {
                     .foregroundColor(.white)
                     .shadow(radius: 3, x: 0, y: 3)
             )
+        }
+    }
+    @ViewBuilder
+    fileprivate func quickTopViewBody(airtimeServices: [MerchantService]) -> some View{
+        ForEach(airtimeServices, id: \.id) { service in
+            QuickTopupCard(imageUrl: service.serviceLogo!)
+                .padding(.vertical)
         }
     }
 }

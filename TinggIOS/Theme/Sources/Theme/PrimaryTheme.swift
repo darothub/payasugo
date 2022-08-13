@@ -8,7 +8,9 @@
 import SwiftUI
 
 public struct PrimaryTheme {
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     public static var smallTextSize: CGFloat = 14.0
     public static var mediumTextSize: CGFloat = 16.0
     public static var largeTextSize: CGFloat = 24.0

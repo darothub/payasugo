@@ -4,6 +4,7 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
+import Common
 import Core
 import SwiftUI
 import Theme
@@ -11,7 +12,9 @@ public struct IntroView: View {
     @State var active = false
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @EnvironmentObject var navigation: NavigationUtils
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     public var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
@@ -56,11 +59,7 @@ struct IntroTabView: View {
     var body: some View {
         VStack {
             TabView {
-                ForEach(onboardingItems(), id: \.info) { item in
-                    VStack {
-                        OnboadingView(onboadingItem: item, screenSize: geo.size)
-                    }
-                }
+                onboardingViewListView()
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
@@ -72,12 +71,24 @@ struct IntroTabView: View {
                     .environmentObject(navigation),
                 isActive: $active
             ) {
-                button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
-                    active.toggle()
-                }
-                .accessibility(identifier: "getstarted")
+                getStartedButton()
             }
         }
+    }
+    @ViewBuilder
+    fileprivate func onboardingViewListView() -> some View {
+        ForEach(onboardingItems(), id: \.info) { item in
+            VStack {
+                OnboadingView(onboadingItem: item, screenSize: geo.size)
+            }
+        }
+    }
+    @ViewBuilder
+    fileprivate func getStartedButton() -> some View {
+        button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
+            active.toggle()
+        }
+        .accessibility(identifier: "getstarted")
     }
 }
 public var tinggColoredLogo: some View {

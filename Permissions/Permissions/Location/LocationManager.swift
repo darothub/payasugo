@@ -38,14 +38,9 @@ extension LocationManager : CLLocationManagerDelegate{
         
         guard let location = locations.last else { return }
         geocoder.reverseGeocodeLocation(location, completionHandler: {[unowned self] placemarks, error in
-//            var placeMark: CLPlacemark!
-            if let placeMark = placemarks?[0]{
-                // City
-                if let city = placeMark.locality {
-                    locality = city
-                    print(locality)
-                    
-                }
+            if let placeMark = placemarks?[0], city = placeMark.locality{
+                locality = city
+                print(locality)
             }
        
         })
@@ -53,7 +48,6 @@ extension LocationManager : CLLocationManagerDelegate{
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
           case .restricted, .denied:
-             // Disable your app's location features
             Future<CLAuthorizationStatus, Never> { promise in
                 promise(.success(status))
             }
@@ -63,18 +57,9 @@ extension LocationManager : CLLocationManagerDelegate{
             .store(in: &subscription)
              break
                 
-          case .authorizedWhenInUse:
-             // Enable your app's location features.
-            print("Location Enabled")
+          case .authorizedWhenInUse, .authorizedAlways:
             locationManager.startUpdatingLocation()
-             break
-                
-          case .authorizedAlways:
-             // Enable or prepare your app's location features that can run any time.
-             print("Location Enabled")
-            locationManager.startUpdatingLocation()
-             break
-                
+             break                
           case .notDetermined:
              break
         @unknown default:

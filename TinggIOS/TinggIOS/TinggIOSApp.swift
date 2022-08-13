@@ -22,19 +22,22 @@ struct TinggIOSApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                ZStack {
-                    NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
-                    if navigation.screen != .launch {
-                        LaunchScreenView()
-                            .environmentObject(navigation)
-                    }
-                }
-                .onAppear {
-                      UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-                      print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
-                }
-
+                appBody()
             }
+        }
+    }
+    @ViewBuilder
+    fileprivate func appBody() -> some View {
+        ZStack {
+            NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
+            if navigation.screen != .launch {
+                LaunchScreenView()
+                    .environmentObject(navigation)
+            }
+        }
+        .onAppear {
+              UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+              print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
         }
     }
     @ViewBuilder

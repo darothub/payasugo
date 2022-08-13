@@ -40,9 +40,8 @@ public class CountryRepositoryImpl: CountryRepository {
         return country
     }
     public func getCountriesAndDialCode() async throws -> [String: String] {
-        let countries = try await getCountries()
-        print("Countries \(countries)")
-        let countryDictionary = countries.reduce(into: [:]) { partialResult, country in
+        let latestCountries = try await getCountries()
+        let countryDictionary = latestCountries.reduce(into: [:]) { partialResult, country in
             partialResult[country.countryCode!] = country.countryDialCode
         }
         return countryDictionary

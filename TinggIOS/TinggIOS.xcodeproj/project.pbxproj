@@ -14,13 +14,25 @@
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71C1AE4F289DB9AB00FE2E33 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE4E289DB9AB00FE2E33 /* Home */; };
-		71C1AE51289DB9B000FE2E33 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71C1AE50289DB9B000FE2E33 /* Onboarding */; };
+		71929B5328A5AEC700D84B98 /* CoreModuleUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5228A5AEC700D84B98 /* CoreModuleUnitTest.swift */; };
+		71929B5D28A5AFF300D84B98 /* CountryRepositoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5928A5AFF300D84B98 /* CountryRepositoryTest.swift */; };
+		71929B5E28A5AFF300D84B98 /* CountryCodeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5C28A5AFF300D84B98 /* CountryCodeTest.swift */; };
+		71929B5F28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5B28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift */; };
+		71929B6028A5AFF300D84B98 /* DatabaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5A28A5AFF300D84B98 /* DatabaseTest.swift */; };
+		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
+		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
 		71E2BE28289BF2B40025ED12 /* DIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E2BE27289BF2B40025ED12 /* DIManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		714B15AD2899D5C6005338EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 718C6284283EBCB4002ADCA8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 718C628B283EBCB4002ADCA8;
+			remoteInfo = TinggIOS;
+		};
+		71929B5428A5AEC700D84B98 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 718C6284283EBCB4002ADCA8 /* Project object */;
 			proxyType = 1;
@@ -56,6 +68,13 @@
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6293283EBCB8002ADCA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		71929B5028A5AEC700D84B98 /* CoreModuleUnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreModuleUnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		71929B5228A5AEC700D84B98 /* CoreModuleUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModuleUnitTest.swift; sourceTree = "<group>"; };
+		71929B5928A5AFF300D84B98 /* CountryRepositoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryRepositoryTest.swift; sourceTree = "<group>"; };
+		71929B5A28A5AFF300D84B98 /* DatabaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseTest.swift; sourceTree = "<group>"; };
+		71929B5B28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryRepoistoryTestImpl.swift; sourceTree = "<group>"; };
+		71929B5C28A5AFF300D84B98 /* CountryCodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeTest.swift; sourceTree = "<group>"; };
+		71929B6128A6F97600D84B98 /* Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Common; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,8 +94,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71C1AE4F289DB9AB00FE2E33 /* Home in Frameworks */,
-				71C1AE51289DB9B000FE2E33 /* Onboarding in Frameworks */,
+				71D019DF28A8537D00312864 /* Home in Frameworks */,
+				71D019E128A8538400312864 /* Onboarding in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		71929B4D28A5AEC700D84B98 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +134,7 @@
 				71AED58B28665C9400A4B14F /* Packages */,
 				718C628E283EBCB4002ADCA8 /* TinggIOS */,
 				714B15A82899D5C6005338EB /* OnboardingUITest */,
+				71929B5128A5AEC700D84B98 /* CoreModuleUnitTest */,
 				718C628D283EBCB4002ADCA8 /* Products */,
 				7108CD75285253DF0034EA29 /* Frameworks */,
 			);
@@ -118,6 +145,7 @@
 			children = (
 				718C628C283EBCB4002ADCA8 /* TinggIOS.app */,
 				714B15A72899D5C6005338EB /* OnboardingUITest.xctest */,
+				71929B5028A5AEC700D84B98 /* CoreModuleUnitTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,6 +172,18 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		71929B5128A5AEC700D84B98 /* CoreModuleUnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				71929B5C28A5AFF300D84B98 /* CountryCodeTest.swift */,
+				71929B5B28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift */,
+				71929B5928A5AFF300D84B98 /* CountryRepositoryTest.swift */,
+				71929B5A28A5AFF300D84B98 /* DatabaseTest.swift */,
+				71929B5228A5AEC700D84B98 /* CoreModuleUnitTest.swift */,
+			);
+			path = CoreModuleUnitTest;
+			sourceTree = "<group>";
+		};
 		71AED58B28665C9400A4B14F /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +191,7 @@
 				71867FB728946DCB008A5411 /* Onboarding */,
 				71867FBA28946EF0008A5411 /* Home */,
 				71E2BE26289BE97A0025ED12 /* Core */,
+				71929B6128A6F97600D84B98 /* Common */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -192,12 +233,30 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
-				71C1AE4E289DB9AB00FE2E33 /* Home */,
-				71C1AE50289DB9B000FE2E33 /* Onboarding */,
+				71D019DE28A8537D00312864 /* Home */,
+				71D019E028A8538400312864 /* Onboarding */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
 			productType = "com.apple.product-type.application";
+		};
+		71929B4F28A5AEC700D84B98 /* CoreModuleUnitTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 71929B5828A5AEC700D84B98 /* Build configuration list for PBXNativeTarget "CoreModuleUnitTest" */;
+			buildPhases = (
+				71929B4C28A5AEC700D84B98 /* Sources */,
+				71929B4D28A5AEC700D84B98 /* Frameworks */,
+				71929B4E28A5AEC700D84B98 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				71929B5528A5AEC700D84B98 /* PBXTargetDependency */,
+			);
+			name = CoreModuleUnitTest;
+			productName = CoreModuleUnitTest;
+			productReference = 71929B5028A5AEC700D84B98 /* CoreModuleUnitTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -215,6 +274,10 @@
 					};
 					718C628B283EBCB4002ADCA8 = {
 						CreatedOnToolsVersion = 13.4;
+					};
+					71929B4F28A5AEC700D84B98 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 718C628B283EBCB4002ADCA8;
 					};
 				};
 			};
@@ -235,6 +298,7 @@
 			targets = (
 				718C628B283EBCB4002ADCA8 /* TinggIOS */,
 				714B15A62899D5C6005338EB /* OnboardingUITest */,
+				71929B4F28A5AEC700D84B98 /* CoreModuleUnitTest */,
 			);
 		};
 /* End PBXProject section */
@@ -257,6 +321,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		71929B4E28A5AEC700D84B98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -275,7 +346,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#export PATH=\"$PATH:/opt/homebrew/bin\"\n#if which swiftlint > /dev/null; then\n # swiftlint\n#else\n # echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -299,6 +370,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		71929B4C28A5AEC700D84B98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71929B5F28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift in Sources */,
+				71929B5E28A5AFF300D84B98 /* CountryCodeTest.swift in Sources */,
+				71929B5D28A5AFF300D84B98 /* CountryRepositoryTest.swift in Sources */,
+				71929B6028A5AFF300D84B98 /* DatabaseTest.swift in Sources */,
+				71929B5328A5AEC700D84B98 /* CoreModuleUnitTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -306,6 +389,11 @@
 			isa = PBXTargetDependency;
 			target = 718C628B283EBCB4002ADCA8 /* TinggIOS */;
 			targetProxy = 714B15AD2899D5C6005338EB /* PBXContainerItemProxy */;
+		};
+		71929B5528A5AEC700D84B98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 718C628B283EBCB4002ADCA8 /* TinggIOS */;
+			targetProxy = 71929B5428A5AEC700D84B98 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -480,7 +568,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -520,7 +608,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -534,6 +622,42 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
+			};
+			name = Release;
+		};
+		71929B5628A5AEC700D84B98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DNS8AZ6368;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.cellullant.TinggIOS.CoreModuleUnitTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TinggIOS.app/TinggIOS";
+			};
+			name = Debug;
+		};
+		71929B5728A5AEC700D84B98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DNS8AZ6368;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.cellullant.TinggIOS.CoreModuleUnitTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TinggIOS.app/TinggIOS";
 			};
 			name = Release;
 		};
@@ -567,14 +691,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		71929B5828A5AEC700D84B98 /* Build configuration list for PBXNativeTarget "CoreModuleUnitTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71929B5628A5AEC700D84B98 /* Debug */,
+				71929B5728A5AEC700D84B98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		71C1AE4E289DB9AB00FE2E33 /* Home */ = {
+		71D019DE28A8537D00312864 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
 		};
-		71C1AE50289DB9B000FE2E33 /* Onboarding */ = {
+		71D019E028A8538400312864 /* Onboarding */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Onboarding;
 		};

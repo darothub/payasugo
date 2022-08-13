@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 04/08/2022.
 //
 import Core
+import Common
 import SwiftUI
 import Theme
 struct PolicySectionView: View {

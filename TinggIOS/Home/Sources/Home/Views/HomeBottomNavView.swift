@@ -10,50 +10,38 @@ import Core
 import Theme
 public struct HomeBottomNavView: View {
     @StateObject var hvm: HomeViewModel = .init()
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     public var body: some View {
         GeometryReader { _ in
             TabView {
                 HomeView()
                     .environmentObject(hvm)
-                    .tabItem {
-                    Label {
-                        Text("Home")
-                    } icon: {
-                        PrimaryTheme.getImage(image: .home)
-                            .renderingMode(.template)
-                            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-                    }
-                }
-                Text("Bill").tabItem {
-                    Label {
-                        Text("Bill")
-                    } icon: {
-                        PrimaryTheme.getImage(image: .bill)
-                            .renderingMode(.template)
-                            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-                    }
-
-                }
-                Text("Group").tabItem {
-                    Label {
-                        Text("Group")
-                    } icon: {
-                        PrimaryTheme.getImage(image: .group)
-                    }
-                }
-                Text("Explore").tabItem {
-                    Label {
-                        Text("Explore")
-                    } icon: {
-                        PrimaryTheme.getImage(image: .explore)
-                            .renderingMode(.template)
-                            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-                    }
-                }
-            }
-        }.navigationBarBackButtonHidden(true)
-    }
+                    .tabItemStyle(
+                        title: "Home",
+                        image: PrimaryTheme.getImage(image: .home)
+                    )
+          
+            Text("Bill")
+                .tabItemStyle(
+                    title: "Bill",
+                    image:PrimaryTheme.getImage(image: .bill)
+                )
+            
+            Text("Group")
+                .tabItemStyle(
+                    title: "Group",
+                    image: PrimaryTheme.getImage(image: .group)
+                )
+            Text("Explore")
+                .tabItemStyle(
+                    title: "Explore",
+                    image: PrimaryTheme.getImage(image: .explore)
+                )
+        }
+    }.navigationBarBackButtonHidden(true)
+}
 }
 
 struct HomeBottomNavView_Previews: PreviewProvider {
@@ -63,6 +51,6 @@ struct HomeBottomNavView_Previews: PreviewProvider {
         }
     }
     static var previews: some View {
-        HBNPReviewHolder()
+        Text("Hello")
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 13/07/2022.
 //
 import Combine
+import Common
 import Core
 import Foundation
 import SwiftUI
@@ -81,7 +82,8 @@ public class OnboardingViewModel: ObservableObject {
             print("Success \(err.localizedDescription)")
         case .success(let data):
             print("Success \(data)")
-            uiModel = UIModel.content(data)
+            let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
+            uiModel = UIModel.content(content)
         }
     }
     func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
@@ -89,7 +91,9 @@ public class OnboardingViewModel: ObservableObject {
             switch uiModel {
             case .content(let data):
                 if data.statusMessage.lowercased().contains("succ") {
-                    action(data)
+                    if let baseDto = data.data as? BaseDTOprotocol {
+                        action(baseDto)
+                    }
                 }
             case .loading:
                 print("loadingState")
@@ -113,7 +117,9 @@ public class OnboardingViewModel: ObservableObject {
 
 class DBTransactions {
     private var realmManager: RealmManager = .init()
-    init() {}
+    init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     func save(data: DBObject) {
         Task {
             await realmManager.save(data: data)

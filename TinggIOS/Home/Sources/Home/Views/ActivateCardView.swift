@@ -48,7 +48,9 @@ struct ActivateCardView: View {
 struct ActivateCardView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
-            ActivateCardView(parentSize: geo) {}
+            ActivateCardView(parentSize: geo) {
+                // Intentionally unimplemented...
+            }
         }
     }
 }

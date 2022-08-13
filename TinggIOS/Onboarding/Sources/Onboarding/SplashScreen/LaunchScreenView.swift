@@ -10,7 +10,9 @@ import Theme
 public struct LaunchScreenView: View {
     @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
     @EnvironmentObject var navigation: NavigationUtils
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     public var body: some View {
         ZStack {
             background

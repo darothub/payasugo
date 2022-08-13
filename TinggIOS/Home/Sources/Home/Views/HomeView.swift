@@ -17,7 +17,9 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 25) {
                     HomeTopViewDesign(parentSize: geo)
-                    ActivateCardView(parentSize: geo) {}
+                    ActivateCardView(parentSize: geo) {
+                        // Intentionally unimplemented...To Do
+                    }
                     ActiveCategoryTabView()
                         .background(.white)
                         .shadow(radius: 0, y: 3)
@@ -35,6 +37,7 @@ struct HomeView: View {
         .navigationBarHidden(true)
     }
 }
+
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

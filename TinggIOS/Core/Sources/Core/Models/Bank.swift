@@ -21,12 +21,4 @@ struct Bank: Codable {
     enum CodingKeys: String, CodingKey {
         case id, accountNumber, accountName, bankName, bankBranch, selected
     }
-//    init( id: String, accountNumber: String, accountName: String, bankName: String, bankBranch: String, selected: Bool) {
-//        self.id = id
-//        self.accountNumber = accountNumber
-//        self.accountName = accountName
-//        self.bankName = bankName
-//        self.bankBranch = bankBranch
-//        self.selected = selected
-//    }
 }

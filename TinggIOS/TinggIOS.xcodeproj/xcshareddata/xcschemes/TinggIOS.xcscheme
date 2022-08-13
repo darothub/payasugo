@@ -39,6 +39,16 @@
                ReferencedContainer = "container:TinggIOS.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "71929B4F28A5AEC700D84B98"
+               BuildableName = "CoreModuleUnitTest.xctest"
+               BlueprintName = "CoreModuleUnitTest"
+               ReferencedContainer = "container:TinggIOS.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

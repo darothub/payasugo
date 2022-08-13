@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 08/07/2022.
 //
 import Combine
+import Common
 import Core
 import SwiftUI
 import Theme
@@ -21,6 +22,7 @@ public struct OtpConfirmationView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @Environment(\.presentationMode) var presentationMode
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+  
     public var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
@@ -39,12 +41,7 @@ public struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                onboardingViewModel.observeUIModel { _ in
-                    DispatchQueue.main.async {
-                        otpConfirmed = true
-                        $onboardingViewModel.showOTPView.wrappedValue = false
-                    }
-                }
+                observingUIModel()
             }
         }
         .handleViewState(uiModel: $onboardingViewModel.uiModel)
@@ -70,6 +67,14 @@ public struct OtpConfirmationView: View {
             )
             timeAdvice = "Code resent"
             resetTimer()
+        }
+    }
+    fileprivate func observingUIModel() {
+        onboardingViewModel.observeUIModel { _ in
+            DispatchQueue.main.async {
+                otpConfirmed = true
+                $onboardingViewModel.showOTPView.wrappedValue = false
+            }
         }
     }
 }
