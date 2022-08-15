@@ -28,7 +28,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script:
-    - if [[ "$CI_BRANCH_NAME" == master ]] || [[ "$CI_BRANCH_NAME" == feature/* ]]; then docker run --rm --network=host --platform linux/amd64/v8 -v "/Users/darot/XcodeProject/tinggios:/usr/src" sonarsource/sonar-scanner-cli -Dsonar.qualitygate.wait=true fi
+    - if [[ "$CI_BRANCH_NAME" == master ]] || [[ "$CI_BRANCH_NAME" == feature/* ]]; then docker run --rm --network=host --platform linux/amd64/v8 -v "/Users/darot/XcodeProject/tinggios:/usr/src" sonarsource/sonar-scanner-cli -Dsonar.qualitygate.wait=true
   allow_failure: true
   only:
     - merge_requests
