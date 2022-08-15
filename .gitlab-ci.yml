@@ -1,5 +1,6 @@
 stages:
   - build
+  - analyze
   
 before_script:
  - echo "started by ${GITLAB_USER_NAME}"
@@ -8,8 +9,31 @@ build_project:
   stage: build
   script:
     - xcodebuild clean -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS | xcpretty
-#    - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=15' | xcpretty -s
+    - xcodebuild test -workspace TinggIOS/TinggIOS.xcworkspace -scheme TinggIOS -destination 'platform=iOS Simulator,name=iPhone 11 Pro Max,OS=15' -enableCodeCoverage YES | xcpretty -s
+#    - bash xccov-to-sonarqube-generic.sh Build/Logs/Test/*.xcresult/ > sonarqube-generic-coverage.xml
   tags:
     - stage
   image: macos-11-xcode-12
+
+sonarqube-check:
+  stage: analyze
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - docker run --rm --network=host --platform linux/amd64/v8 -v "/Users/darot/XcodeProject/tinggios:/usr/src" sonarsource/sonar-scanner-cli -Dsonar.qualitygate.wait=true
+  allow_failure: true
+  only:
+    - merge_requests
+    - feature/unit-test # or the name of your main branch
+  tags:
+    - stage
+
 

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BaseRequest.swift
 //  
 //
 //  Created by Abdulrasaq on 19/07/2022.

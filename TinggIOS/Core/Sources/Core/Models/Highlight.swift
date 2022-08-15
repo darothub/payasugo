@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Highlight
-public class Highlight: Object, ObjectKeyIdentifiable, Codable {
+public class Highlight: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var activeStatus: Int
     @Persisted public var title: String

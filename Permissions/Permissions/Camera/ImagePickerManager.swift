@@ -14,7 +14,9 @@ import SwiftUI
 public final class ImagePickerManager :  ObservableObject {
     var appName:String = "this"
     public static let shared = ImagePickerManager(appName: "TinggIOS")
-    public init () {}
+    public init () {
+        // Intentionally unimplemented...Needed for modular accessibility
+    }
     
     public convenience init(appName:String){
         self.init()

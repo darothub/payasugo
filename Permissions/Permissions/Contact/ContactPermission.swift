@@ -14,7 +14,9 @@ public class ContactPermission : ObservableObject {
     let contactStore = CNContactStore()
     @Published public var invalidPermission: Bool = false
     
-    public init(){}
+    public init(){
+        // Intentionally unimplemented...needed for modular accessibility
+    }
     
     private var authorizationStatus: AnyPublisher<CNAuthorizationStatus, Never> {
       Future<CNAuthorizationStatus, Never> { promise in

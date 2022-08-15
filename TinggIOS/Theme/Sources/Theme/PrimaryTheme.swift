@@ -8,7 +8,9 @@
 import SwiftUI
 
 public struct PrimaryTheme {
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     public static var smallTextSize: CGFloat = 14.0
     public static var mediumTextSize: CGFloat = 16.0
     public static var largeTextSize: CGFloat = 24.0
@@ -28,7 +30,8 @@ public struct PrimaryTheme {
     }
     public enum AppColors: String {
         case secondaryColor, primaryColor, cellulantPurple,
-             cellulantRed, skyBlue, cellulantLightGray, textColor
+             cellulantRed, skyBlue, cellulantLightGray, textColor, tinggwhite,
+        tinggblack
         public static func getColor(_ name: String) -> Color {
             return  Color(name, bundle: .myModule)
         }
@@ -54,7 +57,8 @@ extension Bundle {
             Bundle(for: CurrentBundleFinder.self).resourceURL?.deletingLastPathComponent(),
             /* For command-line tools. */
             Bundle.main.bundleURL,
-            /* Bundle should be present here when running previews from a different package (this is the path to "…/Debug-iphonesimulator/"). */
+            /* Bundle should be present here when running previews
+             from a different package (this is the path to "…/Debug-iphonesimulator/"). */
             Bundle(for: CurrentBundleFinder.self).resourceURL?
                 .deletingLastPathComponent()
                 .deletingLastPathComponent()

@@ -9,8 +9,8 @@ import Foundation
 import RealmSwift
 
 // MARK: - Profile
-public class Profile: Object,  ObjectKeyIdentifiable, Codable {
-    @Persisted(primaryKey: true) public var profileID: String = ""
+public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
+    @Persisted(primaryKey: true) public var profileID: String? = ""
     @Persisted public var msisdn: String? = ""
     @Persisted public var firstName: String? = ""
     @Persisted public var lastName: String? = ""
@@ -27,7 +27,7 @@ public class Profile: Object,  ObjectKeyIdentifiable, Codable {
     @Persisted public var currencyNumber: String? = ""
     @Persisted public var pinRequestType: String? = ""
     @Persisted public var isMulaPinSet: String? = ""
-    @Persisted public var isMain: String? = ""
+//    @Persisted public var isMain: RealmProperty<String>? = nil
     @Persisted public var simSerialNumber: String? = ""
     @Persisted public var hasValidatedCard: Int? = 0
     @Persisted public var creditLimit: String? = ""
@@ -62,7 +62,7 @@ public class Profile: Object,  ObjectKeyIdentifiable, Codable {
         case currency, currencyCode, rewardAmount, mulaAccount, currencyNumber
         case pinRequestType = "PIN_REQUEST_TYPE"
         case isMulaPinSet = "IS_MULA_PIN_SET"
-        case isMain = "IS_MAIN"
+//        case isMain = "IS_MAIN"
         case simSerialNumber = "SIM_SERIAL_NUMBER"
         case hasValidatedCard = "HAS_VALIDATED_CARD"
         case creditLimit = "CREDIT_LIMIT"
@@ -84,57 +84,5 @@ public class Profile: Object,  ObjectKeyIdentifiable, Codable {
         case hasBritamAccount = "HAS_BRITAM_ACCOUNT"
         case britamWalletData = "BRITAM_WALLET_DATA"
     }
-//    init(profileID: Int, msisdn: String?, firstName: String?,
-//         lastName: String?, emailAddress: String?, photoURL: String?,
-//         accountID: String?, accountAlias: String?, accountNumber: String?,
-//         profileProfileID: String?, currency: String?, currencyCode: String?,
-//         rewardAmount: String?, mulaAccount: String?, currencyNumber: String?,
-//         pinRequestType: String?, isMulaPinSet: String?, isMain: String?,
-//         simSerialNumber: String?, hasValidatedCard: String?, creditLimit: String?,
-//         hasActivatedAssist: String?, hasOptedOut: String?, currentUsage: String?,
-//         loanBalance: String?, hasActivatedWallet: String?, walletAccountID: String?,
-//         walletAccountNumber: String?, walletBalance: String?, freshchatRestorationID: String?,
-//         loyaltyPoints: String?, identity: String?, postalAddress: String?,
-//         acceptedTacVersion: String?, dateAcceptedTac: String?, nationalid: String?,
-//         hasBritamAccount: String?, britamWalletData: String?
-//    ) {
-//        self.profileID = profileID
-//        self.msisdn = msisdn
-//        self.firstName = firstName
-//        self.lastName = lastName
-//        self.emailAddress = emailAddress
-//        self.photoURL = photoURL
-//        self.accountID = accountID
-//        self.accountAlias = accountAlias
-//        self.accountNumber = accountNumber
-//        self.profileProfileID = profileProfileID
-//        self.currency = currency
-//        self.currencyCode = currencyCode
-//        self.rewardAmount = rewardAmount
-//        self.mulaAccount = mulaAccount
-//        self.currencyNumber = currencyNumber
-//        self.pinRequestType = pinRequestType
-//        self.isMulaPinSet = isMulaPinSet
-//        self.isMain = isMain
-//        self.simSerialNumber = simSerialNumber
-//        self.hasValidatedCard = hasValidatedCard
-//        self.creditLimit = creditLimit
-//        self.hasActivatedAssist = hasActivatedAssist
-//        self.hasOptedOut = hasOptedOut
-//        self.currentUsage = currentUsage
-//        self.loanBalance = loanBalance
-//        self.hasActivatedWallet = hasActivatedWallet
-//        self.walletAccountID = walletAccountID
-//        self.walletAccountNumber = walletAccountNumber
-//        self.walletBalance = walletBalance
-//        self.freshchatRestorationID = freshchatRestorationID
-//        self.loyaltyPoints = loyaltyPoints
-//        self.identity = identity
-//        self.postalAddress = postalAddress
-//        self.acceptedTacVersion = acceptedTacVersion
-//        self.dateAcceptedTac = dateAcceptedTac
-//        self.nationalid = nationalid
-//        self.hasBritamAccount = hasBritamAccount
-//        self.britamWalletData = britamWalletData
-//    }
+
 }

@@ -4,18 +4,19 @@
 //
 //  Created by Abdulrasaq on 17/07/2022.
 //
+import Common
 import Core
 import SwiftUI
 import Theme
 
 struct HomeTopViewDesign: View {
     var parentSize: GeometryProxy
-    @State var profile: Profile = .init()
+    @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
         VStack {
-            ProfileImageAndHelpIconView(imageUrl: profile.photoURL!)
+            ProfileImageAndHelpIconView(imageUrl: hvm.profile.photoURL!)
                 .padding(.top, 30)
-            Text("Welcome back, \(profile.firstName!)")
+            Text("Welcome back, \(hvm.profile.firstName!)")
                 .foregroundColor(.white)
                 .font(.system(size: PrimaryTheme.smallTextSize))
             Text("What would you like to do?")
@@ -34,7 +35,8 @@ struct HomeTopViewDesign: View {
 struct HomeTopViewDesign_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
-            HomeTopViewDesign(parentSize: geo, profile: previewProfile)
+            HomeTopViewDesign(parentSize: geo)
+                .environmentObject(HomeViewModel())
         }
     }
 }

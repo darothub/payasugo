@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 // MARK: - Invoice
-public class Invoice: Object, ObjectKeyIdentifiable, Codable {
+public class Invoice: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var currency: String? = ""
     @Persisted public var dueDate: String? = ""
     @Persisted public var parkingZone: String? = ""

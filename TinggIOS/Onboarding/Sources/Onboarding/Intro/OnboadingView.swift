@@ -4,6 +4,7 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
+import Common
 import Core
 import SwiftUI
 import Theme
@@ -37,13 +38,17 @@ extension OnboadingView {
     var pageIntro: some View {
         Text(onboadingItem.info)
             .font(.system(size: PrimaryTheme.mediumTextSize))
+            .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             .bold()
             .multilineTextAlignment(.center)
             .padding(.vertical, 5)
+            .accessibility(identifier: "nevermisstopay")
     }
     var pageSubIntro: some View {
         Text(onboadingItem.subInfo)
             .font(.system(size: PrimaryTheme.smallTextSize))
+            .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             .multilineTextAlignment(.center)
+            .accessibility(identifier: "addyourbillontingg")
     }
 }

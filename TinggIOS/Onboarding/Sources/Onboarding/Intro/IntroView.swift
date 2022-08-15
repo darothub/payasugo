@@ -4,14 +4,17 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
+import Common
 import Core
 import SwiftUI
 import Theme
 public struct IntroView: View {
     @State var active = false
-    @StateObject var onboardingViewModel: OnboardingViewModel = .init(tinggApiServices: BaseRepository())
+    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @EnvironmentObject var navigation: NavigationUtils
-    public init() {}
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
     public var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
@@ -20,9 +23,12 @@ public struct IntroView: View {
                     color: PrimaryTheme.getColor(.cellulantLightGray)
                 )
                 tinggColoredLogo
+                    .accessibility(identifier: "tingggreenlogo")
                 IntroTabView(geo: geo, active: $active)
                     .environmentObject(navigation)
+                    .environmentObject(onboardingViewModel)
             }
+            .background(.white)
             .onAppear {
                 setPageIndicatorAppearance()
             }
@@ -34,6 +40,14 @@ struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
             .environmentObject(NavigationUtils())
+            .environmentObject(OnboardingViewModel(
+                countryRepository: CountryRepositoryImpl(
+                    apiService: BaseRepository(),
+                    realmManager: RealmManager()
+                ),
+                baseRequest: BaseRequest(apiServices: BaseRepository())
+            )
+        )
     }
 }
 
@@ -41,28 +55,40 @@ struct IntroTabView: View {
     var geo: GeometryProxy
     @Binding var active: Bool
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     var body: some View {
         VStack {
             TabView {
-                ForEach(onboardingItems(), id: \.info) { item in
-                    VStack {
-                        OnboadingView(onboadingItem: item, screenSize: geo.size)
-                    }
-                }
+                onboardingViewListView()
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+            .accessibility(identifier: "onboardingtabview")
             Spacer()
             NavigationLink(
                 destination: PhoneNumberValidationView()
+                    .environmentObject(onboardingViewModel)
                     .environmentObject(navigation),
                 isActive: $active
             ) {
-                button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
-                    active.toggle()
-                }
+                getStartedButton()
             }
         }
+    }
+    @ViewBuilder
+    fileprivate func onboardingViewListView() -> some View {
+        ForEach(onboardingItems(), id: \.info) { item in
+            VStack {
+                OnboadingView(onboadingItem: item, screenSize: geo.size)
+            }
+        }
+    }
+    @ViewBuilder
+    fileprivate func getStartedButton() -> some View {
+        button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
+            active.toggle()
+        }
+        .accessibility(identifier: "getstarted")
     }
 }
 public var tinggColoredLogo: some View {
