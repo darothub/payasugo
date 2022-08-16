@@ -15,7 +15,7 @@ struct HomeView: View {
     var body: some View {
         GeometryReader { geo in
             ScrollView {
-                VStack(spacing: 25) {
+                VStack(spacing: 20) {
                     HomeTopViewDesign(parentSize: geo)
                     ActivateCardView(parentSize: geo) {
                         // Intentionally unimplemented...To Do
@@ -23,13 +23,21 @@ struct HomeView: View {
                     ActiveCategoryTabView()
                         .background(.white)
                         .shadow(radius: 0, y: 3)
-                        .padding(.top, 10)
+                        .padding(.vertical, 10)
                     QuickTopupView()
-                }.background(
-                    RoundedRectangle(cornerRadius: 0)
-                        .frame(height: geo.size.height * 0.3)
-                        .foregroundColor(.white)
-                )
+                        .background(
+                            RoundedRectangle(cornerRadius: 0)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3, x: 0, y: 3)
+                        )
+                    RechargeAndBillView()
+                        .background(
+                            RoundedRectangle(cornerRadius: 0)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3, x: 0, y: 3)
+                        )
+                 
+                }
                 .environmentObject(hvm)
             }.ignoresSafeArea()
         }

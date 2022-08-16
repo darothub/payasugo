@@ -79,26 +79,29 @@ public class OnboardingViewModel: ObservableObject {
         switch result {
         case .failure(let err):
             uiModel = UIModel.error(err.localizedDescription)
-            print("Success \(err.localizedDescription)")
+            print("Failure \(err.localizedDescription)")
+            return
         case .success(let data):
             print("Success \(data)")
             let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
             uiModel = UIModel.content(content)
+            return
         }
     }
     func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
         $uiModel.sink { uiModel in
             switch uiModel {
             case .content(let data):
-                if data.statusMessage.lowercased().contains("succ") {
-                    if let baseDto = data.data as? BaseDTOprotocol {
-                        action(baseDto)
-                    }
+                if data.statusMessage.lowercased().contains("succ"),
+                    let baseDto = data.data as? BaseDTOprotocol {
+                    action(baseDto)
                 }
+                return
             case .loading:
                 print("loadingState")
             case .error:
                 print("errorState")
+                return
             case .nothing:
                 print("nothingState")
             }
@@ -112,6 +115,9 @@ public class OnboardingViewModel: ObservableObject {
     }
     func printLn(methodName: String, message: String) {
         print("\(name) \(methodName) \(message)")
+    }
+    func stopUIModelSubscription() {
+        subscriptions.removeAll()
     }
 }
 

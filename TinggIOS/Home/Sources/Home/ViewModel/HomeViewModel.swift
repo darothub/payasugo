@@ -15,11 +15,13 @@ public class HomeViewModel: ObservableObject {
     @Published public var airTimeServices = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var processedCategories = [[Categorys]]()
+    @Published public var rechargeAndBill = [MerchantService]()
     @Published public var subscription = Set<AnyCancellable>()
     public init() {
         processedCategories = categories.reversed().reversed().chunked(into: 4)
         getProfile()
         getQuickTopups()
+        firstEightRechargeAndBill()
     }
     public func getProfile() {
         guard let profile = profiles.first else {
@@ -36,6 +38,15 @@ public class HomeViewModel: ObservableObject {
             promise(.success(services.filter { $0.categoryID == theAirtimeCategory.categoryID}))
         }
         .assign(to: \.airTimeServices, on: self)
+        .store(in: &subscription)
+        return
+    }
+    
+    public func firstEightRechargeAndBill() {
+        Future<[MerchantService], Never> { [unowned self] promise in
+            promise(.success(services.prefix(8).shuffled()))
+        }
+        .assign(to: \.rechargeAndBill, on: self)
         .store(in: &subscription)
         return
     }

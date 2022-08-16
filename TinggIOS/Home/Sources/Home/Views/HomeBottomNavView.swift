@@ -16,32 +16,35 @@ public struct HomeBottomNavView: View {
     public var body: some View {
         GeometryReader { _ in
             TabView {
-                HomeView()
-                    .environmentObject(hvm)
+                VStack{
+                    HomeView()
+                        .environmentObject(hvm)
+                    Spacer()
+                }
+                .tabItemStyle(
+                    title: "Home",
+                    image: Image(systemName: "house.fill")
+                )
+                
+                Text("Bill")
                     .tabItemStyle(
-                        title: "Home",
-                        image: PrimaryTheme.getImage(image: .home)
+                        title: "Bill",
+                        image:PrimaryTheme.getImage(image: .bill)
                     )
-          
-            Text("Bill")
-                .tabItemStyle(
-                    title: "Bill",
-                    image:PrimaryTheme.getImage(image: .bill)
-                )
-            
-            Text("Group")
-                .tabItemStyle(
-                    title: "Group",
-                    image: PrimaryTheme.getImage(image: .group)
-                )
-            Text("Explore")
-                .tabItemStyle(
-                    title: "Explore",
-                    image: PrimaryTheme.getImage(image: .explore)
-                )
-        }
-    }.navigationBarBackButtonHidden(true)
-}
+                
+                Text("Group")
+                    .tabItemStyle(
+                        title: "Group",
+                        image: PrimaryTheme.getImage(image: .group)
+                    )
+                Text("Explore")
+                    .tabItemStyle(
+                        title: "Explore",
+                        image: PrimaryTheme.getImage(image: .explore)
+                    )
+            }
+        }.navigationBarBackButtonHidden(true)
+    }
 }
 
 struct HomeBottomNavView_Previews: PreviewProvider {

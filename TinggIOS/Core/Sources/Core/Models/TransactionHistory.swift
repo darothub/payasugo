@@ -69,34 +69,5 @@ public class TransactionHistory: Object,  ObjectKeyIdentifiable, Codable {
              merchantPayer,
              transferType
     }
-    
-//    init(amount: Int?, billAmount: Int?, status: String?,
-//         transactionTitle: String?, currencyCode: String?, accountNumber: String?,
-//         serviceID: String?, shortDescription: String?, msisdn: String?,
-//         bundleID: String?, message: String?, requestLogID: String?,
-//         narration: String?, dateCreated: String?, statusCode: String?,
-//         payerClientID: String?, invoiceNumber: String?, token: String?,
-//         merchantService: MerchantService?, merchantPayer: MerchantPayer?, transferType: String?) {
-//        self.amount = amount
-//        self.billAmount = billAmount
-//        self.status = status
-//        self.transactionTitle = transactionTitle
-//        self.currencyCode = currencyCode
-//        self.accountNumber = accountNumber
-//        self.serviceID = serviceID
-//        self.shortDescription = shortDescription
-//        self.msisdn = msisdn
-//        self.bundleID = bundleID
-//        self.message = message
-//        self.requestLogID = requestLogID
-//        self.narration = narration
-//        self.dateCreated = dateCreated
-//        self.statusCode = statusCode
-//        self.payerClientID = payerClientID
-//        self.invoiceNumber = invoiceNumber
-//        self.token = token
-//        self.merchantService = merchantService
-//        self.merchantPayer = merchantPayer
-//        self.transferType = transferType
-//    }
+
 }

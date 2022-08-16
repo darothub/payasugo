@@ -24,12 +24,6 @@ struct QuickTopupView: View {
                 }
             }
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 0)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
-                    .shadow(radius: 3, x: 0, y: 3)
-            )
         }
     }
     @ViewBuilder

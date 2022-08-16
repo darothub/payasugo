@@ -14,7 +14,7 @@ public struct ViewState: ViewModifier {
     public init(uiModel: Binding<UIModel>) {
         _uiModel = uiModel
     }
-    fileprivate func buttonEvent() -> Button<Text> {
+    fileprivate func buttonEvent() -> some View {
         return Button("OK", role: .cancel) {
             // Intentionally unimplemented...no action needed
         }
@@ -30,13 +30,18 @@ public struct ViewState: ViewModifier {
                     .scaleEffect(3)
             case .content(let data):
                 let message = data.statusMessage.lowercased().contains("succ") ? "" : data.statusMessage
-                VStack {
-                    Text(message)
-                        .padding(.vertical, 5)
-                        .foregroundColor(
-                            .red
-                        )
-                    Spacer()
+                if !message.isEmpty {
+                    VStack {
+                        // Intentionally unimplemented...placeholder view
+                    }
+                        .edgesIgnoringSafeArea(.all)
+                        .opacity(0)
+                        .onAppear {
+                            showAlert.toggle()
+                        }
+                    .alert(message, isPresented: $showAlert) {
+                        buttonEvent()
+                    }
                 }
             case .error(let err):
                 VStack {

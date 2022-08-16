@@ -41,13 +41,15 @@ public struct OtpConfirmationView: View {
                 onboardingViewModel.confirmActivationCodeRequest(
                     msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
                 )
-                observingUIModel()
             }
         }
         .handleViewState(uiModel: $onboardingViewModel.uiModel)
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
+        }
+        .onAppear {
+            observingUIModel()
         }
     }
     fileprivate func resetTimer() {
@@ -70,10 +72,12 @@ public struct OtpConfirmationView: View {
         }
     }
     fileprivate func observingUIModel() {
-        onboardingViewModel.observeUIModel { _ in
-            DispatchQueue.main.async {
-                otpConfirmed = true
-                $onboardingViewModel.showOTPView.wrappedValue = false
+        onboardingViewModel.observeUIModel { data in
+            if data is BaseDTO, data.statusMessage.lowercased().contains("confirm") {
+                DispatchQueue.main.async {
+                    otpConfirmed.toggle()
+                    $onboardingViewModel.showOTPView.wrappedValue = false
+                }
             }
         }
     }
