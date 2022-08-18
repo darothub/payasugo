@@ -181,6 +181,7 @@ extension PhoneNumberValidationView {
                 }
                 vm.saveObjects(data: sortedCategories)
                 vm.saveObjects(data: parResponse.services)
+                vm.saveObjects(data: parResponse.transactionSummaryInfo)
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                 vm.save(data: profile)
                 navigation.screen = .home

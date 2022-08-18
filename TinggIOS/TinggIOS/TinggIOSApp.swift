@@ -4,6 +4,7 @@
 //
 //  Created by Abdulrasaq on 25/05/2022.
 //
+
 import Core
 import Home
 import Onboarding
@@ -22,7 +23,7 @@ struct TinggIOSApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                appBody()
+                HomeBottomNavView()
             }
         }
     }

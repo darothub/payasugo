@@ -36,7 +36,12 @@ struct HomeView: View {
                                 .foregroundColor(.white)
                                 .shadow(radius: 3, x: 0, y: 3)
                         )
-                 
+                    ExpensesGraphView()
+                        .background(
+                            RoundedRectangle(cornerRadius: 0)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3, x: 0, y: 3)
+                        )
                 }
                 .environmentObject(hvm)
             }.ignoresSafeArea()
