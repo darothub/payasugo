@@ -42,6 +42,7 @@ struct HomeView: View {
                                 .foregroundColor(.white)
                                 .shadow(radius: 3, x: 0, y: 3)
                         )
+                    AddNewBillCardView()
                 }
                 .environmentObject(hvm)
             }.ignoresSafeArea()

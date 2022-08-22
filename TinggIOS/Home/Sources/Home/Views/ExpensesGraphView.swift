@@ -12,7 +12,8 @@ struct ExpensesGraphView: View {
     var body: some View {
         Section{
             BarChartView(data: hvm.mapHistoryIntoChartData(), colors: [.green, .green])
-        }.padding(.horizontal, 20)
+        }.padding(20)
+            .frame(maxWidth: .infinity)
     }
 }
 

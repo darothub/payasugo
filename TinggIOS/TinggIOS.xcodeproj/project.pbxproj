@@ -559,6 +559,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
@@ -599,6 +600,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";

@@ -23,7 +23,7 @@ struct TinggIOSApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                HomeBottomNavView()
+                appBody()
             }
         }
     }
