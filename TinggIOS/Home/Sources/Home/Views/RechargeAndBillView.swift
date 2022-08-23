@@ -33,7 +33,7 @@ struct RechargeAndBillView: View {
                 }
                 LazyVGrid(columns: gridColumn, spacing: 0){
                     ForEach(hvm.rechargeAndBill, id: \.id) { service in
-                        QuickTopupCard(imageUrl: service.serviceLogo!)
+                        RemoteImageCard(imageUrl: service.serviceLogo!)
                             .padding(.vertical)
                             .animation(.easeInOut, value: service.id)
                     }

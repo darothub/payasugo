@@ -29,7 +29,7 @@ struct QuickTopupView: View {
     @ViewBuilder
     fileprivate func quickTopViewBody(airtimeServices: [MerchantService]) -> some View{
         ForEach(airtimeServices, id: \.id) { service in
-            QuickTopupCard(imageUrl: service.serviceLogo!)
+            RemoteImageCard(imageUrl: service.serviceLogo!)
                 .padding(.vertical)
         }
     }
