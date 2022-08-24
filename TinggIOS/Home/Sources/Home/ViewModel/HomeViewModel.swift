@@ -64,7 +64,7 @@ public class HomeViewModel: ObservableObject {
         return chartDataMap.map { (key, value) in
             ChartData(xName: ChartMonth.allCases[key], point: value)
         }.sorted { cd1, cd2 in
-            ChartMonth.allCases.index(of: cd1.xName)! <  ChartMonth.allCases.index(of: cd2.xName)!
+            ChartMonth.allCases.firstIndex(of: cd1.xName)! <  ChartMonth.allCases.firstIndex(of: cd2.xName)!
         }
         
     }

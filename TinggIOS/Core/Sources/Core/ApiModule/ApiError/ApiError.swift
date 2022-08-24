@@ -7,5 +7,12 @@
 
 import Foundation
 public enum ApiError: Error {
-    case networkError
+    case networkError(String)
+    
+    public var localizedString: String {
+        switch self {
+        case .networkError(let string):
+            return string
+        }
+    }
 }

@@ -20,7 +20,7 @@ public struct OtpConfirmationView: View {
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
-    @Environment(\.presentationMode) var presentationMode
+
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
   
     public var body: some View {
@@ -73,12 +73,13 @@ public struct OtpConfirmationView: View {
     }
     fileprivate func observingUIModel() {
         onboardingViewModel.observeUIModel { data in
+            print("OTP \(data)")
             if data is BaseDTO, data.statusMessage.lowercased().contains("confirm") {
-                DispatchQueue.main.async {
-                    otpConfirmed.toggle()
-                    $onboardingViewModel.showOTPView.wrappedValue = false
-                }
+                print("OTPInside \(data)")
+                otpConfirmed.toggle()
+                $onboardingViewModel.showOTPView.wrappedValue = false
             }
+            print("OTPAfter \(data)")
         }
     }
 }
@@ -94,13 +95,6 @@ struct OtpConfirmationView_Previews: PreviewProvider {
     }
     static var previews: some View {
         OtpConfirmationViewHolder()
-            .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepositoryImpl(
-                    apiService: BaseRepository(),
-                    realmManager: RealmManager()
-                ),
-                baseRequest: BaseRequest(apiServices: BaseRepository())
-            )
-        )
+            .environmentObject(OnboardingDI.createOnboardingViewModel())
     }
 }

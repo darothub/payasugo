@@ -1,50 +1,51 @@
 //
-//  DependenciesManager.swift
-//  TinggIOS
+//  File.swift
+//  
 //
-//  Created by Abdulrasaq on 04/08/2022.
+//  Created by Abdulrasaq on 24/08/2022.
 //
 
 import Foundation
 import Core
-import SwiftUI
-import Onboarding
 
-struct DIManager {
-    static func createApiServices() -> TinggApiServices {
+public struct OnboardingDI {
+    public init() {
+        //public init
+    }
+    public static func createApiServices() -> TinggApiServices {
         return BaseRepository()
     }
-    static func createRealmManager() -> RealmManager {
+    public static func createRealmManager() -> RealmManager {
         return RealmManager()
     }
-    static func createBaseRequest() -> BaseRequest {
+    public static func createBaseRequest() -> BaseRequest {
         return .init()
     }
-    static func createCountryRepository() -> CountryRepositoryImpl {
+    public static func createCountryRepository() -> CountryRepositoryImpl {
         return CountryRepositoryImpl(
             baseRequest: createBaseRequest(),
             realmManager: createRealmManager()
         )
     }
-    static func createOnboardingViewModel() -> OnboardingViewModel {
+    public static func createOnboardingViewModel() -> OnboardingViewModel {
         return OnboardingViewModel(onboardingUseCase: createOnboardingUseCase())
     }
-    static func createOnboardingUseCase() -> OnboardingUseCase {
+    public static func createOnboardingUseCase() -> OnboardingUseCase {
         return OnboardingUsecaseImpl(
             getCountriesUsecase: createGetCountriesUsecase(),
             authenticateUsecase: createAuthenticateUsecase(),
             parUsecase: createParAndFsuUsecase()
         )
     }
-    static func createGetCountriesUsecase() -> GetCountriesUsecaseImpl {
+    public static func createGetCountriesUsecase() -> GetCountriesUsecaseImpl {
         return GetCountriesUsecaseImpl(countryRepository: createCountryRepository())
     }
 
-    static func createAuthenticateUsecase() -> AuthenticateUsecaseImpl {
+    public static func createAuthenticateUsecase() -> AuthenticateUsecaseImpl {
         return AuthenticateUsecaseImpl(baseRequest: createBaseRequest())
     }
     
-    static func createParAndFsuUsecase() -> PARAndFSUUsecaseImpl {
+    public static func createParAndFsuUsecase() -> PARAndFSUUsecaseImpl {
         return PARAndFSUUsecaseImpl(baseRequest: createBaseRequest())
     }
 }

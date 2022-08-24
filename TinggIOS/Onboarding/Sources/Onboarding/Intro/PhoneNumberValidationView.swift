@@ -15,12 +15,7 @@ public struct PhoneNumberValidationView: View {
     @State var countryCode = "267"
     @State var countries: [String: String] = [String: String]()
     // swiftlint:disable all
-    @StateObject var vm = OnboardingViewModel(
-        countryRepository: CountryRepositoryImpl(
-            apiService: BaseRepository(),
-            realmManager: RealmManager()),
-        baseRequest: BaseRequest(apiServices: BaseRepository())
-    )
+    @StateObject var vm = OnboardingDI.createOnboardingViewModel()
     var dbTransactionController: DBTransactions = .init()
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
@@ -132,14 +127,6 @@ public struct PhoneNumberValidationView: View {
 struct PhoneNumberValidationView_Previews: PreviewProvider {
     static var previews: some View {
         PhoneNumberValidationView()
-            .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepositoryImpl(
-                    apiService: BaseRepository(),
-                    realmManager: RealmManager()
-                ),
-                baseRequest: BaseRequest(apiServices: BaseRepository())
-            )
-        )
     }
 }
 
@@ -206,15 +193,11 @@ extension OnboardingViewModel {
         isValidPhoneNumber = true
     }
     func getSelectedCountryRegex() -> String {
-        Task {
-            guard let country = await countryRepository.getCountryByDialCode(dialCode: countryCode) else {
-                printLn(methodName: "getSelectedCountryRegex", message: "country is nil")
-                return
-            }
-            DispatchQueue.main.async {
-                self.currentCountry = country
-            }
+        guard let country = getCountryByDialCode(dialCode: countryCode) else {
+            printLn(methodName: "getSelectedCountryRegex", message: "country is nil")
+            return ""
         }
+        self.currentCountry = country
         guard let regex = currentCountry.countryMobileRegex else { return ""}
         return regex
     }

@@ -26,66 +26,63 @@ public class OnboardingViewModel: ObservableObject {
     @Published var message = ""
     @Published var warning = ""
     @Published var statusCode = 0
-    @Published var results = Result<BaseDTOprotocol, ApiError>.failure(.networkError)
     @Published var uiModel = UIModel.nothing
     private var subscriptions = Set<AnyCancellable>()
     private var dbTransaction = DBTransactions()
     @Published public var countryDictionary = [String: String]()
     @Published public var countriesDb = Observer<Country>().objects
-    var tinggRequest: TinggRequest = .init()
-    var countryRepository: CountryRepositoryImpl
-    var baseRequest: BaseRequest
+    var onboardingUseCase: OnboardingUseCase
     var name = "OnboardingViewModel"
-    public init(countryRepository: CountryRepositoryImpl, baseRequest: BaseRequest) {
-        self.countryRepository = countryRepository
-        self.baseRequest = baseRequest
+    
+    public init(onboardingUseCase: OnboardingUseCase) {
+        self.onboardingUseCase = onboardingUseCase
         getCountryDictionary()
     }
     func makeActivationCodeRequest(msisdn: String, clientId: String) {
         uiModel = UIModel.loading
-        tinggRequest.getActivationCode(service: "MAK", msisdn: msisdn, clientId: clientId)
-        baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<BaseDTO, ApiError>) in
-            handleResultState(result)
+        Task {
+            let result = try await onboardingUseCase.makeActivationCodeRequest(msisdn: msisdn, clientId: clientId)
+            handleResultState(result as Result<BaseDTO, ApiError>)
         }
     }
     func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) {
         uiModel = UIModel.loading
-        tinggRequest.confirmActivationCode(
-            service: "VAK",
-            msisdn: msisdn,
-            clientId: clientId,
-            code: code
-        )
-        baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<BaseDTO, ApiError>) in
-            handleResultState(result)
+        Task {
+            let result = try await onboardingUseCase.confirmActivationCodeRequest(msisdn: msisdn, clientId: clientId, code: code)
+            handleResultState(result as Result<BaseDTO, ApiError>)
         }
     }
     func makePARRequest(msisdn: String, clientId: String) {
         uiModel = UIModel.loading
-        let activeCountry = AppStorageManager.getActiveCountry()
-        tinggRequest.makePARRequesr(dataSource: activeCountry, msisdn: msisdn, clientId: clientId)
-        baseRequest.makeRequest(tinggRequest: tinggRequest) { [unowned self] (result: Result<PARAndFSUDTO, ApiError>) in
-            print("PAR result \(result)")
-            handleResultState(result)
+        Task {
+            let result = try await onboardingUseCase.makePARRequest(msisdn: msisdn, clientId: clientId)
+            print("Result2 \(result)")
+            handleResultState(result as Result<PARAndFSUDTO, ApiError>)
         }
     }
     func getCountryDictionary() {
         Task {
-            countryDictionary = try await countryRepository.getCountriesAndDialCode()
+            countryDictionary = try await onboardingUseCase.getCountryDictionary()
         }
     }
+    
+    func getCountryByDialCode(dialCode: String) -> Country? {
+        return onboardingUseCase.getCountryByDialCode(dialCode: dialCode)
+    }
     fileprivate func handleResultState<T: BaseDTOprotocol>(_ result: Result<T, ApiError>) {
-        self.showLoader = false
-        switch result {
-        case .failure(let err):
-            uiModel = UIModel.error(err.localizedDescription)
-            print("Failure \(err.localizedDescription)")
-            return
-        case .success(let data):
-            print("Success \(data)")
-            let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
-            uiModel = UIModel.content(content)
-            return
+        DispatchQueue.main.async { [unowned self] in
+            self.showLoader = false
+            switch result {
+            case .failure(let apiError):
+                uiModel = UIModel.error(apiError.localizedString)
+                print("Failure \(apiError.localizedString)")
+                return
+            case .success(let data):
+                print("Success \(data)")
+                let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
+                uiModel = UIModel.content(content)
+                return
+            }
         }
     }
     func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {

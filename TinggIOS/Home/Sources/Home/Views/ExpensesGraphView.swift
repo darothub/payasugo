@@ -4,14 +4,16 @@
 //
 //  Created by Abdulrasaq on 16/08/2022.
 //
+
 import Common
 import SwiftUI
 
 struct ExpensesGraphView: View {
-    @EnvironmentObject var hvm: HomeViewModel
+//    @EnvironmentObject var hvm: HomeViewModel
+    var chartData = [ChartData]()
     var body: some View {
         Section{
-            BarChartView(data: hvm.mapHistoryIntoChartData(), colors: [.green, .green])
+            BarChartView(data: chartData, colors: [.green, .green])
         }.padding(20)
             .frame(maxWidth: .infinity)
     }

@@ -33,14 +33,7 @@ struct PolicySectionView_Previews: PreviewProvider {
     struct PolicySectionViewHolder: View {
         var body: some View {
             PolicySectionView()
-                .environmentObject(OnboardingViewModel(
-                    countryRepository: CountryRepositoryImpl(
-                        apiService: BaseRepository(),
-                        realmManager: RealmManager()
-                    ),
-                    baseRequest: BaseRequest(apiServices: BaseRepository())
-                )
-            )
+                .environmentObject(OnboardingDI.createOnboardingViewModel())
         }
     }
     static var previews: some View {

@@ -9,7 +9,8 @@ import SwiftUI
 import Theme
 import Core
 struct QuickTopupView: View {
-    @EnvironmentObject var hvm: HomeViewModel
+//    @EnvironmentObject var hvm: HomeViewModel
+    var airtimeServices = [MerchantService]()
     var body: some View {
         Section {
             VStack(alignment: .leading) {
@@ -19,7 +20,7 @@ struct QuickTopupView: View {
                     .font(.system(size: PrimaryTheme.smallTextSize))
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        quickTopViewBody(airtimeServices: hvm.airTimeServices)
+                        quickTopViewBody(airtimeServices: airtimeServices)
                     }
                 }
             }
@@ -37,8 +38,7 @@ struct QuickTopupView: View {
 
 struct QuickTopupView_Previews: PreviewProvider {
     static var previews: some View {
-        QuickTopupView()
-            .environmentObject(HomeViewModel())
+        QuickTopupView(airtimeServices: services)
     }
 }
 

@@ -14,7 +14,7 @@ import Theme
 struct TinggIOSApp: App {
     @StateObject var enviromentUtils = EnvironmentUtils()
     @StateObject var navigation = NavigationUtils()
-    @StateObject var ovm = DIManager.createOnboardingViewModel()
+    @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
     @State var profile: Profile = .init()
     @State var categories: [[Categorys]] = [[]]
     @State var quicktops: [MerchantService] = [MerchantService]()

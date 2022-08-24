@@ -6,22 +6,49 @@
 //
 
 import Foundation
-public class BaseRequest: ObservableObject {
-    let apiServices: TinggApiServices
-    public init(apiServices: TinggApiServices) {
-        self.apiServices = apiServices
+import Alamofire
+public class BaseRequest: ObservableObject, TinggApiServices {
+    public init () {
+        //Public init
     }
     public func makeRequest<T: BaseDTOprotocol>(
         tinggRequest: TinggRequest,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
-        apiServices.request(tinggRequest: tinggRequest)
+        request(tinggRequest: tinggRequest)
             .validate(statusCode: 200..<300)
-            .responseDecodable(of: T.self, emptyResponseCodes: [200, 204, 205]) { response in
+            .responseDecodable(of: T.self) { response in
                 switch response.result {
-                case .failure :
-                    print("response \(response)")
-                    onCompletion(.failure(.networkError))
+                case .failure(let error):
+                    print("response \(error)")
+                    onCompletion(.failure(.networkError(error.localizedDescription)))
+                case .success(let baseResponse):
+                    onCompletion(.success(baseResponse))
+                }
+            }
+    }
+    public func makeRequest<T: BaseDTOprotocol>(
+        urlPath: String? = nil,
+        tinggRequest: TinggRequest,
+        onCompletion: @escaping(Result<T, ApiError>) -> Void
+    ) {
+        var apiRequest: DataRequest
+        if urlPath == nil {
+            apiRequest =  request(tinggRequest: tinggRequest)
+        }
+        else {
+            guard let url = urlPath else {
+                fatalError("Invalid url")
+            }
+            apiRequest = request(urlPath: url, tinggRequest: tinggRequest)
+        }
+        apiRequest
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: T.self) { response in
+                switch response.result {
+                case .failure(let error):
+                    print("response \(error)")
+                    onCompletion(.failure(.networkError(error.localizedDescription)))
                 case .success(let baseResponse):
                     onCompletion(.success(baseResponse))
                 }

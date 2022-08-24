@@ -38,7 +38,7 @@ public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var hasActivatedWallet: String? = ""
     @Persisted public var walletAccountID: String? = ""
     @Persisted public var walletAccountNumber: String? = ""
-    @Persisted public var walletBalance: Int? = 0
+    @Persisted public var walletBalance: String? = ""
     @Persisted public var freshchatRestorationID: String? = ""
     @Persisted public var loyaltyPoints: String? = ""
     @Persisted public var identity: String? = ""

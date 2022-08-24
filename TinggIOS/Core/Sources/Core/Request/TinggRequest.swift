@@ -39,7 +39,7 @@ public struct TinggRequest: Encodable {
         self.clientId = clientId
         self.activationCode = code
     }
-    public mutating func makePARRequesr(dataSource: String, msisdn: String, clientId: String) {
+    public mutating func makePARRequest(dataSource: String, msisdn: String, clientId: String) {
         self.service = "PAR"
         self.dataSource = dataSource
         self.msisdn = msisdn

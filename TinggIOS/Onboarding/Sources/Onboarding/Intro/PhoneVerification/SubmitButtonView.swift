@@ -35,14 +35,8 @@ struct SubmitButtonView: View {
 struct SubmitButtonView_Previews: PreviewProvider {
     static var previews: some View {
         SubmitButtonView()
-            .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepositoryImpl(
-                    apiService: BaseRepository(),
-                    realmManager: RealmManager()
-                ),
-                baseRequest: BaseRequest(apiServices: BaseRepository())
-            )
-        )
+            .environmentObject(OnboardingDI.createOnboardingViewModel())
+
     }
 }
 
