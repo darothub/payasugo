@@ -20,9 +20,9 @@ public struct OtpConfirmationView: View {
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
-
+    
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-  
+    
     public var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
@@ -38,9 +38,7 @@ public struct OtpConfirmationView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm"
             ) {
-                onboardingViewModel.confirmActivationCodeRequest(
-                    msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
-                )
+                onboardingViewModel.confirmActivationCodeRequest(code: otp)
             }
         }
         .handleViewState(uiModel: $onboardingViewModel.uiModel)
@@ -64,9 +62,7 @@ public struct OtpConfirmationView: View {
                 timeAdvice = "Resend code in 00:\(timeLeft)"
             }
         } else {
-            onboardingViewModel.makeActivationCodeRequest(
-                msisdn: phoneNumber, clientId: activeCountry.mulaClientID!
-            )
+            onboardingViewModel.makeActivationCodeRequest()
             timeAdvice = "Code resent"
             resetTimer()
         }

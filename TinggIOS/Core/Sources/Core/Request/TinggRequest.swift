@@ -10,8 +10,8 @@ import UIKit
 public struct TinggRequest: Encodable {
     public var service: String?
     public var accountNumber: String?
-    public var msisdn: String?
-    public var clientId: String?
+    public var msisdn: String? = AppStorageManager.getPhoneNumber()
+    public var clientId: String? = AppStorageManager.getClientId()
     public var activationCode: String?
     public var uuid: String = uuidForVendor
     public var osVersion: String = deviceOSVersion()
@@ -24,7 +24,7 @@ public struct TinggRequest: Encodable {
     public var profileInfo: String? = ""
     public var apiLevel: String = "15"
     public var isExplicit = "1"
-    public var dataSource: String? = ""
+    public var dataSource: String? = AppStorageManager.getActiveCountry()
     
     public init() {
         // Intentionally unimplemented...needed for modular accessibility

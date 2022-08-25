@@ -38,24 +38,34 @@ public class OnboardingViewModel: ObservableObject {
         self.onboardingUseCase = onboardingUseCase
         getCountryDictionary()
     }
-    func makeActivationCodeRequest(msisdn: String, clientId: String) {
+    func makeActivationCodeRequest() {
         uiModel = UIModel.loading
         Task {
-            let result = try await onboardingUseCase.makeActivationCodeRequest(msisdn: msisdn, clientId: clientId)
+            var tinggRequest: TinggRequest = .init()
+            tinggRequest.service = "MAK"
+            print("requestMAK \(tinggRequest)")
+            let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
             handleResultState(result as Result<BaseDTO, ApiError>)
         }
     }
-    func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) {
+    func confirmActivationCodeRequest(code: String) {
         uiModel = UIModel.loading
         Task {
-            let result = try await onboardingUseCase.confirmActivationCodeRequest(msisdn: msisdn, clientId: clientId, code: code)
+            var tinggRequest: TinggRequest = .init()
+            tinggRequest.service = "VAK"
+            tinggRequest.activationCode = code
+            print("requestVAK \(tinggRequest)")
+            let result = try await onboardingUseCase.confirmActivationCodeRequest(tinggRequest: tinggRequest, code: code)
             handleResultState(result as Result<BaseDTO, ApiError>)
         }
     }
-    func makePARRequest(msisdn: String, clientId: String) {
+    func makePARRequest() {
         uiModel = UIModel.loading
         Task {
-            let result = try await onboardingUseCase.makePARRequest(msisdn: msisdn, clientId: clientId)
+            var tinggRequest: TinggRequest = .init()
+            tinggRequest.service = "PAR"
+            print("requestPAR \(tinggRequest)")
+            let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest )
             print("Result2 \(result)")
             handleResultState(result as Result<PARAndFSUDTO, ApiError>)
         }
@@ -90,7 +100,7 @@ public class OnboardingViewModel: ObservableObject {
             switch uiModel {
             case .content(let data):
                 if data.statusMessage.lowercased().contains("succ"),
-                    let baseDto = data.data as? BaseDTOprotocol {
+                   let baseDto = data.data as? BaseDTOprotocol {
                     action(baseDto)
                 }
                 return
@@ -134,3 +144,5 @@ class DBTransactions {
         }
     }
 }
+
+

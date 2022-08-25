@@ -11,9 +11,7 @@ import Core
 import SwiftUI
 import Theme
 public struct PhoneNumberValidationView: View {
-    @State var phoneNumber = ""
-    @State var countryCode = "267"
-    @State var countries: [String: String] = [String: String]()
+
     // swiftlint:disable all
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
     var dbTransactionController: DBTransactions = .init()
@@ -50,13 +48,11 @@ public struct PhoneNumberValidationView: View {
             }
             .sheet(isPresented: $vm.showOTPView, onDismiss: {
                 if vm.confirmedOTP {
-                    vm.retainActiveCountry(
-                        country: vm.currentCountry.name!
-                    )
-                    vm.makePARRequest(
-                        msisdn: $vm.phoneNumber.wrappedValue,
-                        clientId: $vm.currentCountry.wrappedValue.mulaClientID!
-                    )
+//                    vm.retainActiveCountry(
+//                        country: vm.currentCountry
+//                    )
+//                    vm.retainPhoneNumber()
+                    vm.makePARRequest()
                 }
             }, content: {
                 OtpConfirmationView(
@@ -169,6 +165,7 @@ extension PhoneNumberValidationView {
                 vm.saveObjects(data: sortedCategories)
                 vm.saveObjects(data: parResponse.services)
                 vm.saveObjects(data: parResponse.transactionSummaryInfo)
+                vm.saveObjects(data: parResponse.nominationInfo)
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                 vm.save(data: profile)
                 navigation.screen = .home
@@ -218,7 +215,4 @@ extension OnboardingViewModel {
         return result
     }
 
-    func retainActiveCountry(country: String) {
-        AppStorageManager.retainActiveCountry(country: country)
-    }
 }

@@ -8,17 +8,14 @@
 import Foundation
 public class PARAndFSUUsecaseImpl: BaseUsecase, PARAndFSUUsecase {
     public var baseRequest: BaseRequest
-    var tinggRequest: TinggRequest = .init()
     public init (baseRequest: BaseRequest) {
         self.baseRequest = baseRequest
     }
-    public func callAsFunction(msisdn: String, clientId: String) async throws -> Result<PARAndFSUDTO, ApiError>{
-        let activeCountry = AppStorageManager.getActiveCountry()
-        tinggRequest.makePARRequest(dataSource: activeCountry, msisdn: msisdn, clientId: clientId)
+    public func callAsFunction(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError>{
         return try await result(tinggRequest: tinggRequest)
     }
 }
 
 public protocol PARAndFSUUsecase {
-    func callAsFunction(msisdn: String, clientId: String) async throws -> Result<PARAndFSUDTO, ApiError>
+    func callAsFunction(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError>
 }

@@ -20,11 +20,12 @@ struct SubmitButtonView: View {
           ) {
               let isValidated = onboardingViewModel.validatePhoneNumberIsNotEmpty()
               if isValidated {
-                  let number = "+\($onboardingViewModel.countryCode)\($onboardingViewModel.phoneNumber)"
-                  onboardingViewModel.makeActivationCodeRequest(
-                    msisdn: number,
-                    clientId: $onboardingViewModel.currentCountry.wrappedValue.mulaClientID!
-                  )
+                  onboardingViewModel.retainPhoneNumber()
+                  onboardingViewModel.saveActiveCountry(countryName: onboardingViewModel.currentCountry.name!)
+                  onboardingViewModel.saveClientId(clientId: onboardingViewModel.currentCountry.mulaClientID!)
+                  
+                  onboardingViewModel.makeActivationCodeRequest()
+                  
               }
           }.keyboardShortcut(.return)
             .accessibility(identifier: "continuebtn")
@@ -53,5 +54,15 @@ extension OnboardingViewModel {
             return false
         }
         return true
+    }
+    func retainPhoneNumber() {
+        print("ActiveNumber \(countryCode)\(phoneNumber)")
+        AppStorageManager.retainPhoneNumber(number: countryCode+phoneNumber)
+    }
+    func saveActiveCountry(countryName: String) {
+        AppStorageManager.retainActiveCountry(country: countryName)
+    }
+    func saveClientId(clientId: String) {
+        AppStorageManager.retainClientId(id: clientId)
     }
 }

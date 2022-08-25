@@ -21,5 +21,8 @@ extension TinggApiServices {
         return AF.request(Utils.baseUrlStaging+urlPath, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }
+    public func request(urlPath: String) -> DataRequest {
+        return AF.request(Utils.baseUrlStaging+urlPath, method: .get)
+    }
 }
 

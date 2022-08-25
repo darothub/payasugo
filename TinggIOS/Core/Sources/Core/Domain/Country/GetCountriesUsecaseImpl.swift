@@ -8,7 +8,6 @@ import Foundation
 
 public class GetCountriesUsecaseImpl: GetCountriesUsecase {
     public let countryRepository: CountryRepository
-    var tinggRequest: TinggRequest = .init()
     public init (countryRepository: CountryRepository) {
         self.countryRepository = countryRepository
     }

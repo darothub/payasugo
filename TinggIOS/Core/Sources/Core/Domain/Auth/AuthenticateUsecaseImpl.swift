@@ -8,26 +8,18 @@
 import Foundation
 public class AuthenticateUsecaseImpl: BaseUsecase, AuthenticateUsecase {
     public var baseRequest: BaseRequest
-    var tinggRequest: TinggRequest = .init()
     public init (baseRequest: BaseRequest) {
         self.baseRequest = baseRequest
     }
-    public func callAsFunction(msisdn: String, clientId: String) async throws -> Result<BaseDTO, ApiError>{
-        tinggRequest.getActivationCode(service: "MAK", msisdn: msisdn, clientId: clientId)
+    public func callAsFunction(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>{
         return try await result(tinggRequest: tinggRequest)
     }
-    public func callAsFunction(msisdn: String, clientId: String, code: String) async throws -> Result<BaseDTO, ApiError>{
-        tinggRequest.confirmActivationCode(
-            service: "VAK",
-            msisdn: msisdn,
-            clientId: clientId,
-            code: code
-        )
+    public func callAsFunction(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>{
         return try await result(tinggRequest: tinggRequest)
     }
 }
 
 public protocol AuthenticateUsecase {
-    func callAsFunction(msisdn: String, clientId: String) async throws -> Result<BaseDTO, ApiError>
-    func callAsFunction(msisdn: String, clientId: String, code: String) async throws -> Result<BaseDTO, ApiError>
+    func callAsFunction(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>
+    func callAsFunction(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>
 }

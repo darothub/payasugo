@@ -26,15 +26,6 @@
         "revision" : "a107f5660b0b6067700923af7f107b6af73c546b",
         "version" : "10.28.5"
       }
-    },
-    {
-      "identity" : "swiftuicharts",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AfrazCodes/SwiftUICharts.git",
-      "state" : {
-        "revision" : "6cacb77e8d3e0a9ed1d09ce9a19ba057c95ce529",
-        "version" : "0.5.2"
-      }
     }
   ],
   "version" : 2

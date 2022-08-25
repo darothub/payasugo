@@ -16,8 +16,6 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.1")),
         .package(url: "https://github.com/realm/realm-swift.git", .upToNextMajor(from: "10.28.1")),
-//        .package(url: "https://github.com/AppPear/ChartView", .upToNextMajor(from: "2.0.0-beta.2")),
-        .package(url: "https://github.com/AfrazCodes/SwiftUICharts.git", .upToNextMajor(from: "0.5.2"))
 //        .package(path: "../Theme")
     ],
     targets: [
@@ -28,8 +26,6 @@ let package = Package(
             dependencies: [
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "RealmSwift", package: "realm-swift"),
-//                .product(name: "SwiftUICharts", package: "ChartView"),
-                .product(name: "SwiftUICharts", package: "SwiftUICharts"),
             ]
         ),
         .testTarget(

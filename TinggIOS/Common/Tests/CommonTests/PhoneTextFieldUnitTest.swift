@@ -1,14 +1,12 @@
 //
-//  Country.swift
+//  PhoneTextFieldUnitTest.swift
 //  
 //
-//  Created by Abdulrasaq on 02/08/2022.
+//  Created by Abdulrasaq on 25/08/2022.
 //
-// swiftlint:disable all
-import XCTest
 import Common
-
-class CountryCodeTest: XCTestCase {
+import XCTest
+class PhoneTextFieldUnitTest: XCTestCase {
 
     func testCountryCode_BW_ShouldReturn_Botswana(){
         let actual = getCountryName(countryCode: "BW")

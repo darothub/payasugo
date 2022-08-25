@@ -22,13 +22,20 @@ public class BaseRequest: ObservableObject, TinggApiServices {
     }
     public func makeRequest<T: BaseDTOprotocol>(
         urlPath: String,
-        tinggRequest: TinggRequest,
+        tinggRequest: TinggRequest? = nil,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
-       request(urlPath: urlPath, tinggRequest: tinggRequest)
-            .execute { (result:Result<T, ApiError>) in
-                onCompletion(result)
-            }
+        if tinggRequest != nil {
+            request(urlPath: urlPath, tinggRequest: tinggRequest ?? .init())
+                 .execute { (result:Result<T, ApiError>) in
+                     onCompletion(result)
+                 }
+            return
+        }
+        request(urlPath: urlPath)
+             .execute { (result:Result<T, ApiError>) in
+                 onCompletion(result)
+             }
     }
 }
 

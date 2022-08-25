@@ -7,17 +7,39 @@
 
 import SwiftUI
 public struct AppStorageManager {
-    @AppStorage(LocalProperties.activeCountry.rawValue) public static var activeCountry: Data = .init()
-    @AppStorage(LocalProperties.activeCountry.rawValue) static var userCountry: String = ""
+    @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: Data = .init()
+    @AppStorage(LocalProperties.countryName.rawValue) fileprivate static var userCountry: String = ""
+    @AppStorage(LocalProperties.phoneNumber.rawValue) fileprivate static var phoneNumber: String = ""
+    @AppStorage(LocalProperties.clientId.rawValue) fileprivate static var clientId: String = ""
     public static func retainActiveCountry(country: String) {
         userCountry = country
     }
+    public static func retainPhoneNumber(number: String) {
+        phoneNumber = number
+    }
     public static func getActiveCountry() -> String {
-        print("ActiveCountry \(userCountry)")
+       
         return userCountry
+    }
+    public static func getPhoneNumber() -> String {
+        return phoneNumber
+    }
+    public static func retainClientId(id: String) {
+        clientId = id
+    }
+    public static func getClientId() -> String {
+        return clientId
     }
 }
 
 public enum LocalProperties: String {
     case activeCountry
+    case countryName
+    case phoneNumber
+    case clientId
+}
+
+
+class User: Codable {
+    var name = "Somebody"
 }

@@ -18,11 +18,11 @@ public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var mulaClientID: String? = ""
     @Persisted public var countryMobileRegex: String? = ""
     @Persisted public var genericAccountNumberRegex: String? = ""
-    @Persisted public var extractSMSOnProfiling = 0
+//    @Persisted public var extractSMSOnProfiling = 0
     @Persisted public var countryCurrencyRegex: String? = ""
-    @Persisted public var excludedSMSSourceAddresses = RealmSwift.List<String>()
+//    @Persisted public var excludedSMSSourceAddresses = RealmSwift.List<String>()
     @Persisted public var countryDialCode: String? = ""
-    @Persisted public var confirmedAccountLimits: String? = ""
+//    @Persisted public var confirmedAccountLimits: String? = ""
     @Persisted public var hotlineAppID: String? = ""
     @Persisted public var hotlineAppKey: String? = ""
     @Persisted public var freshchatAppID: String? = ""
@@ -38,7 +38,7 @@ public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var hasWallet: Int? = 0
     @Persisted public var hasGroups: Int? = 0
     @Persisted public var hasFloatingButton: Int? = 0
-    @Persisted public var hasDiscover: Int = 0
+//    @Persisted public var hasDiscover: Int = 0
     @Persisted public var useSmileSDK: Int? = 0
     @Persisted public var hasReferral: Int? = 0
 //    @Persisted public var isManualKycRegistration: Int = 0
@@ -46,7 +46,7 @@ public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var isDefault: Bool? = false
     @Persisted public var successCallBackURL: String? = ""
     @Persisted public var payerClientCode: String? = ""
-    @Persisted public var isSecureCardPayment: String? = ""
+//    @Persisted public var isSecureCardPayment: String? = ""
     @Persisted public var failedCallBackURL: String? = ""
     @Persisted public var webCheckoutURL: String? = ""
     @Persisted public var clevertapAccountID: String? = ""
@@ -62,6 +62,7 @@ public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var webHookURL: String? = ""
     @Persisted public var fetchBearerTokenURL: String? = ""
     @Persisted public var privacyPolicyURL: String? = ""
+    @Persisted public var activeCountry: Bool = false
     enum CodingKeys: String, CodingKey {
         case name = "COUNTRY"
         case countryCode = "COUNTRY_CODE"

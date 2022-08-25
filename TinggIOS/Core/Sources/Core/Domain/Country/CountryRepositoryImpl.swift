@@ -16,7 +16,7 @@ public class CountryRepositoryImpl: CountryRepository {
         self.realmManager = realmManager
     }
     func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
-        baseRequest.makeRequest(urlPath: "countries.php/", tinggRequest: .init()) {(result: Result<CountryDTO, ApiError>) in
+        baseRequest.makeRequest(urlPath: "countries.php/") {(result: Result<CountryDTO, ApiError>) in
             switch result {
             case .failure(let error):
                 onCompletion(.failure(.networkError(error.localizedDescription)))

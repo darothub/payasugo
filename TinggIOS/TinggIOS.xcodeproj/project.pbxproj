@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7100B4EA28B6F8D5006BA539 /* CountryCodeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100B4E928B6F8D5006BA539 /* CountryCodeTest.swift */; };
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
@@ -50,7 +49,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7100B4E928B6F8D5006BA539 /* CountryCodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeTest.swift; sourceTree = "<group>"; };
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		714B15A72899D5C6005338EB /* OnboardingUITest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnboardingUITest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		714B15A92899D5C6005338EB /* OnboardingUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITest.swift; sourceTree = "<group>"; };
@@ -124,7 +122,6 @@
 				71AED58B28665C9400A4B14F /* Packages */,
 				718C628E283EBCB4002ADCA8 /* TinggIOS */,
 				714B15A82899D5C6005338EB /* OnboardingUITest */,
-				71929B5128A5AEC700D84B98 /* CoreModuleUnitTest */,
 				718C628D283EBCB4002ADCA8 /* Products */,
 				7108CD75285253DF0034EA29 /* Frameworks */,
 			);
@@ -159,14 +156,6 @@
 				718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		71929B5128A5AEC700D84B98 /* CoreModuleUnitTest */ = {
-			isa = PBXGroup;
-			children = (
-				7100B4E928B6F8D5006BA539 /* CountryCodeTest.swift */,
-			);
-			path = CoreModuleUnitTest;
 			sourceTree = "<group>";
 		};
 		71AED58B28665C9400A4B14F /* Packages */ = {
@@ -358,7 +347,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7100B4EA28B6F8D5006BA539 /* CountryCodeTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

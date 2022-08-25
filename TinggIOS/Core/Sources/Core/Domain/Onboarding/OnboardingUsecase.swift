@@ -23,21 +23,21 @@ public class OnboardingUsecaseImpl: OnboardingUseCase {
     public func getCountryByDialCode(dialCode: String) -> Country? {
         return getCountriesUsecase(dialCode: dialCode)
     }
-    public func makeActivationCodeRequest(msisdn: String, clientId: String) async throws -> Result<BaseDTO, ApiError> {
-        return try await authenticateUsecase(msisdn: msisdn, clientId: clientId)
+    public func makeActivationCodeRequest(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError> {
+        return try await authenticateUsecase(tinggRequest: tinggRequest)
     }
-    public func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) async throws -> Result<BaseDTO, ApiError> {
-        return try await authenticateUsecase(msisdn: msisdn, clientId: clientId, code: code)
+    public func confirmActivationCodeRequest(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError> {
+        return try await authenticateUsecase(tinggRequest: tinggRequest, code: code)
     }
-    public func makePARRequest(msisdn: String, clientId: String) async throws -> Result<PARAndFSUDTO, ApiError> {
-        return try await parUsecase(msisdn: msisdn, clientId: clientId)
+    public func makePARRequest(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError> {
+        return try await parUsecase(tinggRequest: tinggRequest )
     }
 }
 
 public protocol OnboardingUseCase {
     func getCountryDictionary() async throws -> [String: String]
-    func makeActivationCodeRequest(msisdn: String, clientId: String) async throws -> Result<BaseDTO, ApiError>
-    func confirmActivationCodeRequest(msisdn: String, clientId: String, code: String) async throws -> Result<BaseDTO, ApiError>
-    func makePARRequest(msisdn: String, clientId: String) async throws -> Result<PARAndFSUDTO, ApiError>
+    func makeActivationCodeRequest(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>
+    func confirmActivationCodeRequest(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>
+    func makePARRequest(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError>
     func getCountryByDialCode(dialCode: String) -> Country?
 }
