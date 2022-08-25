@@ -7,5 +7,5 @@
 
 import Foundation
 public protocol FetchBillRepository {
-    
+    func getDueBills(tinggRequest: TinggRequest) async throws -> [FetchedBill]
 }

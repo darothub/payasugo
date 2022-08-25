@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 public struct TinggRequest: Encodable {
     public var service: String?
+    public var accountNumber: String?
     public var msisdn: String?
     public var clientId: String?
     public var activationCode: String?
@@ -21,7 +22,7 @@ public struct TinggRequest: Encodable {
     public var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
     public var merchantDetails: String? = ""
     public var profileInfo: String? = ""
-    public var apiLevel: String = "13"
+    public var apiLevel: String = "15"
     public var isExplicit = "1"
     public var dataSource: String? = ""
     
@@ -45,8 +46,15 @@ public struct TinggRequest: Encodable {
         self.msisdn = msisdn
         self.clientId = clientId
     }
+    public mutating func createNewRequest(serviceId: String, msisdn: String, clientId: String){
+        self.service = serviceId
+        self.msisdn = msisdn
+        self.clientId = clientId
+        self.accountNumber = msisdn
+    }
     enum CodingKeys: String, CodingKey {
         case service = "SERVICE"
+        case accountNumber = "ACCOUNT_NUMBER"
         case msisdn = "MSISDN"
         case uuid = "UUID"
         case clientId = "CLIENT_ID"

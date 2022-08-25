@@ -14,16 +14,19 @@ public class HomeViewModel: ObservableObject {
     @Published public var profiles = Observer<Profile>().objects
     @Published public var services = Observer<MerchantService>().objects
     @Published public var airTimeServices = [MerchantService]()
-    @Published public var profile = Profile()
     @Published public var processedCategories = [[Categorys]]()
     @Published public var rechargeAndBill = [MerchantService]()
+    @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
+    @Published public var dueBill = [FetchedBill]()
     @Published public var subscription = Set<AnyCancellable>()
-    public init() {
+    public var homeUsecase: HomeUsecase
+    public init(homeUsecase: HomeUsecase) {
+        self.homeUsecase = homeUsecase
         processedCategories = categories.reversed().reversed().chunked(into: 4)
         getProfile()
         getQuickTopups()
-        firstEightRechargeAndBill()
+        displayedRechargeAndBill()
     }
     public func getProfile() {
         guard let profile = profiles.first else {
@@ -68,13 +71,25 @@ public class HomeViewModel: ObservableObject {
         }
         
     }
-
-    public func firstEightRechargeAndBill() {
+    public func displayedRechargeAndBill() {
         Future<[MerchantService], Never> { [unowned self] promise in
             promise(.success(services.prefix(8).shuffled()))
         }
         .assign(to: \.rechargeAndBill, on: self)
         .store(in: &subscription)
         return
+    }
+    
+    public func fetchDueBills(serviceId: String, msisdn: String, clientId: String)  {
+        let serviceId="FB"
+        guard let profile = profiles.first else {
+            fatalError("No profile found")
+        }
+        let msisdn = profile.msisdn
+        let clientId = profile
+        Task{
+//            let result = try await homeUsecase(serviceId: serviceId, msisdn: msisdn, clientId: clientId)
+//            dueBill = result
+        }
     }
 }

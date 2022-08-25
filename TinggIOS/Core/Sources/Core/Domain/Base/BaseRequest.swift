@@ -16,42 +16,33 @@ public class BaseRequest: ObservableObject, TinggApiServices {
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
         request(tinggRequest: tinggRequest)
-            .validate(statusCode: 200..<300)
-            .responseDecodable(of: T.self) { response in
-                switch response.result {
-                case .failure(let error):
-                    print("response \(error)")
-                    onCompletion(.failure(.networkError(error.localizedDescription)))
-                case .success(let baseResponse):
-                    onCompletion(.success(baseResponse))
-                }
+            .execute { (result:Result<T, ApiError>) in
+                onCompletion(result)
             }
     }
     public func makeRequest<T: BaseDTOprotocol>(
-        urlPath: String? = nil,
+        urlPath: String,
         tinggRequest: TinggRequest,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
-        var apiRequest: DataRequest
-        if urlPath == nil {
-            apiRequest =  request(tinggRequest: tinggRequest)
-        }
-        else {
-            guard let url = urlPath else {
-                fatalError("Invalid url")
+       request(urlPath: urlPath, tinggRequest: tinggRequest)
+            .execute { (result:Result<T, ApiError>) in
+                onCompletion(result)
             }
-            apiRequest = request(urlPath: url, tinggRequest: tinggRequest)
-        }
-        apiRequest
-            .validate(statusCode: 200..<300)
-            .responseDecodable(of: T.self) { response in
-                switch response.result {
-                case .failure(let error):
-                    print("response \(error)")
-                    onCompletion(.failure(.networkError(error.localizedDescription)))
-                case .success(let baseResponse):
-                    onCompletion(.success(baseResponse))
-                }
+    }
+}
+
+extension DataRequest {
+    func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
+        validate(statusCode: 200..<300)
+        responseDecodable(of: T.self) { response in
+            switch response.result {
+            case .failure(let error):
+                print("response \(error)")
+                onCompletion(.failure(.networkError(error.localizedDescription)))
+            case .success(let baseResponse):
+                onCompletion(.success(baseResponse))
             }
+        }
     }
 }

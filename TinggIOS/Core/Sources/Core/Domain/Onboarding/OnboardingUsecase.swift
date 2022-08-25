@@ -11,7 +11,6 @@ public class OnboardingUsecaseImpl: OnboardingUseCase {
     let getCountriesUsecase: GetCountriesUsecase
     let authenticateUsecase: AuthenticateUsecase
     let parUsecase: PARAndFSUUsecase
-    var tinggRequest: TinggRequest = .init()
     public init (getCountriesUsecase: GetCountriesUsecase, authenticateUsecase: AuthenticateUsecase, parUsecase: PARAndFSUUsecase) {
         self.getCountriesUsecase = getCountriesUsecase
         self.authenticateUsecase = authenticateUsecase

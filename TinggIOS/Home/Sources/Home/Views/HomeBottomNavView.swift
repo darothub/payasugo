@@ -9,7 +9,7 @@ import SwiftUI
 import Core
 import Theme
 public struct HomeBottomNavView: View {
-    @StateObject var hvm: HomeViewModel = .init()
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     public init() {
         // Intentionally unimplemented...modular accessibility
     }

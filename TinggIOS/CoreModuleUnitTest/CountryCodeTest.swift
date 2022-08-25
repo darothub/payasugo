@@ -6,7 +6,6 @@
 //
 // swiftlint:disable all
 import XCTest
-import Core
 import Common
 
 class CountryCodeTest: XCTestCase {

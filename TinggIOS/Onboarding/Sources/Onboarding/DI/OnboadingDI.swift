@@ -12,9 +12,6 @@ public struct OnboardingDI {
     public init() {
         //public init
     }
-    public static func createApiServices() -> TinggApiServices {
-        return BaseRepository()
-    }
     public static func createRealmManager() -> RealmManager {
         return RealmManager()
     }

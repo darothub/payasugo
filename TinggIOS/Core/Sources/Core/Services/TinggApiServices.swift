@@ -23,19 +23,3 @@ extension TinggApiServices {
     }
 }
 
-public struct TinggApiServicesKey: EnvironmentKey {
-    public static let defaultValue: TinggApiServices = BaseRepository()
-}
-
-public extension EnvironmentValues {
-    var tinggApiServices: TinggApiServices {
-        get { self[TinggApiServicesKey.self] }
-        set { self[TinggApiServicesKey.self] = newValue }
-    }
-}
-
-extension View {
-    public func tinggApiServices(_ tinggApiServices: TinggApiServices) -> some View {
-        environment(\.tinggApiServices, tinggApiServices)
-    }
-}

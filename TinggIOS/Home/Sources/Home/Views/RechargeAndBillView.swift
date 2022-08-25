@@ -47,6 +47,6 @@ struct RechargeAndBillView: View {
 struct RechargeAndBillView_Previews: PreviewProvider {
     static var previews: some View {
         RechargeAndBillView()
-            .environmentObject(HomeViewModel())
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
