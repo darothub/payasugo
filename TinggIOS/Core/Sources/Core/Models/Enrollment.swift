@@ -9,13 +9,14 @@ import Foundation
 import RealmSwift
 // MARK: - Enrollment
 public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
+    @Persisted public var id: ObjectId
     @Persisted public var merchantName: String?
-    @Persisted(primaryKey: true) public var merchantID: Int?
+    @Persisted public var merchantID: Int?
     @Persisted public var merchantCode: String?
     @Persisted public var serviceName: String?
-    @Persisted public var hubServiceID: Int?
+    @Persisted public var hubServiceID: Int = 0
     @Persisted public var serviceCode: String?
-    @Persisted public var accountNumber: String?
+    @Persisted(primaryKey: true) public var accountNumber: String?
     @Persisted public var accountName: String?
     @Persisted public var accountAlias: String?
     @Persisted public var accountID: String?

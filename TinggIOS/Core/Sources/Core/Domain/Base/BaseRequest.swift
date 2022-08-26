@@ -45,9 +45,10 @@ extension DataRequest {
         responseDecodable(of: T.self) { response in
             switch response.result {
             case .failure(let error):
-                print("response \(error)")
+                print("responseError \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
             case .success(let baseResponse):
+                print("responseSuccess \(baseResponse)")
                 onCompletion(.success(baseResponse))
             }
         }

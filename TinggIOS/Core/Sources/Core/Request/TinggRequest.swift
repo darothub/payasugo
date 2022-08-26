@@ -25,32 +25,10 @@ public struct TinggRequest: Encodable {
     public var apiLevel: String = "15"
     public var isExplicit = "1"
     public var dataSource: String? = AppStorageManager.getActiveCountry()
-    
+    public var billAccounts: [BillAccount]?
+    public static var shared = TinggRequest()
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
-    }
-    public mutating func getActivationCode(service: String, msisdn: String, clientId: String) {
-        self.service = service
-        self.msisdn = msisdn
-        self.clientId = clientId
-    }
-    public mutating func confirmActivationCode(service: String, msisdn: String, clientId: String, code: String) {
-        self.service = service
-        self.msisdn = msisdn
-        self.clientId = clientId
-        self.activationCode = code
-    }
-    public mutating func makePARRequest(dataSource: String, msisdn: String, clientId: String) {
-        self.service = "PAR"
-        self.dataSource = dataSource
-        self.msisdn = msisdn
-        self.clientId = clientId
-    }
-    public mutating func createNewRequest(serviceId: String, msisdn: String, clientId: String){
-        self.service = serviceId
-        self.msisdn = msisdn
-        self.clientId = clientId
-        self.accountNumber = msisdn
     }
     enum CodingKeys: String, CodingKey {
         case service = "SERVICE"
@@ -70,9 +48,22 @@ public struct TinggRequest: Encodable {
         case isExplicit = "IS_EXPLICIT"
         case activationCode = "ACTIVATION_CODE"
         case dataSource = "DATA_SOURCE"
+        case billAccounts = "BILL_ACCOUNTS"
     }
 }
 
+public struct BillAccount: Codable {
+    public let serviceId: String
+    public let accountNumber: String
+    public init(serviceId: String, accountNumber: String){
+        self.serviceId = serviceId
+        self.accountNumber = accountNumber
+    }
+    enum CodingKeys: String, CodingKey {
+        case serviceId = "SERVICE_ID"
+        case accountNumber = "ACCOUNT_NUMBER"
+    }
+}
 func modelIdentifier() -> String {
     if let simulatorModelIdentifier = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] {
         return simulatorModelIdentifier }

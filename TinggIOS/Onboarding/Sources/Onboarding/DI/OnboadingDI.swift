@@ -24,6 +24,7 @@ public struct OnboardingDI {
             realmManager: createRealmManager()
         )
     }
+    @MainActor
     public static func createOnboardingViewModel() -> OnboardingViewModel {
         return OnboardingViewModel(onboardingUseCase: createOnboardingUseCase())
     }

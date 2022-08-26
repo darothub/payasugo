@@ -20,6 +20,7 @@ public struct HomeDI {
     public static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecaseImpl(fetchDueBillUsecase: createFetchBillUsecase())
     }
+    @MainActor
     public static func createHomeViewModel() -> HomeViewModel {
         return HomeViewModel(homeUsecase: createHomeUsecase())
     }

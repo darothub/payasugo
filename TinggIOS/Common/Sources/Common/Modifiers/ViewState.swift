@@ -56,7 +56,7 @@ public struct ViewState: ViewModifier {
                     buttonEvent()
                 }
             case .nothing:
-                EmptyView()
+                content
             }
         }
     }

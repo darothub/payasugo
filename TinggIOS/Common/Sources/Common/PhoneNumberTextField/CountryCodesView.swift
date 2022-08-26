@@ -29,11 +29,11 @@ public struct CountryCodesView: View {
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text(countryCode.isEmpty ? "🇧🇼 +267" : "\(countryFlag) +\(countryCode)")
+                Text("\(countryFlag) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
-                    .foregroundColor(countryCode.isEmpty ? .secondary : .black)
+                    .foregroundColor(.black)
                     .onTapGesture {
                         showPhoneSheet.toggle()
                     }
@@ -42,6 +42,7 @@ public struct CountryCodesView: View {
                 TextField("Phone Number", text: $phoneNumber)
                     .padding()
                     .keyboardType(.phonePad)
+                    .foregroundColor(.black)
                     .onChange(of: phoneNumber) { newValue in
                         checkLength(newValue)
                     }
@@ -64,7 +65,7 @@ public struct CountryCodesView: View {
         if let flag = sortedCountries.first?.key {
             countryFlag = getFlag(country: flag)
         }
-        if let code = sortedCountries.first?.value{
+        if let code = sortedCountries.first?.value {
             countryCode = code
         }
     }

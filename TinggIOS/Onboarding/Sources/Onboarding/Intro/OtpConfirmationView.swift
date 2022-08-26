@@ -72,10 +72,11 @@ public struct OtpConfirmationView: View {
             print("OTP \(data)")
             if data is BaseDTO, data.statusMessage.lowercased().contains("confirm") {
                 print("OTPInside \(data)")
-                otpConfirmed.toggle()
-                $onboardingViewModel.showOTPView.wrappedValue = false
+                DispatchQueue.main.async {
+                    otpConfirmed.toggle()
+                    $onboardingViewModel.showOTPView.wrappedValue = false
+                }
             }
-            print("OTPAfter \(data)")
         }
     }
 }

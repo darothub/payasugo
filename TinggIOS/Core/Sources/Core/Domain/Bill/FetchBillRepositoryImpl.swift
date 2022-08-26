@@ -13,7 +13,7 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
     }
     fileprivate func fetchDueBillsDTO(tinggRequest: TinggRequest) async throws ->  FetchBillDTO {
         return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(tinggRequest: .init()) { (result: Result<FetchBillDTO, ApiError>) in
+            baseRequest.makeRequest(tinggRequest: tinggRequest) { (result: Result<FetchBillDTO, ApiError>) in
                 continuation.resume(with: result)
             }
         }

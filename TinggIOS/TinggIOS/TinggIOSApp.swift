@@ -31,10 +31,6 @@ struct TinggIOSApp: App {
     fileprivate func appBody() -> some View {
         ZStack {
             NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
-            if navigation.screen != .launch {
-                LaunchScreenView()
-                    .environmentObject(navigation)
-            }
         }
         .onAppear {
               UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
@@ -53,6 +49,8 @@ struct TinggIOSApp: App {
                 .environmentObject(ovm)
         case .launch:
             LaunchScreenView()
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
                 .environmentObject(navigation)
         }
     }

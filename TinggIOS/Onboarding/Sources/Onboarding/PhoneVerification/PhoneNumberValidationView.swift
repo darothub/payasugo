@@ -48,10 +48,6 @@ public struct PhoneNumberValidationView: View {
             }
             .sheet(isPresented: $vm.showOTPView, onDismiss: {
                 if vm.confirmedOTP {
-//                    vm.retainActiveCountry(
-//                        country: vm.currentCountry
-//                    )
-//                    vm.retainPhoneNumber()
                     vm.makePARRequest()
                 }
             }, content: {
@@ -165,7 +161,10 @@ extension PhoneNumberValidationView {
                 vm.saveObjects(data: sortedCategories)
                 vm.saveObjects(data: parResponse.services)
                 vm.saveObjects(data: parResponse.transactionSummaryInfo)
-                vm.saveObjects(data: parResponse.nominationInfo)
+                let nominationInfo = parResponse.nominationInfo.filter { enrolment in
+                    enrolment.isReminder == "0" && enrolment.accountStatus == 1
+                }
+                vm.saveObjects(data: nominationInfo)
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                 vm.save(data: profile)
                 navigation.screen = .home

@@ -10,6 +10,8 @@ import Core
 import Foundation
 import SwiftUI
 import RealmSwift
+
+@MainActor
 public class OnboardingViewModel: ObservableObject {
     @Published var phoneNumber = ""
     @Published var countryCode = "267"
@@ -40,10 +42,9 @@ public class OnboardingViewModel: ObservableObject {
     }
     func makeActivationCodeRequest() {
         uiModel = UIModel.loading
+        var tinggRequest: TinggRequest = .shared
+        tinggRequest.service = "MAK"
         Task {
-            var tinggRequest: TinggRequest = .init()
-            tinggRequest.service = "MAK"
-            print("requestMAK \(tinggRequest)")
             let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
             handleResultState(result as Result<BaseDTO, ApiError>)
         }
@@ -71,11 +72,13 @@ public class OnboardingViewModel: ObservableObject {
         }
     }
     func getCountryDictionary() {
+        uiModel = UIModel.loading
         Task {
             countryDictionary = try await onboardingUseCase.getCountryDictionary()
+            uiModel = UIModel.nothing
         }
     }
-    
+        
     func getCountryByDialCode(dialCode: String) -> Country? {
         return onboardingUseCase.getCountryByDialCode(dialCode: dialCode)
     }
