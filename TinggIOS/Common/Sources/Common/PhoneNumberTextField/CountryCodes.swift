@@ -31,12 +31,12 @@ public struct CountryCodes : View {
             Text("\(getCountryName(countryCode: key) ?? key)")
                 .accessibility(identifier: "countrydialcode")
             Spacer()
-            Text("+\(value)").foregroundColor(.secondary)
+            Text("+\(value)").foregroundColor(.black)
         }.background(Color.white)
             .font(.system(size: 20))
             .onTapGesture {
                 self.countryCode = value
-                self.countryFlag = getFlag(country: key)
+                self.countryFlag = key
                 dismiss()
         }
     }
@@ -47,11 +47,13 @@ public func getCountryName(countryCode: String) -> String? {
     return current.localizedString(forRegionCode: countryCode)
 }
 
-public func getFlag(country:String) -> String {
-    let base : UInt32 = 127397
-    var flag = ""
-    for v in country.unicodeScalars {
-        flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+public func getFlag(country: String) -> String {
+  let base = 127397
+  var tempScalarView = String.UnicodeScalarView()
+  for i in country.utf16 {
+    if let scalar = UnicodeScalar(base + Int(i)) {
+      tempScalarView.append(scalar)
     }
-    return flag
+  }
+  return String(tempScalarView)
 }

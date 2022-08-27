@@ -10,15 +10,16 @@ import Combine
 public struct CountryCodesView: View {
     @Binding public var phoneNumber: String
     @Binding public var countryCode: String
-    @State public var countryFlag = ""
+    @Binding public var countryFlag: String
     public var numberLength = 10
-    @Binding var countries: [String: String]
+    var countries: [String: String]
     @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
-    public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countries: Binding<[String: String]>){
+    public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: [String: String]){
         self._phoneNumber = phoneNumber
         self._countryCode = countryCode
-        self._countries = countries
+        self._countryFlag = countryFlag
+        self.countries = countries
     }
     fileprivate func checkLength(_ newValue: String) {
         if newValue.count > 10 {
@@ -29,7 +30,7 @@ public struct CountryCodesView: View {
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text("\(countryFlag) +\(countryCode)")
+                Text("\(getFlag(country: countryFlag)) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
@@ -55,7 +56,7 @@ public struct CountryCodesView: View {
                 countries: countries
             )
         }
-        .task {
+        .onAppear {
             getCountryCode()
         }
     }
@@ -63,7 +64,7 @@ public struct CountryCodesView: View {
     func getCountryCode () {
         let sortedCountries = countries.sorted(by: <)
         if let flag = sortedCountries.first?.key {
-            countryFlag = getFlag(country: flag)
+            countryFlag = flag
         }
         if let code = sortedCountries.first?.value {
             countryCode = code
@@ -75,10 +76,11 @@ struct SwiftUIView_Previews: PreviewProvider {
     struct CountryViewHolder: View {
         @State var number = ""
         @State var code = ""
+        @State var flag = "NG"
         @State var countries = [String:String]()
 
         var body: some View {
-            CountryCodesView(phoneNumber: $number, countryCode: $code, countries: $countries)
+            CountryCodesView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
         }
     }
     static var previews: some View {

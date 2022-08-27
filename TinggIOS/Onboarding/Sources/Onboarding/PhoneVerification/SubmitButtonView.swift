@@ -23,7 +23,6 @@ struct SubmitButtonView: View {
                   onboardingViewModel.retainPhoneNumber()
                   onboardingViewModel.saveActiveCountry(countryName: onboardingViewModel.currentCountry.name!)
                   onboardingViewModel.saveClientId(clientId: onboardingViewModel.currentCountry.mulaClientID!)
-                  print("CountryCodeInSubmitView\(onboardingViewModel.countryCode)")
                   onboardingViewModel.makeActivationCodeRequest()
                   
               }

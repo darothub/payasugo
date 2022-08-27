@@ -14,7 +14,8 @@ import RealmSwift
 @MainActor
 public class OnboardingViewModel: ObservableObject {
     @Published var phoneNumber = ""
-    @Published var countryCode = "267"
+    @Published var countryCode = ""
+    @Published var countryFlag = ""
     @Published var showLoader = false
     @Published var showOTPView = false
     @Published var showError = false
@@ -42,7 +43,7 @@ public class OnboardingViewModel: ObservableObject {
     }
     func makeActivationCodeRequest() {
         uiModel = UIModel.loading
-        var tinggRequest: TinggRequest = .shared
+        var tinggRequest: TinggRequest = .init()
         tinggRequest.service = "MAK"
         Task {
             let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)

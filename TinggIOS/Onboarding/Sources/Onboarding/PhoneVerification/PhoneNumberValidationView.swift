@@ -27,7 +27,15 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 topView(geo: geometry)
                 MobileNumberView()
-                countryCodeViewActions()
+                CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countryFlag: $vm.countryFlag, countries: vm.countryDictionary)
+                    .countryFieldViewStyle(
+                        CountryViewDropDownStyle(
+                            isValidPhoneNumber: $vm.isValidPhoneNumber
+                        )
+                    )
+                    .onChange(of: vm.phoneNumber) { number in
+                        vm.verifyPhoneNumber(number: number)
+                    }
                 VerificationCodeAdviceTextView()
                 PolicySectionView()
                     .environmentObject(vm)
@@ -72,15 +80,7 @@ public struct PhoneNumberValidationView: View {
     }
     @ViewBuilder
     fileprivate func countryCodeViewActions() -> some View {
-        CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countries: $vm.countryDictionary)
-            .countryFieldViewStyle(
-                CountryViewDropDownStyle(
-                    isValidPhoneNumber: $vm.isValidPhoneNumber
-                )
-            )
-            .onChange(of: vm.phoneNumber) { number in
-                vm.verifyPhoneNumber(number: number)
-            }
+        
     }
     @ViewBuilder
     fileprivate func topView(geo: GeometryProxy) -> some View {
