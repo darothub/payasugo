@@ -73,7 +73,7 @@ struct DueBillsView: View {
 
 struct DueBillsView_Previews: PreviewProvider {
     static var previews: some View {
-        DueBillCardView()
+        DueBillsView()
     }
 }
 
