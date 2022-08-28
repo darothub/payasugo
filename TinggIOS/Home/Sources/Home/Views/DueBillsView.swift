@@ -7,8 +7,10 @@
 
 import SwiftUI
 import Theme
+import Core
 struct DueBillsView: View {
-    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @State var fetchedBill = [FetchedBill]()
+    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
@@ -22,23 +24,56 @@ struct DueBillsView: View {
                         .font(.caption)
                 }
             }
-            ForEach(hvm.dueBill, id: \.billReference) { bill in
-                DueBillCardView()
+            ForEach(fetchedBill, id: \.billReference) { bill in
+                let now = Date()
+                let updatedTime = updatedTimeInUnits(time: homeViewModel.updatedTime)
+                let dueDate = makeDateFromString(validDateString: bill.dueDate)
+                let dueDays = abs(dueDate - now)
+                let dueDaysString = dueDayString(dueDaysNumber: dueDays.day)
+                
+                DueBillCardView(serviceName: bill.biller, serviceImageString: "", updatedTime: "\(updatedTime)", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount: bill.currency+"0.0", dueDate: dueDaysString)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
                     )
             }
+            .onReceive(homeViewModel.timer) { latest in
+                homeViewModel.updatedTime += 1
+            }
           
         }.padding()
     }
+    func updatedTimeInUnits(time: Int) -> String {
+      
+        if time > 3599 {
+            return "\(time / 3600) hours ago"
+        }
+        else if time > 59 {
+            return "\(time / 60) mins ago"
+        }
+        else {
+            return "\(time) seconds ago"
+        }
+    }
+    
+    func dueDayString(dueDaysNumber: Int) -> String {
+        print("Number \(dueDaysNumber)")
+        if dueDaysNumber < 1 {
+            return "today"
+        }
+        else if dueDaysNumber == 1 {
+            return "tomorrow"
+        }
+        else {
+            return String(dueDaysNumber)+"days"
+        }
+    }
 }
-
 
 struct DueBillsView_Previews: PreviewProvider {
     static var previews: some View {
-        DueBillsView()
+        DueBillCardView()
     }
 }
 
@@ -61,7 +96,7 @@ struct DueBillCardView: View {
             Spacer()
             RightHandSideView(amount: amount, dueDate: dueDate)
         }.frame(maxWidth: .infinity)
-            .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
+        .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
     }
 }
 struct LeftHandSideView: View {

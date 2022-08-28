@@ -27,7 +27,6 @@ struct SubmitButtonView: View {
                   onboardingViewModel.saveClientId(clientId: onboardingViewModel.currentCountry.mulaClientID!)
                   onboardingViewModel.makeActivationCodeRequest()
                   observeUIModel()
-                  
               }
           }.keyboardShortcut(.return)
             .accessibility(identifier: "continuebtn")

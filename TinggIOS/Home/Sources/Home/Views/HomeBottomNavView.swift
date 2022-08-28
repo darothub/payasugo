@@ -44,7 +44,6 @@ public struct HomeBottomNavView: View {
                     )
             }
         }.navigationBarBackButtonHidden(true)
-        .handleViewState(uiModel: $hvm.uiModel)
     }
 }
 

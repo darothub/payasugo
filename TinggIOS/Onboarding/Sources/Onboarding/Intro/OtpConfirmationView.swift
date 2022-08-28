@@ -39,20 +39,12 @@ public struct OtpConfirmationView: View {
                 buttonLabel: "Confirm"
             ) {
                 onboardingViewModel.confirmActivationCodeRequest(code: otp)
-                onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
-                    DispatchQueue.main.async {
-                        onboardingViewModel.confirmedOTP = true
-                        onboardingViewModel.showOTPView = false
-                    }
-                }
+                observingUIModel()
             }.handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
         }
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
-        }
-        .onAppear {
-       
         }
     }
     fileprivate func resetTimer() {
@@ -73,14 +65,10 @@ public struct OtpConfirmationView: View {
         }
     }
     fileprivate func observingUIModel() {
-        onboardingViewModel.observeUIModel { data in
-            print("OTP \(data)")
-            if data is BaseDTO, data.statusMessage.lowercased().contains("confirm") {
-                print("OTPInside \(data)")
-                DispatchQueue.main.async {
-                    otpConfirmed.toggle()
-                    $onboardingViewModel.showOTPView.wrappedValue = false
-                }
+        onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
+            DispatchQueue.main.async {
+                onboardingViewModel.confirmedOTP = true
+                onboardingViewModel.showOTPView = false
             }
         }
     }

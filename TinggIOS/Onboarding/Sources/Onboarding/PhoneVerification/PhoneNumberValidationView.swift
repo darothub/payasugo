@@ -69,23 +69,16 @@ public struct PhoneNumberValidationView: View {
             .background(PrimaryTheme.getColor(.tinggwhite))
             .handleViewState(uiModel: $vm.uiModel)
             .onAppear {
-                vm.observeUIModel(model: vm.$uiModel) { dto in
-                    confirmRegistration(data: dto)
-                }
+                observeUIModel()
             }
         }
     }
-    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
-        vm.$phoneNumberFieldUIModel.sink { uiModel in
-            vm.uiModelCases(uiModel: uiModel, action: action)
-        }.store(in: &subscriptions)
-    }
-    
-    fileprivate func observingUIModel() {
-        vm.observeUIModel { data in
-            confirmRegistration(data: data)
+    func observeUIModel() {
+        vm.observeUIModel(model: vm.$uiModel) { dto in
+            confirmRegistration(data: dto)
         }
     }
+    
     @ViewBuilder
     fileprivate func countryCodeViewActions() -> some View {
         

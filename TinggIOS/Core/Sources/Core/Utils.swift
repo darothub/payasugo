@@ -21,3 +21,4 @@ public class NavigationUtils: ObservableObject {
         // Intentionally unimplemented...needed for modular accessibility
     }
 }
+

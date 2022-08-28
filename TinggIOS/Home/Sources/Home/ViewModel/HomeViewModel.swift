@@ -21,8 +21,10 @@ public class HomeViewModel: ObservableObject {
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
     @Published public var dueBill = [FetchedBill]()
-    @Published var uiModel = UIModel.nothing
-    @Published public var subscription = Set<AnyCancellable>()
+    @Published var fetchBillUIModel = UIModel.nothing
+    @Published public var subscriptions = Set<AnyCancellable>()
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @Published var updatedTime = 0
     public var homeUsecase: HomeUsecase
 
     public init(homeUsecase: HomeUsecase) {
@@ -33,6 +35,8 @@ public class HomeViewModel: ObservableObject {
         displayedRechargeAndBill()
         fetchDueBills()
     }
+    
+
     public func getProfile() {
         guard let profile = profiles.first else {
 //            fatalError("No profile found")
@@ -48,7 +52,7 @@ public class HomeViewModel: ObservableObject {
             promise(.success(services.filter { $0.categoryID == theAirtimeCategory.categoryID}))
         }
         .assign(to: \.airTimeServices, on: self)
-        .store(in: &subscription)
+        .store(in: &subscriptions)
         return
     }
     public func mapHistoryIntoChartData() -> [ChartData] {
@@ -77,12 +81,12 @@ public class HomeViewModel: ObservableObject {
             promise(.success(services.prefix(8).shuffled()))
         }
         .assign(to: \.rechargeAndBill, on: self)
-        .store(in: &subscription)
+        .store(in: &subscriptions)
         return
     }
     
     public func fetchDueBills()  {
-        uiModel = UIModel.loading
+        fetchBillUIModel = UIModel.loading
         let enrollments =  services.flatMap { service in
             self.nominationInfo.filter {enrollment  in
                 (String(enrollment.hubServiceID) == service.hubServiceID)  && service.presentmentType == "hasPresentment"
@@ -98,32 +102,40 @@ public class HomeViewModel: ObservableObject {
         Task {
             do {
                 dueBill = try await homeUsecase.fetchDueBill(tinggRequest: tinggRequest)
-                uiModel = UIModel.nothing
+                dueBill = dueBill.filter { bill in
+                    let daysDiff = abs((makeDateFromString(validDateString: bill.dueDate) - Date()).day)
+                    print("HomeVm: daysDiff \(daysDiff)")
+                     return daysDiff <= 5
+                }
+                fetchBillUIModel = UIModel.nothing
                 print("HomeVm: FetchBills \(dueBill)")
             } catch {
                 print("HoneVm: Error \(error)")
-                uiModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error")
+                fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error")
             }
         }
     }
-    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
-        $uiModel.sink { uiModel in
-            switch uiModel {
-            case .content(let data):
-                if data.statusMessage.lowercased().contains("succ"),
-                   let baseDto = data.data as? BaseDTOprotocol {
-                    action(baseDto)
-                }
-                return
-            case .loading:
-                print("loadingState")
-            case .error:
-                print("errorState")
-                return
-            case .nothing:
-                print("nothingState")
+    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {
+        model.sink { [unowned self] uiModel in
+            uiModelCases(uiModel: uiModel, action: action)
+        }.store(in: &subscriptions)
+    }
+    func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
+        switch uiModel {
+        case .content(let data):
+            if data.statusMessage.lowercased().contains("succ"),
+               let baseDto = data.data as? BaseDTOprotocol {
+                action(baseDto)
             }
-        }.store(in: &subscription)
+            return
+        case .loading:
+            print("loadingState")
+        case .error:
+            print("errorState")
+            return
+        case .nothing:
+            print("nothingState")
+        }
     }
 }
 

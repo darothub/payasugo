@@ -27,7 +27,7 @@ public struct ViewState: ViewModifier {
             case .loading:
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
-                    .scaleEffect(3)
+                    .scaleEffect(2)
             case .content(let data):
                 let message = data.statusMessage.lowercased().contains("succ") ? "" : data.statusMessage
                 if !message.isEmpty {

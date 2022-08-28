@@ -85,23 +85,6 @@ public class OnboardingViewModel: ObservableObject {
     func getCountryByDialCode(dialCode: String) -> Country? {
         return onboardingUseCase.getCountryByDialCode(dialCode: dialCode)
     }
-    fileprivate func handleResultState<T: BaseDTOprotocol>(_ result: Result<T, ApiError>) {
-        DispatchQueue.main.async { [unowned self] in
-            self.showLoader = false
-            switch result {
-            case .failure(let apiError):
-                uiModel = UIModel.error(apiError.localizedString)
-                print("Failure \(apiError.localizedString)")
-                return
-            case .success(let data):
-                print("Success \(data)")
-                let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
-                uiModel = UIModel.content(content)
-                return
-            }
-        }
-    }
-    @MainActor
     fileprivate func handleResultState<T: BaseDTOprotocol>(model: inout UIModel, _ result: Result<T, ApiError>) {
         switch result {
         case .failure(let apiError):
@@ -115,12 +98,8 @@ public class OnboardingViewModel: ObservableObject {
             return
         }
     }
-    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
-        $uiModel.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action)
-        }.store(in: &subscriptions)
-    }
-    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {        model.sink { [unowned self] uiModel in
+    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {
+        model.sink { [unowned self] uiModel in
             uiModelCases(uiModel: uiModel, action: action)
         }.store(in: &subscriptions)
     }

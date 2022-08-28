@@ -21,6 +21,9 @@ struct HomeView: View {
     var airtimeServices: [MerchantService] {
         hvm.airTimeServices
     }
+    var fetchedBill: [FetchedBill] {
+        hvm.dueBill
+    }
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -33,12 +36,21 @@ struct HomeView: View {
                         .background(.white)
                         .shadow(radius: 0, y: 3)
                         .padding(.vertical, 10)
+                    
                     QuickTopupView(airtimeServices: airtimeServices)
                         .background(
                             RoundedRectangle(cornerRadius: 0)
                                 .foregroundColor(.white)
                                 .shadow(radius: 3, x: 0, y: 3)
                         )
+                    DueBillsView(fetchedBill: fetchedBill)
+                        .background(
+                            RoundedRectangle(cornerRadius: 0)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3, x: 0, y: 3)
+                        )
+                        .frame(maxWidth: .infinity)
+                        .handleViewState(uiModel: $hvm.fetchBillUIModel)
                     RechargeAndBillView()
                         .background(
                             RoundedRectangle(cornerRadius: 0)
