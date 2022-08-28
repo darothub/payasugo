@@ -8,6 +8,7 @@
 import SwiftUI
 import Theme
 struct DueBillsView: View {
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
@@ -21,12 +22,15 @@ struct DueBillsView: View {
                         .font(.caption)
                 }
             }
-            DueBillCardView()
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                    .foregroundColor(.white)
-                    .shadow(radius: 3, x: 0, y: 3)
-                )
+            ForEach(hvm.dueBill, id: \.billReference) { bill in
+                DueBillCardView()
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.white)
+                        .shadow(radius: 3, x: 0, y: 3)
+                    )
+            }
+          
         }.padding()
     }
 }
@@ -40,47 +44,61 @@ struct DueBillsView_Previews: PreviewProvider {
 
 
 struct DueBillCardView: View {
+    @State var serviceName: String = ""
+    @State var serviceImageString = ""
+    @State var updatedTime = ""
+    @State var beneficiaryName = ""
+    @State var accountNumber = ""
+    @State var amount = "0.0"
+    @State var dueDate = "today"
     var body: some View {
         HStack {
             Rectangle()
                      .fill(Color.red)
                      .frame(width: 10, height: 90)
                      .cornerRadius(20, corners: [.topRight, .bottomRight])
-            LeftHandSideView()
+            LeftHandSideView(serviceName: serviceName, serviceImageString: serviceImageString, updatedTime: updatedTime, beneficiaryName: beneficiaryName, accountNumber: accountNumber)
             Spacer()
-            RightHandSideView()
+            RightHandSideView(amount: amount, dueDate: dueDate)
         }.frame(maxWidth: .infinity)
             .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
     }
 }
 struct LeftHandSideView: View {
+    @State var serviceName: String = ""
+    @State var serviceImageString = ""
+    @State var updatedTime = ""
+    @State var beneficiaryName = ""
+    @State var accountNumber = ""
     var body: some View {
         HStack(alignment: .top) {
-            RemoteImageCard(imageUrl: "")
+            RemoteImageCard(imageUrl: serviceImageString)
             VStack(alignment: .leading) {
-                Text("ServiceName")
+                Text("\(serviceName)")
                     .bold()
                     .font(.caption)
-                Text("Updated at: ")
+                Text("Updated at: \(updatedTime)")
                     .font(.caption)
-                Text("Beneficiary Name")
+                Text("\(beneficiaryName)")
                     .bold()
                     .textCase(.uppercase)
                     .font(.caption)
-                Text("Acc No:")
+                Text("Acc No: \(accountNumber)")
                     .font(.caption)
             }
         }
     }
 }
 struct RightHandSideView: View {
+    @State var amount = "0.0"
+    @State var dueDate = "today"
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Amount")
+            Text("\(amount)")
                 .bold()
                 .textCase(.uppercase)
                 .font(.caption)
-            Text("Due date")
+            Text("Due: \(dueDate)")
                 .font(.caption)
                 .foregroundColor(.red)
             Button {

@@ -18,6 +18,7 @@ public struct PhoneNumberValidationView: View {
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
+    @State private var subscriptions = Set<AnyCancellable>()
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -35,7 +36,7 @@ public struct PhoneNumberValidationView: View {
                     )
                     .onChange(of: vm.phoneNumber) { number in
                         vm.verifyPhoneNumber(number: number)
-                    }
+                    }.handleViewState(uiModel: $vm.phoneNumberFieldUIModel)
                 VerificationCodeAdviceTextView()
                 PolicySectionView()
                     .environmentObject(vm)
@@ -68,9 +69,16 @@ public struct PhoneNumberValidationView: View {
             .background(PrimaryTheme.getColor(.tinggwhite))
             .handleViewState(uiModel: $vm.uiModel)
             .onAppear {
-                observingUIModel()
+                vm.observeUIModel(model: vm.$uiModel) { dto in
+                    confirmRegistration(data: dto)
+                }
             }
         }
+    }
+    func observeUIModel(action: @escaping (BaseDTOprotocol) -> Void) {
+        vm.$phoneNumberFieldUIModel.sink { uiModel in
+            vm.uiModelCases(uiModel: uiModel, action: action)
+        }.store(in: &subscriptions)
     }
     
     fileprivate func observingUIModel() {
@@ -146,11 +154,6 @@ extension PhoneNumberValidationView {
             }
     }
     func confirmRegistration(data: BaseDTOprotocol) {
-        if data is BaseDTO {
-            $vm.showOTPView.wrappedValue = true
-        } else {
-            $vm.showOTPView.wrappedValue = false
-        }
         if let parResponse = data as? PARAndFSUDTO, !vm.showOTPView && vm.confirmedOTP  {
             Task {
                 let sortedCategories = parResponse.categories.sorted { category1, category2 in

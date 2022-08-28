@@ -4,12 +4,14 @@
 //
 //  Created by Abdulrasaq on 04/08/2022.
 //
+import Combine
 import Common
 import Core
 import SwiftUI
 import Theme
 struct SubmitButtonView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
+    @State private var subscriptions = Set<AnyCancellable>()
     var body: some View {
         NavigationLink(
             destination: IntroView(),
@@ -24,10 +26,22 @@ struct SubmitButtonView: View {
                   onboardingViewModel.saveActiveCountry(countryName: onboardingViewModel.currentCountry.name!)
                   onboardingViewModel.saveClientId(clientId: onboardingViewModel.currentCountry.mulaClientID!)
                   onboardingViewModel.makeActivationCodeRequest()
+                  observeUIModel()
                   
               }
           }.keyboardShortcut(.return)
             .accessibility(identifier: "continuebtn")
+            }.onAppear {
+          
+            }
+            .handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
+    }
+    
+    func observeUIModel() {
+        onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
+            print("submit \(dto)")
+            onboardingViewModel.showOTPView = true
+
         }
     }
 }

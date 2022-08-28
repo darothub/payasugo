@@ -20,7 +20,7 @@ public struct OtpConfirmationView: View {
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
-    
+    @Environment(\.dismiss) var dismiss
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     public var body: some View {
@@ -39,15 +39,20 @@ public struct OtpConfirmationView: View {
                 buttonLabel: "Confirm"
             ) {
                 onboardingViewModel.confirmActivationCodeRequest(code: otp)
-            }
+                onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
+                    DispatchQueue.main.async {
+                        onboardingViewModel.confirmedOTP = true
+                        onboardingViewModel.showOTPView = false
+                    }
+                }
+            }.handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
         }
-        .handleViewState(uiModel: $onboardingViewModel.uiModel)
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
         }
         .onAppear {
-            observingUIModel()
+       
         }
     }
     fileprivate func resetTimer() {

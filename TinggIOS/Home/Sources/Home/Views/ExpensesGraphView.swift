@@ -9,7 +9,6 @@ import Common
 import SwiftUI
 
 struct ExpensesGraphView: View {
-//    @EnvironmentObject var hvm: HomeViewModel
     var chartData = [ChartData]()
     var body: some View {
         Section{

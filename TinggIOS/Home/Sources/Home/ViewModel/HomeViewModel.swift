@@ -24,6 +24,7 @@ public class HomeViewModel: ObservableObject {
     @Published var uiModel = UIModel.nothing
     @Published public var subscription = Set<AnyCancellable>()
     public var homeUsecase: HomeUsecase
+
     public init(homeUsecase: HomeUsecase) {
         self.homeUsecase = homeUsecase
         processedCategories = categories.reversed().reversed().chunked(into: 4)
@@ -56,11 +57,7 @@ public class HomeViewModel: ObservableObject {
             guard let validDateString = history.paymentDate?.split(separator: ".").first else {
                 fatalError("Invalid date format")
             }
-            let validDate = String(validDateString)
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let date = dateFormatter.date(from: validDate)!
+            let date = makeDateFromString(validDateString: String(validDateString))
             let calendar = Calendar.current
             let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
             let monthIndex = components.month!
@@ -91,40 +88,21 @@ public class HomeViewModel: ObservableObject {
                 (String(enrollment.hubServiceID) == service.hubServiceID)  && service.presentmentType == "hasPresentment"
             }
         }
-        enrollments.forEach { element in
-            print("HomeVm: NominationInfo \(element.hubServiceID)")
-        }
         let billAccounts = enrollments.map { nominationInfo in
             BillAccount(serviceId:String( nominationInfo.hubServiceID), accountNumber: String(nominationInfo.accountNumber!))
         }
-        print("HomeVm: BillAccount \(billAccounts)")
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
         tinggRequest.billAccounts = billAccounts.reversed()
         print("HomeVm: Request \(tinggRequest)")
         Task {
             do {
-                let fetchBills = try await homeUsecase.fetchDueBill(tinggRequest: tinggRequest)
+                dueBill = try await homeUsecase.fetchDueBill(tinggRequest: tinggRequest)
                 uiModel = UIModel.nothing
-                print("HomeVm: FetchBills \(fetchBills)")
+                print("HomeVm: FetchBills \(dueBill)")
             } catch {
                 print("HoneVm: Error \(error)")
                 uiModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error")
-            }
-        }
-    }
-    fileprivate func handleResultState<T: BaseDTOprotocol>(_ result: Result<T, ApiError>) {
-        DispatchQueue.main.async { [unowned self] in
-            switch result {
-            case .failure(let apiError):
-                uiModel = UIModel.error(apiError.localizedString)
-                print("Failure \(apiError.localizedString)")
-                return
-            case .success(let data):
-                print("Success \(data)")
-                let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
-                uiModel = UIModel.content(content)
-                return
             }
         }
     }

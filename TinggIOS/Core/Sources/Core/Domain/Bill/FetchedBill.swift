@@ -8,16 +8,16 @@
 import Foundation
 
 // MARK: - FetchedBill
-public class FetchedBill: Codable {
-    let billDescription, billReference, biller, serviceID: String
-     let customerName, invoiceNumber: String
-//     let amount: Int
-     let currency, dueDate, beepTransactionID, parkingZone: String
-     let vehicleType, callbackData, currentAppVersion: String
-     let isEstimate, estimateAmount: Int
-     let dateEstimated, estimateExpiryDate, lastFetchDate: String
-     let statusCode: Int
-
+public struct FetchedBill: Codable {
+    public let billDescription, billReference, biller, serviceID: String
+    public let customerName, invoiceNumber: String
+    //     public let amount: Int
+    public let currency, dueDate, beepTransactionID, parkingZone: String
+    public let vehicleType, callbackData, currentAppVersion: String
+    public let isEstimate, estimateAmount: Int
+    public let dateEstimated, estimateExpiryDate, lastFetchDate: String
+    public let statusCode: Int
+    
     enum CodingKeys: String, CodingKey {
         case billDescription = "BILL_DESCRIPTION"
         case billReference = "BILL_REFERENCE"
@@ -25,7 +25,7 @@ public class FetchedBill: Codable {
         case serviceID = "SERVICE_ID"
         case customerName = "CUSTOMER_NAME"
         case invoiceNumber = "INVOICE_NUMBER"
-//        case amount = "AMOUNT"
+        //        case amount = "AMOUNT"
         case currency = "CURRENCY"
         case dueDate = "DUE_DATE"
         case beepTransactionID = "BEEP_TRANSACTION_ID"
