@@ -55,11 +55,8 @@ extension LocationManager : CLLocationManagerDelegate{
             .map { $0 == .denied || $0 == .restricted }
             .assign(to: \.locationPermissionDeniedOrRestricted, on: self)
             .store(in: &subscription)
-             break
-                
           case .authorizedWhenInUse, .authorizedAlways:
             locationManager.startUpdatingLocation()
-             break                
           case .notDetermined:
              break
         @unknown default:

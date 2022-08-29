@@ -16,11 +16,24 @@ public struct CheckBoxView: View {
     public var body: some View {
         Image(systemName: checkboxChecked ? "checkmark.square.fill" : "square")
             .foregroundColor(
-                checkboxChecked ? .green : colorScheme == .dark ? .white : .black
+                foregroundColors()
             )
             .onTapGesture {
                 self.checkboxChecked.toggle()
             }
+    }
+    func foregroundColors() -> Color {
+        if checkboxChecked {
+            return .green
+        }
+        else {
+            if colorScheme == .dark {
+                return .white
+            }
+            else {
+                return.black
+            }
+        }
     }
 }
 
