@@ -30,7 +30,7 @@ public struct CountryCodesView: View {
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text("\(getFlag(country: countryFlag)) +\(countryCode)")
+                Text(countryCode.isEmpty ? "🇧🇼 +267" : "\(getFlag(country: countryFlag)) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
