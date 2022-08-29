@@ -11,6 +11,7 @@ import Core
 struct DueBillsView: View {
     @State var fetchedBill = [FetchedBill]()
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var updatedTimeString: String = ""
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
@@ -26,40 +27,26 @@ struct DueBillsView: View {
             }
             ForEach(fetchedBill, id: \.billReference) { bill in
                 let now = Date()
-                let updatedTime = updatedTimeInUnits(time: homeViewModel.updatedTime)
                 let dueDate = makeDateFromString(validDateString: bill.dueDate)
-                let dueDays = abs(dueDate - now)
+                let dueDays = dueDate - now
                 let dueDaysString = dueDayString(dueDaysNumber: dueDays.day)
                 
-                DueBillCardView(serviceName: bill.biller, serviceImageString: "", updatedTime: "\(updatedTime)", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount: bill.currency+"0.0", dueDate: dueDaysString)
+                DueBillCardView(serviceName: bill.biller, serviceImageString: "", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount: bill.currency+"0.0", dueDate: dueDaysString, updatedTimeString: $updatedTimeString)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
                     )
             }
-            .onReceive(homeViewModel.timer) { latest in
-                homeViewModel.updatedTime += 1
-            }
           
         }.padding()
     }
-    func updatedTimeInUnits(time: Int) -> String {
-      
-        if time > 3599 {
-            return "\(time / 3600) hours ago"
-        }
-        else if time > 59 {
-            return "\(time / 60) mins ago"
-        }
-        else {
-            return "\(time) seconds ago"
-        }
-    }
-    
     func dueDayString(dueDaysNumber: Int) -> String {
         print("Number \(dueDaysNumber)")
-        if dueDaysNumber < 1 {
+        if dueDaysNumber < 0 {
+            return "\(abs(dueDaysNumber)) day(s) ago"
+        }
+        else if dueDaysNumber == 0 {
             return "today"
         }
         else if dueDaysNumber == 1 {
@@ -86,13 +73,14 @@ struct DueBillCardView: View {
     @State var accountNumber = ""
     @State var amount = "0.0"
     @State var dueDate = "today"
+    @Binding var updatedTimeString: String
     var body: some View {
         HStack {
             Rectangle()
                      .fill(Color.red)
                      .frame(width: 10, height: 90)
                      .cornerRadius(20, corners: [.topRight, .bottomRight])
-            LeftHandSideView(serviceName: serviceName, serviceImageString: serviceImageString, updatedTime: updatedTime, beneficiaryName: beneficiaryName, accountNumber: accountNumber)
+            LeftHandSideView(serviceName: serviceName, serviceImageString: serviceImageString, beneficiaryName: beneficiaryName, accountNumber: accountNumber, updatedTimeString: $updatedTimeString)
             Spacer()
             RightHandSideView(amount: amount, dueDate: dueDate)
         }.frame(maxWidth: .infinity)
@@ -102,9 +90,12 @@ struct DueBillCardView: View {
 struct LeftHandSideView: View {
     @State var serviceName: String = ""
     @State var serviceImageString = ""
-    @State var updatedTime = ""
+//    @State var updatedTime = ""
     @State var beneficiaryName = ""
     @State var accountNumber = ""
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var updatedTime: Int = 0
+    @Binding var updatedTimeString: String
     var body: some View {
         HStack(alignment: .top) {
             RemoteImageCard(imageUrl: serviceImageString)
@@ -112,7 +103,7 @@ struct LeftHandSideView: View {
                 Text("\(serviceName)")
                     .bold()
                     .font(.caption)
-                Text("Updated at: \(updatedTime)")
+                Text("Updated at: \(updatedTimeString)")
                     .font(.caption)
                 Text("\(beneficiaryName)")
                     .bold()
@@ -121,6 +112,21 @@ struct LeftHandSideView: View {
                 Text("Acc No: \(accountNumber)")
                     .font(.caption)
             }
+        }.onReceive(timer) { latest in
+            updatedTime += 1
+            updatedTimeString = updatedTimeInUnits(time: updatedTime)
+        }
+    }
+    func updatedTimeInUnits(time: Int) -> String {
+      
+        if time > 3599 {
+            return "\(time / 3600) hours ago"
+        }
+        else if time > 59 {
+            return "\(time / 60) mins ago"
+        }
+        else {
+            return "\(time) seconds ago"
         }
     }
 }

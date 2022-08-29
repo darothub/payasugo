@@ -23,8 +23,6 @@ public class HomeViewModel: ObservableObject {
     @Published public var dueBill = [FetchedBill]()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published public var subscriptions = Set<AnyCancellable>()
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @Published var updatedTime = 0
     public var homeUsecase: HomeUsecase
 
     public init(homeUsecase: HomeUsecase) {
@@ -104,14 +102,11 @@ public class HomeViewModel: ObservableObject {
                 dueBill = try await homeUsecase.fetchDueBill(tinggRequest: tinggRequest)
                 dueBill = dueBill.filter { bill in
                     let daysDiff = abs((makeDateFromString(validDateString: bill.dueDate) - Date()).day)
-                    print("HomeVm: daysDiff \(daysDiff)")
-                     return daysDiff <= 5
+                    return daysDiff <= 5
                 }
                 fetchBillUIModel = UIModel.nothing
-                print("HomeVm: FetchBills \(dueBill)")
             } catch {
-                print("HoneVm: Error \(error)")
-                fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error")
+                fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
             }
         }
     }

@@ -30,10 +30,8 @@ struct SubmitButtonView: View {
               }
           }.keyboardShortcut(.return)
             .accessibility(identifier: "continuebtn")
-            }.onAppear {
-          
-            }
-            .handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
+        }
+        .handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
     }
     
     func observeUIModel() {
