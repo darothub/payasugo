@@ -12,7 +12,7 @@ struct BarView: View {
     var colors: [Color]
 
     var body: some View {
-        VStack(spacing: 0.0){
+        VStack(spacing: 1.0){
             let point = chartData.point < 1 ? "" : "KES\(String(format: "%.0f", chartData.point))"
             let height = Swift.min(chartData.point/500, 100000)
             Text("\(point)")

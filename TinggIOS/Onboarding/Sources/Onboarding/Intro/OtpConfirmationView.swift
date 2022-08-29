@@ -20,7 +20,9 @@ public struct OtpConfirmationView: View {
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
-    @Environment(\.dismiss) var dismiss
+    @StateObject var otpViewOVM = OnboardingDI.createOnboardingViewModel()
+    @Environment(\.colorScheme) var colorScheme
+    @State var onSubmit = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     public var body: some View {
@@ -30,21 +32,27 @@ public struct OtpConfirmationView: View {
             Divider()
             Text("Enter the code received via SMS\nto confirm request")
                 .smallTextViewStyle(SmallTextStyle())
+                .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             OtpFieldView(fieldSize: $otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
                 .padding(.vertical, 20)
             Text(timeAdvice)
                 .smallTextViewStyle(SmallTextStyle())
+                .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm"
             ) {
-                onboardingViewModel.confirmActivationCodeRequest(code: otp)
-                observingUIModel()
-            }.handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
+                otpViewOVM.confirmActivationCodeRequest(code: otp)
+                print("OTP on`submit \(otp)")
+               
+            }.handleViewState(uiModel: $otpViewOVM.onSubmitUIModel)
         }
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
+        }
+        .onAppear {
+            observingUIModel()
         }
     }
     fileprivate func resetTimer() {
@@ -65,10 +73,11 @@ public struct OtpConfirmationView: View {
         }
     }
     fileprivate func observingUIModel() {
-        onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
+        otpViewOVM.observeUIModel(model: otpViewOVM.$onSubmitUIModel) { dto in
             DispatchQueue.main.async {
-                onboardingViewModel.confirmedOTP = true
+                print("OTP onObserve \(otp)")
                 onboardingViewModel.showOTPView = false
+                onboardingViewModel.confirmedOTP = true
             }
         }
     }

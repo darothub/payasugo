@@ -32,7 +32,7 @@ sonarqube-check:
   allow_failure: true
   only:
     - merge_requests
-    - feature/unit-test # or the name of your main branch
+    - feature/recharge-billpayment # or the name of your main branch
   tags:
     - stage
 

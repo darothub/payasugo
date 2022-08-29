@@ -37,6 +37,7 @@ struct ActiveCategoryView: View {
             }
             Text(title)
                 .font(.caption)
+                .foregroundColor(.black)
             Spacer()
         }
     }

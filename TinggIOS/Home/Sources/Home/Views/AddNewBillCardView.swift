@@ -16,6 +16,7 @@ struct AddNewBillCardView: View {
                     .padding(.horizontal, 10)
                 Text("Pay for bills, food, and enjoy cashless shopping with TinggPay wallet")
                     .font(.system(size: PrimaryTheme.smallTextSize))
+                    .foregroundColor(.black)
             }.padding(20)
             Divider()
             Text("Add a new bill")

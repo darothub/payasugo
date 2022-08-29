@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 26/06/2022.
 //
 // swiftlint:disable all
+import Foundation
 import SwiftUI
 import Combine
 public struct CountryCodesView: View {
@@ -15,6 +16,7 @@ public struct CountryCodesView: View {
     var countries: [String: String]
     @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
+    @Environment(\.colorScheme) var colorScheme
     public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: [String: String]){
         self._phoneNumber = phoneNumber
         self._countryCode = countryCode
@@ -34,19 +36,15 @@ public struct CountryCodesView: View {
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
-                    .foregroundColor(.black)
-                    .onTapGesture {
-                        showPhoneSheet.toggle()
-                    }
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .onTapGesture(perform: tap)
                     .accessibility(identifier: "countrycodeandflag")
                 
                 TextField("Phone Number", text: $phoneNumber)
                     .padding()
                     .keyboardType(.phonePad)
-                    .foregroundColor(.black)
-                    .onChange(of: phoneNumber) { newValue in
-                        checkLength(newValue)
-                    }
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .onChange(of: phoneNumber, perform: change)
                     .accessibility(identifier: "countrytextfield")
             }
         }.sheet(isPresented: $showPhoneSheet) {
@@ -60,8 +58,14 @@ public struct CountryCodesView: View {
             getCountryCode()
         }
     }
+    fileprivate func tap() -> Void {
+        showPhoneSheet.toggle()
+    }
+    fileprivate func change(value: String) -> Void {
+        checkLength(value)
+    }
     
-    func getCountryCode () {
+    fileprivate func getCountryCode () {
         let sortedCountries = countries.sorted(by: <)
         if let flag = sortedCountries.first?.key {
             countryFlag = flag

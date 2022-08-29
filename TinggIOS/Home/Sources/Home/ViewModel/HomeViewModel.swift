@@ -1,9 +1,5 @@
-//
-//  File.swift
-//  
-//
+//  HomeViewModel.swift
 //  Created by Abdulrasaq on 24/07/2022.
-//
 import Common
 import Core
 import Combine
@@ -37,9 +33,7 @@ public class HomeViewModel: ObservableObject {
 
     public func getProfile() {
         guard let profile = profiles.first else {
-//            fatalError("No profile found")
             return
-            
         }
         self.profile = profile
     }

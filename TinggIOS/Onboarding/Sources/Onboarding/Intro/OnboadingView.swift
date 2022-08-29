@@ -11,6 +11,7 @@ import Theme
 
 struct OnboadingView: View {
     let onboadingItem: OnboardingItem
+    @Environment(\.colorScheme) var colorScheme
     let screenSize: CGSize
     @EnvironmentObject var theme: EnvironmentUtils
     var body: some View {
@@ -38,7 +39,7 @@ extension OnboadingView {
     var pageIntro: some View {
         Text(onboadingItem.info)
             .font(.system(size: PrimaryTheme.mediumTextSize))
-            .foregroundColor(PrimaryTheme.getColor(.tinggblack))
+            .foregroundColor(.black)
             .bold()
             .multilineTextAlignment(.center)
             .padding(.vertical, 5)
@@ -47,7 +48,7 @@ extension OnboadingView {
     var pageSubIntro: some View {
         Text(onboadingItem.subInfo)
             .font(.system(size: PrimaryTheme.smallTextSize))
-            .foregroundColor(PrimaryTheme.getColor(.tinggblack))
+            .foregroundColor(.black)
             .multilineTextAlignment(.center)
             .accessibility(identifier: "addyourbillontingg")
     }

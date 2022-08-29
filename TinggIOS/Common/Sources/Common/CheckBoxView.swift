@@ -9,15 +9,18 @@ import SwiftUI
 
 public struct CheckBoxView: View {
     @Binding var checkboxChecked: Bool
+    @Environment(\.colorScheme) var colorScheme
     public init(checkboxChecked: Binding<Bool>) {
         self._checkboxChecked = checkboxChecked
     }
     public var body: some View {
         Image(systemName: checkboxChecked ? "checkmark.square.fill" : "square")
-            .foregroundColor(checkboxChecked ? Color(UIColor.green) : Color.black)
-                    .onTapGesture {
-                        self.checkboxChecked.toggle()
-                    }
+            .foregroundColor(
+                checkboxChecked ? .green : colorScheme == .dark ? .white : .black
+            )
+            .onTapGesture {
+                self.checkboxChecked.toggle()
+            }
     }
 }
 

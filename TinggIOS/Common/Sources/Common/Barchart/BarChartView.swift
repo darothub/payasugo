@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 public struct BarChartView: View {
     var data: [ChartData]
     var colors: [Color]
@@ -18,16 +17,20 @@ public struct BarChartView: View {
     public var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false){
-                HStack(alignment: .bottom, spacing: 3.0) {
-                    ForEach(data, id: \.xName) { chartdatum in
-                        BarView(chartData: chartdatum, colors: [.green])
-                    }
-                }
+                horizontalAlignmentBarView()
             }
         }.frame(height: 240, alignment: .bottom)
         .padding(20)
         .background(.thinMaterial)
         .cornerRadius(6)
+    }
+    @ViewBuilder
+    func horizontalAlignmentBarView() -> some View {
+        HStack(alignment: .bottom, spacing: 4.0) {
+            ForEach(data, id: \.xName) { chartdatum in
+                BarView(chartData: chartdatum, colors: [.green])
+            }
+        }
     }
 }
 

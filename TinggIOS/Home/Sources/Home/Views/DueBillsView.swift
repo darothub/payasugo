@@ -18,12 +18,7 @@ struct DueBillsView: View {
                 PrimaryTheme.getImage(image: .tinggAssistImage)
                     .resizable()
                     .frame(width: 35, height: 35)
-                VStack(alignment: .leading) {
-                    Text("Tingg Assist")
-                        .bold()
-                    Text("You have due bills")
-                        .font(.caption)
-                }
+                tinggAssistAndBillText()
             }
             ForEach(fetchedBill, id: \.billReference) { bill in
                 let now = Date()
@@ -40,6 +35,17 @@ struct DueBillsView: View {
             }
           
         }.padding()
+    }
+    @ViewBuilder
+    func tinggAssistAndBillText() -> some View {
+        VStack(alignment: .leading) {
+            Text("Tingg Assist")
+                .bold()
+                .foregroundColor(.black)
+            Text("You have due bills")
+                .font(.caption)
+                .foregroundColor(.black)
+        }
     }
     func dueDayString(dueDaysNumber: Int) -> String {
         print("Number \(dueDaysNumber)")
@@ -103,14 +109,18 @@ struct LeftHandSideView: View {
                 Text("\(serviceName)")
                     .bold()
                     .font(.caption)
+                    .foregroundColor(.black)
                 Text("Updated at: \(updatedTimeString)")
                     .font(.caption)
+                    .foregroundColor(.black)
                 Text("\(beneficiaryName)")
                     .bold()
                     .textCase(.uppercase)
                     .font(.caption)
+                    .foregroundColor(.black)
                 Text("Acc No: \(accountNumber)")
                     .font(.caption)
+                    .foregroundColor(.black)
             }
         }.onReceive(timer) { latest in
             updatedTime += 1
@@ -139,6 +149,7 @@ struct RightHandSideView: View {
                 .bold()
                 .textCase(.uppercase)
                 .font(.caption)
+                .foregroundColor(.black)
             Text("Due: \(dueDate)")
                 .font(.caption)
                 .foregroundColor(.red)

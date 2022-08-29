@@ -26,7 +26,7 @@ public struct ViewState: ViewModifier {
             switch uiModel {
             case .loading:
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                    .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                     .scaleEffect(2)
             case .content(let data):
                 let message = data.statusMessage.lowercased().contains("succ") ? "" : data.statusMessage

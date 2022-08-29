@@ -12,6 +12,8 @@ public struct CountryCodes : View {
     @Binding public var countryFlag: String
     public var countries = [String: String]()
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
+
     
     public var body: some View {
         GeometryReader { geo in
@@ -20,7 +22,6 @@ public struct CountryCodes : View {
             }
             .padding(.bottom)
             .frame(width: geo.size.width, height:  geo.size.height)
-      
         }
     }
     @ViewBuilder
@@ -29,10 +30,11 @@ public struct CountryCodes : View {
             Text("\(getFlag(country: key))")
                 .accessibility(identifier: "countryflag")
             Text("\(getCountryName(countryCode: key) ?? key)")
+                .foregroundColor(colorScheme == .dark ? .white : .black)
                 .accessibility(identifier: "countrydialcode")
             Spacer()
-            Text("+\(value)").foregroundColor(.black)
-        }.background(Color.white)
+            Text("+\(value)").foregroundColor(colorScheme == .dark ? .white : .black)
+        }.background(colorScheme == .dark ? .black.opacity(0) : .white)
             .font(.system(size: 20))
             .onTapGesture {
                 self.countryCode = value

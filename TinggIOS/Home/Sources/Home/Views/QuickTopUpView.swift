@@ -16,12 +16,12 @@ struct QuickTopupView: View {
             VStack(alignment: .leading) {
                 Text("Quick Top up")
                     .font(.system(size: PrimaryTheme.mediumTextSize))
+                    .foregroundColor(.black)
                 Text("Recharge or pay instantly")
                     .font(.system(size: PrimaryTheme.smallTextSize))
+                    .foregroundColor(.black)
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        quickTopViewBody(airtimeServices: airtimeServices)
-                    }
+                    quickTopViewBody(airtimeServices: airtimeServices)
                 }
             }
             .padding()
@@ -29,9 +29,11 @@ struct QuickTopupView: View {
     }
     @ViewBuilder
     fileprivate func quickTopViewBody(airtimeServices: [MerchantService]) -> some View{
-        ForEach(airtimeServices, id: \.id) { service in
-            RemoteImageCard(imageUrl: service.serviceLogo!)
-                .padding(.vertical)
+        HStack {
+            ForEach(airtimeServices, id: \.id) { service in
+                RemoteImageCard(imageUrl: service.serviceLogo!)
+                    .padding(.vertical)
+            }
         }
     }
 }

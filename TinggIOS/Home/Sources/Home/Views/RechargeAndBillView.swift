@@ -16,31 +16,42 @@ struct RechargeAndBillView: View {
     var body: some View {
         Section {
             VStack {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("Recharge & Bill payment")
-                            .font(.system(size: PrimaryTheme.mediumTextSize))
-                        Text("Recharge or pay for")
-                            .font(.system(size: PrimaryTheme.smallTextSize))
-                        Spacer()
-                    }
-                    Spacer()
-                    Group {
-                        Text("See all")
-                            .font(.system(size: PrimaryTheme.smallTextSize))
-                        Image(systemName: "chevron.right")
-                    }
-                }
-                LazyVGrid(columns: gridColumn, spacing: 0){
-                    ForEach(hvm.rechargeAndBill, id: \.id) { service in
-                        RemoteImageCard(imageUrl: service.serviceLogo!)
-                            .padding(.vertical)
-                            .animation(.easeInOut, value: service.id)
-                    }
-                }
-                
+                heading()
+                viewBody()
             }
         }.padding()
+    }
+    @ViewBuilder
+    fileprivate func heading() -> some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading) {
+                Text("Recharge & Bill payment")
+                    .font(.system(size: PrimaryTheme.mediumTextSize))
+                    .foregroundColor(.black)
+                Text("Recharge or pay for")
+                    .font(.system(size: PrimaryTheme.smallTextSize))
+                    .foregroundColor(.black)
+                Spacer()
+            }
+            Spacer()
+            Group {
+                Text("See all")
+                    .font(.system(size: PrimaryTheme.smallTextSize))
+                    .foregroundColor(.black)
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.black)
+            }
+        }
+    }
+    @ViewBuilder
+    fileprivate func viewBody() -> some View {
+        LazyVGrid(columns: gridColumn, spacing: 0){
+            ForEach(hvm.rechargeAndBill, id: \.id) { service in
+                RemoteImageCard(imageUrl: service.serviceLogo!)
+                    .padding(.vertical)
+                    .animation(.easeInOut, value: service.id)
+            }
+        }
     }
 }
 

@@ -16,11 +16,7 @@ public struct HomeBottomNavView: View {
     public var body: some View {
         GeometryReader { _ in
             TabView {
-                VStack{
-                    HomeView()
-                        .environmentObject(hvm)
-                    Spacer()
-                }
+                homeView()
                 .tabItemStyle(
                     title: "Home",
                     image: Image(systemName: "house.fill")
@@ -44,6 +40,14 @@ public struct HomeBottomNavView: View {
                     )
             }
         }.navigationBarBackButtonHidden(true)
+    }
+    @ViewBuilder
+    func homeView() -> some View {
+        VStack{
+            HomeView()
+                .environmentObject(hvm)
+            Spacer()
+        }
     }
 }
 

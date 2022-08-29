@@ -11,7 +11,6 @@ import Core
 import SwiftUI
 import Theme
 public struct PhoneNumberValidationView: View {
-
     // swiftlint:disable all
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
     var dbTransactionController: DBTransactions = .init()
@@ -34,9 +33,11 @@ public struct PhoneNumberValidationView: View {
                             isValidPhoneNumber: $vm.isValidPhoneNumber
                         )
                     )
-                    .onChange(of: vm.phoneNumber) { number in
-                        vm.verifyPhoneNumber(number: number)
-                    }.handleViewState(uiModel: $vm.phoneNumberFieldUIModel)
+                    .onChange(
+                        of: vm.phoneNumber,
+                        perform: onPhoneNumberInput(number:)
+                    )
+                    .handleViewState(uiModel: $vm.phoneNumberFieldUIModel)
                 VerificationCodeAdviceTextView()
                 PolicySectionView()
                     .environmentObject(vm)
@@ -73,10 +74,13 @@ public struct PhoneNumberValidationView: View {
             }
         }
     }
-    func observeUIModel() {
+    fileprivate func observeUIModel() {
         vm.observeUIModel(model: vm.$uiModel) { dto in
             confirmRegistration(data: dto)
         }
+    }
+    fileprivate func onPhoneNumberInput(number: String) -> Void {
+        vm.verifyPhoneNumber(number: number)
     }
     
     @ViewBuilder

@@ -31,9 +31,6 @@ public struct IntroView: View {
             .background(.white)
             .onAppear {
                 setPageIndicatorAppearance()
-                withAnimation(.easeInOut) {
-                    onboardingViewModel.$countryDictionary
-                }
             }
         }
     }

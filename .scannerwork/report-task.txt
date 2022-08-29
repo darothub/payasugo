@@ -1,6 +1,7 @@
 projectKey=tinggios
 serverUrl=https://sonar.cellulant.co.ke
 serverVersion=9.3.0.51899
-dashboardUrl=https://sonar.cellulant.co.ke/dashboard?id=tinggios
-ceTaskId=AYKdWnrXovECMIheosHh
-ceTaskUrl=https://sonar.cellulant.co.ke/api/ce/task?id=AYKdWnrXovECMIheosHh
+branch=feature/unit-test
+dashboardUrl=https://sonar.cellulant.co.ke/dashboard?id=tinggios&branch=feature%2Funit-test
+ceTaskId=AYLpit_bovECMIheov2r
+ceTaskUrl=https://sonar.cellulant.co.ke/api/ce/task?id=AYLpit_bovECMIheov2r

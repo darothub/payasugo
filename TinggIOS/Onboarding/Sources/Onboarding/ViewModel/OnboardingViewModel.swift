@@ -1,9 +1,6 @@
-//
 //  OnboardingViewModel.swift
 //  TinggIOS
-//
 //  Created by Abdulrasaq on 13/07/2022.
-//
 import Combine
 import Common
 import Core
@@ -103,6 +100,13 @@ public class OnboardingViewModel: ObservableObject {
             uiModelCases(uiModel: uiModel, action: action)
         }.store(in: &subscriptions)
     }
+    func uiModelConnectable(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) -> Publishers.MakeConnectable<Published<UIModel>.Publisher> {
+        let connectable = model.makeConnectable()
+        model.sink { [unowned self] uiModel in
+            uiModelCases(uiModel: uiModel, action: action)
+        }
+        return connectable
+    }
     func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
         switch uiModel {
         case .content(let data):
@@ -130,7 +134,9 @@ public class OnboardingViewModel: ObservableObject {
         print("\(name) \(methodName) \(message)")
     }
     func stopUIModelSubscription() {
-        subscriptions.removeAll()
+        subscriptions.forEach { cancellable in
+            cancellable.cancel()
+        }
     }
 }
 

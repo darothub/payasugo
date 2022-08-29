@@ -36,9 +36,7 @@ struct SubmitButtonView: View {
     
     func observeUIModel() {
         onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
-            print("submit \(dto)")
             onboardingViewModel.showOTPView = true
-
         }
     }
 }
