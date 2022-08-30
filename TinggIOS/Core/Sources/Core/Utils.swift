@@ -15,9 +15,10 @@ public enum Screens {
 }
 
 public class NavigationUtils: ObservableObject {
-    @Published public var screen = Screens.intro
-    @Published public var navigatePermission = false
+    @Published public var screen = Screens.launch
+    @Published public var navigatePermission = true
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
     }
 }
+

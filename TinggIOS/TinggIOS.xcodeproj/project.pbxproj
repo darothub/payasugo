@@ -14,14 +14,8 @@
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71929B5328A5AEC700D84B98 /* CoreModuleUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5228A5AEC700D84B98 /* CoreModuleUnitTest.swift */; };
-		71929B5D28A5AFF300D84B98 /* CountryRepositoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5928A5AFF300D84B98 /* CountryRepositoryTest.swift */; };
-		71929B5E28A5AFF300D84B98 /* CountryCodeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5C28A5AFF300D84B98 /* CountryCodeTest.swift */; };
-		71929B5F28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5B28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift */; };
-		71929B6028A5AFF300D84B98 /* DatabaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71929B5A28A5AFF300D84B98 /* DatabaseTest.swift */; };
 		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
-		71E2BE28289BF2B40025ED12 /* DIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E2BE27289BF2B40025ED12 /* DIManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,17 +63,11 @@
 		718C6293283EBCB8002ADCA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		71929B5028A5AEC700D84B98 /* CoreModuleUnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreModuleUnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		71929B5228A5AEC700D84B98 /* CoreModuleUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModuleUnitTest.swift; sourceTree = "<group>"; };
-		71929B5928A5AFF300D84B98 /* CountryRepositoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryRepositoryTest.swift; sourceTree = "<group>"; };
-		71929B5A28A5AFF300D84B98 /* DatabaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseTest.swift; sourceTree = "<group>"; };
-		71929B5B28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryRepoistoryTestImpl.swift; sourceTree = "<group>"; };
-		71929B5C28A5AFF300D84B98 /* CountryCodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeTest.swift; sourceTree = "<group>"; };
 		71929B6128A6F97600D84B98 /* Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Common; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
-		71E2BE27289BF2B40025ED12 /* DIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +122,6 @@
 				71AED58B28665C9400A4B14F /* Packages */,
 				718C628E283EBCB4002ADCA8 /* TinggIOS */,
 				714B15A82899D5C6005338EB /* OnboardingUITest */,
-				71929B5128A5AEC700D84B98 /* CoreModuleUnitTest */,
 				718C628D283EBCB4002ADCA8 /* Products */,
 				7108CD75285253DF0034EA29 /* Frameworks */,
 			);
@@ -155,7 +142,6 @@
 			children = (
 				71867FBE289479BC008A5411 /* ViewHouse.swift */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
-				71E2BE27289BF2B40025ED12 /* DIManager.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
@@ -170,18 +156,6 @@
 				718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		71929B5128A5AEC700D84B98 /* CoreModuleUnitTest */ = {
-			isa = PBXGroup;
-			children = (
-				71929B5C28A5AFF300D84B98 /* CountryCodeTest.swift */,
-				71929B5B28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift */,
-				71929B5928A5AFF300D84B98 /* CountryRepositoryTest.swift */,
-				71929B5A28A5AFF300D84B98 /* DatabaseTest.swift */,
-				71929B5228A5AEC700D84B98 /* CoreModuleUnitTest.swift */,
-			);
-			path = CoreModuleUnitTest;
 			sourceTree = "<group>";
 		};
 		71AED58B28665C9400A4B14F /* Packages */ = {
@@ -366,7 +340,6 @@
 			files = (
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */,
-				71E2BE28289BF2B40025ED12 /* DIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,11 +347,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71929B5F28A5AFF300D84B98 /* CountryRepoistoryTestImpl.swift in Sources */,
-				71929B5E28A5AFF300D84B98 /* CountryCodeTest.swift in Sources */,
-				71929B5D28A5AFF300D84B98 /* CountryRepositoryTest.swift in Sources */,
-				71929B6028A5AFF300D84B98 /* DatabaseTest.swift in Sources */,
-				71929B5328A5AEC700D84B98 /* CoreModuleUnitTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,12 +521,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
@@ -593,12 +562,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";

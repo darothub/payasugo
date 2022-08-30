@@ -20,9 +20,11 @@ public struct OtpConfirmationView: View {
     @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @StateObject var otpViewOVM = OnboardingDI.createOnboardingViewModel()
+    @Environment(\.colorScheme) var colorScheme
+    @State var onSubmit = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-  
+    
     public var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
@@ -30,24 +32,27 @@ public struct OtpConfirmationView: View {
             Divider()
             Text("Enter the code received via SMS\nto confirm request")
                 .smallTextViewStyle(SmallTextStyle())
+                .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             OtpFieldView(fieldSize: $otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
                 .padding(.vertical, 20)
             Text(timeAdvice)
                 .smallTextViewStyle(SmallTextStyle())
+                .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm"
             ) {
-                onboardingViewModel.confirmActivationCodeRequest(
-                    msisdn: phoneNumber, clientId: activeCountry.mulaClientID!, code: otp
-                )
-                observingUIModel()
-            }
+                otpViewOVM.confirmActivationCodeRequest(code: otp)
+                print("OTP on`submit \(otp)")
+               
+            }.handleViewState(uiModel: $otpViewOVM.onSubmitUIModel)
         }
-        .handleViewState(uiModel: $onboardingViewModel.uiModel)
         .padding(20)
         .onReceive(timer) { _ in
             handleCountDown()
+        }
+        .onAppear {
+            observingUIModel()
         }
     }
     fileprivate func resetTimer() {
@@ -62,18 +67,17 @@ public struct OtpConfirmationView: View {
                 timeAdvice = "Resend code in 00:\(timeLeft)"
             }
         } else {
-            onboardingViewModel.makeActivationCodeRequest(
-                msisdn: phoneNumber, clientId: activeCountry.mulaClientID!
-            )
+            onboardingViewModel.makeActivationCodeRequest()
             timeAdvice = "Code resent"
             resetTimer()
         }
     }
     fileprivate func observingUIModel() {
-        onboardingViewModel.observeUIModel { _ in
+        otpViewOVM.observeUIModel(model: otpViewOVM.$onSubmitUIModel) { dto in
             DispatchQueue.main.async {
-                otpConfirmed = true
-                $onboardingViewModel.showOTPView.wrappedValue = false
+                print("OTP onObserve \(otp)")
+                onboardingViewModel.showOTPView = false
+                onboardingViewModel.confirmedOTP = true
             }
         }
     }
@@ -90,13 +94,6 @@ struct OtpConfirmationView_Previews: PreviewProvider {
     }
     static var previews: some View {
         OtpConfirmationViewHolder()
-            .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepositoryImpl(
-                    apiService: BaseRepository(),
-                    realmManager: RealmManager()
-                ),
-                baseRequest: BaseRequest(apiServices: BaseRepository())
-            )
-        )
+            .environmentObject(OnboardingDI.createOnboardingViewModel())
     }
 }

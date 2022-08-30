@@ -482,9 +482,10 @@ public struct MulaProfile: Codable {
 
 // MARK: - MulaProfileInfoPaymentOption
 public struct MulaProfileInfoPaymentOption: Codable {
-    public var hubClientID, clientName, clientCode, isSelected: String
+    public var clientName, clientCode: String
     public var paymentOptionID: Int
-
+    public var hubClientID: String
+    public var isSelected: String
     enum CodingKeys: String, CodingKey {
         case hubClientID = "HUB_CLIENT_ID"
         case clientName = "CLIENT_NAME"
@@ -598,16 +599,6 @@ public struct CoreProfileInfo: Codable {
         case emailAddress = "EMAIL_ADDRESS"
     }
 }
-
-//// MARK: - SecurityQuestion
-//public struct SecurityQuestion: Codable {
-//    let questionID, securityQuestion: String
-//
-//    enum CodingKeys: String, CodingKey {
-//        case questionID = "QUESTION_ID"
-//        case securityQuestion = "SECURITY_QUESTION"
-//    }
-//}
 
 // MARK: - Service
 public struct Service: Codable {

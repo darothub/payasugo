@@ -9,8 +9,9 @@ import Foundation
 import UIKit
 public struct TinggRequest: Encodable {
     public var service: String?
-    public var msisdn: String?
-    public var clientId: String?
+    public var accountNumber: String?
+    public var msisdn: String? = AppStorageManager.getPhoneNumber()
+    public var clientId: String? = AppStorageManager.getClientId()
     public var activationCode: String?
     public var uuid: String = uuidForVendor
     public var osVersion: String = deviceOSVersion()
@@ -21,32 +22,17 @@ public struct TinggRequest: Encodable {
     public var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
     public var merchantDetails: String? = ""
     public var profileInfo: String? = ""
-    public var apiLevel: String = "13"
+    public var apiLevel: String = "15"
     public var isExplicit = "1"
-    public var dataSource: String? = ""
-    
+    public var dataSource: String? = AppStorageManager.getActiveCountry()
+    public var billAccounts: [BillAccount]?
+    public static var shared = TinggRequest()
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
     }
-    public mutating func getActivationCode(service: String, msisdn: String, clientId: String) {
-        self.service = service
-        self.msisdn = msisdn
-        self.clientId = clientId
-    }
-    public mutating func confirmActivationCode(service: String, msisdn: String, clientId: String, code: String) {
-        self.service = service
-        self.msisdn = msisdn
-        self.clientId = clientId
-        self.activationCode = code
-    }
-    public mutating func makePARRequesr(dataSource: String, msisdn: String, clientId: String) {
-        self.service = "PAR"
-        self.dataSource = dataSource
-        self.msisdn = msisdn
-        self.clientId = clientId
-    }
     enum CodingKeys: String, CodingKey {
         case service = "SERVICE"
+        case accountNumber = "ACCOUNT_NUMBER"
         case msisdn = "MSISDN"
         case uuid = "UUID"
         case clientId = "CLIENT_ID"
@@ -62,9 +48,22 @@ public struct TinggRequest: Encodable {
         case isExplicit = "IS_EXPLICIT"
         case activationCode = "ACTIVATION_CODE"
         case dataSource = "DATA_SOURCE"
+        case billAccounts = "BILL_ACCOUNTS"
     }
 }
 
+public struct BillAccount: Codable {
+    public let serviceId: String
+    public let accountNumber: String
+    public init(serviceId: String, accountNumber: String){
+        self.serviceId = serviceId
+        self.accountNumber = accountNumber
+    }
+    enum CodingKeys: String, CodingKey {
+        case serviceId = "SERVICE_ID"
+        case accountNumber = "ACCOUNT_NUMBER"
+    }
+}
 func modelIdentifier() -> String {
     if let simulatorModelIdentifier = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] {
         return simulatorModelIdentifier }

@@ -21,7 +21,7 @@ public struct LaunchScreenView: View {
         }.onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 navigation.screen = .intro
-                navigation.navigatePermission.toggle()
+//                navigation.navigatePermission.toggle()
             }
         }
         .edgesIgnoringSafeArea(.all)

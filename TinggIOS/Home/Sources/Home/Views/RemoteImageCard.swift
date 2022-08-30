@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Theme
-struct QuickTopupCard: View {
+struct RemoteImageCard: View {
     @State var imageUrl: String = ""
     var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { image in
@@ -19,7 +19,7 @@ struct QuickTopupCard: View {
             PrimaryTheme.getImage(image: .tinggIcon)
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
-                .padding(60)
+                .padding()
         }.background(
             RoundedRectangle(cornerRadius: 10)
                 .foregroundColor(.white)
@@ -30,6 +30,6 @@ struct QuickTopupCard: View {
 
 struct QuickTopupCard_Previews: PreviewProvider {
     static var previews: some View {
-        QuickTopupCard()
+        RemoteImageCard()
     }
 }

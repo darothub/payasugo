@@ -17,6 +17,7 @@ struct ActivateCardView: View {
                 .padding(.leading, PrimaryTheme.largePadding)
             Text("Enjoy cashless shopping with Tingg Wallet and earn rewards")
                 .font(.system(size: 14))
+                .foregroundColor(.black)
                 .minimumScaleFactor(0.05)
                 .lineLimit(3)
                 .padding()

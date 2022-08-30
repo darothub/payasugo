@@ -36,7 +36,7 @@ struct HomeTopViewDesign_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
             HomeTopViewDesign(parentSize: geo)
-                .environmentObject(HomeViewModel())
+                .environmentObject(HomeDI.createHomeViewModel())
         }
     }
 }

@@ -30,14 +30,7 @@ struct TinggSupportSectionView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
             TinggSupportSectionView(geometry: geo)
-                .environmentObject(OnboardingViewModel(
-                    countryRepository: CountryRepositoryImpl(
-                        apiService: BaseRepository(),
-                        realmManager: RealmManager()
-                    ),
-                    baseRequest: BaseRequest(apiServices: BaseRepository())
-                )
-            )
+                .environmentObject(OnboardingDI.createOnboardingViewModel())
         }
     }
 }

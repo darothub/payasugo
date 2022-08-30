@@ -23,7 +23,10 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Core",
-            dependencies: [.product(name: "Alamofire", package: "Alamofire"), .product(name: "RealmSwift", package: "realm-swift")]
+            dependencies: [
+                .product(name: "Alamofire", package: "Alamofire"),
+                .product(name: "RealmSwift", package: "realm-swift"),
+            ]
         ),
         .testTarget(
             name: "CoreTests",

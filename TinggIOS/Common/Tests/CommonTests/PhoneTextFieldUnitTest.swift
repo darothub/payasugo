@@ -1,32 +1,29 @@
 //
-//  Country.swift
+//  PhoneTextFieldUnitTest.swift
 //  
 //
-//  Created by Abdulrasaq on 02/08/2022.
+//  Created by Abdulrasaq on 25/08/2022.
 //
-// swiftlint:disable all
-import XCTest
-import Core
 import Common
+import XCTest
+class PhoneTextFieldUnitTest: XCTestCase {
 
-class CountryCodeTest: XCTestCase {
-
-    func testCountryCode_BW_ShouldReturn_Botswana(){
+    func testCountryCodeBWShouldReturnBotswana(){
         let actual = getCountryName(countryCode: "BW")
         let expected = "Botswana"
         XCTAssertEqual(actual, expected)
     }
-    func testCountryCode_NG_ShouldReturn_Nigeria(){
+    func testCountryCodeNGShouldReturnNigeria(){
         let actual = getCountryName(countryCode: "NG")
         let expected = "Nigeria"
         XCTAssertEqual(actual, expected)
     }
-    func testCountryCodeKE_ShouldReturn_Kenya(){
+    func testCountryCodeKEShouldReturnKenya(){
         let actual = getCountryName(countryCode: "KE")
         let expected = "Kenya"
         XCTAssertEqual(actual, expected)
     }
-    func testCountryCode_GH_ShouldReturn_Ghana(){
+    func testCountryCodeGHShouldReturnGhana(){
         let actual = getCountryName(countryCode: "GH")
         let expected = "Ghana"
         XCTAssertEqual(actual, expected)

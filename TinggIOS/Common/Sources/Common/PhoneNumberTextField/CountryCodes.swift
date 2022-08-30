@@ -12,6 +12,8 @@ public struct CountryCodes : View {
     @Binding public var countryFlag: String
     public var countries = [String: String]()
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
+
     
     public var body: some View {
         GeometryReader { geo in
@@ -20,7 +22,6 @@ public struct CountryCodes : View {
             }
             .padding(.bottom)
             .frame(width: geo.size.width, height:  geo.size.height)
-      
         }
     }
     @ViewBuilder
@@ -29,14 +30,15 @@ public struct CountryCodes : View {
             Text("\(getFlag(country: key))")
                 .accessibility(identifier: "countryflag")
             Text("\(getCountryName(countryCode: key) ?? key)")
+                .foregroundColor(colorScheme == .dark ? .white : .black)
                 .accessibility(identifier: "countrydialcode")
             Spacer()
-            Text("+\(value)").foregroundColor(.secondary)
-        }.background(Color.white)
+            Text("+\(value)").foregroundColor(colorScheme == .dark ? .white : .black)
+        }.background(colorScheme == .dark ? .black.opacity(0) : .white)
             .font(.system(size: 20))
             .onTapGesture {
                 self.countryCode = value
-                self.countryFlag = getFlag(country: key)
+                self.countryFlag = key
                 dismiss()
         }
     }
@@ -47,11 +49,13 @@ public func getCountryName(countryCode: String) -> String? {
     return current.localizedString(forRegionCode: countryCode)
 }
 
-public func getFlag(country:String) -> String {
-    let base : UInt32 = 127397
-    var flag = ""
-    for v in country.unicodeScalars {
-        flag.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+public func getFlag(country: String) -> String {
+  let base = 127397
+  var tempScalarView = String.UnicodeScalarView()
+  for i in country.utf16 {
+    if let scalar = UnicodeScalar(base + Int(i)) {
+      tempScalarView.append(scalar)
     }
-    return flag
+  }
+  return String(tempScalarView)
 }

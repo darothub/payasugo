@@ -9,12 +9,13 @@ import Common
 import Core
 import Foundation
 import SwiftUI
+import Photos
 struct ActiveCategoryTabView: View {
-    @EnvironmentObject var hvm: HomeViewModel
+    var categories: [[Categorys]] = [[Categorys]]()
     var body: some View {
         TabView {
-            ForEach(0..<hvm.processedCategories.count, id: \.self) { eachChunkIndex in
-                ActiveCategoryListView(categories: hvm.processedCategories[eachChunkIndex])
+            ForEach(0..<categories.count, id: \.self) { eachChunkIndex in
+                ActiveCategoryListView(categories: categories[eachChunkIndex])
             }
         }
         .frame(height: 165)
@@ -27,8 +28,7 @@ struct ActiveCategoryTabView: View {
 
 struct ActiveCategoryTabView_Previews: PreviewProvider {
     static var previews: some View {
-        ActiveCategoryTabView()
-            .environmentObject(HomeViewModel())
+        ActiveCategoryTabView(categories: previewProcessedCategories)
     }
 }
 

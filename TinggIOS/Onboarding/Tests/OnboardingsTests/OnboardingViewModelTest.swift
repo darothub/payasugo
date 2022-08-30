@@ -1,13 +1,14 @@
 //
-//  CoreModuleUnitTest.swift
-//  CoreModuleUnitTest
+//  OnboardingViewModelTest.swift
+//  
 //
-//  Created by Abdulrasaq on 11/08/2022.
+//  Created by Abdulrasaq on 25/08/2022.
 //
 
 import XCTest
 
-class CoreModuleUnitTest: XCTestCase {
+
+class OnboardingViewModelTest: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -27,7 +28,7 @@ class CoreModuleUnitTest: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        measure {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }

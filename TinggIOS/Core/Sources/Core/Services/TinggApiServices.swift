@@ -17,21 +17,12 @@ extension TinggApiServices {
         return AF.request(Utils.baseUrlStaging, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }
-}
-
-public struct TinggApiServicesKey: EnvironmentKey {
-    public static let defaultValue: TinggApiServices = BaseRepository()
-}
-
-public extension EnvironmentValues {
-    var tinggApiServices: TinggApiServices {
-        get { self[TinggApiServicesKey.self] }
-        set { self[TinggApiServicesKey.self] = newValue }
+    public func request(urlPath: String, tinggRequest: TinggRequest) -> DataRequest {
+        return AF.request(Utils.baseUrlStaging+urlPath, method: .post,
+                          parameters: tinggRequest, encoder: JSONParameterEncoder.default)
+    }
+    public func request(urlPath: String) -> DataRequest {
+        return AF.request(Utils.baseUrlStaging+urlPath, method: .get)
     }
 }
 
-extension View {
-    public func tinggApiServices(_ tinggApiServices: TinggApiServices) -> some View {
-        environment(\.tinggApiServices, tinggApiServices)
-    }
-}

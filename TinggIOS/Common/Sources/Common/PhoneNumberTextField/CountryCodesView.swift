@@ -5,20 +5,23 @@
 //  Created by Abdulrasaq on 26/06/2022.
 //
 // swiftlint:disable all
+import Foundation
 import SwiftUI
 import Combine
 public struct CountryCodesView: View {
     @Binding public var phoneNumber: String
     @Binding public var countryCode: String
-    @State public var countryFlag = ""
+    @Binding public var countryFlag: String
     public var numberLength = 10
-    @Binding var countries: [String: String]
+    var countries: [String: String]
     @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
-    public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countries: Binding<[String: String]>){
+    @Environment(\.colorScheme) var colorScheme
+    public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: [String: String]){
         self._phoneNumber = phoneNumber
         self._countryCode = countryCode
-        self._countries = countries
+        self._countryFlag = countryFlag
+        self.countries = countries
     }
     fileprivate func checkLength(_ newValue: String) {
         if newValue.count > 10 {
@@ -29,22 +32,19 @@ public struct CountryCodesView: View {
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text(countryCode.isEmpty ? "🇧🇼 +267" : "\(countryFlag) +\(countryCode)")
+                Text(countryCode.isEmpty ? "🇧🇼 +267" : "\(getFlag(country: countryFlag)) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
-                    .foregroundColor(countryCode.isEmpty ? .secondary : .black)
-                    .onTapGesture {
-                        showPhoneSheet.toggle()
-                    }
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .onTapGesture(perform: tap)
                     .accessibility(identifier: "countrycodeandflag")
                 
                 TextField("Phone Number", text: $phoneNumber)
                     .padding()
                     .keyboardType(.phonePad)
-                    .onChange(of: phoneNumber) { newValue in
-                        checkLength(newValue)
-                    }
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .onChange(of: phoneNumber, perform: change)
                     .accessibility(identifier: "countrytextfield")
             }
         }.sheet(isPresented: $showPhoneSheet) {
@@ -54,17 +54,23 @@ public struct CountryCodesView: View {
                 countries: countries
             )
         }
-        .task {
+        .onAppear {
             getCountryCode()
         }
     }
+    fileprivate func tap() -> Void {
+        showPhoneSheet.toggle()
+    }
+    fileprivate func change(value: String) -> Void {
+        checkLength(value)
+    }
     
-    func getCountryCode () {
+    fileprivate func getCountryCode () {
         let sortedCountries = countries.sorted(by: <)
         if let flag = sortedCountries.first?.key {
-            countryFlag = getFlag(country: flag)
+            countryFlag = flag
         }
-        if let code = sortedCountries.first?.value{
+        if let code = sortedCountries.first?.value {
             countryCode = code
         }
     }
@@ -74,10 +80,11 @@ struct SwiftUIView_Previews: PreviewProvider {
     struct CountryViewHolder: View {
         @State var number = ""
         @State var code = ""
+        @State var flag = "NG"
         @State var countries = [String:String]()
 
         var body: some View {
-            CountryCodesView(phoneNumber: $number, countryCode: $code, countries: $countries)
+            CountryCodesView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
         }
     }
     static var previews: some View {

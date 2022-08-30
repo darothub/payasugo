@@ -4,12 +4,14 @@
 //
 //  Created by Abdulrasaq on 04/08/2022.
 //
+import Combine
 import Common
 import Core
 import SwiftUI
 import Theme
 struct SubmitButtonView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
+    @State private var subscriptions = Set<AnyCancellable>()
     var body: some View {
         NavigationLink(
             destination: IntroView(),
@@ -20,14 +22,21 @@ struct SubmitButtonView: View {
           ) {
               let isValidated = onboardingViewModel.validatePhoneNumberIsNotEmpty()
               if isValidated {
-                  let number = "+\($onboardingViewModel.countryCode)\($onboardingViewModel.phoneNumber)"
-                  onboardingViewModel.makeActivationCodeRequest(
-                    msisdn: number,
-                    clientId: $onboardingViewModel.currentCountry.wrappedValue.mulaClientID!
-                  )
+                  onboardingViewModel.retainPhoneNumber()
+                  onboardingViewModel.saveActiveCountry(countryName: onboardingViewModel.currentCountry.name!)
+                  onboardingViewModel.saveClientId(clientId: onboardingViewModel.currentCountry.mulaClientID!)
+                  onboardingViewModel.makeActivationCodeRequest()
+                  observeUIModel()
               }
           }.keyboardShortcut(.return)
             .accessibility(identifier: "continuebtn")
+        }
+        .handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
+    }
+    
+    func observeUIModel() {
+        onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
+            onboardingViewModel.showOTPView = true
         }
     }
 }
@@ -35,14 +44,8 @@ struct SubmitButtonView: View {
 struct SubmitButtonView_Previews: PreviewProvider {
     static var previews: some View {
         SubmitButtonView()
-            .environmentObject(OnboardingViewModel(
-                countryRepository: CountryRepositoryImpl(
-                    apiService: BaseRepository(),
-                    realmManager: RealmManager()
-                ),
-                baseRequest: BaseRequest(apiServices: BaseRepository())
-            )
-        )
+            .environmentObject(OnboardingDI.createOnboardingViewModel())
+
     }
 }
 
@@ -59,5 +62,15 @@ extension OnboardingViewModel {
             return false
         }
         return true
+    }
+    func retainPhoneNumber() {
+        print("ActiveNumber \(countryCode)\(phoneNumber)")
+        AppStorageManager.retainPhoneNumber(number: countryCode+phoneNumber)
+    }
+    func saveActiveCountry(countryName: String) {
+        AppStorageManager.retainActiveCountry(country: countryName)
+    }
+    func saveClientId(clientId: String) {
+        AppStorageManager.retainClientId(id: clientId)
     }
 }

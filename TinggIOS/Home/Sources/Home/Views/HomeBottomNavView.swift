@@ -9,39 +9,46 @@ import SwiftUI
 import Core
 import Theme
 public struct HomeBottomNavView: View {
-    @StateObject var hvm: HomeViewModel = .init()
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
     public var body: some View {
         GeometryReader { _ in
             TabView {
-                HomeView()
-                    .environmentObject(hvm)
+                homeView()
+                .tabItemStyle(
+                    title: "Home",
+                    image: Image(systemName: "house.fill")
+                )
+                
+                Text("Bill")
                     .tabItemStyle(
-                        title: "Home",
-                        image: PrimaryTheme.getImage(image: .home)
+                        title: "Bill",
+                        image:PrimaryTheme.getImage(image: .bill)
                     )
-          
-            Text("Bill")
-                .tabItemStyle(
-                    title: "Bill",
-                    image:PrimaryTheme.getImage(image: .bill)
-                )
-            
-            Text("Group")
-                .tabItemStyle(
-                    title: "Group",
-                    image: PrimaryTheme.getImage(image: .group)
-                )
-            Text("Explore")
-                .tabItemStyle(
-                    title: "Explore",
-                    image: PrimaryTheme.getImage(image: .explore)
-                )
+                
+                Text("Group")
+                    .tabItemStyle(
+                        title: "Group",
+                        image: PrimaryTheme.getImage(image: .group)
+                    )
+                Text("Explore")
+                    .tabItemStyle(
+                        title: "Explore",
+                        image: PrimaryTheme.getImage(image: .explore)
+                    )
+            }
+        }.navigationBarBackButtonHidden(true)
+    }
+    @ViewBuilder
+    func homeView() -> some View {
+        VStack{
+            HomeView()
+                .environmentObject(hvm)
+            Spacer()
         }
-    }.navigationBarBackButtonHidden(true)
-}
+    }
 }
 
 struct HomeBottomNavView_Previews: PreviewProvider {

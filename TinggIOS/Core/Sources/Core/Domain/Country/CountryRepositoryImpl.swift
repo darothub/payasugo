@@ -9,22 +9,22 @@ import Foundation
 import RealmSwift
 public class CountryRepositoryImpl: CountryRepository {
     @ObservedResults(Country.self) var countries
-    public var apiService: TinggApiServices
+    public var baseRequest: BaseRequest
     public var realmManager: RealmManager
-    public init(apiService: TinggApiServices, realmManager: RealmManager) {
-        self.apiService = apiService
+    public init(baseRequest: BaseRequest, realmManager: RealmManager) {
+        self.baseRequest = baseRequest
         self.realmManager = realmManager
     }
     func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
-        apiService.getCountries()
-            .responseDecodable(of: CountryDTO.self) {response in
-                switch response.result {
-                case .failure:
-                    onCompletion(.failure(.networkError))
-                case .success(let countries):
-                    onCompletion(.success(countries))
-                }
+        baseRequest.makeRequest(urlPath: "countries.php/") {(result: Result<CountryDTO, ApiError>) in
+            switch result {
+            case .failure(let error):
+                onCompletion(.failure(.networkError(error.localizedDescription)))
+            case .success(let countries):
+                onCompletion(.success(countries))
             }
+        }
+
     }
     func getRemoteCountries() async throws -> CountryDTO {
         return try await withCheckedThrowingContinuation { continuation in
@@ -57,9 +57,4 @@ public class CountryRepositoryImpl: CountryRepository {
         }
         return countries.reversed()
     }
-}
-
-
-public protocol CountryRepository {
-    func getCountries() async throws -> [Country]
 }

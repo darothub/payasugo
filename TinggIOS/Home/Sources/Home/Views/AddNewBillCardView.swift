@@ -16,6 +16,7 @@ struct AddNewBillCardView: View {
                     .padding(.horizontal, 10)
                 Text("Pay for bills, food, and enjoy cashless shopping with TinggPay wallet")
                     .font(.system(size: PrimaryTheme.smallTextSize))
+                    .foregroundColor(.black)
             }.padding(20)
             Divider()
             Text("Add a new bill")
@@ -27,7 +28,7 @@ struct AddNewBillCardView: View {
             RoundedRectangle(cornerRadius: 4)
                 .foregroundColor(.white)
                 .padding(.horizontal, PrimaryTheme.largePadding)
-                .shadow(radius: 10, x: 0, y: 5)
+                .shadow(radius: 3, x: 0, y: 3)
         )
     }
 }
