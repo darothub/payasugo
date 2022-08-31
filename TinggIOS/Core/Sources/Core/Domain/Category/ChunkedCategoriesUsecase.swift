@@ -8,6 +8,7 @@
 import Foundation
 public class ChunkedCategoriesUsecase {
     private let categoryRepository: CategoryRepository
+    
     public init(categoryRepository: CategoryRepository){
         self.categoryRepository = categoryRepository
     }

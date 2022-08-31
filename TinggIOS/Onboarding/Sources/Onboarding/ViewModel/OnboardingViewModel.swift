@@ -146,14 +146,10 @@ class DBTransactions {
         // Intentionally unimplemented...modular accessibility
     }
     func save(data: DBObject) {
-        Task {
-            await realmManager.save(data: data)
-        }
+        realmManager.save(data: data)
     }
     func saveObjects(data: [DBObject]) {
-        Task {
-            await realmManager.save(data: data)
-        }
+        realmManager.save(data: data)
     }
 }
 
