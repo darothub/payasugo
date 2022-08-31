@@ -13,11 +13,15 @@ import Theme
 public struct PhoneNumberValidationView: View {
     // swiftlint:disable all
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
-    var dbTransactionController: DBTransactions = .init()
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
     @State private var subscriptions = Set<AnyCancellable>()
+    var categoriesDbObserver = Observer<Categorys>()
+    var merchantServicesDbObserver = Observer<MerchantService>()
+    var enrollmentDbObserver = Observer<Enrollment>()
+    var transactionHistoryDbObserver = Observer<TransactionHistory>()
+    var profileDbObserver = Observer<Profile>()
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -158,15 +162,19 @@ extension PhoneNumberValidationView {
                 }.filter { category in
                     category.activeStatus == "1"
                 }
-                vm.saveObjects(data: sortedCategories)
-                vm.saveObjects(data: parResponse.services)
-                vm.saveObjects(data: parResponse.transactionSummaryInfo)
+                categoriesDbObserver.saveEntities(objs: sortedCategories)
+                merchantServicesDbObserver.saveEntities(objs: parResponse.services)
+                transactionHistoryDbObserver.saveEntities(objs: parResponse.transactionSummaryInfo)
+//                vm.saveObjects(data: parResponse.services)
+//                vm.saveObjects(data: parResponse.transactionSummaryInfo)
                 let nominationInfo = parResponse.nominationInfo.filter { enrolment in
                     enrolment.isReminder == "0" && enrolment.accountStatus == 1
                 }
-                vm.saveObjects(data: nominationInfo)
+//                vm.saveObjects(data: nominationInfo)
+                enrollmentDbObserver.saveEntities(objs: nominationInfo)
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
-                vm.save(data: profile)
+                profileDbObserver.saveEntity(obj: profile)
+//                vm.save(data: profile)
                 navigation.screen = .home
             }
         }
@@ -189,7 +197,7 @@ extension OnboardingViewModel {
         isValidPhoneNumber = true
     }
     func getSelectedCountryRegex() -> String {
-        guard let country = getCountryByDialCode(dialCode: countryCode) else {
+        guard getCountryByDialCode(dialCode: countryCode) != nil else {
             printLn(methodName: "getSelectedCountryRegex", message: "country is nil")
             return ""
         }

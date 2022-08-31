@@ -8,7 +8,17 @@ import RealmSwift
 import Foundation
 public protocol BaseRepository {
     associatedtype O where O: Object & ObjectKeyIdentifiable
-    func getEntities() -> [O]
+    var dbObserver: Observer<O> { get }
+    
+}
+
+extension BaseRepository {
+    public func getEntities() -> [O] {
+        dbObserver.getEntities()
+    }
+    public func saveEntities(obj: O){
+        dbObserver.$objects.append(obj)
+    }
 }
 
 public protocol BassRepository {

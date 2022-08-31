@@ -32,7 +32,7 @@ public class OnboardingViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     private var dbTransaction = DBTransactions()
     @Published public var countryDictionary = [String: String]()
-    @Published public var countriesDb = Observer<Country>().objects
+   
     var onboardingUseCase: OnboardingUseCase
     var name = "OnboardingViewModel"
     
@@ -132,11 +132,6 @@ public class OnboardingViewModel: ObservableObject {
     }
     func printLn(methodName: String, message: String) {
         print("\(name) \(methodName) \(message)")
-    }
-    func stopUIModelSubscription() {
-        subscriptions.forEach { cancellable in
-            cancellable.cancel()
-        }
     }
 }
 

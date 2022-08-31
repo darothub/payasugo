@@ -53,11 +53,20 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     public init() {}
     
+    
     func getEntities() ->[T] {
         objects.map(returnEntity(obj:))
     }
     
-    func returnEntity(obj: T) -> T {
+    public func saveEntity(obj: T){
+        $objects.append(obj)
+    }
+    public func saveEntities(objs: [T]){
+        objs.forEach { obj in
+            saveEntity(obj: obj)
+        }
+    }
+    private func returnEntity(obj: T) -> T {
         return obj
     }
 }
