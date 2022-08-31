@@ -58,6 +58,14 @@ public final class RealmManager: ObservableObject {
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     public init() {}
+    
+    func getEntities() ->[T] {
+        objects.map(returnEntity(obj:))
+    }
+    
+    func returnEntity(obj: T) -> T {
+        return obj
+    }
 }
 
 public protocol DBObject: Object {}

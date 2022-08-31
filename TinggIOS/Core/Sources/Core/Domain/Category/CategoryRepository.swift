@@ -13,12 +13,9 @@ public class CategoryRepositoryImpl: CategoryRepository {
     }
     
     public func getCategories() -> [Categorys] {
-        return dbObserver.objects.map(returnCategories(category:))
+        return dbObserver.getEntities()
     }
-    
-    private func returnCategories(category: Categorys) -> Categorys{
-        return category
-    }
+
 }
 
 public protocol CategoryRepository {

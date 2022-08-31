@@ -32,7 +32,7 @@ public class CountryRepositoryImpl: CountryRepository {
         }
     }
     public func getCountries() async throws -> [Country] {
-        if await dbObserver.objects.isEmpty {
+        if await dbObserver.getEntities().isEmpty {
             let remoteData = try await getRemoteCountries().data
             let localDb = try await Realm()
             localDb.writeAsync {
@@ -40,10 +40,6 @@ public class CountryRepositoryImpl: CountryRepository {
             }
             return remoteData
         }
-        return await dbObserver.objects.map(returnCountry)
-    }
-    
-    private func returnCountry(country: Country) -> Country {
-        return country
+        return await dbObserver.getEntities()
     }
 }

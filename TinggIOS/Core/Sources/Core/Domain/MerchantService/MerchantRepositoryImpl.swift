@@ -12,8 +12,6 @@ public class MerchantServiceRepositoryImpl: MerchantServiceRepository {
         self.dbObserver = dbObserver
     }
     public func getServices() -> [MerchantService] {
-        dbObserver.objects.map { service in
-            service
-        }
+        dbObserver.getEntities()
     }
 }

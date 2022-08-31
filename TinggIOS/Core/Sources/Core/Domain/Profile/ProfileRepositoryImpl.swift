@@ -12,6 +12,6 @@ public class ProfileRepositoryImpl: ProfileRepository {
         self.dbObserver = dbObserver
     }
     public func getProfile() -> Profile? {
-        return dbObserver.objects.first
+        return dbObserver.getEntities().first
     }
 }
