@@ -9,7 +9,6 @@ import Foundation
 import RealmSwift
 import SwiftUI
 public final class RealmManager: ObservableObject {
-    @ObservedResults(Country.self) public var countries
     private(set) var localDb: Realm?
     public init() {
         openRealmDb()
@@ -46,11 +45,6 @@ public final class RealmManager: ObservableObject {
             }
         } catch {
             print("RealmManager save \(error.localizedDescription)")
-        }
-    }
-    public func filterCountryByDialCode(dialCode: String) -> Country? {
-        return countries.first { country in
-            country.countryDialCode == dialCode
         }
     }
 }
