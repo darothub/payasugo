@@ -14,7 +14,7 @@ public class CountryRepositoryImpl: CountryRepository {
         self.baseRequest = baseRequest
         self.dbObserver =  dbObserver
     }
-    func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
+    private func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
         baseRequest.makeRequest(urlPath: "countries.php/") {(result: Result<CountryDTO, ApiError>) in
             switch result {
             case .failure(let error):
@@ -24,7 +24,7 @@ public class CountryRepositoryImpl: CountryRepository {
             }
         }
     }
-    func getRemoteCountries() async throws -> CountryDTO {
+    private func getRemoteCountries() async throws -> CountryDTO {
         return try await withCheckedThrowingContinuation { continuation in
             getCountries { result in
                 continuation.resume(with: result)

@@ -20,11 +20,19 @@ public struct HomeDI {
     public static func createMerchantServiceRepository() -> MerchantServiceRepository {
         return MerchantServiceRepositoryImpl(dbObserver: Observer<MerchantService>())
     }
+    public static func createCategoryRepository() -> CategoryRepository {
+        return CategoryRepositoryImpl(dbObserver: Observer<Categorys>())
+    }
+    public static func createChunkedCategoriesUsecase() -> ChunkedCategoriesUsecase {
+        return ChunkedCategoriesUsecase(categoryRepository: createCategoryRepository())
+    }
     public static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecaseImpl(
             fetchDueBillRepository: createFetchBillRepository(),
             profileRepository: createProfileRepository(),
-            merchantRepository: createMerchantServiceRepository()
+            merchantRepository: createMerchantServiceRepository(),
+            categoryRepository: createCategoryRepository(),
+            chunkedCategoriesUsecase: createChunkedCategoriesUsecase()
         )
     }
     @MainActor

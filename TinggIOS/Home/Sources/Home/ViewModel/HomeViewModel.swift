@@ -7,25 +7,26 @@ import Foundation
 
 @MainActor
 public class HomeViewModel: ObservableObject {
-    @Published public var categories = Observer<Categorys>().objects
     @Published public var nominationInfo = Observer<Enrollment>().objects
     @Published public var airTimeServices = [MerchantService]()
-    @Published public var processedCategories = [[Categorys]]()
+    @Published public var servicesByCategory = [[Categorys]]()
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
     @Published public var dueBill = [FetchedBill]()
     @Published var fetchBillUIModel = UIModel.nothing
+    @Published var quickTopUIModel = UIModel.nothing
+    @Published var categoryUIModel = UIModel.nothing
     @Published public var subscriptions = Set<AnyCancellable>()
-    public var homeUsecase: HomeUsecase
 
+    public var homeUsecase: HomeUsecase
     public init(homeUsecase: HomeUsecase) {
         self.homeUsecase = homeUsecase
-        processedCategories = categories.reversed().reversed().chunked(into: 4)
         getProfile()
         getQuickTopups()
         displayedRechargeAndBill()
         fetchDueBills()
+        getServicesByCategory()
     }
     
 
@@ -35,11 +36,23 @@ public class HomeViewModel: ObservableObject {
         }
         self.profile = profile
     }
+    
+    public func getServicesByCategory() {
+        categoryUIModel = UIModel.loading
+        Future<[[Categorys]], Never> { [unowned self] promise in
+            let servicesByCategory = homeUsecase.categorisedCategories()
+            promise(.success(servicesByCategory))
+            categoryUIModel = UIModel.nothing
+        }
+        .assign(to: \.servicesByCategory, on: self)
+        .store(in: &subscriptions)
+    }
     public func getQuickTopups() {
+        quickTopUIModel = UIModel.loading
         Future<[MerchantService], Never> { [unowned self] promise in
-            let airtimes = categories.filter {$0.categoryName == "Airtime"}
-            let theAirtimeCategory = airtimes[0]
-            promise(.success(services.filter { $0.categoryID == theAirtimeCategory.categoryID}))
+            let quicktopups = homeUsecase.getQuickTopups()
+            promise(.success(quicktopups))
+            quickTopUIModel = UIModel.nothing
         }
         .assign(to: \.airTimeServices, on: self)
         .store(in: &subscriptions)

@@ -10,14 +10,20 @@ public class HomeUsecaseImpl: HomeUsecase {
     private var fetchDueBillRepository: FetchBillRepository
     private var profileRepository: ProfileRepository
     private var merchantRepository: MerchantServiceRepository
+    private var categoryRepository: CategoryRepository
+    private var chunkedCategoriesUsecase: ChunkedCategoriesUsecase
     public init(
         fetchDueBillRepository: FetchBillRepository,
         profileRepository: ProfileRepository,
-        merchantRepository: MerchantServiceRepository
+        merchantRepository: MerchantServiceRepository,
+        categoryRepository: CategoryRepository,
+        chunkedCategoriesUsecase: ChunkedCategoriesUsecase
     ){
         self.fetchDueBillRepository = fetchDueBillRepository
         self.profileRepository = profileRepository
         self.merchantRepository = merchantRepository
+        self.categoryRepository = categoryRepository
+        self.chunkedCategoriesUsecase = chunkedCategoriesUsecase
     }
     public func fetchDueBill(tinggRequest: TinggRequest) async throws -> [FetchedBill] {
         return try await fetchDueBillRepository.getDueBills(tinggRequest: tinggRequest)
@@ -28,6 +34,15 @@ public class HomeUsecaseImpl: HomeUsecase {
     public func displayedRechargeAndBill() -> [MerchantService] {
         merchantRepository.getServices().prefix(8).shuffled()
     }
+    public func getQuickTopups() -> [MerchantService] {
+        let categories = categoryRepository.getCategories()
+        let airtimes = categories.filter {$0.categoryName == "Airtime"}
+        let theAirtimeCategory = airtimes[0]
+        return merchantRepository.getServices().filter { $0.categoryID == theAirtimeCategory.categoryID}
+    }
+    public func categorisedCategories() -> [[Categorys]]{
+        chunkedCategoriesUsecase()
+    }
 }
 
 
@@ -36,4 +51,6 @@ public protocol HomeUsecase {
     func fetchDueBill(tinggRequest: TinggRequest) async throws -> [FetchedBill]
     func getProfile() -> Profile?
     func displayedRechargeAndBill() -> [MerchantService]
+    func getQuickTopups() -> [MerchantService]
+    func categorisedCategories() -> [[Categorys]]
 }
