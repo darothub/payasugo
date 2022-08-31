@@ -8,8 +8,6 @@ import Foundation
 @MainActor
 public class HomeViewModel: ObservableObject {
     @Published public var categories = Observer<Categorys>().objects
-    @Published public var profiles = Observer<Profile>().objects
-    @Published public var services = Observer<MerchantService>().objects
     @Published public var nominationInfo = Observer<Enrollment>().objects
     @Published public var airTimeServices = [MerchantService]()
     @Published public var processedCategories = [[Categorys]]()
@@ -32,7 +30,7 @@ public class HomeViewModel: ObservableObject {
     
 
     public func getProfile() {
-        guard let profile = profiles.first else {
+        guard let profile = homeUsecase.getProfile() else {
             return
         }
         self.profile = profile
@@ -70,7 +68,7 @@ public class HomeViewModel: ObservableObject {
     }
     public func displayedRechargeAndBill() {
         Future<[MerchantService], Never> { [unowned self] promise in
-            promise(.success(services.prefix(8).shuffled()))
+            promise(.success(homeUsecase.displayedRechargeAndBill()))
         }
         .assign(to: \.rechargeAndBill, on: self)
         .store(in: &subscriptions)

@@ -14,11 +14,18 @@ public struct HomeDI {
     public static func createFetchBillRepository() -> FetchBillRepository {
         return FetchBillRepositoryImpl(baseRequest: .init())
     }
-    public static func createFetchBillUsecase() -> FetchDueBillUsecase {
-        return FetchDueBillUsecaseImpl(fetchBillRepository: createFetchBillRepository())
+    public static func createProfileRepository() -> ProfileRepository {
+        return ProfileRepositoryImpl(dbObserver: Observer<Profile>())
+    }
+    public static func createMerchantServiceRepository() -> MerchantServiceRepository {
+        return MerchantServiceRepositoryImpl(dbObserver: Observer<MerchantService>())
     }
     public static func createHomeUsecase() -> HomeUsecase {
-        return HomeUsecaseImpl(fetchDueBillUsecase: createFetchBillUsecase())
+        return HomeUsecaseImpl(
+            fetchDueBillRepository: createFetchBillRepository(),
+            profileRepository: createProfileRepository(),
+            merchantRepository: createMerchantServiceRepository()
+        )
     }
     @MainActor
     public static func createHomeViewModel() -> HomeViewModel {

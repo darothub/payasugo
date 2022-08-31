@@ -49,6 +49,16 @@
                ReferencedContainer = "container:TinggIOS.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "71463F3228BE4CA800A54384"
+               BuildableName = "HomeUITests.xctest"
+               BlueprintName = "HomeUITests"
+               ReferencedContainer = "container:TinggIOS.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
