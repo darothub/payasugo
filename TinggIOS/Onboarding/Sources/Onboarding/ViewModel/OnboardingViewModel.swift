@@ -30,7 +30,6 @@ public class OnboardingViewModel: ObservableObject {
     @Published var onSubmitUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     private var subscriptions = Set<AnyCancellable>()
-    private var dbTransaction = DBTransactions()
     @Published public var countryDictionary = [String: String]()
    
     var onboardingUseCase: OnboardingUseCase
@@ -82,7 +81,10 @@ public class OnboardingViewModel: ObservableObject {
     func getCountryByDialCode(dialCode: String) -> Country? {
         Task {
             do {
-                currentCountry = try await onboardingUseCase.getCountryByDialCode(dialCode: dialCode)!
+                guard let country = try await onboardingUseCase.getCountryByDialCode(dialCode: dialCode) else {
+                    throw "Invalid dialcode \(dialCode)"
+                }
+                currentCountry = country
             } catch {
                 uiModel = UIModel.error(error.localizedDescription)
             }
@@ -124,29 +126,8 @@ public class OnboardingViewModel: ObservableObject {
             print("nothingState")
         }
     }
-    func save(data: DBObject) {
-        dbTransaction.save(data: data)
-    }
-    func saveObjects(data: [DBObject]) {
-        dbTransaction.saveObjects(data: data)
-    }
-    func printLn(methodName: String, message: String) {
-        print("\(name) \(methodName) \(message)")
-    }
 }
 
-class DBTransactions {
-    private var realmManager: RealmManager = .init()
-    init() {
-        // Intentionally unimplemented...modular accessibility
-    }
-    func save(data: DBObject) {
-        realmManager.save(data: data)
-    }
-    func saveObjects(data: [DBObject]) {
-        realmManager.save(data: data)
-    }
-}
 
 
 
