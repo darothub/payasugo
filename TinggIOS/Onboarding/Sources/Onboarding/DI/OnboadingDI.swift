@@ -21,7 +21,7 @@ public struct OnboardingDI {
     public static func createCountryRepository() -> CountryRepositoryImpl {
         return CountryRepositoryImpl(
             baseRequest: createBaseRequest(),
-            realmManager: createRealmManager()
+            dbObserver: Observer<Country>()
         )
     }
     @MainActor
