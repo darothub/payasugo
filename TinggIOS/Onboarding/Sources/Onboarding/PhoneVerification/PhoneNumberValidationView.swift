@@ -193,7 +193,6 @@ extension OnboardingViewModel {
             printLn(methodName: "getSelectedCountryRegex", message: "country is nil")
             return ""
         }
-        self.currentCountry = country
         guard let regex = currentCountry.countryMobileRegex else { return ""}
         return regex
     }

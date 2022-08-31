@@ -80,7 +80,14 @@ public class OnboardingViewModel: ObservableObject {
     }
         
     func getCountryByDialCode(dialCode: String) -> Country? {
-        return onboardingUseCase.getCountryByDialCode(dialCode: dialCode)
+        Task {
+            do {
+                currentCountry = try await onboardingUseCase.getCountryByDialCode(dialCode: dialCode)!
+            } catch {
+                uiModel = UIModel.error(error.localizedDescription)
+            }
+        }
+        return currentCountry
     }
     fileprivate func handleResultState<T: BaseDTOprotocol>(model: inout UIModel, _ result: Result<T, ApiError>) {
         switch result {
@@ -99,13 +106,6 @@ public class OnboardingViewModel: ObservableObject {
         model.sink { [unowned self] uiModel in
             uiModelCases(uiModel: uiModel, action: action)
         }.store(in: &subscriptions)
-    }
-    func uiModelConnectable(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) -> Publishers.MakeConnectable<Published<UIModel>.Publisher> {
-        let connectable = model.makeConnectable()
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action)
-        }
-        return connectable
     }
     func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
         switch uiModel {

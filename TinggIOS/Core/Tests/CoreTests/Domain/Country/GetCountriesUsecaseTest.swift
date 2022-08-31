@@ -9,12 +9,12 @@ import Core
 import Foundation
 import XCTest
 class GetCountriesUsecaseTest: XCTestCase {
-    var getCountriesUsecase: GetCountriesUsecase?
+    var getCountriesUsecase: GetCountriesAndDialCodeUseCase?
     var countryRepository: CountryRepository?
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         countryRepository = FakeCountryRepositoryImpl()
-        getCountriesUsecase = GetCountriesUsecaseImpl(countryRepository: countryRepository!)
+        getCountriesUsecase = GetCountriesAndDialCodeUsecaseImpl(countryRepository: countryRepository!)
     }
 
     func testGetCountriesAndDialCode() async throws {
