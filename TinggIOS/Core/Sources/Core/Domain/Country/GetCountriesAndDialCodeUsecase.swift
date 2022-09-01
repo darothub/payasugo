@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public class GetCountriesAndDialCodeUsecaseImpl: GetCountriesAndDialCodeUseCase {
+public class GetCountriesAndDialCodeUseCase {
     public let countryRepository: CountryRepository
     public init (countryRepository: CountryRepository) {
         self.countryRepository = countryRepository
@@ -20,7 +20,7 @@ public class GetCountriesAndDialCodeUsecaseImpl: GetCountriesAndDialCodeUseCase 
     }
 }
 
-public class GetCountryByDialCodeUsecaseImpl: GetCountryByDialCodeUsecase {
+public class GetCountryByDialCodeUsecase {
     public let countryRepository: CountryRepository
     public init (countryRepository: CountryRepository) {
         self.countryRepository = countryRepository
@@ -35,10 +35,3 @@ public class GetCountryByDialCodeUsecaseImpl: GetCountryByDialCodeUsecase {
     }
 }
 
-public protocol GetCountriesAndDialCodeUseCase {
-    func callAsFunction() async throws -> [String : String]
-}
-
-public protocol GetCountryByDialCodeUsecase {
-    func callAsFunction(dialCode: String) async throws -> Country?
-}

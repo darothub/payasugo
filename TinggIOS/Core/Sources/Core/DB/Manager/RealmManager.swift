@@ -19,7 +19,7 @@ public final class RealmManager: ObservableObject {
     }
     private func openRealmDb() {
         do {
-            let config = Realm.Configuration(schemaVersion: 0)
+            let config = Realm.Configuration(schemaVersion: 7)
             Realm.Configuration.defaultConfiguration = config
             localDb = try Realm()
         } catch {
@@ -47,6 +47,16 @@ public final class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
+    public func invalidate() {
+        do {
+            try  localDb?.write { [unowned self] in
+                localDb?.deleteAll()
+            }
+        } catch {
+            print("RealmManager save \(error.localizedDescription)")
+        }
+        
+    }
 }
 
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
@@ -54,7 +64,7 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     public init() {}
     
     
-    func getEntities() ->[T] {
+    public func getEntities() ->[T] {
         objects.map(returnEntity(obj:))
     }
     
