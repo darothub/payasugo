@@ -30,9 +30,8 @@ public class OnboardingViewModel: ObservableObject {
     @Published var onSubmitUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     private var subscriptions = Set<AnyCancellable>()
-    private var dbTransaction = DBTransactions()
     @Published public var countryDictionary = [String: String]()
-    @Published public var countriesDb = Observer<Country>().objects
+   
     var onboardingUseCase: OnboardingUseCase
     var name = "OnboardingViewModel"
     
@@ -80,7 +79,17 @@ public class OnboardingViewModel: ObservableObject {
     }
         
     func getCountryByDialCode(dialCode: String) -> Country? {
-        return onboardingUseCase.getCountryByDialCode(dialCode: dialCode)
+        Task {
+            do {
+                guard let country = try await onboardingUseCase.getCountryByDialCode(dialCode: dialCode) else {
+                    throw "Invalid dialcode \(dialCode)"
+                }
+                currentCountry = country
+            } catch {
+                uiModel = UIModel.error(error.localizedDescription)
+            }
+        }
+        return currentCountry
     }
     fileprivate func handleResultState<T: BaseDTOprotocol>(model: inout UIModel, _ result: Result<T, ApiError>) {
         switch result {
@@ -100,13 +109,6 @@ public class OnboardingViewModel: ObservableObject {
             uiModelCases(uiModel: uiModel, action: action)
         }.store(in: &subscriptions)
     }
-    func uiModelConnectable(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) -> Publishers.MakeConnectable<Published<UIModel>.Publisher> {
-        let connectable = model.makeConnectable()
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action)
-        }
-        return connectable
-    }
     func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
         switch uiModel {
         case .content(let data):
@@ -124,38 +126,8 @@ public class OnboardingViewModel: ObservableObject {
             print("nothingState")
         }
     }
-    func save(data: DBObject) {
-        dbTransaction.save(data: data)
-    }
-    func saveObjects(data: [DBObject]) {
-        dbTransaction.saveObjects(data: data)
-    }
-    func printLn(methodName: String, message: String) {
-        print("\(name) \(methodName) \(message)")
-    }
-    func stopUIModelSubscription() {
-        subscriptions.forEach { cancellable in
-            cancellable.cancel()
-        }
-    }
 }
 
-class DBTransactions {
-    private var realmManager: RealmManager = .init()
-    init() {
-        // Intentionally unimplemented...modular accessibility
-    }
-    func save(data: DBObject) {
-        Task {
-            await realmManager.save(data: data)
-        }
-    }
-    func saveObjects(data: [DBObject]) {
-        Task {
-            await realmManager.save(data: data)
-        }
-    }
-}
 
 
 

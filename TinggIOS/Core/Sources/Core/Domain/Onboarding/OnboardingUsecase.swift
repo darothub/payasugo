@@ -8,29 +8,36 @@
 import Foundation
 
 public class OnboardingUsecaseImpl: OnboardingUseCase {
-    let getCountriesUsecase: GetCountriesUsecase
-    let authenticateUsecase: AuthenticateUsecase
-    let parUsecase: PARAndFSUUsecase
-    public init (getCountriesUsecase: GetCountriesUsecase, authenticateUsecase: AuthenticateUsecase, parUsecase: PARAndFSUUsecase) {
-        self.getCountriesUsecase = getCountriesUsecase
-        self.authenticateUsecase = authenticateUsecase
-        self.parUsecase = parUsecase
+    let getCountriesAndDialCodeUsecase: GetCountriesAndDialCodeUseCase
+    let getCountryByDialCodeUsecase: GetCountryByDialCodeUsecase
+    let authenticateRepository: AuthenticateRepository
+    let parAndFsuRepository: PARAndFSURepository
+    public init (
+        getCountriesAndDialCodeUsecase: GetCountriesAndDialCodeUseCase,
+        getCountryByDialCodeUsecase: GetCountryByDialCodeUsecase,
+        authenticateRepository: AuthenticateRepository,
+        parAndFsuRepository: PARAndFSURepository
+    ) {
+        self.getCountriesAndDialCodeUsecase = getCountriesAndDialCodeUsecase
+        self.getCountryByDialCodeUsecase = getCountryByDialCodeUsecase
+        self.authenticateRepository = authenticateRepository
+        self.parAndFsuRepository = parAndFsuRepository
     }
     
     public func getCountryDictionary() async throws -> [String: String] {
-        return try await getCountriesUsecase()
+        return try await getCountriesAndDialCodeUsecase()
     }
-    public func getCountryByDialCode(dialCode: String) -> Country? {
-        return getCountriesUsecase(dialCode: dialCode)
+    public func getCountryByDialCode(dialCode: String) async throws -> Country? {
+        return try await getCountryByDialCodeUsecase(dialCode: dialCode)
     }
     public func makeActivationCodeRequest(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError> {
-        return try await authenticateUsecase(tinggRequest: tinggRequest)
+        return try await authenticateRepository.requestForActivationCode(tinggRequest: tinggRequest)
     }
     public func confirmActivationCodeRequest(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError> {
-        return try await authenticateUsecase(tinggRequest: tinggRequest, code: code)
+        return try await authenticateRepository.confirmActivationCode(tinggRequest: tinggRequest, code: code)
     }
     public func makePARRequest(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError> {
-        return try await parUsecase(tinggRequest: tinggRequest )
+        return try await parAndFsuRepository.makeParAndFsuRequest(tinggRequest: tinggRequest)
     }
 }
 
@@ -39,5 +46,5 @@ public protocol OnboardingUseCase {
     func makeActivationCodeRequest(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>
     func confirmActivationCodeRequest(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>
     func makePARRequest(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError>
-    func getCountryByDialCode(dialCode: String) -> Country?
+    func getCountryByDialCode(dialCode: String) async throws -> Country?
 }

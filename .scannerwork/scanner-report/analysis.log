@@ -1,0 +1,92 @@
+SonarQube plugins:
+  - IaC Code Quality and Security 1.5.0.1600 (iac)
+  - PL/SQL Code Quality and Security 3.7.0.4372 (plsql)
+  - Scala Code Quality and Security 1.9.0.3429 (sonarscala)
+  - C# Code Quality and Security 8.34.0.42011 (csharp)
+  - Vulnerability Analysis 9.3.0.14923 (security)
+  - Java Code Quality and Security 7.7.0.28547 (java)
+  - HTML Code Quality and Security 3.6.0.3106 (web)
+  - Flex Code Quality and Security 2.7.0.2865 (flex)
+  - XML Code Quality and Security 2.5.0.3376 (xml)
+  - Text file Code Quality and Security 1.0.0.120 (text)
+  - VB.NET Code Quality and Security 8.34.0.42011 (vbnet)
+  - Swift Code Quality and Security 4.5.0.5305 (swift)
+  - CFamily Code Quality and Security 6.30.0.42324 (cpp)
+  - Python Code Quality and Security 3.9.0.9230 (python)
+  - Clover 4.1 (clover)
+  - Go Code Quality and Security 1.9.0.3429 (go)
+  - JaCoCo 1.1.1.1157 (jacoco)
+  - Kotlin Code Quality and Security 2.9.0.1147 (kotlin)
+  - RPG Code Quality 3.2.0.3034 (rpg)
+  - PL/I Code Quality and Security 1.11.1.2727 (pli)
+  - T-SQL Code Quality and Security 1.6.0.4844 (tsql)
+  - VB6 Code Quality and Security 2.8.0.3021 (vb)
+  - Apex Code Quality and Security 1.9.0.3429 (sonarapex)
+  - JavaScript/TypeScript Code Quality and Security 8.8.0.17228 (javascript)
+  - Ruby Code Quality and Security 1.9.0.3429 (ruby)
+  - Vulnerability Rules for C# 9.3.0.14923 (securitycsharpfrontend)
+  - Vulnerability Rules for Java 9.3.0.14923 (securityjavafrontend)
+  - License for SonarLint 9.3.0.51899 (license)
+  - Vulnerability Rules for JS 9.3.0.14923 (securityjsfrontend)
+  - COBOL Code Quality 4.6.2.4876 (cobol)
+  - Vulnerability Rules for Python 9.3.0.14923 (securitypythonfrontend)
+  - PHP Code Quality and Security 3.22.1.8626 (php)
+  - ABAP Code Quality and Security 3.10.0.3628 (abap)
+  - Configuration detection fot Code Quality and Security 1.2.0.267 (config)
+  - Vulnerability Rules for PHP 9.3.0.14923 (securityphpfrontend)
+Global server settings:
+  - email.from=no-reply@cellulant.io
+  - sonar.auth.gitlab.allowUsersToSignUp=true
+  - sonar.auth.gitlab.enabled=true
+  - sonar.auth.gitlab.url=https://thanos.cellulant.africa
+  - sonar.clover.reportPath=reports/clover.xml
+  - sonar.core.id=02F7F878-AXZLvThgZzEUZnXtko62
+  - sonar.core.serverBaseURL=https://sonar.cellulant.co.ke
+  - sonar.core.startTime=2022-03-08T05:21:19+0000
+  - sonar.dbcleaner.auditHousekeeping=Weekly
+  - sonar.dbcleaner.branchesToKeepWhenInactive=production,approval
+  - sonar.dbcleaner.daysBeforeDeletingClosedIssues=20
+  - sonar.dbcleaner.daysBeforeDeletingInactiveBranchesAndPRs=10
+  - sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion=30
+  - sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth=30
+  - sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek=1
+  - sonar.forceAuthentication=true
+  - sonar.governance.report.view.frequency=Weekly
+  - sonar.governance.report.view.recipients=george.murage@cellulant.io,michael.muriuki@celluant.io,victor.william@cellulant.io,mark.wachira@celluant.io,brenda.wairimu@cellulant.io,judith.kalondu@cellulant.io
+  - sonar.lf.enableGravatar=true
+  - sonar.lf.logoUrl=https://thanos.cellulant.africa/uploads/-/system/appearance/header_logo/1/Cellulan_new_logo_white.png
+  - sonar.plugins.risk.consent=ACCEPTED
+Project server settings:
+Project scanner properties:
+  - sonar.branch.name=feature/unit-test
+  - sonar.c.file.suffixes=-
+  - sonar.coverage.jacoco.xmlReportPaths=coverage.xml
+  - sonar.coverageReportPaths=coverage.xml
+  - sonar.cpp.file.suffixes=-
+  - sonar.exclusions=**/*.xml,Pods/**/*,Reports/**/*
+  - sonar.host.url=https://sonar.cellulant.co.ke/
+  - sonar.junit.reportsPath=sonar-reports/TEST-report.xml
+  - sonar.language=swift
+  - sonar.login=******
+  - sonar.objc.file.suffixes=-
+  - sonar.projectBaseDir=/usr/src
+  - sonar.projectDescription=This is TinggiOS
+  - sonar.projectKey=tinggios
+  - sonar.projectName=TinggIOS
+  - sonar.qualitygate.wait=true
+  - sonar.scanner.app=ScannerCLI
+  - sonar.scanner.appVersion=4.7.0.2747
+  - sonar.sourceEncoding=UTF-8
+  - sonar.sources=.
+  - sonar.swift.appConfiguration=Debug
+  - sonar.swift.appName=TinggIOS
+  - sonar.swift.appScheme=TinggIOS
+  - sonar.swift.coverage.reportPattern=sonar-reports/coverage-swift*.xml
+  - sonar.swift.simulator=platform=iOS Simulator,name=iPhone 11,OS=15
+  - sonar.swift.swiftlint.report=sonar-reports/*swiftlint.txt
+  - sonar.swift.tailor.config=--no-color --max-line-length=100 --max-file-length=500 --max-name-length=40 --max-name-length=40 --min-name-length=4
+  - sonar.swift.tailor.report=sonar-reports/*tailor.txt
+  - sonar.swift.workspace=TinggIOS/TinggIOS.xcworkspace
+  - sonar.test.inclusions=*.swift
+  - sonar.tests=TinggIOS/Home/Tests/HomeTests,TinggIOS/OnboardingUITest,TinggIOS/Core/Tests/CoreTests,TinggIOS/Onboarding/Tests/OnboardingsTests
+  - sonar.working.directory=/usr/src/.scannerwork

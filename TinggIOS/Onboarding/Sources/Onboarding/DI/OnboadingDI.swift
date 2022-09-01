@@ -21,7 +21,7 @@ public struct OnboardingDI {
     public static func createCountryRepository() -> CountryRepositoryImpl {
         return CountryRepositoryImpl(
             baseRequest: createBaseRequest(),
-            realmManager: createRealmManager()
+            dbObserver: Observer<Country>()
         )
     }
     @MainActor
@@ -30,20 +30,24 @@ public struct OnboardingDI {
     }
     public static func createOnboardingUseCase() -> OnboardingUseCase {
         return OnboardingUsecaseImpl(
-            getCountriesUsecase: createGetCountriesUsecase(),
-            authenticateUsecase: createAuthenticateUsecase(),
-            parUsecase: createParAndFsuUsecase()
+            getCountriesAndDialCodeUsecase: createGetCountriesAndDialCodeUsecase(),
+            getCountryByDialCodeUsecase: createGetCountryByDialCodeUsecase(),
+            authenticateRepository: createAuthenticateUsecase(),
+            parAndFsuRepository: createParAndFsuRepository()
         )
     }
-    public static func createGetCountriesUsecase() -> GetCountriesUsecaseImpl {
-        return GetCountriesUsecaseImpl(countryRepository: createCountryRepository())
+    public static func createGetCountriesAndDialCodeUsecase() -> GetCountriesAndDialCodeUsecaseImpl {
+        return GetCountriesAndDialCodeUsecaseImpl(countryRepository: createCountryRepository())
+    }
+    public static func createGetCountryByDialCodeUsecase() -> GetCountryByDialCodeUsecaseImpl {
+        return GetCountryByDialCodeUsecaseImpl(countryRepository: createCountryRepository())
     }
 
-    public static func createAuthenticateUsecase() -> AuthenticateUsecaseImpl {
-        return AuthenticateUsecaseImpl(baseRequest: createBaseRequest())
+    public static func createAuthenticateUsecase() -> AuthenticateRepositoryImpl {
+        return AuthenticateRepositoryImpl(baseRequest: createBaseRequest())
     }
     
-    public static func createParAndFsuUsecase() -> PARAndFSUUsecaseImpl {
-        return PARAndFSUUsecaseImpl(baseRequest: createBaseRequest())
+    public static func createParAndFsuRepository() -> PARAndFSURepositoryImpl {
+        return PARAndFSURepositoryImpl(baseRequest: createBaseRequest())
     }
 }

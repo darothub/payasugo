@@ -7,7 +7,5 @@
 
 import Foundation
 public protocol CountryRepository {
-    func getCountriesAndDialCode() async throws -> [String: String]
-    func getCountryByDialCode(dialCode: String) -> Country?
     func getCountries() async throws -> [Country]
 }

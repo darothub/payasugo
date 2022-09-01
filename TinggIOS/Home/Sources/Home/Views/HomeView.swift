@@ -13,7 +13,7 @@ import Theme
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
     var categories: [[Categorys]] {
-        hvm.processedCategories
+        hvm.servicesByCategory
     }
     var chartData: [ChartData] {
         hvm.mapHistoryIntoChartData()
@@ -44,6 +44,7 @@ struct HomeView: View {
                 .background(.white)
                 .shadow(radius: 0, y: 3)
                 .padding(.vertical, 10)
+                .handleViewState(uiModel: $hvm.categoryUIModel)
             
             QuickTopupView(airtimeServices: airtimeServices)
                 .background(
@@ -51,6 +52,7 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
                 )
+                .handleViewState(uiModel: $hvm.quickTopUIModel)
             DueBillsView(fetchedBill: fetchedBill)
                 .background(
                     RoundedRectangle(cornerRadius: 0)

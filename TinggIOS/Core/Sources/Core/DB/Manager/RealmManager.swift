@@ -9,7 +9,6 @@ import Foundation
 import RealmSwift
 import SwiftUI
 public final class RealmManager: ObservableObject {
-    @ObservedResults(Country.self) public var countries
     private(set) var localDb: Realm?
     public init() {
         openRealmDb()
@@ -48,16 +47,28 @@ public final class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
-    public func filterCountryByDialCode(dialCode: String) -> Country? {
-        return countries.first { country in
-            country.countryDialCode == dialCode
-        }
-    }
 }
 
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     public init() {}
+    
+    
+    func getEntities() ->[T] {
+        objects.map(returnEntity(obj:))
+    }
+    
+    public func saveEntity(obj: T){
+        $objects.append(obj)
+    }
+    public func saveEntities(objs: [T]){
+        objs.forEach { obj in
+            saveEntity(obj: obj)
+        }
+    }
+    private func returnEntity(obj: T) -> T {
+        return obj
+    }
 }
 
 public protocol DBObject: Object {}

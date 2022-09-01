@@ -23,7 +23,10 @@ public func makeDateFromString(validDateString: String) -> Date {
         dateFormatter.dateFormat = "yyyy-MM-dd"
     }
     
-    let date = dateFormatter.date(from: validDateString)!
+    let date = dateFormatter.date(from: validDateString)
+    guard let date = date else {
+        fatalError("Date string \(validDateString) is invalid")
+    }
     return date
 }
 

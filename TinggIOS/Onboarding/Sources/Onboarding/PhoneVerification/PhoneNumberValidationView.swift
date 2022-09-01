@@ -13,11 +13,16 @@ import Theme
 public struct PhoneNumberValidationView: View {
     // swiftlint:disable all
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
-    var dbTransactionController: DBTransactions = .init()
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
     @State private var subscriptions = Set<AnyCancellable>()
+    @Environment(\.realmManager) var realmManager
+    var categoriesDbObserver = Observer<Categorys>()
+    var merchantServicesDbObserver = Observer<MerchantService>()
+    var enrollmentDbObserver = Observer<Enrollment>()
+    var transactionHistoryDbObserver = Observer<TransactionHistory>()
+    var profileDbObserver = Observer<Profile>()
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -158,15 +163,15 @@ extension PhoneNumberValidationView {
                 }.filter { category in
                     category.activeStatus == "1"
                 }
-                vm.saveObjects(data: sortedCategories)
-                vm.saveObjects(data: parResponse.services)
-                vm.saveObjects(data: parResponse.transactionSummaryInfo)
+                realmManager.save(data: sortedCategories)
+                realmManager.save(data: parResponse.services)
+                realmManager.save(data: parResponse.transactionSummaryInfo)
                 let nominationInfo = parResponse.nominationInfo.filter { enrolment in
                     enrolment.isReminder == "0" && enrolment.accountStatus == 1
                 }
-                vm.saveObjects(data: nominationInfo)
+                realmManager.save(data: nominationInfo)
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
-                vm.save(data: profile)
+                realmManager.save(data: profile)
                 navigation.screen = .home
             }
         }
@@ -176,24 +181,28 @@ extension PhoneNumberValidationView {
 extension OnboardingViewModel {
     func verifyPhoneNumber(number: String) {
         let phoneNumber = "+\(countryCode)\(number)"
-        let regex = getSelectedCountryRegex()
-        guard validatePhoneNumberWith(regex: regex, phoneNumber: phoneNumber) != nil
-        else {
-            isValidPhoneNumber = false
-            return
+        do {
+            let regex = try getSelectedCountryRegex()
+            guard validatePhoneNumberWith(regex: regex, phoneNumber: phoneNumber) != nil
+            else {
+                isValidPhoneNumber = false
+                return
+            }
+            if  number.count < 8 {
+                isValidPhoneNumber = false
+                return
+            }
+            isValidPhoneNumber = true
+        } catch {
+            phoneNumberFieldUIModel = UIModel.error(error.localizedDescription)
         }
-        if  number.count < 8 {
-            isValidPhoneNumber = false
-            return
-        }
-        isValidPhoneNumber = true
+       
+     
     }
-    func getSelectedCountryRegex() -> String {
-        guard let country = getCountryByDialCode(dialCode: countryCode) else {
-            printLn(methodName: "getSelectedCountryRegex", message: "country is nil")
-            return ""
+    func getSelectedCountryRegex() throws -> String {
+        guard getCountryByDialCode(dialCode: countryCode) != nil else {
+            throw "Country witn \(countryCode) not found"
         }
-        self.currentCountry = country
         guard let regex = currentCountry.countryMobileRegex else { return ""}
         return regex
     }
