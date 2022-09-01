@@ -36,11 +36,11 @@ public struct OnboardingDI {
             parAndFsuRepository: createParAndFsuRepository()
         )
     }
-    public static func createGetCountriesAndDialCodeUsecase() -> GetCountriesAndDialCodeUsecaseImpl {
-        return GetCountriesAndDialCodeUsecaseImpl(countryRepository: createCountryRepository())
+    public static func createGetCountriesAndDialCodeUsecase() -> GetCountriesAndDialCodeUseCase {
+        return GetCountriesAndDialCodeUseCase(countryRepository: createCountryRepository())
     }
-    public static func createGetCountryByDialCodeUsecase() -> GetCountryByDialCodeUsecaseImpl {
-        return GetCountryByDialCodeUsecaseImpl(countryRepository: createCountryRepository())
+    public static func createGetCountryByDialCodeUsecase() -> GetCountryByDialCodeUsecase {
+        return GetCountryByDialCodeUsecase(countryRepository: createCountryRepository())
     }
 
     public static func createAuthenticateUsecase() -> AuthenticateRepositoryImpl {

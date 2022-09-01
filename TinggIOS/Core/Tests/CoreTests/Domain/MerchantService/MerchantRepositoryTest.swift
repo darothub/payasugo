@@ -13,12 +13,13 @@ class MerchantRepositoryTest: XCTestCase {
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         Realm.Configuration.defaultConfiguration.inMemoryIdentifier = self.name
-        merchantServiceRepository = FakeMerchantRepository()
+        merchantServiceRepository = FakeMerchantRepository(dbObserver: Observer<MerchantService>())
     }
     
     func testGetServices(){
-        let services = merchantServiceRepository?.getServices()
-        XCTAssertEqual(services?.count, 9, "Merchant service was not properly updated from server.")
+        let actual = merchantServiceRepository?.getServices().count
+        let expected = 9
+        XCTAssertEqual(actual, expected, "Expected \(expected) but found \(String(describing: actual))")
     }
     
 }
