@@ -9,9 +9,9 @@ import Foundation
 import RealmSwift
 // MARK: - TransactionHistory
 public class TransactionHistory: Object, DBObject, ObjectKeyIdentifiable, Codable {
-    @Persisted(primaryKey: true) public var id: ObjectId
+    @Persisted public var id: ObjectId
     @Persisted public var statusCode : String?
-    @Persisted public var payerTransactionID : String?
+    @Persisted(primaryKey: true) public var payerTransactionID : String?
     @Persisted public var beepTransactionID : String?
     @Persisted public var receiptNumber: String?
     @Persisted public var receiverNarration: String?

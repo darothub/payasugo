@@ -7,34 +7,33 @@
 
 import Foundation
 public class HomeUsecase {
-    private var fetchDueBillRepository: FetchBillRepository
+    private var billAccountUsecase: BillAccountUsecase
     private var profileRepository: ProfileRepository
     private var merchantRepository: MerchantServiceRepository
     private var categoryRepository: CategoryRepository
     private var chunkedCategoriesUsecase: ChunkedCategoriesUsecase
     private var barChartUsecase: BarChartUsecase
-    private var dueBillsUsecase: DueBillsUsecase
+    private var dueBillUsecase: DueBillsUsecase
+
     public init(
-        fetchDueBillRepository: FetchBillRepository,
+        billAccountUsecase: BillAccountUsecase,
         profileRepository: ProfileRepository,
         merchantRepository: MerchantServiceRepository,
         categoryRepository: CategoryRepository,
         chunkedCategoriesUsecase: ChunkedCategoriesUsecase,
         barChartUsecase: BarChartUsecase,
-        dueBillsUsecase: DueBillsUsecase
+        dueBillUsecase: DueBillsUsecase
 
     ){
-        self.fetchDueBillRepository = fetchDueBillRepository
+        self.billAccountUsecase = billAccountUsecase
         self.profileRepository = profileRepository
         self.merchantRepository = merchantRepository
         self.categoryRepository = categoryRepository
         self.chunkedCategoriesUsecase = chunkedCategoriesUsecase
         self.barChartUsecase = barChartUsecase
-        self.dueBillsUsecase = dueBillsUsecase
+        self.dueBillUsecase = dueBillUsecase
     }
-    public func fetchDueBill(tinggRequest: TinggRequest) async throws -> [FetchedBill] {
-        return try await fetchDueBillRepository.getDueBills(tinggRequest: tinggRequest)
-    }
+
     public func getProfile() -> Profile? {
         profileRepository.getProfile()
     }
@@ -60,7 +59,11 @@ public class HomeUsecase {
     }
     
     public func getDueBills() async throws -> [FetchedBill] {
-       try await dueBillsUsecase()
+        var tinggRequest: TinggRequest = .shared
+        tinggRequest.service = "FBA"
+        tinggRequest.billAccounts = billAccountUsecase()
+        print("DueBillUsecase \(tinggRequest)")
+        return try await dueBillUsecase(tinggRequest: tinggRequest)
     }
 
 }

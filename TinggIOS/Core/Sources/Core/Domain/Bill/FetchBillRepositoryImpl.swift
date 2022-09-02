@@ -7,11 +7,11 @@
 import RealmSwift
 import Foundation
 public class FetchBillRepositoryImpl: FetchBillRepository {
-    public var baseRequest: BaseRequest
-    public init(baseRequest: BaseRequest) {
+    public var baseRequest: TinggApiServices
+    public init(baseRequest: TinggApiServices) {
         self.baseRequest = baseRequest
     }
-    fileprivate func fetchDueBillsDTO(tinggRequest: TinggRequest) async throws ->  FetchBillDTO {
+    public func fetchDueBillsDTO(tinggRequest: TinggRequest) async throws ->  FetchBillDTO {
         return try await withCheckedThrowingContinuation { continuation in
             baseRequest.makeRequest(tinggRequest: tinggRequest) { (result: Result<FetchBillDTO, ApiError>) in
                 continuation.resume(with: result)
