@@ -12,10 +12,7 @@ public struct HomeDI {
     public init() {
         //public init
     }
-    public static func createBaseRepository<T: BaseRepository>() -> T where T.O : Object, T.O: ObjectKeyIdentifiable  {
-        let impl = BaseRepositoryImpl<T.O>(dbObserver: .init())
-        return impl as! T
-    }
+
     public static func createFetchBillRepository() -> FetchBillRepository {
         return FetchBillRepositoryImpl(baseRequest: BaseRequest())
     }
