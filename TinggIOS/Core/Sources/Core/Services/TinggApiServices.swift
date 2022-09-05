@@ -9,7 +9,10 @@ import Alamofire
 import Foundation
 import SwiftUI
 public protocol TinggApiServices {
-    func request(tinggRequest: TinggRequest) -> DataRequest
+    func makeRequest<T: BaseDTOprotocol>(
+        tinggRequest: TinggRequest,
+        onCompletion: @escaping(Result<T, ApiError>) -> Void
+    )
 }
 
 extension TinggApiServices {
@@ -23,6 +26,15 @@ extension TinggApiServices {
     }
     public func request(urlPath: String) -> DataRequest {
         return AF.request(Utils.baseUrlStaging+urlPath, method: .get)
+    }
+    public func makeRequest<T: BaseDTOprotocol>(
+        urlPath: String,
+        onCompletion: @escaping(Result<T, ApiError>) -> Void
+    ) {
+        request(urlPath: urlPath)
+             .execute { (result:Result<T, ApiError>) in
+                 onCompletion(result)
+             }
     }
 }
 

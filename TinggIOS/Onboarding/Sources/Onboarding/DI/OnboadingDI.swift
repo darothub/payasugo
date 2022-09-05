@@ -29,7 +29,7 @@ public struct OnboardingDI {
         return OnboardingViewModel(onboardingUseCase: createOnboardingUseCase())
     }
     public static func createOnboardingUseCase() -> OnboardingUseCase {
-        return OnboardingUsecaseImpl(
+        return OnboardingUseCase(
             getCountriesAndDialCodeUsecase: createGetCountriesAndDialCodeUsecase(),
             getCountryByDialCodeUsecase: createGetCountryByDialCodeUsecase(),
             authenticateRepository: createAuthenticateUsecase(),

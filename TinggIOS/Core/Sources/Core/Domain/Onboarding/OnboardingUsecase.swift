@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class OnboardingUsecaseImpl: OnboardingUseCase {
+public class OnboardingUseCase {
     let getCountriesAndDialCodeUsecase: GetCountriesAndDialCodeUseCase
     let getCountryByDialCodeUsecase: GetCountryByDialCodeUsecase
     let authenticateRepository: AuthenticateRepository
@@ -41,10 +41,3 @@ public class OnboardingUsecaseImpl: OnboardingUseCase {
     }
 }
 
-public protocol OnboardingUseCase {
-    func getCountryDictionary() async throws -> [String: String]
-    func makeActivationCodeRequest(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>
-    func confirmActivationCodeRequest(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>
-    func makePARRequest(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError>
-    func getCountryByDialCode(dialCode: String) async throws -> Country?
-}

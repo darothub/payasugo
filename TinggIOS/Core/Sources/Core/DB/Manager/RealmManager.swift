@@ -19,7 +19,7 @@ public final class RealmManager: ObservableObject {
     }
     private func openRealmDb() {
         do {
-            let config = Realm.Configuration(schemaVersion: 7)
+            let config = Realm.Configuration(schemaVersion: 3)
             Realm.Configuration.defaultConfiguration = config
             localDb = try Realm()
         } catch {

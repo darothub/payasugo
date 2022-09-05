@@ -7,13 +7,20 @@
 
 // MARK: - FetchBillDTO
 public struct FetchBillDTO: BaseDTOprotocol, Codable {
-    public let statusCode: Int
-    public let statusMessage: String
-    public let fetchedBills: [FetchedBill]
+    public var statusCode: Int
+    public var statusMessage: String
+    public var fetchedBills: [FetchedBill]
 
+    public init(statusCode: Int, statusMessage: String, fetchedBills: [FetchedBill]) {
+        self.statusCode = statusCode
+        self.statusMessage = statusMessage
+        self.fetchedBills = fetchedBills
+    }
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
         case statusMessage = "STATUS_MESSAGE"
         case fetchedBills = "FETCHED_BILLS"
     }
 }
+
+

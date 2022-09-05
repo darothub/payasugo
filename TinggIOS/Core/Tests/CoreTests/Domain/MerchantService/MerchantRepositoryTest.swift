@@ -17,8 +17,9 @@ class MerchantRepositoryTest: XCTestCase {
     }
     
     func testGetServices(){
-        let actual = merchantServiceRepository?.getServices().count
-        let expected = 9
+        let services = merchantServiceRepository?.getServices()
+        let actual = services?.count
+        let expected = 3
         XCTAssertEqual(actual, expected, "Expected \(expected) but found \(String(describing: actual))")
     }
     

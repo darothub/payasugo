@@ -15,27 +15,20 @@ class FakeMerchantRepository: MerchantServiceRepository {
     public init(dbObserver: Observer<MerchantService>) {
         //Public init
         self.dbObserver = dbObserver
-        realm.invalidate()
         saveDataInDB()
     }
     func saveDataInDB() {
-        let data =        [
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-            MerchantService(),
-
-           ]
+        let service1 = MerchantService()
+        service1.serviceName = "Airtel"
+        let service2 = MerchantService()
+        service2.serviceName = "DstvNg"
+        let service3 = MerchantService()
+        service3.serviceName = "AON"
+        let data = [service3, service1, service2, ]
         realm.save(data: data)
     }
     
     func getServices() -> [MerchantService] {
         dbObserver.getEntities()
-
     }
 }
