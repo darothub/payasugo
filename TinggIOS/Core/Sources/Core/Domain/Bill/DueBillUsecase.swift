@@ -7,19 +7,12 @@
 
 import Foundation
 public class DueBillsUsecase {
-    private let billAccountUseCase: BillAccountUsecase
-    private let fetchBillRepository: FetchBillRepository
-    
-    public init(billAccountUseCase: BillAccountUsecase, fetchBillRepository: FetchBillRepository) {
+    private let fetchBillRepository: FetchBillRepository    
+    public init(fetchBillRepository: FetchBillRepository) {
         self.fetchBillRepository = fetchBillRepository
-        self.billAccountUseCase = billAccountUseCase
     }
     
-    func callAsFunction() async throws -> [FetchedBill] {
-        var tinggRequest: TinggRequest = .shared
-        tinggRequest.service = "FBA"
-        tinggRequest.billAccounts = billAccountUseCase()
-        print("DueBillUsecase \(tinggRequest)")
+    public func callAsFunction(tinggRequest: TinggRequest) async throws -> [FetchedBill] {
         var dueBills = try await fetchBillRepository.getDueBills(tinggRequest: tinggRequest)
         dueBills = dueBills.filter { bill in
             let daysDiff = abs((makeDateFromString(validDateString: bill.dueDate) - Date()).day)

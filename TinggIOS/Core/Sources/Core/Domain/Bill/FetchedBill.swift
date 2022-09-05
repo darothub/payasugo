@@ -8,15 +8,27 @@
 import Foundation
 
 // MARK: - FetchedBill
-public struct FetchedBill: Codable {
-    public let billDescription, billReference, biller, serviceID: String
-    public let customerName, invoiceNumber: String
-    //     public let amount: Int
-    public let currency, dueDate, beepTransactionID, parkingZone: String
-    public let vehicleType, callbackData, currentAppVersion: String
-    public let isEstimate, estimateAmount: Int
-    public let dateEstimated, estimateExpiryDate, lastFetchDate: String
-    public let statusCode: Int
+public class FetchedBill: NSObject, Codable {
+    public var billDescription: String = ""
+    public var billReference: String = ""
+    public var biller: String = ""
+    public var serviceID: String = ""
+    public var customerName: String = ""
+    public var invoiceNumber: String = ""
+    //     public var amount: Int
+    public var currency: String = ""
+    public var dueDate: String = ""
+    public var beepTransactionID: String = ""
+    public var parkingZone: String = ""
+    public var vehicleType: String = ""
+    public var callbackData: String = ""
+    public var currentAppVersion: String = ""
+    public var isEstimate: Int = 0
+    public var estimateAmount: Int = 0
+    public var dateEstimated: String = ""
+    public var estimateExpiryDate: String = ""
+    public var lastFetchDate: String = ""
+    public var statusCode: Int = 0
     
     enum CodingKeys: String, CodingKey {
         case billDescription = "BILL_DESCRIPTION"
@@ -41,3 +53,4 @@ public struct FetchedBill: Codable {
         case statusCode = "STATUS_CODE"
     }
 }
+

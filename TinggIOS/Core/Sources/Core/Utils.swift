@@ -29,3 +29,18 @@ extension Array {
         }
     }
 }
+
+public func addDaysToCurrentDate(numOfDays: Int) -> Date {
+    let currentDate = Date()
+    var dateComponent = DateComponents()
+    dateComponent.day = numOfDays
+    let futureDate = Calendar.current.date(byAdding: dateComponent, to: currentDate)
+    return futureDate!
+}
+
+public func formatDateToString(date: Date) -> String {
+    let df = DateFormatter()
+    df.dateFormat = "yyyy-MM-dd hh:mm:ss"
+    let now = df.string(from: date)
+    return now
+}
