@@ -9,7 +9,8 @@ import SwiftUI
 import Theme
 import Core
 struct RechargeAndBillView: View {
-    @EnvironmentObject var hvm: HomeViewModel
+    @State var rechargeAndBill = [MerchantService]()
+    @State var navigateToBillForm = false
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
     ]
@@ -46,10 +47,18 @@ struct RechargeAndBillView: View {
     @ViewBuilder
     fileprivate func viewBody() -> some View {
         LazyVGrid(columns: gridColumn, spacing: 0){
-            ForEach(hvm.rechargeAndBill, id: \.id) { service in
-                RemoteImageCard(imageUrl: service.serviceLogo!)
-                    .padding(.vertical)
-                    .animation(.easeInOut, value: service.id)
+            ForEach(rechargeAndBill, id: \.id) { service in
+                NavigationLink(
+                    destination: BillFormView(service: service),
+                    isActive: $navigateToBillForm) {
+                    RemoteImageCard(imageUrl: service.serviceLogo!)
+                        .padding(.vertical)
+                        .animation(.easeInOut, value: service.serviceLogo)
+                        .onTapGesture {
+                            print("Service \(service)")
+                            navigateToBillForm = service.presentmentType != "None"
+                        }
+                }
             }
         }
     }
@@ -57,7 +66,6 @@ struct RechargeAndBillView: View {
 
 struct RechargeAndBillView_Previews: PreviewProvider {
     static var previews: some View {
-        RechargeAndBillView()
-            .environmentObject(HomeDI.createHomeViewModel())
+        RechargeAndBillView(rechargeAndBill: [MerchantService]())
     }
 }

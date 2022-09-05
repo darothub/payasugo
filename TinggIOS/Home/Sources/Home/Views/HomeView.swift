@@ -24,6 +24,9 @@ struct HomeView: View {
     var fetchedBill: [FetchedBill] {
         hvm.dueBill
     }
+    var rechargeAndBill: [MerchantService] {
+        hvm.rechargeAndBill
+    }
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -61,7 +64,7 @@ struct HomeView: View {
                 )
                 .frame(maxWidth: .infinity)
                 .handleViewState(uiModel: $hvm.fetchBillUIModel)
-            RechargeAndBillView()
+            RechargeAndBillView(rechargeAndBill: rechargeAndBill)
                 .background(
                     RoundedRectangle(cornerRadius: 0)
                         .foregroundColor(.white)
