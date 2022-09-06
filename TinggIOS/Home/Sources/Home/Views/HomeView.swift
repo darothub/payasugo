@@ -70,6 +70,7 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
                 ).environmentObject(hvm)
+                .handleViewState(uiModel: $hvm.rechargeAndBillUIModel)
             ExpensesGraphView(chartData: chartData)
                 .background(
                     RoundedRectangle(cornerRadius: 0)

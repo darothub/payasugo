@@ -30,7 +30,7 @@ struct TinggIOSApp: App {
     @ViewBuilder
     fileprivate func appBody() -> some View {
         ZStack {
-            HomeBottomNavView()
+            NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
         }
         .onAppear {
               UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")

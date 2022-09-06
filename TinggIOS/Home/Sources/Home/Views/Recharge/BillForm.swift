@@ -17,8 +17,8 @@ struct BillFormView: View {
             VStack {
                 ZStack(alignment: .top) {
                     TopBackground()
-                        .alignmentGuide(.top) { d in d[.bottom] * 0.75 }
-                        .frame(height: geo.size.height * 0.2)
+                        .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
+                        .frame(height: geo.size.height * 0.1)
                     RemoteImageCard(imageUrl: service.serviceLogo!)
                         .scaleEffect(1.2)
                 }
@@ -75,10 +75,10 @@ struct TextFieldView: View {
         VStack(alignment: .leading) {
             Group {
                 Text("Enter your \(service.referenceLabel!)")
-                    .font(.title3)
+                    .font(.body)
                     .foregroundColor(.black)
                 TextField(service.referenceLabel!, text: $accountNumber)
-                    .padding([.horizontal, .vertical], 20)
+                    .padding([.horizontal, .vertical], 18)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
