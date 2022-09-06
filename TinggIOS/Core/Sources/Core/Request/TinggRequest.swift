@@ -22,10 +22,11 @@ public struct TinggRequest: Encodable {
     public var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
     public var merchantDetails: String? = ""
     public var profileInfo: String? = ""
-    public var apiLevel: String = "15"
+    public var apiLevel: Int = 15
     public var isExplicit = "1"
     public var dataSource: String? = AppStorageManager.getActiveCountry()
     public var billAccounts: [BillAccount]?
+    public var serviceId: String? = ""
     public static var shared = TinggRequest()
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
@@ -48,6 +49,7 @@ public struct TinggRequest: Encodable {
         case isExplicit = "IS_EXPLICIT"
         case activationCode = "ACTIVATION_CODE"
         case dataSource = "DATA_SOURCE"
+        case serviceId = "SERVICE_ID"
         case billAccounts = "BILL_ACCOUNTS"
     }
 }

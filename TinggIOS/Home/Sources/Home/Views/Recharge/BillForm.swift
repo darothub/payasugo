@@ -12,6 +12,7 @@ import Core
 struct BillFormView: View {
     @State var accountNumber: String = ""
     @Binding var service: MerchantService
+    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     var body: some View {
         GeometryReader { geo in
             VStack {
@@ -24,24 +25,28 @@ struct BillFormView: View {
                 }
                 Text(service.serviceName!)
                     .padding(20)
-                    .font(.title.bold())
+                    .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)
                 
                 TextFieldView(
-                    accountNumber: $accountNumber,
-                    service: $service
-                )
+                    fieldText: $accountNumber,
+                    label: "Enter your \(service.referenceLabel!)",
+                    placeHolder: service.referenceLabel!
+                ).keyboardType(.namePhonePad)
                 Spacer()
                 
-                button(
-                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                    buttonLabel: "Continue"
-                ) {
-                    
+                NavigationLink(destination: BillDetailsView(fetchBill: homeViewModel.singleBill, service: service), isActive: $homeViewModel.navigateBillDetailsView) {
+                    button(
+                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                        buttonLabel: "Continue"
+                    ) {
+                        homeViewModel.getSingleDueBill(
+                            accountNumber: accountNumber,
+                            serviceId: service.hubServiceID!
+                        )
+                    }.handleViewState(uiModel: $homeViewModel.uiModel)
                 }
             }
-        }.onAppear {
-            print("Service \(service)")
         }
     }
 }
@@ -67,24 +72,3 @@ struct TopBackground: View {
     }
 }
 
-
-struct TextFieldView: View {
-    @Binding var accountNumber: String
-    @Binding var service: MerchantService
-    var body: some View {
-        VStack(alignment: .leading) {
-            Group {
-                Text("Enter your \(service.referenceLabel!)")
-                    .font(.body)
-                    .foregroundColor(.black)
-                TextField(service.referenceLabel!, text: $accountNumber)
-                    .padding([.horizontal, .vertical], 18)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(lineWidth: 0.5)
-                    ).foregroundColor(.black)
-                
-            }.padding(.horizontal, 25)
-        }
-    }
-}

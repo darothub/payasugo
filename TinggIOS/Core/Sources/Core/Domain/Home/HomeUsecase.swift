@@ -13,7 +13,8 @@ public class HomeUsecase {
     private var categoryRepository: CategoryRepository
     private var chunkedCategoriesUsecase: ChunkedCategoriesUsecase
     private var barChartUsecase: BarChartUsecase
-    private var dueBillUsecase: DueBillsUsecase
+    private var dueBillsUsecase: DueBillsUsecase
+    private var singleDueBillUsecase: SingleDueBillUsecase
 
     public init(
         billAccountUsecase: BillAccountUsecase,
@@ -22,7 +23,8 @@ public class HomeUsecase {
         categoryRepository: CategoryRepository,
         chunkedCategoriesUsecase: ChunkedCategoriesUsecase,
         barChartUsecase: BarChartUsecase,
-        dueBillUsecase: DueBillsUsecase
+        dueBillsUsecase: DueBillsUsecase,
+        singleDueBillUsecase: SingleDueBillUsecase
 
     ){
         self.billAccountUsecase = billAccountUsecase
@@ -31,7 +33,8 @@ public class HomeUsecase {
         self.categoryRepository = categoryRepository
         self.chunkedCategoriesUsecase = chunkedCategoriesUsecase
         self.barChartUsecase = barChartUsecase
-        self.dueBillUsecase = dueBillUsecase
+        self.dueBillsUsecase = dueBillsUsecase
+        self.singleDueBillUsecase = singleDueBillUsecase
     }
 
     public func getProfile() -> Profile? {
@@ -64,8 +67,17 @@ public class HomeUsecase {
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
         tinggRequest.billAccounts = billAccountUsecase()
-        print("DueBillUsecase \(tinggRequest)")
-        return try await dueBillUsecase(tinggRequest: tinggRequest)
+//        print("DueBillUsecase \(tinggRequest)")
+        return try await dueBillsUsecase(tinggRequest: tinggRequest)
+    }
+    
+    public func getSingleDueBills(accountNumber: String, serviceId: String) async throws -> FetchedBill {
+        var tinggRequest: TinggRequest = .init()
+        tinggRequest.service = "FB"
+        tinggRequest.accountNumber = accountNumber
+        tinggRequest.serviceId = serviceId
+//        print("SingleBillUsecase \(tinggRequest)")
+        return try await singleDueBillUsecase(tinggRequest: tinggRequest)
     }
 
 }

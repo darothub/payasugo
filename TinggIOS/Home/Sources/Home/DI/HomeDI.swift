@@ -55,6 +55,12 @@ public struct HomeDI {
         )
     }
     
+    public static func createSingleDueBillUsecase() -> SingleDueBillUsecase {
+        return SingleDueBillUsecase(
+            fetchBillRepository: createFetchBillRepository()
+        )
+    }
+    
     public static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecase(
             billAccountUsecase: createBillAccountUsecase(),
@@ -63,7 +69,8 @@ public struct HomeDI {
             categoryRepository: createCategoryRepository(),
             chunkedCategoriesUsecase: createChunkedCategoriesUsecase(),
             barChartUsecase: createBarChartUsecase(),
-            dueBillUsecase: createDueBillUsecase()
+            dueBillsUsecase: createDueBillUsecase(),
+            singleDueBillUsecase: createSingleDueBillUsecase()
         )
     }
     @MainActor

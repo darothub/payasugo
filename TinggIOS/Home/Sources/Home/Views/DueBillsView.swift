@@ -13,28 +13,30 @@ struct DueBillsView: View {
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     @State var updatedTimeString: String = ""
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .top) {
-                PrimaryTheme.getImage(image: .tinggAssistImage)
-                    .resizable()
-                    .frame(width: 35, height: 35)
-                tinggAssistAndBillText()
-            }
-            ForEach(fetchedBill, id: \.billReference) { bill in
-                let now = Date()
-                let dueDate = makeDateFromString(validDateString: bill.dueDate)
-                let dueDays = dueDate - now
-                let dueDaysString = dueDayString(dueDaysNumber: dueDays.day)
-                
-                DueBillCardView(serviceName: bill.biller, serviceImageString: "", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount: bill.currency+"0.0", dueDate: dueDaysString, updatedTimeString: $updatedTimeString)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3, x: 0, y: 3)
-                    )
-            }
-          
-        }.padding()
+        Section {
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    PrimaryTheme.getImage(image: .tinggAssistImage)
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                    tinggAssistAndBillText()
+                }
+                ForEach(fetchedBill, id: \.billReference) { bill in
+                    let now = Date()
+                    let dueDate = makeDateFromString(validDateString: bill.dueDate)
+                    let dueDays = dueDate - now
+                    let dueDaysString = dueDayString(dueDaysNumber: dueDays.day)
+                    
+                    DueBillCardView(serviceName: bill.biller, serviceImageString: "", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount: bill.currency+"0.0", dueDate: dueDaysString, updatedTimeString: $updatedTimeString)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.white)
+                            .shadow(radius: 3, x: 0, y: 3)
+                        )
+                }
+              
+            }.padding()
+        }
     }
     @ViewBuilder
     func tinggAssistAndBillText() -> some View {
