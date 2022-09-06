@@ -10,8 +10,8 @@ import Common
 import Theme
 import Core
 struct BillFormView: View {
-    @State var accountNumber: String = "080"
-    @State var service: MerchantService = .init()
+    @State var accountNumber: String = ""
+    @Binding var service: MerchantService
     var body: some View {
         GeometryReader { geo in
             VStack {
@@ -40,13 +40,21 @@ struct BillFormView: View {
                     
                 }
             }
+        }.onAppear {
+            print("Service \(service)")
         }
     }
 }
 
 struct BillFormView_Previews: PreviewProvider {
+    struct BillFormViewHolder: View {
+        @State var service: MerchantService = .init()
+        var body: some View {
+            BillFormView(service: $service)
+        }
+    }
     static var previews: some View {
-        BillFormView()
+        BillFormViewHolder()
     }
 }
 

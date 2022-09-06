@@ -69,7 +69,7 @@ struct HomeView: View {
                     RoundedRectangle(cornerRadius: 0)
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
-                )
+                ).environmentObject(hvm)
             ExpensesGraphView(chartData: chartData)
                 .background(
                     RoundedRectangle(cornerRadius: 0)
