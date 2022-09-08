@@ -7,8 +7,12 @@
 
 import SwiftUI
 import Theme
+import Common
 import Core
 struct RechargeAndBillView: View {
+    @State var rechargeAndBill = [MerchantService]()
+    @State var navigateToBillForm = false
+    @State var service = MerchantService()
     @EnvironmentObject var hvm: HomeViewModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
@@ -17,7 +21,9 @@ struct RechargeAndBillView: View {
         Section {
             VStack {
                 heading()
-                viewBody()
+                NavigationLink(destination: BillFormView(service: $service), isActive: $navigateToBillForm) {
+                    viewBody()
+                }
             }
         }.padding()
     }
@@ -46,18 +52,26 @@ struct RechargeAndBillView: View {
     @ViewBuilder
     fileprivate func viewBody() -> some View {
         LazyVGrid(columns: gridColumn, spacing: 0){
-            ForEach(hvm.rechargeAndBill, id: \.id) { service in
+            ForEach(rechargeAndBill, id: \.id) { service in
                 RemoteImageCard(imageUrl: service.serviceLogo!)
                     .padding(.vertical)
-                    .animation(.easeInOut, value: service.id)
+                    .onTapGesture {onImageCardClick(service: service)}
             }
         }
+    }
+    fileprivate func onImageCardClick(service: MerchantService) {
+        if service.presentmentType != "None" {
+            self.service = service
+            navigateToBillForm.toggle()
+            return
+        }
+        hvm.rechargeAndBillUIModel = UIModel.error("Service not available")
     }
 }
 
 struct RechargeAndBillView_Previews: PreviewProvider {
     static var previews: some View {
-        RechargeAndBillView()
+        RechargeAndBillView(rechargeAndBill: [MerchantService]())
             .environmentObject(HomeDI.createHomeViewModel())
     }
 }

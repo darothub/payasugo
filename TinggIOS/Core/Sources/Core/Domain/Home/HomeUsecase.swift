@@ -37,8 +37,10 @@ public class HomeUsecase {
     public func getProfile() -> Profile? {
         profileRepository.getProfile()
     }
-    public func displayedRechargeAndBill() -> [MerchantService] {
-        merchantRepository.getServices().prefix(8).shuffled()
+    public func displayedRechargeAndBill() throws -> [MerchantService] {
+        merchantRepository.getServices().prefix(8).map { service in
+            service
+        }
     }
     public func getQuickTopups()throws -> [MerchantService] {
         let categories = categoryRepository.getCategories()

@@ -17,6 +17,7 @@ public class HomeViewModel: ObservableObject {
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
     @Published var categoryUIModel = UIModel.nothing
+    @Published var rechargeAndBillUIModel = UIModel.nothing
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
@@ -71,8 +72,15 @@ public class HomeViewModel: ObservableObject {
         
     }
     public func displayedRechargeAndBill() {
+        rechargeAndBillUIModel =  UIModel.loading
         Future<[MerchantService], Never> { [unowned self] promise in
-            promise(.success(homeUsecase.displayedRechargeAndBill()))
+            do {
+                let bill = try homeUsecase.displayedRechargeAndBill()
+                promise(.success(bill))
+                rechargeAndBillUIModel = UIModel.nothing
+            } catch {
+                rechargeAndBillUIModel = UIModel.error(error.localizedDescription)
+            }
         }
         .assign(to: \.rechargeAndBill, on: self)
         .store(in: &subscriptions)
