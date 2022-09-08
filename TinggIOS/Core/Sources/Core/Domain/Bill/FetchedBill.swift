@@ -15,7 +15,7 @@ public class FetchedBill: NSObject, Codable {
     public var serviceID: String = ""
     public var customerName: String = ""
     public var invoiceNumber: String = ""
-    //     public var amount: Int
+    public var amount: String = ""
     public var currency: String = ""
     public var dueDate: String = ""
     public var beepTransactionID: String = ""

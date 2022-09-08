@@ -13,12 +13,14 @@ struct BillDetailsView: View {
     @State var fetchBill = FetchedBill()
     @State var service = MerchantService()
     @State var textFieldText = ""
-    var dueDate: String {
+    @State var amount = ""
+    @State var dueDate = ""
+    var dueDateComputed: String {
         let date = makeDateFromString(validDateString: fetchBill.estimateExpiryDate)
         return date.formatted(with: "EE, dd MM yyyy")
     }
-    var amount: String {
-        fetchBill.currency + String(fetchBill.estimateAmount)
+    var amountComputed: String {
+        fetchBill.currency + String(fetchBill.amount)
     }
     @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
@@ -28,7 +30,7 @@ struct BillDetailsView: View {
                     TopBackground()
                         .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
                         .frame(height: geo.size.height * 0.1)
-                    RemoteImageCard(imageUrl: "")
+                    RemoteImageCard(imageUrl: service.serviceLogo ?? "")
                         .scaleEffect(1.2)
                 }
                 Text(service.serviceName ?? "Service name")
@@ -50,12 +52,12 @@ struct BillDetailsView: View {
                         placeHolder: fetchBill.customerName
                     )
                     TextFieldView(
-                        fieldText: $textFieldText,
+                        fieldText: $amount,
                         label: "Bill found",
                         placeHolder: amount
                     )
                     TextFieldView(
-                        fieldText: $textFieldText,
+                        fieldText: $dueDate,
                         label: "Due date",
                         placeHolder: dueDate
                     )
@@ -77,6 +79,9 @@ struct BillDetailsView: View {
                     }
                 }
             }
+        }.onAppear {
+            amount = amountComputed
+            dueDate = dueDateComputed
         }
     }
 }
