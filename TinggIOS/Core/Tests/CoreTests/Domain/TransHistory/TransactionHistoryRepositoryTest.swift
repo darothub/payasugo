@@ -10,11 +10,10 @@ import Foundation
 import RealmSwift
 import XCTest
 class TransactionHistoryRepositoryTest: XCTestCase {
-    var transHistoryRepository: TransactionHistoryRepository?
-    var history: [TransactionHistory]?
+    private var transHistoryRepository: TransactionHistoryRepository?
+    private var history: [TransactionHistory]?
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        Realm.Configuration.defaultConfiguration.inMemoryIdentifier = self.name
         transHistoryRepository = FakeTransactionHistoryRepository(dbObserver: Observer<TransactionHistory>())
         history = transHistoryRepository?.getHistory()
     }

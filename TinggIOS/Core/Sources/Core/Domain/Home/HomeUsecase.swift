@@ -67,7 +67,7 @@ public class HomeUsecase {
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
         tinggRequest.billAccounts = billAccountUsecase()
-//        print("DueBillUsecase \(tinggRequest)")
+        print("DueBillUsecase \(tinggRequest)")
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
     

@@ -18,14 +18,15 @@ public class BillAccountUsecase {
         self.merchantServiceRepository = merchantServiceRepository
     }
     
-    func callAsFunction() -> [BillAccount] {
+    public func callAsFunction() -> [BillAccount] {
         let enrollments =  merchantServiceRepository.getServices().flatMap { service in
             enrollmentRepository.getNominationInfo().filter { enrollment  in
-                (String(enrollment.hubServiceID) == service.hubServiceID)  && service.presentmentType != "None"
+                (String(enrollment.hubServiceID) == service.hubServiceID)  && service.presentmentType != "hasNone"
             }
         }
-        let billAccounts = enrollments.map { nominationInfo in
-            BillAccount(serviceId:String( nominationInfo.hubServiceID), accountNumber: String(nominationInfo.accountNumber!))
+        print("Nomination \(enrollments)")
+        let billAccounts = enrollments.map { nominationInfo -> BillAccount in
+           return BillAccount(serviceId:String( nominationInfo.hubServiceID), accountNumber: String(nominationInfo.accountNumber!))
         }
         return billAccounts
     }

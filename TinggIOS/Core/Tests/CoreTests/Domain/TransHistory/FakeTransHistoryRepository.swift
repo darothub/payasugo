@@ -9,8 +9,8 @@ import Foundation
 import Core
 import RealmSwift
 class FakeTransactionHistoryRepository: TransactionHistoryRepository {
-    var dbObserver: Observer<TransactionHistory>
-    let realm: RealmManager = .init()
+    private var dbObserver: Observer<TransactionHistory>
+    private let realm: RealmManager = .init()
     public init(dbObserver: Observer<TransactionHistory>) {
         self.dbObserver = dbObserver
         let transactionOne = TransactionHistory()
@@ -22,7 +22,6 @@ class FakeTransactionHistoryRepository: TransactionHistoryRepository {
         transactionTwo.paymentDate = "2022-07-22 13:19:21.0"
         transactionTwo.amount = "20.0"
         let fakeData = [transactionOne, transactionTwo]
-        realm.invalidate()
         realm.save(data: fakeData)
         
     }

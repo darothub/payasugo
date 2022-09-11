@@ -10,8 +10,8 @@ import Foundation
 import RealmSwift
 import XCTest
 class BarChartUsecaseTest: XCTestCase {
-    var transHistoryRepository: TransactionHistoryRepository?
-    var barChartUsecase: BarChartUsecase!
+    private var transHistoryRepository: TransactionHistoryRepository?
+    private var barChartUsecase: BarChartUsecase!
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         transHistoryRepository = FakeTransactionHistoryRepository(dbObserver: Observer<TransactionHistory>())
