@@ -15,6 +15,7 @@ public class HomeUsecase {
     private var barChartUsecase: BarChartUsecase
     private var dueBillsUsecase: DueBillsUsecase
     private var singleDueBillUsecase: SingleDueBillUsecase
+    private var saveBillUsecase: SaveBillUsecase
 
     public init(
         billAccountUsecase: BillAccountUsecase,
@@ -24,7 +25,8 @@ public class HomeUsecase {
         chunkedCategoriesUsecase: ChunkedCategoriesUsecase,
         barChartUsecase: BarChartUsecase,
         dueBillsUsecase: DueBillsUsecase,
-        singleDueBillUsecase: SingleDueBillUsecase
+        singleDueBillUsecase: SingleDueBillUsecase,
+        saveBillUsecase: SaveBillUsecase
 
     ){
         self.billAccountUsecase = billAccountUsecase
@@ -35,6 +37,7 @@ public class HomeUsecase {
         self.barChartUsecase = barChartUsecase
         self.dueBillsUsecase = dueBillsUsecase
         self.singleDueBillUsecase = singleDueBillUsecase
+        self.saveBillUsecase = saveBillUsecase
     }
 
     public func getProfile() -> Profile? {
@@ -67,8 +70,14 @@ public class HomeUsecase {
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
         tinggRequest.billAccounts = billAccountUsecase()
-        print("DueBillUsecase \(tinggRequest)")
+//        print("DueBillUsecase \(tinggRequest)")
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
+    }
+    
+    public func saveBill(tinggRequest: TinggRequest) async throws -> SavedBill {
+        let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
+        print("Bill \(bill)")
+        return bill
     }
     
     public func getSingleDueBills(accountNumber: String, serviceId: String) async throws -> FetchedBill {

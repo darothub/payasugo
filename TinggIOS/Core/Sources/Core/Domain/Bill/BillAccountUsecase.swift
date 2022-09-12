@@ -24,7 +24,7 @@ public class BillAccountUsecase {
                 (String(enrollment.hubServiceID) == service.hubServiceID)  && service.presentmentType != "hasNone"
             }
         }
-        print("Nomination \(enrollments)")
+//        print("Nomination \(enrollments)")
         let billAccounts = enrollments.map { nominationInfo -> BillAccount in
            return BillAccount(serviceId:String( nominationInfo.hubServiceID), accountNumber: String(nominationInfo.accountNumber!))
         }

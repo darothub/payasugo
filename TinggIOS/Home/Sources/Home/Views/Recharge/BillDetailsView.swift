@@ -15,6 +15,7 @@ struct BillDetailsView: View {
     @State var textFieldText = ""
     @State var amount = ""
     @State var dueDate = ""
+    @StateObject var homeViewModel: HomeViewModel = HomeDI.createHomeViewModel()
     var dueDateComputed: String {
         let date = makeDateFromString(validDateString: fetchBill.estimateExpiryDate)
         return date.formatted(with: "EE, dd MM yyyy")
@@ -22,7 +23,10 @@ struct BillDetailsView: View {
     var amountComputed: String {
         fetchBill.currency + String(fetchBill.amount)
     }
-    @EnvironmentObject var homeViewModel: HomeViewModel
+    var profileInfoComputed: String {
+        "\(service.receiverSourceAddress!)|\(fetchBill.billReference)|\(service.serviceName!)|\(service.hubClientID!)|\(service.hubServiceID!)|\(service.categoryID!)||||||||"
+    }
+    
     var body: some View {
         GeometryReader { geo in
             VStack {
@@ -69,8 +73,12 @@ struct BillDetailsView: View {
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Save bill"
                     ) {
-                        
-                    }
+                        var request = TinggRequest()
+                        request.service = "MCP"
+                        request.profileInfo = profileInfoComputed
+                        request.action = "ADD"
+                        homeViewModel.saveBill(tinggRequest: request)
+                    }.handleViewState(uiModel: $homeViewModel.saveBillUIModel)
                     button(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Pay bill"
