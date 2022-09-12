@@ -12,6 +12,10 @@ import Core
 struct BillFormView: View {
     @State var accountNumber: String = ""
     @Binding var service: MerchantService
+    @Binding var billDetails: BillDetails
+    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @Environment(\.dismiss) var dismiss
+    @State var showAccounts = false
     var body: some View {
         GeometryReader { geo in
             VStack {
@@ -19,38 +23,62 @@ struct BillFormView: View {
                     TopBackground()
                         .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
                         .frame(height: geo.size.height * 0.1)
-                    RemoteImageCard(imageUrl: service.serviceLogo!)
+                    RemoteImageCard(imageUrl: billDetails.logo)
                         .scaleEffect(1.2)
                 }
-                Text(service.serviceName!)
+                Text(billDetails.serviceName)
                     .padding(20)
-                    .font(.title.bold())
+                    .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)
                 
                 TextFieldView(
-                    accountNumber: $accountNumber,
-                    service: $service
+                    fieldText: $accountNumber,
+                    label: "Enter your \(billDetails.label)",
+                    placeHolder: billDetails.label
                 )
+                .bottomSheet(present: $showAccounts, sheet: {
+                    Picker(selection: $accountNumber) {
+                        ForEach(billDetails.info, id: \.id) { info in
+                            Text(info.accountNumber ?? "None")
+                            .tag("\(info.accountNumber ?? "")")
+                        }
+                    } label: {
+                        Text("Existing account number")
+                    }.pickerStyle(WheelPickerStyle())
+                })
+                .onChange(of: accountNumber, perform: { newValue in
+                    showAccounts = false
+                    print("NewValue \(accountNumber)")
+                })
+                .onTapGesture (perform: onTextFieldTap)
+            
                 Spacer()
                 
-                button(
-                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                    buttonLabel: "Continue"
-                ) {
-                    
+                NavigationLink(destination: BillDetailsView(fetchBill: homeViewModel.singleBill, service: service), isActive: $homeViewModel.navigateBillDetailsView) {
+                    button(
+                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                        buttonLabel: "Get bill"
+                    ) {
+                        homeViewModel.getSingleDueBill(
+                            accountNumber: accountNumber,
+                            serviceId: billDetails.serviceId
+                        )
+                    }.handleViewState(uiModel: $homeViewModel.uiModel)
                 }
             }
-        }.onAppear {
-            print("Service \(service)")
         }
+    }
+    func onTextFieldTap() {
+        showAccounts = true
     }
 }
 
 struct BillFormView_Previews: PreviewProvider {
     struct BillFormViewHolder: View {
         @State var service: MerchantService = .init()
+        @State var bills = BillDetails(logo: "", label: "", serviceName: "", serviceId: "", info: [Enrollment]())
         var body: some View {
-            BillFormView(service: $service)
+            BillFormView(service: $service, billDetails: $bills)
         }
     }
     static var previews: some View {
@@ -67,24 +95,10 @@ struct TopBackground: View {
     }
 }
 
-
-struct TextFieldView: View {
-    @Binding var accountNumber: String
-    @Binding var service: MerchantService
-    var body: some View {
-        VStack(alignment: .leading) {
-            Group {
-                Text("Enter your \(service.referenceLabel!)")
-                    .font(.body)
-                    .foregroundColor(.black)
-                TextField(service.referenceLabel!, text: $accountNumber)
-                    .padding([.horizontal, .vertical], 18)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(lineWidth: 0.5)
-                    ).foregroundColor(.black)
-                
-            }.padding(.horizontal, 25)
-        }
-    }
+struct BillDetails {
+    let logo:String
+    let label: String
+    let serviceName: String
+    let serviceId: String
+    let info: [Enrollment]
 }

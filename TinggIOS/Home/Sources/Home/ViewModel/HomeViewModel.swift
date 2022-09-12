@@ -10,14 +10,18 @@ public class HomeViewModel: ObservableObject {
     @Published public var nominationInfo = Observer<Enrollment>().objects
     @Published public var airTimeServices = [MerchantService]()
     @Published public var servicesByCategory = [[Categorys]]()
+    @Published public var service = MerchantService()
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
     @Published public var dueBill = [FetchedBill]()
+    @Published public var singleBill = FetchedBill()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
     @Published var categoryUIModel = UIModel.nothing
     @Published var rechargeAndBillUIModel = UIModel.nothing
+    @Published var uiModel = UIModel.nothing
+    @Published var navigateBillDetailsView = false
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
@@ -95,6 +99,18 @@ public class HomeViewModel: ObservableObject {
                 fetchBillUIModel = UIModel.nothing
             } catch {
                 fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
+            }
+        }
+    }
+    public func getSingleDueBill(accountNumber: String, serviceId: String) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                singleBill = try await homeUsecase.getSingleDueBills(accountNumber: accountNumber, serviceId: serviceId)
+                uiModel = UIModel.nothing
+                navigateBillDetailsView.toggle()
+            }catch {
+                uiModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
             }
         }
     }

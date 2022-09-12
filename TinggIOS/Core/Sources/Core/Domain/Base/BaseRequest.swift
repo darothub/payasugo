@@ -56,3 +56,9 @@ extension DataRequest {
         }
     }
 }
+
+func Log(_ logString: String?) {
+    if logString?.isEmpty ?? false { return }
+    NSLog("%@", logString!)
+    Log(String(logString!.dropFirst(1024)))
+}

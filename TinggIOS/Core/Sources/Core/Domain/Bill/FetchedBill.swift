@@ -15,7 +15,7 @@ public class FetchedBill: NSObject, Codable {
     public var serviceID: String = ""
     public var customerName: String = ""
     public var invoiceNumber: String = ""
-    //     public var amount: Int
+    public var amount: String = ""
     public var currency: String = ""
     public var dueDate: String = ""
     public var beepTransactionID: String = ""
@@ -28,7 +28,7 @@ public class FetchedBill: NSObject, Codable {
     public var dateEstimated: String = ""
     public var estimateExpiryDate: String = ""
     public var lastFetchDate: String = ""
-    public var statusCode: Int = 0
+//    public var statusCode: Int = 0
     
     enum CodingKeys: String, CodingKey {
         case billDescription = "BILL_DESCRIPTION"
@@ -50,7 +50,7 @@ public class FetchedBill: NSObject, Codable {
         case dateEstimated = "DATE_ESTIMATED"
         case estimateExpiryDate = "ESTIMATE_EXPIRY_DATE"
         case lastFetchDate = "LAST_FETCH_DATE"
-        case statusCode = "STATUS_CODE"
+//        case statusCode = "STATUS_CODE"
     }
 }
 

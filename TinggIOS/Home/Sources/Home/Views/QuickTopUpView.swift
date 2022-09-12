@@ -9,7 +9,6 @@ import SwiftUI
 import Theme
 import Core
 struct QuickTopupView: View {
-//    @EnvironmentObject var hvm: HomeViewModel
     var airtimeServices = [MerchantService]()
     var body: some View {
         Section {

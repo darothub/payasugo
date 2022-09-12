@@ -13,6 +13,7 @@ struct RechargeAndBillView: View {
     @State var rechargeAndBill = [MerchantService]()
     @State var navigateToBillForm = false
     @State var service = MerchantService()
+    @State var bills = BillDetails(logo: "", label: "", serviceName: "", serviceId: "", info: [Enrollment]())
     @EnvironmentObject var hvm: HomeViewModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
@@ -21,7 +22,7 @@ struct RechargeAndBillView: View {
         Section {
             VStack {
                 heading()
-                NavigationLink(destination: BillFormView(service: $service), isActive: $navigateToBillForm) {
+                NavigationLink(destination: BillFormView(service: $service, billDetails: $bills), isActive: $navigateToBillForm) {
                     viewBody()
                 }
             }
@@ -62,10 +63,18 @@ struct RechargeAndBillView: View {
     fileprivate func onImageCardClick(service: MerchantService) {
         if service.presentmentType != "None" {
             self.service = service
+            let info: [Enrollment] = hvm.nominationInfo.filter(filterNominationInfo(enrollment:))
+            let billDetails = BillDetails(logo: service.serviceLogo!, label: service.referenceLabel!, serviceName: service.serviceName!, serviceId: service.hubServiceID!, info: info)
+            self.bills = billDetails
+            print("Bills \(bills)")
             navigateToBillForm.toggle()
             return
         }
         hvm.rechargeAndBillUIModel = UIModel.error("Service not available")
+    }
+    
+    fileprivate func filterNominationInfo(enrollment: Enrollment) -> Bool {
+        String(enrollment.hubServiceID) == self.service.hubServiceID
     }
 }
 

@@ -11,6 +11,11 @@ extension Date {
     public static func - (lhs: Date, rhs: Date) -> TimeInterval {
         return lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
     }
+    public func formatted(with formatString: String) -> String {
+           let dateFormatter = DateFormatter()
+           dateFormatter.dateFormat = formatString
+           return dateFormatter.string(from: self)
+    }
 }
 
 public func makeDateFromString(validDateString: String) -> Date {
@@ -25,7 +30,7 @@ public func makeDateFromString(validDateString: String) -> Date {
     
     let date = dateFormatter.date(from: validDateString)
     guard let date = date else {
-        fatalError("Date string \(validDateString) is invalid")
+       return Date()
     }
     return date
 }
