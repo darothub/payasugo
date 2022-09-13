@@ -7,9 +7,11 @@
 import RealmSwift
 import Foundation
 public class FetchBillRepositoryImpl: FetchBillRepository {
-    public var baseRequest: TinggApiServices
-    public init(baseRequest: TinggApiServices) {
+    private var baseRequest: TinggApiServices
+    private var dbObserver: Observer<Invoice>
+    public init(baseRequest: TinggApiServices, dbObserver: Observer<Invoice>) {
         self.baseRequest = baseRequest
+        self.dbObserver = dbObserver
     }
     public func fetchDueBillsDTO(tinggRequest: TinggRequest) async throws ->  FetchBillDTO {
         return try await withCheckedThrowingContinuation { continuation in
@@ -25,7 +27,7 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
             }
         }
     }
-    public func getDueBills(tinggRequest: TinggRequest) async throws -> [FetchedBill] {
+    public func getDueBills(tinggRequest: TinggRequest) async throws -> [Invoice] {
         let dto = try await fetchDueBillsDTO(tinggRequest: tinggRequest)
 //        print("DTO \(dto)")
         let data = dto.fetchedBills.filter { bill in
@@ -39,6 +41,10 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
         print("SavedBillDTO \(dto)")
         let savedBill = dto.savedBill[0]
         return savedBill
+    }
+    
+    public func insertInvoiceInDb(invoice: Invoice) {
+        dbObserver.saveEntity(obj: invoice)
     }
     
 }

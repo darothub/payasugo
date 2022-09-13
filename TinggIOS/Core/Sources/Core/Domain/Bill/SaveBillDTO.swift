@@ -42,8 +42,21 @@ public class SavedBill: NSObject, Codable {
 
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
-        case manualBillID = "MANUAL_BILL_ID"
+//        case manualBillID = "MANUAL_BILL_ID"
         case statusMessage = "STATUS_MESSAGE"
         case clientProfileAccountID, merchantAccountNumber, merchantAccountName, merchantServiceID, accountAlias, isExplicit, active, insertedBy, dateCreated, dateModified
+    }
+}
+
+
+extension SavedBill {
+    func convertBillToEnrollment() -> Enrollment {
+        let enrollment = Enrollment()
+        enrollment.accountAlias = self.accountAlias
+        enrollment.clientProfileAccountID = Int( self.clientProfileAccountID) ?? 0
+        enrollment.isExplicit = self.isExplicit
+        enrollment.accountID = self.clientProfileAccountID
+        enrollment.accountStatus = self.active
+        return enrollment
     }
 }

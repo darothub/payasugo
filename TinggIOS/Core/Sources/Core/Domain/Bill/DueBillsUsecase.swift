@@ -12,7 +12,7 @@ public class DueBillsUsecase {
         self.fetchBillRepository = fetchBillRepository
     }
     
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> [FetchedBill] {
+    public func callAsFunction(tinggRequest: TinggRequest) async throws -> [Invoice] {
         var dueBills = try await fetchBillRepository.getDueBills(tinggRequest: tinggRequest)
         dueBills = dueBills.filter { bill in
             let daysDiff = abs((makeDateFromString(validDateString: bill.dueDate) - Date()).day)

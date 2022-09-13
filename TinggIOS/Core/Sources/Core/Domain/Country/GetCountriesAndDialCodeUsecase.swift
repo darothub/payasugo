@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 23/08/2022.
 //
 import Foundation
-
+@MainActor
 public class GetCountriesAndDialCodeUseCase {
     public let countryRepository: CountryRepository
     public init (countryRepository: CountryRepository) {
@@ -13,13 +13,12 @@ public class GetCountriesAndDialCodeUseCase {
     }
     public func callAsFunction() async throws -> [String : String]{
         let latestCountries = try await countryRepository.getCountries()
-        let countryDictionary = latestCountries.reduce(into: [:]) { partialResult, country in
-            partialResult[country.countryCode!] = country.countryDialCode
-        }
-        return countryDictionary
+        let dict = Dictionary(uniqueKeysWithValues: latestCountries.map { ($0.countryCode!, $0.countryDialCode!) })
+
+        return dict
     }
 }
-
+@MainActor
 public class GetCountryByDialCodeUsecase {
     public let countryRepository: CountryRepository
     public init (countryRepository: CountryRepository) {

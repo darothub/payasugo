@@ -10,12 +10,12 @@ import SwiftUI
 import Core
 
 struct BillDetailsView: View {
-    @State var fetchBill = FetchedBill()
+    @State var fetchBill = Invoice()
     @State var service = MerchantService()
     @State var textFieldText = ""
     @State var amount = ""
     @State var dueDate = ""
-    @StateObject var homeViewModel: HomeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
     var dueDateComputed: String {
         let date = makeDateFromString(validDateString: fetchBill.estimateExpiryDate)
         return date.formatted(with: "EE, dd MM yyyy")

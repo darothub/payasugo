@@ -28,7 +28,7 @@ public struct OnboardingDI {
     public static func createOnboardingViewModel() -> OnboardingViewModel {
         return OnboardingViewModel(onboardingUseCase: createOnboardingUseCase())
     }
-    public static func createOnboardingUseCase() -> OnboardingUseCase {
+    @MainActor  public static func createOnboardingUseCase() -> OnboardingUseCase {
         return OnboardingUseCase(
             getCountriesAndDialCodeUsecase: createGetCountriesAndDialCodeUsecase(),
             getCountryByDialCodeUsecase: createGetCountryByDialCodeUsecase(),
@@ -36,10 +36,10 @@ public struct OnboardingDI {
             parAndFsuRepository: createParAndFsuRepository()
         )
     }
-    public static func createGetCountriesAndDialCodeUsecase() -> GetCountriesAndDialCodeUseCase {
+    @MainActor public static func createGetCountriesAndDialCodeUsecase() -> GetCountriesAndDialCodeUseCase {
         return GetCountriesAndDialCodeUseCase(countryRepository: createCountryRepository())
     }
-    public static func createGetCountryByDialCodeUsecase() -> GetCountryByDialCodeUsecase {
+    @MainActor public static func createGetCountryByDialCodeUsecase() -> GetCountryByDialCodeUsecase {
         return GetCountryByDialCodeUsecase(countryRepository: createCountryRepository())
     }
 

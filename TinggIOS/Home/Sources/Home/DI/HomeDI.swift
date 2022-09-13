@@ -14,7 +14,7 @@ public struct HomeDI {
     }
 
     public static func createFetchBillRepository() -> FetchBillRepository {
-        return FetchBillRepositoryImpl(baseRequest: BaseRequest())
+        return FetchBillRepositoryImpl(baseRequest: BaseRequest(), dbObserver: Observer<Invoice>())
     }
     public static func createProfileRepository() -> ProfileRepository {
         return ProfileRepositoryImpl(dbObserver: Observer<Profile>())
@@ -28,10 +28,7 @@ public struct HomeDI {
     public static func createEnrollmentRepository() -> EnrollmentRepository {
         return EnrollmentRepositoryImpl(dbObserver: Observer<Enrollment>())
     }
-    public static func createFetchdBillRepository() -> FetchBillRepository {
-        return FetchBillRepositoryImpl(baseRequest: BaseRequest())
-    }
-    
+ 
     public static func createChunkedCategoriesUsecase() -> ChunkedCategoriesUsecase {
         return ChunkedCategoriesUsecase(categoryRepository: createCategoryRepository())
     }
@@ -67,7 +64,14 @@ public struct HomeDI {
         )
     }
     
-    public static func createHomeUsecase() -> HomeUsecase {
+    public static func createPostMCPUsecase() -> PostMCPUsecase {
+        return PostMCPUsecase(
+            repository: createEnrollmentRepository(),
+            invoiceRepository: createFetchBillRepository()
+        )
+    }
+    
+    @MainActor public static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecase(
             billAccountUsecase: createBillAccountUsecase(),
             profileRepository: createProfileRepository(),
@@ -77,7 +81,8 @@ public struct HomeDI {
             barChartUsecase: createBarChartUsecase(),
             dueBillsUsecase: createDueBillUsecase(),
             singleDueBillUsecase: createSingleDueBillUsecase(),
-            saveBillUsecase:  createSaveBillUsecase()
+            saveBillUsecase:  createSaveBillUsecase(),
+            postMCPUsecase: createPostMCPUsecase()
         )
     }
     @MainActor

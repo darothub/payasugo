@@ -21,7 +21,7 @@ struct HomeView: View {
     var airtimeServices: [MerchantService] {
         hvm.airTimeServices
     }
-    var fetchedBill: [FetchedBill] {
+    var fetchedBill: [Invoice] {
         hvm.dueBill
     }
     var rechargeAndBill: [MerchantService] {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@MainActor
 public class HomeUsecase {
     private var billAccountUsecase: BillAccountUsecase
     private var profileRepository: ProfileRepository
@@ -16,6 +17,7 @@ public class HomeUsecase {
     private var dueBillsUsecase: DueBillsUsecase
     private var singleDueBillUsecase: SingleDueBillUsecase
     private var saveBillUsecase: SaveBillUsecase
+    private var postMCPUsecase: PostMCPUsecase
 
     public init(
         billAccountUsecase: BillAccountUsecase,
@@ -26,7 +28,8 @@ public class HomeUsecase {
         barChartUsecase: BarChartUsecase,
         dueBillsUsecase: DueBillsUsecase,
         singleDueBillUsecase: SingleDueBillUsecase,
-        saveBillUsecase: SaveBillUsecase
+        saveBillUsecase: SaveBillUsecase,
+        postMCPUsecase: PostMCPUsecase
 
     ){
         self.billAccountUsecase = billAccountUsecase
@@ -38,6 +41,7 @@ public class HomeUsecase {
         self.dueBillsUsecase = dueBillsUsecase
         self.singleDueBillUsecase = singleDueBillUsecase
         self.saveBillUsecase = saveBillUsecase
+        self.postMCPUsecase = postMCPUsecase
     }
 
     public func getProfile() -> Profile? {
@@ -66,7 +70,7 @@ public class HomeUsecase {
         barChartUsecase()
     }
     
-    public func getDueBills() async throws -> [FetchedBill] {
+    public func getDueBills() async throws -> [Invoice] {
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
         tinggRequest.billAccounts = billAccountUsecase()
@@ -74,13 +78,12 @@ public class HomeUsecase {
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
     
-    public func saveBill(tinggRequest: TinggRequest) async throws -> SavedBill {
+    public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> SavedBill {
         let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
-        print("Bill \(bill)")
-        return bill
+        return  postMCPUsecase(bill: bill, invoice: invoice)
     }
     
-    public func getSingleDueBills(accountNumber: String, serviceId: String) async throws -> FetchedBill {
+    public func getSingleDueBills(accountNumber: String, serviceId: String) async throws -> Invoice {
         var tinggRequest: TinggRequest = .init()
         tinggRequest.service = "FB"
         tinggRequest.accountNumber = accountNumber

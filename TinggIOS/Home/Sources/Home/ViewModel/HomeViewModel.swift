@@ -14,8 +14,8 @@ public class HomeViewModel: ObservableObject {
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
-    @Published public var dueBill = [FetchedBill]()
-    @Published public var singleBill = FetchedBill()
+    @Published public var dueBill = [Invoice]()
+    @Published public var singleBill = Invoice()
     @Published public var savedBill = SavedBill()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
@@ -120,8 +120,11 @@ public class HomeViewModel: ObservableObject {
         saveBillUIModel = UIModel.loading
         Task {
             do {
-                savedBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest)
-                saveBillUIModel = UIModel.nothing
+                print("singleBill \(singleBill)")
+                savedBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest, invoice: singleBill)
+                let message = "Bill with reference \(savedBill.merchantAccountNumber) created"
+                let content = UIModel.Content(statusMessage: message)
+                saveBillUIModel = UIModel.content(content)
             } catch {
                 saveBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
             }

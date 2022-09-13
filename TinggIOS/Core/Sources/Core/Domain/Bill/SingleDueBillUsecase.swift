@@ -12,7 +12,7 @@ public class SingleDueBillUsecase {
         self.fetchBillRepository = fetchBillRepository
     }
     
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> FetchedBill {
+    public func callAsFunction(tinggRequest: TinggRequest) async throws -> Invoice {
         let dueBills = try await fetchBillRepository.getDueBills(tinggRequest: tinggRequest)
         return dueBills[0]
     }
