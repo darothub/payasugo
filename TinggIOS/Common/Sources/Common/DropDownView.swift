@@ -27,37 +27,38 @@ public struct DropDownView: View {
         self._placeHolder = State(initialValue: placeHoder)
     }
     public var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading) {
-                Group{
-                    Text(label)
+        VStack(alignment: .leading) {
+            Group{
+                Text(label)
+                    .font(.caption)
+                    .foregroundColor(.black)
+                    .hiddenConditionally(isHidden: $showLabel)
+                HStack {
+                    TextField(placeHolder, text: $selectedText)
+                        .padding([.horizontal, .vertical], 15)
                         .font(.caption)
-                        .foregroundColor(.black)
-                        .hiddenConditionally(isHidden: $showLabel)
-                    HStack {
-                        TextField(placeHolder, text: $selectedText)
-                            .padding([.horizontal, .vertical], 15)
-                            .font(.caption)
-                            .foregroundColor(selectedTextColor)
-                            .onTapGesture {
-                                withAnimation(.spring()) {
-                                    showDropDown.toggle()
-                                }
+                        .foregroundColor(selectedTextColor)
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                showDropDown.toggle()
                             }
-                            .onChange(of: selectedText) { newValue in
-                                showDropDown = false
-                            }
-                        Image(systemName: showDropDown ? "chevron.down" : "chevron.right")
-                            .padding()
-                    } .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(lineWidth: 0.5)
-                    ).foregroundColor(outlineColor)
-                }
+                        }
+                        .onChange(of: selectedText) { newValue in
+                            showDropDown = false
+                        }
+                    Image(systemName: showDropDown ? "chevron.down" : "chevron.right")
+                        .padding()
+                } .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(lineWidth: 0.5)
+                ).foregroundColor(outlineColor)
+            }
+            ScrollView(showsIndicators: false){
                 ForEach(dropDownList, id: \.self) { number in
                     VStack(alignment: .leading) {
                         Text("\(number)")
                             .padding(.horizontal)
+                            .font(.caption)
                         Divider()
                     }
                     .background(rowColor.opacity(0.4))
@@ -71,7 +72,6 @@ public struct DropDownView: View {
         }.onAppear {
             showLabel = !label.isEmpty
         }
-        
     }
 }
 
