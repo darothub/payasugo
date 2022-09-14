@@ -20,7 +20,7 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var accountName: String?
     @Persisted public var accountAlias: String?
     @Persisted public var accountID: String?
-    @Persisted public var clientProfileAccountID: Int?
+    @Persisted public var clientProfileAccountID: Int = 0
     @Persisted public var isExplicit: String?
     @Persisted public var extraData: String?
     @Persisted public var serviceCategoryID: String?

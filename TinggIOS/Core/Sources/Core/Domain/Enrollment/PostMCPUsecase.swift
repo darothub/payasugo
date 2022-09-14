@@ -15,7 +15,7 @@ public class PostMCPUsecase {
     }
     
     public func callAsFunction(bill: SavedBill, invoice: Invoice) -> SavedBill {
-        let enrollment = bill.convertBillToEnrollment()
+        let enrollment = bill.convertBillToEnrollment(accountNumber: invoice.billReference)
         repository.saveNomination(nomination: enrollment)
         invoiceRepository.insertInvoiceInDb(invoice: invoice)
         return bill

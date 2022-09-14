@@ -50,13 +50,14 @@ public class SavedBill: NSObject, Codable {
 
 
 extension SavedBill {
-    func convertBillToEnrollment() -> Enrollment {
+    func convertBillToEnrollment(accountNumber: String) -> Enrollment {
         let enrollment = Enrollment()
         enrollment.accountAlias = self.accountAlias
-        enrollment.clientProfileAccountID = Int( self.clientProfileAccountID) ?? 0
+        enrollment.clientProfileAccountID = Int(self.clientProfileAccountID) ?? 0
         enrollment.isExplicit = self.isExplicit
         enrollment.accountID = self.clientProfileAccountID
         enrollment.accountStatus = self.active
+        enrollment.accountNumber = accountNumber
         return enrollment
     }
 }

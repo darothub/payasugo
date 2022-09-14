@@ -6,12 +6,14 @@
 //
 
 import XCTest
+import RealmSwift
 import Core
 
 class EnrollmentRepositoryTest: XCTestCase {
     private var repository: EnrollmentRepository!
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        Realm.Configuration.defaultConfiguration.inMemoryIdentifier = self.name
         repository = FakeEnrollmentRepository(dbObserver: Observer<Enrollment>())
     }
 

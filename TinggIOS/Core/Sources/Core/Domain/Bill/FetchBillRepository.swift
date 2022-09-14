@@ -7,7 +7,6 @@
 
 import Foundation
 public protocol FetchBillRepository {
-    func fetchDueBillsDTO(tinggRequest: TinggRequest) async throws ->  FetchBillDTO
     func getDueBills(tinggRequest: TinggRequest) async throws -> [Invoice]
     func saveBill(tinggRequest: TinggRequest) async throws -> SavedBill
     func insertInvoiceInDb(invoice: Invoice)
