@@ -6,8 +6,7 @@
 //
 
 import SwiftUI
-
-import SwiftUI
+import Theme
 
 struct AllRechargeUIView: View {
     @State var selectedText = "Hello"
@@ -17,8 +16,14 @@ struct AllRechargeUIView: View {
                 Text("Add new bill")
                     .font(.title)
                     .foregroundColor(.black)
+                    .padding()
                 SearchSection(selectedText: $selectedText)
-            }.padding()
+                    .padding()
+                ForEach(0..<4, id: \.self) { row in
+                    RowView()
+                }
+                   
+            }
         }.background(.gray.opacity(0.1))
     }
 }
@@ -45,6 +50,38 @@ struct SearchSection: View {
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 0.0)
                 )  .background(.white)
+        }
+    }
+}
+struct RowView: View {
+    @State var title = "Title"
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.system(size: PrimaryTheme.mediumTextSize))
+                .foregroundColor(.black)
+                .textCase(.uppercase)
+            Item()
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 0)
+                .foregroundColor(.white)
+                .shadow(radius: 3, x: 0, y: 3)
+        )
+    }
+}
+
+struct Item: View {
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(0..<4, id: \.self) { item in
+                    RemoteImageCard(imageUrl: "")
+                        .padding(.vertical)
+                }
+            }
+
         }
     }
 }

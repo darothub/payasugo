@@ -50,7 +50,6 @@ struct DueBillsView: View {
         }
     }
     func dueDayString(dueDaysNumber: Int) -> String {
-        print("Number \(dueDaysNumber)")
         if dueDaysNumber < 0 {
             return "\(abs(dueDaysNumber)) day(s) ago"
         }
