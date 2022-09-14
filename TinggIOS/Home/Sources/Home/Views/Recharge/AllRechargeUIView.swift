@@ -4,12 +4,19 @@
 //
 //  Created by Abdulrasaq on 14/09/2022.
 //
-
+import Core
 import SwiftUI
 import Theme
 
 struct AllRechargeUIView: View {
     @State var selectedText = "Hello"
+    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    var allRechargesData: [RechargeItem] {
+        let dict = homeViewModel.allRechargePublisher
+       return dict
+            .keys
+            .map{RechargeItem(title: $0, services: dict[$0]!)}
+    }
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack (alignment: .leading){
@@ -19,8 +26,8 @@ struct AllRechargeUIView: View {
                     .padding()
                 SearchSection(selectedText: $selectedText)
                     .padding()
-                ForEach(0..<4, id: \.self) { row in
-                    RowView()
+                ForEach(allRechargesData, id: \.title) { item in
+                    RowView(title: item.title, itemList: item.services)
                 }
                    
             }
@@ -55,13 +62,14 @@ struct SearchSection: View {
 }
 struct RowView: View {
     @State var title = "Title"
+    @State var itemList = [MerchantService]()
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.system(size: PrimaryTheme.mediumTextSize))
                 .foregroundColor(.black)
                 .textCase(.uppercase)
-            Item()
+            Item(services: itemList)
         }
         .padding()
         .background(
@@ -73,11 +81,12 @@ struct RowView: View {
 }
 
 struct Item: View {
+    @State var services = [MerchantService]()
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(0..<4, id: \.self) { item in
-                    RemoteImageCard(imageUrl: "")
+                ForEach(services, id: \.serviceName) { item in
+                    RemoteImageCard(imageUrl: item.serviceLogo ?? "")
                         .padding(.vertical)
                 }
             }
@@ -91,3 +100,7 @@ struct AllRechargeUIView_Previews: PreviewProvider {
     }
 }
 
+struct RechargeItem {
+    let title:String
+    let services: [MerchantService]
+}

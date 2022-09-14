@@ -14,6 +14,7 @@ struct RechargeAndBillView: View {
     @State var navigateToBillForm = false
     @State var service = MerchantService()
     @State var bills = BillDetails(logo: "", label: "", serviceName: "", serviceId: "", info: [Enrollment]())
+    @State var gotoAllRechargesView = false
     @EnvironmentObject var hvm: HomeViewModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
@@ -47,8 +48,13 @@ struct RechargeAndBillView: View {
                     .foregroundColor(.black)
                 Image(systemName: "chevron.right")
                     .foregroundColor(.black)
-            }
+            }.onTapGesture(perform: onclickSeeAll)
+        }.sheet(isPresented: $gotoAllRechargesView) {
+           AllRechargeUIView()
         }
+    }
+    private func onclickSeeAll() {
+        gotoAllRechargesView = true
     }
     @ViewBuilder
     fileprivate func viewBody() -> some View {

@@ -17,6 +17,7 @@ public class HomeViewModel: ObservableObject {
     @Published public var dueBill = [Invoice]()
     @Published public var singleBill = Invoice()
     @Published public var savedBill = SavedBill()
+    @Published public var allRechargePublisher = [String: [MerchantService]]()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
     @Published var categoryUIModel = UIModel.nothing
@@ -34,6 +35,7 @@ public class HomeViewModel: ObservableObject {
         displayedRechargeAndBill()
         fetchDueBills()
         getServicesByCategory()
+        allRecharge()
     }
     
 
@@ -93,6 +95,18 @@ public class HomeViewModel: ObservableObject {
         return
     }
     
+    public func allRecharge() {
+        rechargeAndBillUIModel =  UIModel.loading
+        Future<[String: [MerchantService]], Never> { [unowned self] promise in
+            let recharges = homeUsecase.allRecharge()
+            promise(.success(recharges))
+            rechargeAndBillUIModel = UIModel.nothing
+        }
+        .assign(to: \.allRechargePublisher, on: self)
+        .store(in: &subscriptions)
+        return
+     
+    }
     public func fetchDueBills()  {
         fetchBillUIModel = UIModel.loading
         Task {

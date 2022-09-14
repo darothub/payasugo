@@ -164,7 +164,10 @@ extension PhoneNumberValidationView {
                     category.activeStatus == "1"
                 }
                 realmManager.save(data: sortedCategories)
-                realmManager.save(data: parResponse.services)
+                let services = parResponse.services.filter { service in
+                    service.activeStatus != "0"
+                }
+                realmManager.save(data: services)
                 realmManager.save(data: parResponse.transactionSummaryInfo)
                 let nominationInfo = parResponse.nominationInfo.filter { enrolment in
                     enrolment.isReminder == "0" && enrolment.accountStatus == 1
