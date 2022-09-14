@@ -31,8 +31,6 @@ final class PostMCPUsecaseTest: XCTestCase {
             String(enrollment.clientProfileAccountID) == bill.clientProfileAccountID
         }
         XCTAssertNotNil(nomination)
-        
-      
         let actual =  bill.clientProfileAccountID
         guard let nom = nomination else {
             fatalError("Nomination is invalid")
@@ -48,8 +46,6 @@ final class PostMCPUsecaseTest: XCTestCase {
         mockInvoice.billReference  = "1245678"
         _ = usecase(bill: bill, invoice: mockInvoice)
         let dbInvoices = Observer<Invoice>().getEntities()
-        
-        
         let dbInvoice = dbInvoices.first { invoice in
             invoice.billReference == mockInvoice.billReference
         }
