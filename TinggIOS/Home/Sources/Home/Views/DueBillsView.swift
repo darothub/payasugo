@@ -9,7 +9,7 @@ import SwiftUI
 import Theme
 import Core
 struct DueBillsView: View {
-    @State var fetchedBill = [FetchedBill]()
+    @State var fetchedBill = [Invoice]()
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     @State var updatedTimeString: String = ""
     var body: some View {

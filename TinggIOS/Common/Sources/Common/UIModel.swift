@@ -11,12 +11,15 @@ import SwiftUI
 public enum UIModel {
     public struct Content  {
         public var data: Any?
-        public var statusCode: Int
-        public var statusMessage: String
+        public var statusCode: Int = 0
+        public var statusMessage: String = ""
         public init(data: Any?, statusCode: Int, statusMessage: String){
             self.statusMessage = statusMessage
             self.statusCode = statusCode
             self.data = data
+        }
+        public init(statusMessage: String) {
+            self.statusMessage = statusMessage
         }
     }
     case loading

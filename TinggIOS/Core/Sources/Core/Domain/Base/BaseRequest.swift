@@ -43,7 +43,10 @@ public class BaseRequest: ObservableObject, TinggApiServices {
 
 extension DataRequest {
     func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
-        validate(statusCode: 200..<300)
+     
+        responseJSON { response in
+            print("Response \(response)")
+        }
         responseDecodable(of: T.self) { response in
             switch response.result {
             case .failure(let error):

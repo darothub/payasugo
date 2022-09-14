@@ -54,3 +54,4 @@ public class FetchedBill: NSObject, Codable {
     }
 }
 
+

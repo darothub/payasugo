@@ -23,9 +23,9 @@ class FakeBaseRequest: TinggApiServices {
     
     private func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
         call += 1
-        let fetchBill = FetchedBill()
-        let fetchBill2 = FetchedBill()
-        let fetchBill3 = FetchedBill()
+        let fetchBill = Invoice()
+        let fetchBill2 = Invoice()
+        let fetchBill3 = Invoice()
         fetchBill.dueDate = formatDateToString(date: addDaysToCurrentDate(numOfDays: 5))
         fetchBill2.dueDate = formatDateToString(date: addDaysToCurrentDate(numOfDays: 10))
         fetchBill3.dueDate = "2022-08-24 00:00:00"

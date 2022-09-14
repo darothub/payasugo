@@ -12,12 +12,12 @@ class FetchBillRepositoryTest: XCTestCase {
     var fetchBillRepository: FetchBillRepository!
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        fetchBillRepository = FetchBillRepositoryImpl(baseRequest: FakeBaseRequest())
+        fetchBillRepository = FetchBillRepositoryImpl(baseRequest: FakeBaseRequest(), dbObserver: Observer<Invoice>())
     }
 
     func testFetchBillIsNotEmpty() async throws {
         let actual = try await fetchBillRepository.getDueBills(tinggRequest: .init())
-        let notExpected = [FetchedBill]()
+        let notExpected = [Invoice]()
         XCTAssertNotEqual(actual, notExpected, "Expect \(actual) not equal \(String(describing: notExpected))")
     }
     func testFetchBillIsReturnsTwoFetchedBills() async throws {

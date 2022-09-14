@@ -7,6 +7,7 @@
 
 import Foundation
 import RealmSwift
+
 public class CountryRepositoryImpl: CountryRepository {
     private var baseRequest: BaseRequest
     private var dbObserver: Observer<Country>
@@ -32,14 +33,12 @@ public class CountryRepositoryImpl: CountryRepository {
         }
     }
     public func getCountries() async throws -> [Country] {
-        if await dbObserver.getEntities().isEmpty {
+        let dbCountries = await dbObserver.getEntities()
+        if dbCountries.isEmpty {
             let remoteData = try await getRemoteCountries().data
-            let localDb = try await Realm()
-            localDb.writeAsync {
-                localDb.add(remoteData, update: .modified)
-            }
+            await dbObserver.saveEntities(objs: remoteData)
             return remoteData
         }
-        return await dbObserver.getEntities()
+        return dbCountries
     }
 }

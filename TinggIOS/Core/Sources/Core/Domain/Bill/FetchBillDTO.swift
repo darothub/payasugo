@@ -9,9 +9,9 @@
 public struct FetchBillDTO: BaseDTOprotocol, Codable {
     public var statusCode: Int
     public var statusMessage: String
-    public var fetchedBills: [FetchedBill]
+    public var fetchedBills: [Invoice]
 
-    public init(statusCode: Int, statusMessage: String, fetchedBills: [FetchedBill]) {
+    public init(statusCode: Int, statusMessage: String, fetchedBills: [Invoice]) {
         self.statusCode = statusCode
         self.statusMessage = statusMessage
         self.fetchedBills = fetchedBills

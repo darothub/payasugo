@@ -10,7 +10,7 @@ import Core
 import RealmSwift
 class FakeEnrollmentRepository: EnrollmentRepository {
     var dbObserver: Observer<Enrollment>
-    let realm: RealmManager = .init()
+//    let realm: RealmManager = .init()
     public init(dbObserver: Observer<Enrollment>) {
         self.dbObserver = dbObserver
         saveDataInDB()
@@ -28,6 +28,12 @@ class FakeEnrollmentRepository: EnrollmentRepository {
         let enrollment3 = Enrollment()
         enrollment3.hubServiceID = 3
         enrollment3.accountNumber = "789"
-        realm.save(data: [enrollment1, enrollment2, enrollment3])
+        [enrollment1, enrollment2, enrollment3].forEach { info in
+            saveNomination(nomination: info)
+        }
+    }
+    
+    func saveNomination(nomination: Core.Enrollment) {
+        dbObserver.saveEntity(obj: nomination)
     }
 }

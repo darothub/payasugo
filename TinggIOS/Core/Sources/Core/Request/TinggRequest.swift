@@ -27,6 +27,7 @@ public struct TinggRequest: Encodable {
     public var dataSource: String? = AppStorageManager.getActiveCountry()
     public var billAccounts: [BillAccount]?
     public var serviceId: String? = ""
+    public var action: String = ""
     public static var shared = TinggRequest()
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
@@ -51,6 +52,7 @@ public struct TinggRequest: Encodable {
         case dataSource = "DATA_SOURCE"
         case serviceId = "SERVICE_ID"
         case billAccounts = "BILL_ACCOUNTS"
+        case action = "ACTION"
     }
 }
 

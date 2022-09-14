@@ -19,7 +19,7 @@ public final class RealmManager: ObservableObject {
     }
     private func openRealmDb() {
         do {
-            var config = Realm.Configuration(schemaVersion: 1)
+            var config = Realm.Configuration(schemaVersion: 2)
             config.deleteRealmIfMigrationNeeded = true
             Realm.Configuration.defaultConfiguration = config
             localDb = try Realm()
@@ -62,20 +62,26 @@ public final class RealmManager: ObservableObject {
 
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
+    var realmManager: RealmManager = .init()
     public init() {}
-    
     
     public func getEntities() ->[T] {
         objects.map(returnEntity(obj:))
     }
     
     public func saveEntity(obj: T){
-        $objects.append(obj)
+//        DispatchQueue.main.async { [unowned self] in
+//            $objects.append(obj)
+//        }
+        realmManager.save(data: obj)
     }
     public func saveEntities(objs: [T]){
-        objs.forEach { obj in
-            saveEntity(obj: obj)
-        }
+//        DispatchQueue.main.async {[unowned self] in
+//            objs.forEach { obj in
+//                saveEntity(obj: obj)
+//            }
+//        }
+        realmManager.save(data: objs)
     }
     private func returnEntity(obj: T) -> T {
         return obj

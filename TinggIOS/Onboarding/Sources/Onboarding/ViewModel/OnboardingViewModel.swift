@@ -7,7 +7,6 @@ import Core
 import Foundation
 import SwiftUI
 import RealmSwift
-
 @MainActor
 public class OnboardingViewModel: ObservableObject {
     @Published var phoneNumber = ""
@@ -41,9 +40,9 @@ public class OnboardingViewModel: ObservableObject {
     }
     func makeActivationCodeRequest() {
         onSubmitUIModel = UIModel.loading
-        var tinggRequest: TinggRequest = .init()
-        tinggRequest.service = "MAK"
         Task {
+            var tinggRequest: TinggRequest = .init()
+            tinggRequest.service = "MAK"
             let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
             handleResultState(model: &onSubmitUIModel, result)
         }
@@ -60,7 +59,9 @@ public class OnboardingViewModel: ObservableObject {
         }
     }
     func makePARRequest() {
-        uiModel = UIModel.loading
+        DispatchQueue.main.async { [unowned self] in
+            uiModel = UIModel.loading
+        }
         Task {
             var tinggRequest: TinggRequest = .init()
             tinggRequest.service = "PAR"
@@ -70,6 +71,7 @@ public class OnboardingViewModel: ObservableObject {
             handleResultState(model: &uiModel, result)
         }
     }
+
     func getCountryDictionary() {
         phoneNumberFieldUIModel = UIModel.loading
         Task {

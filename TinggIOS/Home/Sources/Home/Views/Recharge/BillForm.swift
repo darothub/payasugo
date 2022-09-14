@@ -14,6 +14,11 @@ struct BillFormView: View {
     @Binding var service: MerchantService
     @Binding var billDetails: BillDetails
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    var accountNumberList: [String] {
+        billDetails.info.map { info in
+            info.accountNumber!
+        }
+    }
     @Environment(\.dismiss) var dismiss
     @State var showAccounts = false
     var body: some View {
@@ -31,30 +36,21 @@ struct BillFormView: View {
                     .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)
                 
-                TextFieldView(
-                    fieldText: $accountNumber,
+                DropDownView(
+                    selectedText: $accountNumber,
+                    dropDownList: accountNumberList,
                     label: "Enter your \(billDetails.label)",
-                    placeHolder: billDetails.label
-                )
-                .bottomSheet(present: $showAccounts, sheet: {
-                    Picker(selection: $accountNumber) {
-                        ForEach(billDetails.info, id: \.id) { info in
-                            Text(info.accountNumber ?? "None")
-                            .tag("\(info.accountNumber ?? "")")
-                        }
-                    } label: {
-                        Text("Existing account number")
-                    }.pickerStyle(WheelPickerStyle())
-                })
-                .onChange(of: accountNumber, perform: { newValue in
-                    showAccounts = false
-                    print("NewValue \(accountNumber)")
-                })
-                .onTapGesture (perform: onTextFieldTap)
-            
+                    placeHoder: billDetails.label
+                ).padding()
+
                 Spacer()
                 
-                NavigationLink(destination: BillDetailsView(fetchBill: homeViewModel.singleBill, service: service), isActive: $homeViewModel.navigateBillDetailsView) {
+                NavigationLink(
+                    destination: BillDetailsView(
+                        fetchBill: homeViewModel.singleBill,
+                        service: service)
+                    .environmentObject(homeViewModel),
+                    isActive: $homeViewModel.navigateBillDetailsView) {
                     button(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Get bill"

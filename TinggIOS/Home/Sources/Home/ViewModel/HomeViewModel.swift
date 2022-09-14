@@ -14,12 +14,14 @@ public class HomeViewModel: ObservableObject {
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
-    @Published public var dueBill = [FetchedBill]()
-    @Published public var singleBill = FetchedBill()
+    @Published public var dueBill = [Invoice]()
+    @Published public var singleBill = Invoice()
+    @Published public var savedBill = SavedBill()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
     @Published var categoryUIModel = UIModel.nothing
     @Published var rechargeAndBillUIModel = UIModel.nothing
+    @Published var saveBillUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
     @Published public var subscriptions = Set<AnyCancellable>()
@@ -111,6 +113,20 @@ public class HomeViewModel: ObservableObject {
                 navigateBillDetailsView.toggle()
             }catch {
                 uiModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
+            }
+        }
+    }
+    public func saveBill(tinggRequest: TinggRequest) {
+        saveBillUIModel = UIModel.loading
+        Task {
+            do {
+                print("singleBill \(singleBill)")
+                savedBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest, invoice: singleBill)
+                let message = "Bill with reference \(savedBill.merchantAccountNumber) created"
+                let content = UIModel.Content(statusMessage: message)
+                saveBillUIModel = UIModel.content(content)
+            } catch {
+                saveBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
             }
         }
     }

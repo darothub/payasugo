@@ -12,7 +12,7 @@ class SingleBillUsecaseTest: XCTestCase {
     var singleDueBillUsecase: SingleDueBillUsecase!
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        fetchBillRepository = FetchBillRepositoryImpl(baseRequest: FakeBaseRequest())
+        fetchBillRepository = FetchBillRepositoryImpl(baseRequest: FakeBaseRequest(), dbObserver: Observer<Invoice>())
         singleDueBillUsecase = SingleDueBillUsecase(fetchBillRepository: fetchBillRepository)
     }
     
