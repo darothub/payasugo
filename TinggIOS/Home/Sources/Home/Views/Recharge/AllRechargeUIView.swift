@@ -18,9 +18,8 @@ struct AllRechargeUIView: View {
                     .font(.title)
                     .foregroundColor(.black)
                 SearchSection(selectedText: $selectedText)
-      
             }.padding()
-        }
+        }.background(.gray.opacity(0.1))
     }
 }
 
@@ -35,16 +34,17 @@ struct SearchSection: View {
                     .padding([.horizontal, .vertical], 15)
                     .font(.caption)
                     .foregroundColor(.black)
+                  
             } .overlay(
                 RoundedRectangle(cornerRadius: 5)
-                    .stroke(lineWidth: 0.5)
-            )
+                    .stroke(lineWidth: 0.0)
+            )  .background(.white)
             Image(systemName: "plus")
                 .padding()
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(lineWidth: 0.5)
-                )
+                        .stroke(lineWidth: 0.0)
+                )  .background(.white)
         }
     }
 }
