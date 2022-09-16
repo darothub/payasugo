@@ -60,7 +60,7 @@ struct RechargeAndBillView: View {
     fileprivate func viewBody() -> some View {
         LazyVGrid(columns: gridColumn, spacing: 0){
             ForEach(rechargeAndBill, id: \.id) { service in
-                RemoteImageCard(imageUrl: service.serviceLogo!)
+                RemoteImageCard(imageUrl: service.serviceLogo)
                     .padding(.vertical)
                     .onTapGesture {onImageCardClick(service: service)}
             }
@@ -70,9 +70,8 @@ struct RechargeAndBillView: View {
         if service.presentmentType != "None" {
             self.service = service
             let info: [Enrollment] = hvm.nominationInfo.filter(filterNominationInfo(enrollment:))
-            let billDetails = BillDetails(logo: service.serviceLogo!, label: service.referenceLabel!, serviceName: service.serviceName!, serviceId: service.hubServiceID!, info: info)
+            let billDetails = BillDetails(logo: service.serviceLogo, label: service.referenceLabel, serviceName: service.serviceName, serviceId: service.hubServiceID, info: info)
             self.bills = billDetails
-            print("Bills \(bills)")
             navigateToBillForm.toggle()
             return
         }

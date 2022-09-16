@@ -23,12 +23,16 @@ class FakeCategoryRepository: CategoryRepository {
     func saveDataInDB() {
         let category1 = Categorys()
         category1.categoryID = "1"
+        category1.categoryName = "Airtime"
         let category2 = Categorys()
         category2.categoryID = "2"
+        category2.categoryName = "PayTV"
         let category3 = Categorys()
         category3.categoryID = "3"
+        category3.categoryName = "Power"
         let category4 = Categorys()
         category4.categoryID = "4"
+        category4.categoryName = "Water"
         let data = [category1, category2, category3, category4]
         realm.save(data: data)
     }

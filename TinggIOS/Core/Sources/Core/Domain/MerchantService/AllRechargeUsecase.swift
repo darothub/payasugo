@@ -14,7 +14,7 @@ public class AllRechargeUsecase {
         self.categoryRepository = categoryRepository
     }
     
-    func callAsFunction() -> [String: [MerchantService]] {
+    public func callAsFunction() -> [String: [MerchantService]] {
         let services = serviceRepository.getServices()
         let categories = categoryRepository.getCategories()
         let idAndName = Dictionary(uniqueKeysWithValues: categories.map{($0.categoryID, $0.categoryName)})
