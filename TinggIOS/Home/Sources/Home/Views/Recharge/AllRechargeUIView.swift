@@ -9,30 +9,35 @@ import SwiftUI
 import Theme
 
 struct AllRechargeUIView: View {
-    @State var selectedText = ""
+    @State var searchText = ""
     @State var searching = false
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     @State var allRechargesData: [RechargeItem] = [RechargeItem]()
     @State var searchResult : [RechargeItem] = [RechargeItem]()
+    fileprivate func searchService(_ newValue: String) -> [RechargeItem] {
+        return allRechargesData
+            .filter({ rechargeItem in
+                let items = rechargeItem.services.contains { service in
+                    service.serviceName.lowercased().contains(newValue.lowercased())
+                }
+                return items
+            })
+    }
+    fileprivate func onSearch(text: String) {
+        searching = !text.isEmpty
+        searchResult = searchService(text)
+    }
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack (alignment: .leading){
+            VStack (alignment: .leading) {
                 Text("Add new bill")
                     .font(.title)
                     .foregroundColor(.black)
                     .padding()
-                SearchSection(selectedText: $selectedText)
+                SearchSection(searchText: $searchText)
                     .padding()
-                    .onChange(of: selectedText) { newValue in
-                        searching = !newValue.isEmpty
-                        searchResult = allRechargesData
-                            .filter({ rechargeItem in
-                                let items = rechargeItem.services.contains { service in
-                                    service.serviceName.lowercased().contains(newValue.lowercased())
-                                }
-                                return items
-                            })
-                    }
+                    .onChange(of: searchText, perform: onSearch(text:))
                 ForEach(searching ? searchResult : allRechargesData, id: \.title) { item in
                     RowView(title: item.title, itemList: item.services)
                 }
@@ -48,13 +53,14 @@ struct AllRechargeUIView: View {
 }
 
 struct SearchSection: View {
-    @Binding var selectedText:String
+    @Binding var searchText:String
     var body: some View {
         HStack {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .padding(.leading)
-                TextField("placeHolder", text: $selectedText)
+                    .foregroundColor(.gray)
+                TextField("Search here", text: $searchText)
                     .padding([.horizontal, .vertical], 15)
                     .font(.caption)
                     .foregroundColor(.black)
@@ -65,6 +71,7 @@ struct SearchSection: View {
             )  .background(.white)
             Image(systemName: "plus")
                 .padding()
+             
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 0.0)
