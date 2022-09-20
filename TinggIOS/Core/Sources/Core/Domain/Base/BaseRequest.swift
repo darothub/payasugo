@@ -43,9 +43,11 @@ public class BaseRequest: ObservableObject, TinggApiServices {
 
 extension DataRequest {
     func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
-     
+        responseString { response in
+            print("ResponseString \(response)")
+        }
         responseJSON { response in
-            print("Response \(response)")
+            print("ResponseJson \(response)")
         }
         responseDecodable(of: T.self) { response in
             switch response.result {
@@ -53,7 +55,7 @@ extension DataRequest {
                 print("responseError \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
             case .success(let baseResponse):
-                print("responseSuccess \(baseResponse)")
+//                print("responseSuccess \(baseResponse)")
                 onCompletion(.success(baseResponse))
             }
         }

@@ -14,6 +14,7 @@ struct RechargeAndBillView: View {
     @State var navigateToBillForm = false
     @State var service = MerchantService()
     @State var bills = BillDetails(logo: "", label: "", serviceName: "", serviceId: "", info: [Enrollment]())
+    @State var gotoAllRechargesView = false
     @EnvironmentObject var hvm: HomeViewModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
@@ -47,14 +48,19 @@ struct RechargeAndBillView: View {
                     .foregroundColor(.black)
                 Image(systemName: "chevron.right")
                     .foregroundColor(.black)
-            }
+            }.onTapGesture(perform: onclickSeeAll)
+        }.sheet(isPresented: $gotoAllRechargesView) {
+           AllRechargeUIView()
         }
+    }
+    private func onclickSeeAll() {
+        gotoAllRechargesView = true
     }
     @ViewBuilder
     fileprivate func viewBody() -> some View {
         LazyVGrid(columns: gridColumn, spacing: 0){
             ForEach(rechargeAndBill, id: \.id) { service in
-                RemoteImageCard(imageUrl: service.serviceLogo!)
+                RemoteImageCard(imageUrl: service.serviceLogo)
                     .padding(.vertical)
                     .onTapGesture {onImageCardClick(service: service)}
             }
@@ -64,9 +70,8 @@ struct RechargeAndBillView: View {
         if service.presentmentType != "None" {
             self.service = service
             let info: [Enrollment] = hvm.nominationInfo.filter(filterNominationInfo(enrollment:))
-            let billDetails = BillDetails(logo: service.serviceLogo!, label: service.referenceLabel!, serviceName: service.serviceName!, serviceId: service.hubServiceID!, info: info)
+            let billDetails = BillDetails(logo: service.serviceLogo, label: service.referenceLabel, serviceName: service.serviceName, serviceId: service.hubServiceID, info: info)
             self.bills = billDetails
-            print("Bills \(bills)")
             navigateToBillForm.toggle()
             return
         }

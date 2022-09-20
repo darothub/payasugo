@@ -87,10 +87,3 @@ struct DropDownView_Previews: PreviewProvider {
     }
 }
 
-
-extension View {
-    @ViewBuilder
-    func hiddenConditionally(isHidden: Binding<Bool>) -> some View {
-        isHidden.wrappedValue ? self : self.hidden() as? Self
-    }
-}

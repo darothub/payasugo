@@ -18,6 +18,7 @@ public class HomeUsecase {
     private var singleDueBillUsecase: SingleDueBillUsecase
     private var saveBillUsecase: SaveBillUsecase
     private var postMCPUsecase: PostMCPUsecase
+    private var allRechargeUsecase: AllRechargeUsecase
 
     public init(
         billAccountUsecase: BillAccountUsecase,
@@ -29,7 +30,8 @@ public class HomeUsecase {
         dueBillsUsecase: DueBillsUsecase,
         singleDueBillUsecase: SingleDueBillUsecase,
         saveBillUsecase: SaveBillUsecase,
-        postMCPUsecase: PostMCPUsecase
+        postMCPUsecase: PostMCPUsecase,
+        allRechargeUsecase: AllRechargeUsecase
 
     ){
         self.billAccountUsecase = billAccountUsecase
@@ -42,6 +44,7 @@ public class HomeUsecase {
         self.singleDueBillUsecase = singleDueBillUsecase
         self.saveBillUsecase = saveBillUsecase
         self.postMCPUsecase = postMCPUsecase
+        self.allRechargeUsecase = allRechargeUsecase
     }
 
     public func getProfile() -> Profile? {
@@ -68,6 +71,9 @@ public class HomeUsecase {
     
     public func getBarChartMappedData() -> [Int: Double] {
         barChartUsecase()
+    }
+    public func allRecharge() -> [String: [MerchantService]] {
+        allRechargeUsecase()
     }
     
     public func getDueBills() async throws -> [Invoice] {

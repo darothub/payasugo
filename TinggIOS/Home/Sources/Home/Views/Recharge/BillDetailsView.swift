@@ -24,7 +24,7 @@ struct BillDetailsView: View {
         fetchBill.currency + String(fetchBill.amount)
     }
     var profileInfoComputed: String {
-        "\(service.receiverSourceAddress!)|\(fetchBill.billReference)|\(service.serviceName!)|\(service.hubClientID!)|\(service.hubServiceID!)|\(service.categoryID!)||||||||"
+        "\(service.receiverSourceAddress)|\(fetchBill.billReference)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
     }
     
     var body: some View {
@@ -47,8 +47,8 @@ struct BillDetailsView: View {
                 Group {
                     TextFieldView(
                         fieldText: $fetchBill.billReference,
-                        label: service.referenceLabel ?? "Label",
-                        placeHolder: service.referenceLabel!
+                        label: service.referenceLabel ,
+                        placeHolder: service.referenceLabel
                     )
                     TextFieldView(
                         fieldText: $fetchBill.customerName,
