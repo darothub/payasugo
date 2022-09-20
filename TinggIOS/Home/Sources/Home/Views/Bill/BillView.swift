@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 20/09/2022.
 //
-
+import Common
 import SwiftUI
 
 struct BillView: View {
