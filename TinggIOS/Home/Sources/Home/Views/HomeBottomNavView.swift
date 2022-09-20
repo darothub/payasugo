@@ -17,12 +17,12 @@ public struct HomeBottomNavView: View {
         GeometryReader { _ in
             TabView {
                 homeView()
-                .tabItemStyle(
-                    title: "Home",
-                    image: Image(systemName: "house.fill")
-                )
+                    .tabItemStyle(
+                        title: "Home",
+                        image: Image(systemName: "house.fill")
+                    )
                 
-                Text("Bill")
+                billView()
                     .tabItemStyle(
                         title: "Bill",
                         image:PrimaryTheme.getImage(image: .bill)
@@ -48,6 +48,11 @@ public struct HomeBottomNavView: View {
                 .environmentObject(hvm)
             Spacer()
         }
+    }
+    @ViewBuilder
+    func billView() -> some View {
+        BillView()
+            .environmentObject(hvm)
     }
 }
 
