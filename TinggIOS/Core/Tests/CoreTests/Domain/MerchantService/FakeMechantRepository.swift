@@ -19,14 +19,17 @@ class FakeMerchantRepository: MerchantServiceRepository {
         let service1 = MerchantService()
         service1.serviceName = "Airtel"
         service1.hubServiceID = "1"
+        service1.categoryID = "1"
         service1.presentmentType = "hasNone"
         let service2 = MerchantService()
         service2.serviceName = "DstvNg"
         service2.hubServiceID = "2"
+        service2.categoryID = "2"
         service2.presentmentType = "hasPresentment"
         let service3 = MerchantService()
         service3.serviceName = "AON"
         service3.hubServiceID = "3"
+        service3.categoryID = "3"
         service3.presentmentType = "hasPresentment"
         let data = [service1,service2,service3]
         realm.save(data: data)

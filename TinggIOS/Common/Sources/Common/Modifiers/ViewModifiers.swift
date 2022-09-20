@@ -32,6 +32,10 @@ public extension View {
     func tabItemStyle(title: String, image: Image?) -> some View {
         modifier(TabItemStyle(title: title, image: image))
     }
+    @ViewBuilder
+    func hiddenConditionally(isHidden: Binding<Bool>) -> some View {
+        isHidden.wrappedValue ? self : self.hidden() as? Self
+    }
 }
 
 
