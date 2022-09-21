@@ -19,10 +19,12 @@ enum Tabs: String, CaseIterable {
 public struct MyBillView: View {
     @State var selectedTab = Tabs.FirstTab
     @State var color: Color = .green
+    @State var gotoAllRechargesView = false
     @State var items = [
         TabLayoutItem(title: "MY BILLS", view: AnyView(Text("MY BILLS"))),
         TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
     ]
+    @EnvironmentObject var hvm: HomeViewModel
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -37,9 +39,12 @@ public struct MyBillView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Add bill"
             ) {
-           
+                onclickAddBill()
             }
         }
+    }
+    private func onclickAddBill() {
+        hvm.gotoAllRechargesView = true
     }
 }
 
@@ -56,6 +61,7 @@ struct MyBillView_Previews: PreviewProvider {
     }
     static var previews: some View {
         MyBillView()
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 

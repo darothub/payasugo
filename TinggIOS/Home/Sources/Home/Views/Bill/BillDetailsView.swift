@@ -34,10 +34,10 @@ struct BillDetailsView: View {
                     TopBackground()
                         .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
                         .frame(height: geo.size.height * 0.1)
-                    RemoteImageCard(imageUrl: service.serviceLogo ?? "")
+                    RemoteImageCard(imageUrl: service.serviceLogo )
                         .scaleEffect(1.2)
                 }
-                Text(service.serviceName ?? "Service name")
+                Text(service.serviceName )
                     .padding([.horizontal, .top], 20)
                     .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)

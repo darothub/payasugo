@@ -49,12 +49,10 @@ struct RechargeAndBillView: View {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.black)
             }.onTapGesture(perform: onclickSeeAll)
-        }.sheet(isPresented: $gotoAllRechargesView) {
-           AllRechargeUIView()
         }
     }
     private func onclickSeeAll() {
-        gotoAllRechargesView = true
+        hvm.gotoAllRechargesView = true
     }
     @ViewBuilder
     fileprivate func viewBody() -> some View {

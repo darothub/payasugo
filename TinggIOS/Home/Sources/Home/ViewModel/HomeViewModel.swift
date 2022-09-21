@@ -25,6 +25,7 @@ public class HomeViewModel: ObservableObject {
     @Published var saveBillUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
+    @Published var gotoAllRechargesView = false
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase

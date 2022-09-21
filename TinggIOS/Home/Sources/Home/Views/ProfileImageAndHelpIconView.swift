@@ -11,6 +11,10 @@ import Theme
 struct ProfileImageAndHelpIconView: View {
     @State var imageUrl: String = ""
     var helpIconString =  "camera.fill"
+    @State var title: String = ""
+    var titleColor: Color = .white
+    @State private var hideTitle = false
+    
     var body: some View {
         HStack {
             AsyncImage(url: URL(string: imageUrl)) { image in
@@ -25,11 +29,17 @@ struct ProfileImageAndHelpIconView: View {
                     .padding()
             }
             Spacer()
+            Text(title)
+                .foregroundColor(titleColor)
+                .hiddenConditionally(isHidden: $hideTitle)
+            Spacer()
             PrimaryTheme.getImage(image: .tinggAssistImage)
                 .resizable()
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
                 .padding()
+        }.onAppear {
+            hideTitle = title.isEmpty ? false : true
         }
     }
 }

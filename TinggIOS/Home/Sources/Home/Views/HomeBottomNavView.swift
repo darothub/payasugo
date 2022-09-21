@@ -40,6 +40,9 @@ public struct HomeBottomNavView: View {
                     )
             }
         }.navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $hvm.gotoAllRechargesView) {
+               AllRechargeUIView()
+        }
     }
     @ViewBuilder
     func homeView() -> some View {

@@ -30,9 +30,7 @@ struct TinggIOSApp: App {
     @ViewBuilder
     fileprivate func appBody() -> some View {
         ZStack {
-//            ExampleTabView(tabSize: 3, tabColor: .red)
-//            MyBillView()
-//            NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
+            NavigationLink("", destination: destination, isActive: $navigation.navigatePermission)
         }
         .onAppear {
               UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")

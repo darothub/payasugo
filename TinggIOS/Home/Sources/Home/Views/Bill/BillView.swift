@@ -6,20 +6,26 @@
 //
 import Common
 import SwiftUI
-
+import Theme
 struct BillView: View {
     @State var color: Color = .green
+ 
+    @EnvironmentObject var hvm: HomeViewModel
     @State var items = [
         TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
         TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
     ]
-    @EnvironmentObject var hvm: HomeViewModel
+    var secondaryColor: Color {
+        PrimaryTheme.getColor(.secondaryColor)
+    }
     var body: some View {
         VStack(spacing: 0) {
-            ProfileImageAndHelpIconView(imageUrl: hvm.profile.photoURL!)
-                .background(.green)
+            ProfileImageAndHelpIconView(imageUrl: hvm.profile.photoURL!, title: "My Bills")
+                .background(secondaryColor)
             CustomTabView(items: items, tabColor: $color)
-        }
+        }.onAppear {
+            color = secondaryColor
+        }.environmentObject(hvm)
     }
 }
 
