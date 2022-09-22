@@ -15,15 +15,15 @@ enum Tabs: String, CaseIterable {
     case ThirdTab
     case FourthTab
 }
-
+var sampleItem = [
+    TabLayoutItem(title: "MY BILLS", view: AnyView(Text("MY BILLS"))),
+    TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
+]
 public struct MyBillView: View {
     @State var selectedTab = Tabs.FirstTab
     @State var color: Color = .green
     @State var gotoAllRechargesView = false
-    @State var items = [
-        TabLayoutItem(title: "MY BILLS", view: AnyView(Text("MY BILLS"))),
-        TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
-    ]
+    @State var items = sampleItem
     @EnvironmentObject var hvm: HomeViewModel
     public init() {
         // Intentionally unimplemented...modular accessibility
@@ -51,10 +51,7 @@ public struct MyBillView: View {
 struct MyBillView_Previews: PreviewProvider {
     struct ExampleTabVieViewHolder: View {
         @State var tabColor: Color = .green
-        @State var items = [
-            TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
-            TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
-        ]
+        @State var items = sampleItem
         var body: some View {
             CustomTabView(items: items, tabColor: $tabColor)
         }

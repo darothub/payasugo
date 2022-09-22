@@ -10,7 +10,7 @@ import Core
 class FakeBaseRequest: TinggApiServices {
     private(set) var call = 0
     init() {
-        
+        //Public initializer
     }
     public func makeRequest<T: BaseDTOprotocol>(
         tinggRequest: TinggRequest,

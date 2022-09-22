@@ -83,7 +83,7 @@ struct BillDetailsView: View {
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Pay bill"
                     ) {
-                        
+                        //Todo
                     }
                 }
             }

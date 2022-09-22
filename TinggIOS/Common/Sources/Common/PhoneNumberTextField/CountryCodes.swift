@@ -13,8 +13,6 @@ public struct CountryCodes : View {
     public var countries = [String: String]()
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-
-    
     public var body: some View {
         GeometryReader { geo in
             List(countries.sorted(by: <), id: \.key) { key , value in
