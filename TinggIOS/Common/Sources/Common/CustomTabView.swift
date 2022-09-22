@@ -19,19 +19,27 @@ public struct CustomTabView: View {
     public var body: some View {
         VStack {
             HStack(spacing: 0) {
-                ForEach(items, id: \.title) { tabId in
-                    TabItemView(tabTitle: .constant(tabId.title), selected: $selectedTab, color: $tabColor)
-                }
+                iTerateTabHeader()
             }
             TabView(selection: $selectedTab) {
-                ForEach(items, id: \.title) { tabId in
-                    tabId.view
-                }
+                iTerateTabViews()
             }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }.onAppear{
             selectedTab = items.first!.title
         }
         
+    }
+    @ViewBuilder
+    private func iTerateTabHeader() -> some View {
+        ForEach(items, id: \.title) { tab in
+            TabItemView(tabTitle: .constant(tab.title), selected: $selectedTab, color: $tabColor)
+        }
+    }
+    @ViewBuilder
+    private func iTerateTabViews() -> some View {
+        ForEach(items, id: \.title) { tabId in
+            tabId.view
+        }
     }
 }
 

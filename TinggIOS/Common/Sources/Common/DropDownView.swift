@@ -28,7 +28,7 @@ public struct DropDownView: View {
     }
     public var body: some View {
         VStack(alignment: .leading) {
-            Group{
+            Group {
                 Text(label)
                     .font(.caption)
                     .foregroundColor(.black)
