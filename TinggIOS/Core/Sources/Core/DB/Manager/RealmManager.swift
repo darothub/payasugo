@@ -63,24 +63,18 @@ public final class RealmManager: ObservableObject {
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     var realmManager: RealmManager = .init()
-    public init() {}
+    public init() {
+        //public initializer
+    }
     
     public func getEntities() ->[T] {
         objects.map(returnEntity(obj:))
     }
     
     public func saveEntity(obj: T){
-//        DispatchQueue.main.async { [unowned self] in
-//            $objects.append(obj)
-//        }
         realmManager.save(data: obj)
     }
     public func saveEntities(objs: [T]){
-//        DispatchQueue.main.async {[unowned self] in
-//            objs.forEach { obj in
-//                saveEntity(obj: obj)
-//            }
-//        }
         realmManager.save(data: objs)
     }
     private func returnEntity(obj: T) -> T {

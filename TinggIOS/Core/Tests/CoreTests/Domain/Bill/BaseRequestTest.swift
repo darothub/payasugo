@@ -16,8 +16,8 @@ class BaseRequestTest: XCTestCase {
     }
     
     func testCallIncreasesWhenMakeRequestIsCalled() {
-        let request = baseRequest.makeRequest(tinggRequest: .init()) {(result: Result<FetchBillDTO, ApiError>) in
-            
+        let _: () = baseRequest.makeRequest(tinggRequest: .init()) {(result: Result<FetchBillDTO, ApiError>) in
+            //No action implemented
         }
         let actual = baseRequest.call
         let expected = 1

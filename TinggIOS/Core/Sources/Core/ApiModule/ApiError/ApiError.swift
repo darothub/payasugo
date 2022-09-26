@@ -8,6 +8,7 @@
 import Foundation
 public enum ApiError: Error {
     case networkError(String)
+    public static var serverErrorString = "Server error, please try again"
     
     public var localizedString: String {
         switch self {

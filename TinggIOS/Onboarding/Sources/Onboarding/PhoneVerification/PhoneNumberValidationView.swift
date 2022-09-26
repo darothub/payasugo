@@ -87,11 +87,6 @@ public struct PhoneNumberValidationView: View {
     fileprivate func onPhoneNumberInput(number: String) -> Void {
         vm.verifyPhoneNumber(number: number)
     }
-    
-    @ViewBuilder
-    fileprivate func countryCodeViewActions() -> some View {
-        
-    }
     @ViewBuilder
     fileprivate func topView(geo: GeometryProxy) -> some View {
         ZStack(alignment: .top) {
@@ -199,8 +194,6 @@ extension OnboardingViewModel {
         } catch {
             phoneNumberFieldUIModel = UIModel.error(error.localizedDescription)
         }
-       
-     
     }
     func getSelectedCountryRegex() throws -> String {
         guard getCountryByDialCode(dialCode: countryCode) != nil else {

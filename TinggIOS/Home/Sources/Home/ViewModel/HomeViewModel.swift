@@ -25,6 +25,7 @@ public class HomeViewModel: ObservableObject {
     @Published var saveBillUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
+    @Published var gotoAllRechargesView = false
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
@@ -114,7 +115,7 @@ public class HomeViewModel: ObservableObject {
                 dueBill = try await homeUsecase.getDueBills()
                 fetchBillUIModel = UIModel.nothing
             } catch {
-                fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
+                fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }
     }
@@ -126,7 +127,7 @@ public class HomeViewModel: ObservableObject {
                 uiModel = UIModel.nothing
                 navigateBillDetailsView.toggle()
             }catch {
-                uiModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
+                uiModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }
     }
@@ -140,7 +141,7 @@ public class HomeViewModel: ObservableObject {
                 let content = UIModel.Content(statusMessage: message)
                 saveBillUIModel = UIModel.content(content)
             } catch {
-                saveBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? "Server error, please try again")
+                saveBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }
     }
