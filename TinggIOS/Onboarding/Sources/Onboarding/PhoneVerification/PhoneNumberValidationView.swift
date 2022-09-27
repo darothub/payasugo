@@ -12,6 +12,7 @@ import SwiftUI
 import Theme
 public struct PhoneNumberValidationView: View {
     // swiftlint:disable all
+    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
     let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
@@ -170,6 +171,7 @@ extension PhoneNumberValidationView {
                 realmManager.save(data: nominationInfo)
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                 realmManager.save(data: profile)
+                defaultNetworkServiceId = parResponse.defaultNetworkServiceID ?? ""
                 navigation.screen = .home
             }
         }

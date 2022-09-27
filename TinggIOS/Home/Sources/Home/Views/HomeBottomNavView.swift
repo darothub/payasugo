@@ -43,6 +43,9 @@ public struct HomeBottomNavView: View {
         .sheet(isPresented: $hvm.gotoAllRechargesView) {
                AllRechargeUIView()
         }
+        .sheet(isPresented: $hvm.buyAirtime) {
+              
+        }
     }
     @ViewBuilder
     func homeView() -> some View {

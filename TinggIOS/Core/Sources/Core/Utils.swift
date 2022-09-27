@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 public enum Utils {
     public static let baseUrlStaging = "https://kartana.tingg.africa/pci/mula_ke/api/v1/"
+    public static let defaultNetworkServiceId = "DEFAULT_NETWORK_SERVICE_ID"
 }
 public enum Screens {
     case launch, intro, home

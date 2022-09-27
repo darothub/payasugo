@@ -40,7 +40,6 @@ public struct CheckBoxView: View {
 struct CheckBoxView_Previews: PreviewProvider {
     struct CheckBoxViewHolder: View {
         @State var checked = false
-
         var body: some View {
             CheckBoxView(checkboxChecked: $checked)
         }
@@ -50,8 +49,4 @@ struct CheckBoxView_Previews: PreviewProvider {
     }
 }
 
-struct PreviewTester: PreviewProvider {
-    static var previews: some View {
-        CheckBoxView_Previews.previews
-    }
-}
+

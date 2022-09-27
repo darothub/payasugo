@@ -26,6 +26,7 @@ public class HomeViewModel: ObservableObject {
     @Published var uiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
     @Published var gotoAllRechargesView = false
+    @Published var buyAirtime = false
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase

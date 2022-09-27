@@ -15,7 +15,9 @@ struct ActiveCategoryListView: View {
                     ActiveCategoryView(
                         title: name,
                         imageUrl: logo
-                    )
+                    ).onTapGesture {
+                        
+                    }
                 }
             }
         }
