@@ -8,6 +8,7 @@ import Core
 import SwiftUI
 struct ActiveCategoryListView: View {
     @State var categories = [Categorys]()
+    @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
         HStack(alignment: .top) {
             ForEach(categories, id: \.categoryID) { eachCategory in
@@ -16,7 +17,9 @@ struct ActiveCategoryListView: View {
                         title: name,
                         imageUrl: logo
                     ).onTapGesture {
-                        
+                        if eachCategory.categoryID == "2" {
+                            hvm.buyAirtime = true
+                        }
                     }
                 }
             }

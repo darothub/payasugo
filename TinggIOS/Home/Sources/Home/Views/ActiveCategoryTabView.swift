@@ -12,6 +12,7 @@ import SwiftUI
 import Photos
 struct ActiveCategoryTabView: View {
     var categories: [[Categorys]] = [[Categorys]]()
+    @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
         TabView {
             ForEach(0..<categories.count, id: \.self) { eachChunkIndex in
@@ -22,13 +23,14 @@ struct ActiveCategoryTabView: View {
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         .onAppear {
             setPageIndicatorAppearance()
-        }
+        }.environmentObject(hvm)
     }
 }
 
 struct ActiveCategoryTabView_Previews: PreviewProvider {
     static var previews: some View {
         ActiveCategoryTabView(categories: previewProcessedCategories)
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 

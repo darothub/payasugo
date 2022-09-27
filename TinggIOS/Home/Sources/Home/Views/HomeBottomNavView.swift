@@ -44,7 +44,7 @@ public struct HomeBottomNavView: View {
                AllRechargeUIView()
         }
         .sheet(isPresented: $hvm.buyAirtime) {
-              
+            BuyAirtimeView(phoneNumber: hvm.profile.msisdn ?? "080")
         }
     }
     @ViewBuilder

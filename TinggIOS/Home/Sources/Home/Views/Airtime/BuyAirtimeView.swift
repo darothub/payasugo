@@ -11,38 +11,73 @@ import Theme
 
 struct BuyAirtimeView: View {
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String?
-    @State var showDialog = false
+    @State var selectedButton:String = ""
+    @State var phoneNumber = "080600885192"
+    @StateObject var hvm = HomeDI.createHomeViewModel()
+    var services: [MerchantService] {
+        let service1 = MerchantService()
+        service1.serviceName = "Airtel"
+        let service2 = MerchantService()
+        service2.serviceName = "Safaricom"
+        return [service1, service2]
+    }
     var body: some View {
         VStack {
             Text("Buy Airtime")
         }
         .onAppear {
             print("DefaultNetWork \(defaultNetworkServiceId)")
-            showDialog = defaultNetworkServiceId != nil
+            hvm.showNetworkList = defaultNetworkServiceId != nil
         }
-        .customDialog(isPresented: $showDialog) {
-            Text("Dialog here")
+        .customDialog(isPresented: $hvm.showNetworkList) {
+            DialogContentView(
+                phoneNumber: phoneNumber,
+                airtimeServices: hvm.airTimeServices,
+                selectedButton: $selectedButton
+            )
+            .padding(20)
+            .environmentObject(hvm)
         }
     }
 }
 
 struct DialogContentView: View {
     var phoneNumber: String = "080"
+    var airtimeServices = [MerchantService]()
+    @State var imageUrl: String = ""
+    @Binding var selectedButton:String
+    @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
         VStack {
             Text("Select mobile network")
-            Text("Please select the mobile network that \(phoneNumber) belongs to")
+            Group {
+                Text("Please select the mobile network that")
+                + Text(" \(phoneNumber)").foregroundColor(.green)
+                + Text(" belongs to")
+            }.multilineTextAlignment(.center)
+                .font(.caption)
             Divider()
+            ForEach(airtimeServices, id: \.serviceName) { service in
+                NetworkSelectionRowView(
+                    imageUrl: service.serviceLogo,
+                    networkName: service.serviceName,
+                    selectedButton: $selectedButton
+                )
+            }
+            button(
+                backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                buttonLabel: "Done"
+            ) {
+                hvm.showNetworkList = false
+            }
         }
     }
 }
-enum Choice {
-    case one, two, three
-}
-struct NetworkRowView: View {
+
+struct NetworkSelectionRowView: View {
     @State var imageUrl: String = ""
     @State var networkName: String = "Airtel"
-    @State var selected = true
+    @Binding var selectedButton:String
     var body: some View {
         HStack {
             AsyncImage(url: URL(string: imageUrl)) { image in
@@ -57,17 +92,14 @@ struct NetworkRowView: View {
                     .padding()
             }
             Text(networkName)
-            Picker(selection: $selected, label: Text("Select an option:")) {
-                     Text("One").tag(Choice.one)
-                     Text("Two").tag(Choice.two)
-                     Text("Three").tag(Choice.three)
-                 }
+            Spacer()
+            RadioButtonView(selected: $selectedButton, id: networkName)
         }
     }
 }
 
 struct BuyAirtimeView_Previews: PreviewProvider {
     static var previews: some View {
-        NetworkRowView()
+        BuyAirtimeView()
     }
 }

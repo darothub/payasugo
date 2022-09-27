@@ -27,6 +27,8 @@ public class HomeViewModel: ObservableObject {
     @Published var navigateBillDetailsView = false
     @Published var gotoAllRechargesView = false
     @Published var buyAirtime = false
+    @Published var selectedDefaultNetworkName = ""
+    @Published var showNetworkList = false
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
