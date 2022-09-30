@@ -72,7 +72,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
         case transactionSummaryInfo = "TRANSACTION_SUMMARY_INFO"
         case inviteMessage = "INVITE_MESSAGE"
         case invitesVisibility = "INVITES_VISIBILITY"
-        case defaultNetworkServiceID = "DEFAULT_NETWORK_SERVICE_ID"
+//        case defaultNetworkServiceID = "DEFAULT_NETWORK_SERVICE_ID"
         case manualBillsSetup = "MANUAL_BILLS_SETUP"
         case manualBillAccounts = "MANUAL_BILL_ACCOUNTS"
         case bundleData = "BUNDLE_DATA"

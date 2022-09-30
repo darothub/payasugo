@@ -20,10 +20,17 @@ public extension View {
     ) -> some View {
       self.modifier(CustomDialog(isPresented: isPresented, dialogContent: dialogContent))
     }
+    @available(swift, deprecated: 5.0 , message: "This has been deprecated in build 6.0 v0.1.0 use handleViewStates instead")
     func handleViewState(
         uiModel: Binding<UIModel>
     ) -> some View {
       self.modifier(ViewState(uiModel: uiModel))
+    }
+    func handleViewStates(
+        uiModel: Binding<UIModel>,
+        showAlert: Binding<Bool>
+    ) -> some View {
+      self.modifier(ViewStates(uiModel: uiModel, showAlert: showAlert))
     }
     func setPageIndicatorAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .red
@@ -37,7 +44,6 @@ public extension View {
         isHidden.wrappedValue ? self : self.hidden() as? Self
     }
 }
-
 
 public struct TabItemStyle: ViewModifier {
     public var title: String

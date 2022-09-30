@@ -77,6 +77,9 @@ public struct HomeDI {
             categoryRepository: createCategoryRepository()
         )
     }
+    public static func createUpdateDefaultNetworkUsecase() -> UpdateDefaultNetworkUsecase {
+        return UpdateDefaultNetworkUsecase(baseRequest: .init())
+    }
     
     @MainActor public static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecase(
@@ -90,7 +93,8 @@ public struct HomeDI {
             singleDueBillUsecase: createSingleDueBillUsecase(),
             saveBillUsecase:  createSaveBillUsecase(),
             postMCPUsecase: createPostMCPUsecase(),
-            allRechargeUsecase: createAllRechargeUsecase()
+            allRechargeUsecase: createAllRechargeUsecase(),
+            updateDefaultNetworkIdUsecase: createUpdateDefaultNetworkUsecase()
         )
     }
     @MainActor

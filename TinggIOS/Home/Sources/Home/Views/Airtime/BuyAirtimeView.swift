@@ -9,10 +9,10 @@ import Core
 import SwiftUI
 import Theme
 
-struct BuyAirtimeView: View {
-    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String?
+public struct BuyAirtimeView: View {
+    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String!
     @State var selectedButton:String = ""
-    @State var phoneNumber = "080600885192"
+    @State var showAlert = true
     @StateObject var hvm = HomeDI.createHomeViewModel()
     var services: [MerchantService] {
         let service1 = MerchantService()
@@ -21,13 +21,20 @@ struct BuyAirtimeView: View {
         service2.serviceName = "Safaricom"
         return [service1, service2]
     }
-    var body: some View {
+    var phoneNumber: String {
+        hvm.profile.msisdn!
+    }
+    public init() {
+        //
+    }
+    public var body: some View {
         VStack {
             Text("Buy Airtime")
+          
         }
         .onAppear {
             print("DefaultNetWork \(defaultNetworkServiceId)")
-            hvm.showNetworkList = defaultNetworkServiceId != nil
+            hvm.showNetworkList = defaultNetworkServiceId.isEmpty
         }
         .customDialog(isPresented: $hvm.showNetworkList) {
             DialogContentView(
@@ -37,7 +44,7 @@ struct BuyAirtimeView: View {
             )
             .padding(20)
             .environmentObject(hvm)
-        }
+        }.handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
 }
 
@@ -45,6 +52,7 @@ struct DialogContentView: View {
     var phoneNumber: String = "080"
     var airtimeServices = [MerchantService]()
     @State var imageUrl: String = ""
+    @State var showAlert = false
     @Binding var selectedButton:String
     @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
@@ -68,8 +76,8 @@ struct DialogContentView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Done"
             ) {
-                hvm.showNetworkList = false
-            }
+                hvm.updateDefaultNetworkId(serviceName: selectedButton)
+            }.handleViewStates(uiModel: $hvm.defaultNetworkUIModel, showAlert: $hvm.showAlert)
         }
     }
 }

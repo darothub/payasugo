@@ -19,6 +19,7 @@ public class HomeUsecase {
     private var saveBillUsecase: SaveBillUsecase
     private var postMCPUsecase: PostMCPUsecase
     private var allRechargeUsecase: AllRechargeUsecase
+    private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
 
     public init(
         billAccountUsecase: BillAccountUsecase,
@@ -31,7 +32,8 @@ public class HomeUsecase {
         singleDueBillUsecase: SingleDueBillUsecase,
         saveBillUsecase: SaveBillUsecase,
         postMCPUsecase: PostMCPUsecase,
-        allRechargeUsecase: AllRechargeUsecase
+        allRechargeUsecase: AllRechargeUsecase,
+        updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
 
     ){
         self.billAccountUsecase = billAccountUsecase
@@ -45,6 +47,7 @@ public class HomeUsecase {
         self.saveBillUsecase = saveBillUsecase
         self.postMCPUsecase = postMCPUsecase
         self.allRechargeUsecase = allRechargeUsecase
+        self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
     }
 
     public func getProfile() -> Profile? {
@@ -94,8 +97,11 @@ public class HomeUsecase {
         tinggRequest.service = "FB"
         tinggRequest.accountNumber = accountNumber
         tinggRequest.serviceId = serviceId
-//        print("SingleBillUsecase \(tinggRequest)")
         return try await singleDueBillUsecase(tinggRequest: tinggRequest)
+    }
+    
+    public func updateDefaultNetwork(request: TinggRequest) async throws -> BaseDTO {
+        return try await updateDefaultNetworkIdUsecase(request: request)
     }
 
 }

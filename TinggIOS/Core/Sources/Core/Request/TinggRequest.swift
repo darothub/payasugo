@@ -28,6 +28,7 @@ public struct TinggRequest: Encodable {
     public var billAccounts: [BillAccount]?
     public var serviceId: String? = ""
     public var action: String = ""
+    public var defaultNetworkServiceId = ""
     public static var shared = TinggRequest()
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
@@ -53,6 +54,7 @@ public struct TinggRequest: Encodable {
         case serviceId = "SERVICE_ID"
         case billAccounts = "BILL_ACCOUNTS"
         case action = "ACTION"
+        case defaultNetworkServiceId = "DEFAULT_NETWORK_SERVICE_ID"
     }
 }
 

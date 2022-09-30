@@ -9,6 +9,7 @@ import SwiftUI
 struct ActiveCategoryListView: View {
     @State var categories = [Categorys]()
     @EnvironmentObject var hvm: HomeViewModel
+    @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
         HStack(alignment: .top) {
             ForEach(categories, id: \.categoryID) { eachCategory in
