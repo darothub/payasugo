@@ -33,7 +33,6 @@ public struct BuyAirtimeView: View {
           
         }
         .onAppear {
-            print("DefaultNetWork \(defaultNetworkServiceId)")
             hvm.showNetworkList = defaultNetworkServiceId.isEmpty
         }
         .customDialog(isPresented: $hvm.showNetworkList) {

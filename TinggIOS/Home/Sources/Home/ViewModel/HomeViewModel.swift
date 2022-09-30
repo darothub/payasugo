@@ -153,7 +153,6 @@ public class HomeViewModel: ObservableObject {
         }
     }
     func updateDefaultNetworkId(serviceName: String) {
-        print("ServiceName \(serviceName)")
         if !serviceName.isEmpty {
             let service = airTimeServices.first { serv in
                 serv.serviceName == serviceName

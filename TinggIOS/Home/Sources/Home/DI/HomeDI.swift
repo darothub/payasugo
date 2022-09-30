@@ -78,7 +78,7 @@ public struct HomeDI {
         )
     }
     public static func createUpdateDefaultNetworkUsecase() -> UpdateDefaultNetworkUsecase {
-        return UpdateDefaultNetworkUsecase(baseRequest: .init())
+        return UpdateDefaultNetworkUsecase(baseRequest: BaseRequest())
     }
     
     @MainActor public static func createHomeUsecase() -> HomeUsecase {
