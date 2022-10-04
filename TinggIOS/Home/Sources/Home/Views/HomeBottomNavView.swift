@@ -21,7 +21,6 @@ public struct HomeBottomNavView: View {
                         title: "Home",
                         image: Image(systemName: "house.fill")
                     )
-                
                 billView()
                     .tabItemStyle(
                         title: "Bill",
@@ -43,6 +42,10 @@ public struct HomeBottomNavView: View {
         .sheet(isPresented: $hvm.gotoAllRechargesView) {
                AllRechargeUIView()
         }
+        .sheet(isPresented: $hvm.buyAirtime) {
+            BuyAirtimeView()
+        }
+        
     }
     @ViewBuilder
     func homeView() -> some View {

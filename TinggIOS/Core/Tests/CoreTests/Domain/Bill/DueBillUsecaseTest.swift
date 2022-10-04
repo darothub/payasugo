@@ -18,7 +18,10 @@ class DueBillUsecaseTest: XCTestCase {
     }
     
     func testDueBillOfFiveDaysAreReturned() async throws {
-        let dueBills = try await dueBillUsecase(tinggRequest: .init())
+        var tinggRequest: TinggRequest = .shared
+        tinggRequest.service = "FBA"
+//        tinggRequest.billAccounts = billAccountUsecase()
+        let dueBills = try await dueBillUsecase(tinggRequest: tinggRequest)
         let actual = dueBills.count
         let expected = 1
         XCTAssertEqual(actual, expected, "Expected \(expected) but found \(String(describing: actual))")

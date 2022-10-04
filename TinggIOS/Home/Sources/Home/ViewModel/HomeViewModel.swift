@@ -24,8 +24,14 @@ public class HomeViewModel: ObservableObject {
     @Published var rechargeAndBillUIModel = UIModel.nothing
     @Published var saveBillUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
+    @Published var defaultNetworkUIModel = UIModel.nothing
+    @Published var buyAirtimeUiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
     @Published var gotoAllRechargesView = false
+    @Published var buyAirtime = false
+    @Published var selectedDefaultNetworkName = ""
+    @Published var showNetworkList = false
+    @Published var showAlert = false
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
@@ -72,6 +78,7 @@ public class HomeViewModel: ObservableObject {
         .store(in: &subscriptions)
         return
     }
+    
     public func mapHistoryIntoChartData() -> [ChartData] {
         return homeUsecase.getBarChartMappedData().map { (key, value) in
             ChartData(xName: ChartMonth.allCases[key], point: value)
@@ -143,6 +150,34 @@ public class HomeViewModel: ObservableObject {
             } catch {
                 saveBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
+        }
+    }
+    func updateDefaultNetworkId(serviceName: String) {
+        if !serviceName.isEmpty {
+            let service = airTimeServices.first { serv in
+                serv.serviceName == serviceName
+            }
+            var request = TinggRequest()
+            request.defaultNetworkServiceId = service!.hubServiceID
+            request.service = "UPN"
+            defaultNetworkUIModel = UIModel.loading
+           
+            Task {
+                do {
+                    let result = try await homeUsecase.updateDefaultNetwork(request: request)
+                    if result.statusCode == 200 {
+                        showAlert = true
+                        uiModel = UIModel.content(UIModel.Content(statusMessage: result.statusMessage))
+                    }
+                    showNetworkList = false
+                } catch {
+                    showAlert = true
+                    defaultNetworkUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+                }
+            }
+        } else {
+            showAlert = true
+            defaultNetworkUIModel = UIModel.error("You have not selected a network")
         }
     }
     func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {
