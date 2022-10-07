@@ -122,6 +122,7 @@ public class OnboardingViewModel: ObservableObject {
         case .loading:
             print("loadingState")
         case .error:
+            showAlert = true
             print("errorState")
             return
         case .nothing:

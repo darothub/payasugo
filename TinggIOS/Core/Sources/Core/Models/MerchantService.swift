@@ -15,7 +15,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var clientName: String = ""
     @Persisted public var hubClientID: String = ""
     @Persisted public var serviceCode: String = ""
-    @Persisted public var hubServiceID:String = ""
+    @Persisted public var hubServiceID: String = ""
     @Persisted public var clientCode:String = ""
     @Persisted public var minAmount:String = ""
     @Persisted public var maxAmount: String = ""

@@ -4,9 +4,11 @@ import Common
 import Core
 import Combine
 import Foundation
+import SwiftUI
 
 @MainActor
 public class HomeViewModel: ObservableObject {
+    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String!
     @Published public var nominationInfo = Observer<Enrollment>().objects
     @Published public var airTimeServices = [MerchantService]()
     @Published public var servicesByCategory = [[Categorys]]()
@@ -45,7 +47,6 @@ public class HomeViewModel: ObservableObject {
         allRecharge()
     }
     
-
     public func getProfile() {
         guard let profile = homeUsecase.getProfile() else {
             return
@@ -142,7 +143,6 @@ public class HomeViewModel: ObservableObject {
         saveBillUIModel = UIModel.loading
         Task {
             do {
-                print("singleBill \(singleBill)")
                 savedBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest, invoice: singleBill)
                 let message = "Bill with reference \(savedBill.merchantAccountNumber) created"
                 let content = UIModel.Content(statusMessage: message)
@@ -168,6 +168,7 @@ public class HomeViewModel: ObservableObject {
                     if result.statusCode == 200 {
                         showAlert = true
                         uiModel = UIModel.content(UIModel.Content(statusMessage: result.statusMessage))
+                        defaultNetworkServiceId = service?.hubServiceID
                     }
                     showNetworkList = false
                 } catch {
