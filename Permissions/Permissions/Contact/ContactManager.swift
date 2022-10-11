@@ -11,7 +11,7 @@ import Foundation
 public struct ContactManager {
     
     let store = CNContactStore()
-    let keys = [CNContactGivenNameKey, CNContactPhoneNumbersKey] as [CNKeyDescriptor]
+    let keys = [CNContactGivenNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey] as [CNKeyDescriptor]
     let fetchRequest: CNContactFetchRequest
     public static let shared = ContactManager()
     public init(){
@@ -22,7 +22,7 @@ public struct ContactManager {
         
         do{
             try store.enumerateContacts(with: fetchRequest, usingBlock: { contact, unsafeMutablePoint in
-                print(unsafeMutablePoint)
+                print(contact)
                 onCompletion(contact)
             })
         }catch {

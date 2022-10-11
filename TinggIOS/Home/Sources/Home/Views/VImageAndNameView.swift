@@ -8,7 +8,7 @@
 import SwiftUI
 import Core
 import Theme
-struct ActiveCategoryView: View {
+struct VImageAndNameView: View {
     @State var title: String = ""
     @State var imageUrl: String = ""
     var body: some View {
@@ -38,12 +38,11 @@ struct ActiveCategoryView: View {
             Text(title)
                 .font(.caption)
                 .foregroundColor(.black)
-            Spacer()
         }
     }
 }
 
-struct ActiveCategoryView_Previews: PreviewProvider {
+struct VImageAndNameView_Previews: PreviewProvider {
     static var previews: some View {
-        ActiveCategoryView(title: "Hello", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/internet.png")    }
+        VImageAndNameView(title: "Hello", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/internet.png")    }
 }

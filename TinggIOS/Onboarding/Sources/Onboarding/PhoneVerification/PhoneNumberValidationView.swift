@@ -43,7 +43,7 @@ public struct PhoneNumberValidationView: View {
                         of: vm.phoneNumber,
                         perform: onPhoneNumberInput(number:)
                     )
-                    .handleViewState(uiModel: $vm.phoneNumberFieldUIModel)
+                    .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $vm.showAlert)
                 VerificationCodeAdviceTextView()
                 PolicySectionView()
                     .environmentObject(vm)
@@ -74,7 +74,7 @@ public struct PhoneNumberValidationView: View {
                 ).environmentObject(vm)
             })
             .background(PrimaryTheme.getColor(.tinggwhite))
-            .handleViewState(uiModel: $vm.uiModel)
+            .handleViewStates(uiModel: $vm.uiModel, showAlert: $vm.showAlert)
             .onAppear {
                 observeUIModel()
             }

@@ -14,7 +14,7 @@ struct ActiveCategoryListView: View {
         HStack(alignment: .top) {
             ForEach(categories, id: \.categoryID) { eachCategory in
                 if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo {
-                    ActiveCategoryView(
+                    VImageAndNameView(
                         title: name,
                         imageUrl: logo
                     ).onTapGesture {
