@@ -24,7 +24,7 @@ public struct TinggRequest: Encodable {
     public var profileInfo: String? = ""
     public var apiLevel: Int = 15
     public var isExplicit = "1"
-    public var dataSource: String? = AppStorageManager.getActiveCountry()
+    public var dataSource: String? = AppStorageManager.getCountry()?.name
     public var billAccounts: [BillAccount]?
     public var serviceId: String? = ""
     public var action: String = ""

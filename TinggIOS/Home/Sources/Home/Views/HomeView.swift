@@ -62,7 +62,7 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
                 )
-                .handleViewState(uiModel: $hvm.fetchBillUIModel)
+                .handleViewStates(uiModel: $hvm.fetchBillUIModel, showAlert: $hvm.showAlert)
             RechargeAndBillView(rechargeAndBill: rechargeAndBill)
                 .background(
                     RoundedRectangle(cornerRadius: 0)

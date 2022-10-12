@@ -123,6 +123,7 @@ public class HomeViewModel: ObservableObject {
                 dueBill = try await homeUsecase.getDueBills()
                 fetchBillUIModel = UIModel.nothing
             } catch {
+                showAlert = true
                 fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }

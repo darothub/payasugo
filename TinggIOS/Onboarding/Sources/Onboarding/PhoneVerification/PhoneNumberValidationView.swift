@@ -183,11 +183,7 @@ extension OnboardingViewModel {
         let phoneNumber = "+\(countryCode)\(number)"
         do {
             let regex = try getSelectedCountryRegex()
-            guard validatePhoneNumberWith(regex: regex, phoneNumber: phoneNumber) != nil
-            else {
-                isValidPhoneNumber = false
-                return
-            }
+            isValidPhoneNumber = validatePhoneNumber(with: regex, phoneNumber: phoneNumber)
             if  number.count < 8 {
                 isValidPhoneNumber = false
                 return
@@ -203,22 +199,6 @@ extension OnboardingViewModel {
         }
         guard let regex = currentCountry.countryMobileRegex else { return ""}
         return regex
-    }
-    func validatePhoneNumberWith(regex: String, phoneNumber: String) -> [NSTextCheckingResult]? {
-        let phoneRegex = try? NSRegularExpression(
-            pattern: regex,
-            options: []
-        )
-        let sourceRange = NSRange(
-            phoneNumber.startIndex..<phoneNumber.endIndex,
-            in: phoneNumber
-        )
-        let result = phoneRegex?.matches(
-            in: phoneNumber,
-            options: [],
-            range: sourceRange
-        )
-        return result
     }
 
 }

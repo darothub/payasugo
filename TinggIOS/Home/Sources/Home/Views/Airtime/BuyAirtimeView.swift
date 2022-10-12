@@ -6,6 +6,7 @@
 //
 import Common
 import Core
+import Contacts
 import Permissions
 import SwiftUI
 import Theme
@@ -17,6 +18,10 @@ public struct BuyAirtimeView: View {
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
     @State var onPersonIconClicked = false
     @State var permission = ContactManager()
+    @State var showContact = false
+    @State var listOfContact = [ContactRow]()
+    @State var strs = [String]()
+    @State var contactImage: Image?
     var currency: String {
         if let currentCurrency = hvm.transactionHistory.first?.currencyCode {
             return currentCurrency
@@ -49,14 +54,35 @@ public struct BuyAirtimeView: View {
                 number: $accountNumber,
                 onIconClick: $onPersonIconClicked
             ) {
-                print("Hello image clicked")
+            
+                showContact.toggle()
+                listOfContact.removeAll()
                 Task {
                     await permission.fetchContacts { result in
                         switch result {
                         case .failure(let error):
                             print("Contact error \(error.localizedDescription)")
                         case .success(let contacts):
-                            print("Image data \n\(contacts)")
+                            
+                            let name = contacts.givenName + " " + contacts.familyName
+                            var phoneNumber = ""
+                            for number in contacts.phoneNumbers  {
+                                print("Numbers \(number)")
+                                switch number.label {
+                                default:
+                                    let mobile = number.value.stringValue
+                                    phoneNumber = mobile
+                                }
+                            }
+                            if let thumbnailData = contacts.imageData, let uiImage = UIImage(data: thumbnailData) {
+                                contactImage = Image(uiImage: uiImage)
+                                let contactRow = ContactRow(name: name, image: contactImage, phoneNumber: phoneNumber)
+                                listOfContact.append(contactRow)
+                                return
+                            }
+                            let contactRow = ContactRow(name: name, image: nil, phoneNumber: phoneNumber)
+                            listOfContact.append(contactRow)
+                            print("\(listOfContact)")
                         }
                     }
                 }
@@ -78,7 +104,14 @@ public struct BuyAirtimeView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-                
+                let country = AppStorageManager.getCountry()
+                if let regex = country?.countryMobileRegex {
+                   let result = validatePhoneNumber(with: regex, phoneNumber: accountNumber)
+                    print("Valid \(result)")
+                }
+                if amount.isEmpty {
+                    print("Amount is empty")
+                }
             }
         }
         .padding()
@@ -100,7 +133,15 @@ public struct BuyAirtimeView: View {
             )
             .padding(20)
             .environmentObject(hvm)
-        }.handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
+        }
+        .sheet(isPresented: $showContact, content: {
+            ContactRowView(listOfContactRow: listOfContact){contact in
+                print("Selected \(contact)")
+                accountNumber = contact.phoneNumber
+                showContact.toggle()
+            }
+        })
+        .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
     
     func resetAccountNumber() {

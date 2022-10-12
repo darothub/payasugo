@@ -7,7 +7,7 @@
 
 import SwiftUI
 public struct AppStorageManager {
-    @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: Data = .init()
+    @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: Country? = nil
     @AppStorage(LocalProperties.countryName.rawValue) fileprivate static var userCountry: String = ""
     @AppStorage(LocalProperties.phoneNumber.rawValue) fileprivate static var phoneNumber: String = ""
     @AppStorage(LocalProperties.clientId.rawValue) fileprivate static var clientId: String = ""
@@ -18,7 +18,6 @@ public struct AppStorageManager {
         phoneNumber = number
     }
     public static func getActiveCountry() -> String {
-       
         return userCountry
     }
     public static func getPhoneNumber() -> String {
@@ -29,6 +28,13 @@ public struct AppStorageManager {
     }
     public static func getClientId() -> String {
         return clientId
+    }
+    public static func retainActiveCountry(country: Country?) {
+        activeCountry = country
+    }
+    
+    public static func getCountry() -> Country? {
+        activeCountry
     }
 }
 

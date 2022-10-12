@@ -11,7 +11,7 @@ import Foundation
 public struct ContactManager {
     
     let store = CNContactStore()
-    let keys = [CNContactGivenNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactFamilyNameKey] as [CNKeyDescriptor]
+    let keys = [CNContactGivenNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactFamilyNameKey, CNContactImageDataKey] as [CNKeyDescriptor]
     let fetchRequest: CNContactFetchRequest
     let permission: ContactPermission = .init()
     public static let shared = ContactManager()
