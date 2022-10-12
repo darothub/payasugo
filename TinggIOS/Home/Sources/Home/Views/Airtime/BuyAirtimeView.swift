@@ -6,6 +6,7 @@
 //
 import Common
 import Core
+import Permissions
 import SwiftUI
 import Theme
 
@@ -14,6 +15,8 @@ public struct BuyAirtimeView: View {
     @StateObject var hvm = HomeDI.createHomeViewModel()
     @State var services: [MerchantService] = [MerchantService]()
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
+    @State var onPersonIconClicked = false
+    @State var permission = ContactManager()
     var currency: String {
         if let currentCurrency = hvm.transactionHistory.first?.currencyCode {
             return currentCurrency
@@ -42,12 +45,29 @@ public struct BuyAirtimeView: View {
             )
             Text("Mobile number")
                 .padding(.top)
-            TextFieldAndRightIcon(number: $accountNumber)
+            TextFieldAndRightIcon(
+                number: $accountNumber,
+                onIconClick: $onPersonIconClicked
+            ) {
+                print("Hello image clicked")
+                Task {
+                    await permission.fetchContacts { result in
+                        switch result {
+                        case .failure(let error):
+                            print("Contact error \(error.localizedDescription)")
+                        case .success(let contacts):
+                            print("Image data \n\(contacts)")
+                        }
+                    }
+                }
+            }
             AirtimeProviderListView(
                 selectedProvider: $selectedButton,
                 airtimeProviders: $hvm.airTimeServices,
                 defaultNetworkId: $hvm.defaultNetworkServiceId
-            )
+            ){
+                resetAccountNumber()
+            }
             Text("Amount")
                 .padding(.top)
             TextFieldAndLeftIcon(amount: $amount, currency: currency)
@@ -56,7 +76,7 @@ public struct BuyAirtimeView: View {
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Continue"
+                buttonLabel: "Buy airtime"
             ) {
                 
             }
@@ -81,6 +101,10 @@ public struct BuyAirtimeView: View {
             .padding(20)
             .environmentObject(hvm)
         }.handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
+    }
+    
+    func resetAccountNumber() {
+        accountNumber = ""
     }
 }
 
@@ -142,10 +166,15 @@ struct NetworkSelectionRowView: View {
 
 struct TextFieldAndRightIcon: View {
     @Binding var number: String
+    @Binding var onIconClick: Bool
+    var onImageClick: () -> Void
     var body: some View {
         HStack {
             TextField("Mobile number", text: $number)
             Image(systemName: "person")
+                .onTapGesture {
+                    onImageClick()
+                }
         }.padding()
         .background(
             RoundedRectangle(cornerRadius: 5)

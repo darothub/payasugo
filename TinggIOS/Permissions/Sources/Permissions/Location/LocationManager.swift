@@ -38,7 +38,7 @@ extension LocationManager : CLLocationManagerDelegate{
         
         guard let location = locations.last else { return }
         geocoder.reverseGeocodeLocation(location, completionHandler: {[unowned self] placemarks, error in
-            if let placeMark = placemarks?[0], city = placeMark.locality{
+            if let placeMark = placemarks?[0], let city = placeMark.locality{
                 locality = city
                 print(locality)
             }

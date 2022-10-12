@@ -11,6 +11,7 @@ struct AirtimeProviderListView: View {
     @Binding var selectedProvider: String
     @Binding var airtimeProviders: [MerchantService]
     @Binding var defaultNetworkId: String
+    var onResetAccountNumber: () -> Void
     let gridColumn = [
         GridItem(.adaptive(minimum: 110))
     ]
@@ -22,7 +23,9 @@ struct AirtimeProviderListView: View {
             LazyVGrid(columns: gridColumn, spacing: 5){
                 ForEach(0..<airtimeProviders.count, id: \.self) { index in
                     let service = airtimeProviders[index]
-                    RectangleImageCardView(imageUrl: service.serviceLogo, tag: service.serviceName, selected: $selectedProvider)
+                    RectangleImageCardView(imageUrl: service.serviceLogo, tag: service.serviceName, selected: $selectedProvider) {
+                        onResetAccountNumber()
+                        }
                         .overlay(alignment: .topTrailing) {
                             if service.hubServiceID == defaultNetworkId {
                                 onDefaultNetworkDetected(service: service)
@@ -47,6 +50,7 @@ struct RectangleImageCardView: View {
     @State var radius: CGFloat = 5
     @State var y: CGFloat = 3
     @Binding var selected: String
+    var onResetAccountNumber: () -> Void
     var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { image in
             image.resizable()
@@ -67,6 +71,7 @@ struct RectangleImageCardView: View {
         .onTapGesture {
             withAnimation {
                 selected = tag
+                onResetAccountNumber()
             }
         }
     }
@@ -108,7 +113,10 @@ struct AirtimeProviderListView_Previews: PreviewProvider {
                 selectedProvider: $selectedProvider,
                 airtimeProviders: $services,
                 defaultNetworkId: $defaultNetworkId
-            ).onAppear {
+            ){
+                resetAccountNumber()
+            }
+            .onAppear {
                 let service1 = MerchantService()
                 service1.serviceName = "Airtel"
                 service1.hubServiceID = "1"
@@ -119,6 +127,9 @@ struct AirtimeProviderListView_Previews: PreviewProvider {
                 service2.serviceLogo = "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0021/8754/brand.gif?itok=vXzzoRXw"
                 services =  [service1, service2]
             }
+        }
+        func resetAccountNumber() {
+            print("Reset")
         }
     }
     static var previews: some View {
