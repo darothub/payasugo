@@ -9,10 +9,14 @@ import SwiftUI
 
 struct SuggestedAmountListView: View {
     @State var history: [TransactionHistory] = .init()
+    @Binding var selectedServiceName: String
     @Binding var amount: String
     @Binding var accountNumber: String
     var historyByAccountNumber: [TransactionHistory] {
-        history.filter {$0.accountNumber == accountNumber}
+        history.filter {
+            ($0.accountNumber == accountNumber) &&
+            ($0.serviceName == selectedServiceName)
+        }
     }
     @State var selectedIndex = -1
     var body: some View {
@@ -20,8 +24,7 @@ struct SuggestedAmountListView: View {
             HStack {
                 ForEach(historyByAccountNumber, id: \.payerTransactionID) { transaction in
                     let index = historyByAccountNumber.firstIndex(of: transaction)
-                    let floatValue = Float(transaction.amount ?? "10.0")
-                    let intAmount = Int(floatValue ?? 0.0)
+                    let intAmount = convertStringToInt(value: transaction.amount ?? "10.0")
                     let strAmount = "\(String(describing: intAmount))"
                     BoxedTextView(text: .constant(strAmount))
                         .background(index == selectedIndex ? .red : .white)
@@ -36,6 +39,8 @@ struct SuggestedAmountListView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
+        .background(.white)
     }
 }
 
@@ -56,6 +61,7 @@ struct SuggestedAmountListView_Previews: PreviewProvider {
     struct SuggestedAmountListViewHolder: View {
         @State var number = "200"
         @State var accountNumber: String = ""
+        @State var serviceName = "Safaricom"
         var historys: [TransactionHistory] {
             let hist1 = TransactionHistory.init()
             hist1.payerTransactionID = "1"
@@ -66,10 +72,16 @@ struct SuggestedAmountListView_Previews: PreviewProvider {
             return [hist1, hist2]
         }
         var body: some View {
-            SuggestedAmountListView(history: historys, amount: $number, accountNumber: $accountNumber)
+            SuggestedAmountListView(history: historys, selectedServiceName: $serviceName, amount: $number, accountNumber: $accountNumber)
         }
     }
     static var previews: some View {
         SuggestedAmountListViewHolder()
     }
+}
+
+func convertStringToInt(value: String) -> Int {
+    let floatValue = Float(value)
+    let intAmount = Int(floatValue ?? 0.0)
+    return intAmount
 }

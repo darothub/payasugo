@@ -3,7 +3,9 @@
 import Common
 import Core
 import Combine
+import Contacts
 import Foundation
+import Permissions
 import SwiftUI
 
 @MainActor
@@ -34,6 +36,7 @@ public class HomeViewModel: ObservableObject {
     @Published var selectedDefaultNetworkName = ""
     @Published var showNetworkList = false
     @Published var showAlert = false
+    @Published var permission = ContactManager()
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
@@ -180,6 +183,17 @@ public class HomeViewModel: ObservableObject {
         } else {
             showAlert = true
             defaultNetworkUIModel = UIModel.error("You have not selected a network")
+        }
+    }
+    func fetchPhoneContacts(action: @escaping (CNContact) -> Void) async {
+        await permission.fetchContacts { [unowned self] result in
+            switch result {
+            case .failure(let error):
+                showAlert = true
+                uiModel = UIModel.error(error.localizedDescription)
+            case .success(let contacts):
+                action(contacts)
+            }
         }
     }
     func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {

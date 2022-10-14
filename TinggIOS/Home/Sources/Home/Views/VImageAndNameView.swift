@@ -11,20 +11,27 @@ import Theme
 struct VImageAndNameView: View {
     @State var title: String = ""
     @State var imageUrl: String = ""
+    var initials: String {
+        if title == "None" {
+            return "NA"
+        } else {
+            return title.prefix(2).uppercased()
+        }
+    }
     var body: some View {
         VStack {
-            AsyncImage(url: URL(string: imageUrl)) { image in
-                image.resizable()
-                .frame(width: 65,
-                       height: 65,
-                       alignment: .center)
-                .scaleEffect(1)
-                .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-                .background(PrimaryTheme.getColor(.cellulantRed).opacity(0.08))
-                .clipShape(Circle())
-                .padding(10)
-            } placeholder: {
-                Image(systemName: "camera.fill")
+            if imageUrl.isEmpty {
+                Text(initials)
+                    .padding()
+                    .background(.gray)
+                    .clipShape(Circle())
+                    .scaleEffect(1.3)
+                    .padding()
+                    .shadow(radius: 3)
+                   
+            } else {
+                AsyncImage(url: URL(string: imageUrl)) { image in
+                    image.resizable()
                     .frame(width: 65,
                            height: 65,
                            alignment: .center)
@@ -34,15 +41,35 @@ struct VImageAndNameView: View {
                     .clipShape(Circle())
                     .padding(10)
                     .shadow(radius: 3)
+                } placeholder: {
+                    Image(systemName: "person.fill")
+                        .frame(width: 65,
+                               height: 65,
+                               alignment: .center)
+                        .scaleEffect(1)
+                        .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+                        .background(PrimaryTheme.getColor(.cellulantRed).opacity(0.08))
+                        .clipShape(Circle())
+                        .padding(10)
+                        .shadow(radius: 3)
+                }
             }
             Text(title)
+                .frame(width: 65, alignment: .center)
                 .font(.caption)
                 .foregroundColor(.black)
+                .lineLimit(nil)
+                .multilineTextAlignment(.center)
+            
         }
     }
 }
 
 struct VImageAndNameView_Previews: PreviewProvider {
     static var previews: some View {
-        VImageAndNameView(title: "Hello", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/internet.png")    }
+        VStack {
+            VImageAndNameView(title: "Safaricom airtime", imageUrl: "")
+            VImageAndNameView(title: "Safaricom airtime", imageUrl: "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0022/3561/brand.gif?itok=oIhcrB6h")
+        }
+    }
 }

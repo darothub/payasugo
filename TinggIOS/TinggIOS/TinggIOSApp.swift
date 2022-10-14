@@ -30,13 +30,13 @@ struct TinggIOSApp: App {
     @ViewBuilder
     fileprivate func appBody() -> some View {
         ZStack {
-            HomeBottomNavView()
-//            NavigationLink(destination: destination, isActive: $navigation.navigatePermission) {
-//                LaunchScreenView()
-//                    .navigationBarHidden(true)
-//                    .navigationBarBackButtonHidden(true)
-//                    .environmentObject(navigation)
-//            }
+//            HomeBottomNavView()
+            NavigationLink(destination: destination, isActive: $navigation.navigatePermission) {
+                LaunchScreenView()
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
+                    .environmentObject(navigation)
+            }
         }
         .onAppear {
               UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")

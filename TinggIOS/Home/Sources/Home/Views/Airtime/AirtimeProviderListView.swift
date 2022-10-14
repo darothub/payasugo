@@ -33,7 +33,10 @@ struct AirtimeProviderListView: View {
                         }
                 }
             }
-        }.onAppear {
+        }
+        .frame(maxWidth: .infinity)
+        .background(.white)
+        .onAppear {
             print("AirtimeServices: \(airtimeProviders)")
         }
     }
