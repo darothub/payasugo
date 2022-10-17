@@ -1,6 +1,0 @@
-projectKey=tinggios
-serverUrl=https://sonar.cellulant.co.ke
-serverVersion=9.3.0.51899
-dashboardUrl=https://sonar.cellulant.co.ke/dashboard?id=tinggios
-ceTaskId=AYKQzNMyovECMIheorvx
-ceTaskUrl=https://sonar.cellulant.co.ke/api/ce/task?id=AYKQzNMyovECMIheorvx
