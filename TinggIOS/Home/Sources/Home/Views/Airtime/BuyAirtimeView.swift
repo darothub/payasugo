@@ -24,7 +24,7 @@ public struct BuyAirtimeView: View {
     @State var phoneNumber: String = ""
     @State var accountNumber = ""
     @State var amount = ""
-    @State var whoseNumber = ""
+    @State var whoseNumber = WhoseNumberLabel.other
     var currency: String {
         if let currentCurrency = hvm.transactionHistory.first?.currencyCode {
             return currentCurrency
@@ -115,6 +115,14 @@ public struct BuyAirtimeView: View {
                 print("Selected \(contact)")
                 accountNumber = contact.phoneNumber
                 showContact.toggle()
+            }
+        })
+        .onChange(of: accountNumber, perform: { newValue in
+            print("Phone number \(phoneNumber)\nAccount number \(newValue)")
+            if phoneNumber == newValue {
+                whoseNumber = WhoseNumberLabel.my
+            } else {
+                whoseNumber = WhoseNumberLabel.other
             }
         })
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
@@ -256,18 +264,27 @@ struct TextFieldAndLeftIcon: View {
 }
 
 struct WhoseNumberOptionView: View {
-    @Binding var selected:String
-    var options: [String] {
-        ["My number", "Other number"]
+    @Binding var selected: WhoseNumberLabel
+    var options: [WhoseNumberLabel] {
+        WhoseNumberLabel.allCases
     }
     var body: some View {
         HStack(spacing: 0) {
             ForEach(options, id: \.self) { option in
-                HRadioButtonAndText(selected: $selected, name: option)
+                HRadioButtonAndText(selected: .constant(selected.label), name: option.label)
                     .scaleEffect(0.9)
                 Spacer()
             }
         }
+    }
+}
+
+enum WhoseNumberLabel: String, CaseIterable {
+    case my
+    case other
+    
+    var label: String {
+        self.rawValue.capitalized + " " + "number"
     }
 }
 
