@@ -16,11 +16,11 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var serviceName: String?
     @Persisted public var hubServiceID: Int = 0
     @Persisted public var serviceCode: String?
-    @Persisted(primaryKey: true) public var accountNumber: String?
+    @Persisted public var accountNumber: String?
     @Persisted public var accountName: String?
     @Persisted public var accountAlias: String?
     @Persisted public var accountID: String?
-    @Persisted public var clientProfileAccountID: Int = 0
+    @Persisted(primaryKey: true) public var clientProfileAccountID: Int = 0
     @Persisted public var isExplicit: String?
     @Persisted public var extraData: String?
     @Persisted public var serviceCategoryID: String?

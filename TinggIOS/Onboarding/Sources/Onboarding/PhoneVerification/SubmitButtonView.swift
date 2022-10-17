@@ -23,7 +23,9 @@ struct SubmitButtonView: View {
               let isValidated = onboardingViewModel.validatePhoneNumberIsNotEmpty()
               if isValidated {
                   onboardingViewModel.retainPhoneNumber()
-                  onboardingViewModel.saveActiveCountry(countryName: onboardingViewModel.currentCountry.name!)
+                  onboardingViewModel.saveActiveCountryName(countryName: onboardingViewModel.currentCountry.name!)
+                  print("Current \(onboardingViewModel.currentCountry)")
+                  onboardingViewModel.saveActiveCountry(country: onboardingViewModel.currentCountry)
                   onboardingViewModel.saveClientId(clientId: onboardingViewModel.currentCountry.mulaClientID!)
                   onboardingViewModel.makeActivationCodeRequest()
                   observeUIModel()
@@ -64,11 +66,13 @@ extension OnboardingViewModel {
         return true
     }
     func retainPhoneNumber() {
-        print("ActiveNumber \(countryCode)\(phoneNumber)")
         AppStorageManager.retainPhoneNumber(number: countryCode+phoneNumber)
     }
-    func saveActiveCountry(countryName: String) {
+    func saveActiveCountryName(countryName: String) {
         AppStorageManager.retainActiveCountry(country: countryName)
+    }
+    func saveActiveCountry(country: Country?) {
+        AppStorageManager.retainActiveCountry(country: country)
     }
     func saveClientId(clientId: String) {
         AppStorageManager.retainClientId(id: clientId)

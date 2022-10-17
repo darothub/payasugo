@@ -43,7 +43,7 @@ public struct HomeBottomNavView: View {
                AllRechargeUIView()
         }
         .sheet(isPresented: $hvm.buyAirtime) {
-            BuyAirtimeView()
+            BuyAirtimeView(airtimeServices: hvm.airTimeServices)
         }
         
     }

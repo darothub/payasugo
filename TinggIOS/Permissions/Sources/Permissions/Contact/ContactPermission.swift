@@ -36,3 +36,7 @@ public class ContactPermission : ObservableObject {
         .store(in: &subscription)
     }
 }
+
+public enum ContactPermissionError: Error {
+    case Unauthorized
+}

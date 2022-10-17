@@ -26,11 +26,11 @@ struct FavouriteListView: View {
         VStack(alignment: .leading) {
             Text("MY FAVOURITES")
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                HStack(alignment: .top) {
                     ForEach(enrollmentResult, id: \.accountNumber) { enrollment in
                         let alias = enrollment.accountAlias
-                        if let name = alias, let logo = enrollment.serviceLogo {
-                            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: logo)
+                        if let name = alias {
+                            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: "")
                                 .shadow(color: .red, radius: accountNumber == enrollment.accountNumber ? 5 : 0, x: 0 , y: accountNumber == enrollment.accountNumber ? 3 : 0)
                                 .onTapGesture {
                                     if let number = enrollment.accountNumber {
