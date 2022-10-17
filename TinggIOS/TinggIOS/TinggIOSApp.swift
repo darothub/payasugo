@@ -30,7 +30,6 @@ struct TinggIOSApp: App {
     @ViewBuilder
     fileprivate func appBody() -> some View {
         ZStack {
-//            HomeBottomNavView()
             NavigationLink(destination: destination, isActive: $navigation.navigatePermission) {
                 LaunchScreenView()
                     .navigationBarHidden(true)
