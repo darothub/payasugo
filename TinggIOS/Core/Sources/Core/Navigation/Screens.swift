@@ -6,6 +6,6 @@
 //
 
 import Foundation
-public enum Screens {
-    case launch, intro, home
+public enum Screens: String, CaseIterable {
+    case intro, home, buyAirtime
 }

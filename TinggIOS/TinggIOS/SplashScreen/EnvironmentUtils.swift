@@ -1,13 +1,13 @@
 //
-//  SplashScreenWatcher.swift
+//  EnvironmentUtils.swift
 //  TinggIOS
 //
-//  Created by Abdulrasaq on 23/06/2022.
+//  Created by Abdulrasaq on 18/10/2022.
 //
 
 import Foundation
 public class EnvironmentUtils: ObservableObject {
-    @Published public var state = SplashScreenState.start
+    @Published var state = SplashScreenState.start
     public init() {
         // Intentionally unimplemented...modular accessibility
     }

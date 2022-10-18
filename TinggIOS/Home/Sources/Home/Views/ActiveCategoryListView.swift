@@ -19,7 +19,10 @@ struct ActiveCategoryListView: View {
                         imageUrl: logo
                     ).onTapGesture {
                         if eachCategory.categoryID == "2" {
-                            hvm.buyAirtime = true
+//                            hvm.buyAirtime = true
+                            withAnimation {
+                                navigation.navigationStack = [.home, .buyAirtime]
+                            }
                         }
                     }
                 }

@@ -172,7 +172,8 @@ extension PhoneNumberValidationView {
                 let profile = parResponse.mulaProfileInfo.mulaProfile[0]
                 realmManager.save(data: profile)
                 defaultNetworkServiceId = parResponse.defaultNetworkServiceID ?? ""
-                navigation.screen = .home
+//                navigation.screen = .home
+                navigation.navigationStack = [.home]
             }
         }
     }

@@ -13,7 +13,6 @@ struct OnboadingView: View {
     let onboadingItem: OnboardingItem
     @Environment(\.colorScheme) var colorScheme
     let screenSize: CGSize
-    @EnvironmentObject var theme: EnvironmentUtils
     var body: some View {
         VStack {
             gifImage(size: screenSize)
@@ -26,7 +25,6 @@ struct OnboadingView: View {
 struct OnboadingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboadingView(onboadingItem: exampleOnboarding(), screenSize: CGSize(width: 500, height: 500))
-            .environmentObject(EnvironmentUtils())
     }
 }
 
