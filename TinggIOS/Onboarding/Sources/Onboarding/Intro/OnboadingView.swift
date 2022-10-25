@@ -9,6 +9,7 @@ import Core
 import SwiftUI
 import Theme
 
+/// A blue print of the Onboarding view
 struct OnboadingView: View {
     let onboadingItem: OnboardingItem
     @Environment(\.colorScheme) var colorScheme
@@ -29,6 +30,9 @@ struct OnboadingView_Previews: PreviewProvider {
 }
 
 extension OnboadingView {
+    /// To return a custom view that displays a gif Image
+    /// - Parameter size: size of the image
+    /// - Returns: A gif Image
     func gifImage(size: CGSize) -> some View {
         let url = Bundle.module.url(forResource: onboadingItem.centerImage, withExtension: "gif")!
         return GifImage(url)

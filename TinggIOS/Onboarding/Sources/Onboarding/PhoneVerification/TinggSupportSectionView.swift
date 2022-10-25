@@ -7,6 +7,8 @@
 import Core
 import SwiftUI
 import Theme
+/// Support option for user
+/// Part of the ``PhoneNumberValidationView``
 struct TinggSupportSectionView: View {
     var geometry: GeometryProxy
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel

@@ -8,6 +8,7 @@ import Common
 import Core
 import SwiftUI
 import Theme
+/// Introduces the onboarding screens to the user
 public struct IntroView: View {
     @State var active = false
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
@@ -44,6 +45,7 @@ struct IntroView_Previews: PreviewProvider {
     }
 }
 
+/// Tabview displays the onboarding views in turn
 struct IntroTabView: View {
     var geo: GeometryProxy
     @Binding var active: Bool
@@ -69,6 +71,8 @@ struct IntroTabView: View {
         }
     }
     @ViewBuilder
+    /// Iterates over available onboarding screens
+    /// - Returns: OnboardingView
     fileprivate func onboardingViewListView() -> some View {
         ForEach(onboardingItems(), id: \.info) { item in
             VStack {
@@ -77,6 +81,8 @@ struct IntroTabView: View {
         }
     }
     @ViewBuilder
+    /// A button with `Get started` text
+    /// - Returns: Button
     fileprivate func getStartedButton() -> some View {
         button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
             active.toggle()
