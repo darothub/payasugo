@@ -12,10 +12,12 @@
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
-		71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71867FBE289479BC008A5411 /* ViewHouse.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
+		71BA90BA28FE7524007B85F2 /* EnvironmentUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90B928FE7524007B85F2 /* EnvironmentUtils.swift */; };
+		71BA90BC28FE7721007B85F2 /* SplashScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BB28FE7721007B85F2 /* SplashScreenState.swift */; };
+		71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */; };
 		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
 /* End PBXBuildFile section */
@@ -63,7 +65,6 @@
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
 		71867FBA28946EF0008A5411 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
-		71867FBE289479BC008A5411 /* ViewHouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHouse.swift; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6293283EBCB8002ADCA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -72,6 +73,9 @@
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71BA90B928FE7524007B85F2 /* EnvironmentUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentUtils.swift; sourceTree = "<group>"; };
+		71BA90BB28FE7721007B85F2 /* SplashScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SplashScreenState.swift; path = TinggIOS/SplashScreen/SplashScreenState.swift; sourceTree = SOURCE_ROOT; };
+		71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,7 +159,7 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
-				71867FBE289479BC008A5411 /* ViewHouse.swift */,
+				71BA90B428FE738B007B85F2 /* SplashScreen */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
@@ -184,6 +188,16 @@
 				715CE27F28F5EC6D00E63E19 /* Permissions */,
 			);
 			name = Packages;
+			sourceTree = "<group>";
+		};
+		71BA90B428FE738B007B85F2 /* SplashScreen */ = {
+			isa = PBXGroup;
+			children = (
+				71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */,
+				71BA90BB28FE7721007B85F2 /* SplashScreenState.swift */,
+				71BA90B928FE7524007B85F2 /* EnvironmentUtils.swift */,
+			);
+			path = SplashScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -363,8 +377,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
+				71BA90BA28FE7524007B85F2 /* EnvironmentUtils.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
-				71867FBF289479BC008A5411 /* ViewHouse.swift in Sources */,
+				71BA90BC28FE7721007B85F2 /* SplashScreenState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

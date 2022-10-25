@@ -15,48 +15,14 @@ struct TinggIOSApp: App {
     @StateObject var enviromentUtils = EnvironmentUtils()
     @StateObject var navigation = NavigationUtils()
     @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
-    @State var profile: Profile = .init()
-    @State var categories: [[Categorys]] = [[]]
-    @State var quicktops: [MerchantService] = [MerchantService]()
-    @State var fieldSize = 4
-    @State var otp = ""
+
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                appBody()
-            }
-        }
-    }
-    @ViewBuilder
-    fileprivate func appBody() -> some View {
-        ZStack {
-            NavigationLink(destination: destination, isActive: $navigation.navigatePermission) {
-                LaunchScreenView()
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .environmentObject(navigation)
-            }
-        }
-        .onAppear {
-              UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-              print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
-        }
-    }
-    @ViewBuilder
-    var destination: some View {
-        switch navigation.screen {
-        case .home:
-            HomeBottomNavView()
-        case .intro:
-            IntroView()
-                .navigationBarHidden(true)
-                .environmentObject(navigation)
-                .environmentObject(ovm)
-        case .launch:
             LaunchScreenView()
                 .navigationBarHidden(true)
                 .navigationBarBackButtonHidden(true)
                 .environmentObject(navigation)
+                .environmentObject(ovm)
         }
     }
 }

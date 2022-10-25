@@ -11,18 +11,6 @@ public enum Utils {
     public static let baseUrlStaging = "https://kartana.tingg.africa/pci/mula_ke/api/v1/"
     public static let defaultNetworkServiceId = "DEFAULT_NETWORK_SERVICE_ID"
 }
-public enum Screens {
-    case launch, intro, home
-}
-
-public class NavigationUtils: ObservableObject {
-    @Published public var screen = Screens.launch
-    @Published public var current = Screens.launch
-    @Published public var navigatePermission = true
-    public init() {
-        // Intentionally unimplemented...needed for modular accessibility
-    }
-}
 
 extension Array {
     func chunked(into size: Int) -> [[Element]] {
