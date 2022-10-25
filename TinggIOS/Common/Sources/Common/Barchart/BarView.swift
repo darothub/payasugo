@@ -10,19 +10,28 @@ import SwiftUI
 struct BarView: View {
     var chartData: ChartData
     var colors: [Color]
-
+    @State var height: Double = 1200.0
+    var minHeight: Double {
+        var minHeight = 0.0
+        if height > 10000 {
+            minHeight = Swift.min(chartData.point/100, height)
+        } else {
+            minHeight = Swift.min(chartData.point/50, height)
+        }
+        return minHeight
+    }
     var body: some View {
         VStack(spacing: 1.0){
             let point = chartData.point < 1 ? "" : "KES\(String(format: "%.0f", chartData.point))"
-            let height = Swift.min(chartData.point/500, 100000)
+          
             Text("\(point)")
                 .font(.system(size: 10))
               Rectangle()
                   .fill(.green)
-                  .frame(width: 30, height: CGFloat(height))
-                  .cornerRadius(5)
-                  .animation(.easeInOut, value: CGFloat(height))
-                  .padding(.bottom, 10)
+                  .frame(width: 40, height: minHeight)
+                  .animation(.easeInOut, value: minHeight)
+                  .padding(.bottom, 0)
+            Divider()
             Text(chartData.xName.rawValue)
                 .font(.caption)
         }
@@ -32,7 +41,17 @@ struct BarView: View {
 }
 
 struct BarView_Previews: PreviewProvider {
+    struct BarViewHolder: View {
+        @State var height = 1200.0
+        var body: some View {
+            BarView(
+                chartData: ChartData(xName: .Jan, point: 100),
+                colors: [.green],
+                height: height
+            )
+        }
+    }
     static var previews: some View {
-        BarView(chartData: ChartData(xName: .Jan, point: 70000), colors: [.green])
+        BarViewHolder()
     }
 }
