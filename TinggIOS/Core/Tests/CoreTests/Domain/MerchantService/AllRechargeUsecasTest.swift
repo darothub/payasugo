@@ -10,12 +10,12 @@ import XCTest
 final class AllRechargeUsecasTest: XCTestCase {
     private var serviceRepository: MerchantServiceRepository!
     private var categoryRepository: CategoryRepository!
-    private var usecase: AllRechargeUsecase!
+    private var usecase: CategoriesAndServicesUsecase!
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         serviceRepository = FakeMerchantRepository(dbObserver: Observer<MerchantService>())
         categoryRepository = FakeCategoryRepository(dbObserver: Observer<Categorys>())
-        usecase = AllRechargeUsecase(serviceRepository: serviceRepository, categoryRepository: categoryRepository)
+        usecase = CategoriesAndServicesUsecase(serviceRepository: serviceRepository, categoryRepository: categoryRepository)
     }
     
     func testAllRechargeUsecase() {

@@ -33,7 +33,7 @@ public struct OnboardingDI {
         return OnboardingUseCase(
             getCountriesAndDialCodeUsecase: createGetCountriesAndDialCodeUsecase(),
             getCountryByDialCodeUsecase: createGetCountryByDialCodeUsecase(),
-            authenticateRepository: createAuthenticateUsecase(),
+            activationRepository: createActivationRepository(),
             parAndFsuRepository: createParAndFsuRepository()
         )
     }
@@ -44,8 +44,8 @@ public struct OnboardingDI {
         return GetCountryByDialCodeUsecase(countryRepository: createCountryRepository())
     }
 
-    public static func createAuthenticateUsecase() -> AuthenticateRepositoryImpl {
-        return AuthenticateRepositoryImpl(baseRequest: createBaseRequest())
+    public static func createActivationRepository() -> ActivationRepositoryImpl {
+        return ActivationRepositoryImpl(baseRequest: createBaseRequest())
     }
     
     public static func createParAndFsuRepository() -> PARAndFSURepositoryImpl {

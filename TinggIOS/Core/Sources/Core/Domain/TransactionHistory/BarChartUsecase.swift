@@ -15,7 +15,6 @@ public class BarChartUsecase {
     public func callAsFunction() -> [Int:Double] {
         var chartDataMap = [Int:Double]()
         let histories = transactHistoryRepository.getHistory()
-//        print("History \(histories) ")
         histories.forEach { history in
             guard let validDateString = history.paymentDate?.split(separator: ".").first else {
                 fatalError("Invalid date format")
@@ -30,7 +29,6 @@ public class BarChartUsecase {
                 let amount = existingAmount + newAmount
                 chartDataMap[monthIndex] = amount
             }
-//            print("History \(chartDataMap) ")
         }
         return chartDataMap
     }

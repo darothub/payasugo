@@ -9,6 +9,10 @@ import Foundation
 public class PostMCPUsecase {
     private var repository: EnrollmentRepository
     private var invoiceRepository: FetchBillRepository
+    /// ``PostMCPUsecase`` initialiser
+    /// - Parameters:
+    ///   - repository: ``EnrollmentRepositoryImpl``
+    ///   - invoiceRepository: ``FetchBillRepositoryImpl``
     public init(repository: EnrollmentRepository, invoiceRepository: FetchBillRepository) {
         self.repository = repository
         self.invoiceRepository = invoiceRepository

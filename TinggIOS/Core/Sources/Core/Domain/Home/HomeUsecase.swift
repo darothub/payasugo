@@ -18,9 +18,23 @@ public class HomeUsecase {
     private var singleDueBillUsecase: SingleDueBillUsecase
     private var saveBillUsecase: SaveBillUsecase
     private var postMCPUsecase: PostMCPUsecase
-    private var allRechargeUsecase: AllRechargeUsecase
+    private var categoriesAndServicesUsecase: CategoriesAndServicesUsecase
     private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
-
+    
+    /// ``HomeUsecase`` initialiser
+    /// - Parameters:
+    ///   - billAccountUsecase: ``BillAccountUsecase
+    ///   - profileRepository: ``ProfileRepositoryImpl``
+    ///   - merchantRepository: ``MerchantServiceRepositoryImpl``
+    ///   - categoryRepository: ``CategoryRepositoryImpl``
+    ///   - chunkedCategoriesUsecase: ``ChunkedCategoriesUsecase``
+    ///   - barChartUsecase: ``BarChartUsecase``
+    ///   - dueBillsUsecase: ``DueBillsUsecase``
+    ///   - singleDueBillUsecase: ``SingleDueBillUsecase``
+    ///   - saveBillUsecase: ``SaveBillUsecase``
+    ///   - postMCPUsecase: ``PostMCPUsecase``
+    ///   - categoriesAndServicesUsecase: ``CategoriesAndServicesUsecase``
+    ///   - updateDefaultNetworkIdUsecase: ``UpdateDefaultNetworkUsecase``
     public init(
         billAccountUsecase: BillAccountUsecase,
         profileRepository: ProfileRepository,
@@ -32,7 +46,7 @@ public class HomeUsecase {
         singleDueBillUsecase: SingleDueBillUsecase,
         saveBillUsecase: SaveBillUsecase,
         postMCPUsecase: PostMCPUsecase,
-        allRechargeUsecase: AllRechargeUsecase,
+        categoriesAndServicesUsecase: CategoriesAndServicesUsecase,
         updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
 
     ){
@@ -46,7 +60,7 @@ public class HomeUsecase {
         self.singleDueBillUsecase = singleDueBillUsecase
         self.saveBillUsecase = saveBillUsecase
         self.postMCPUsecase = postMCPUsecase
-        self.allRechargeUsecase = allRechargeUsecase
+        self.categoriesAndServicesUsecase = categoriesAndServicesUsecase
         self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
     }
 
@@ -76,14 +90,13 @@ public class HomeUsecase {
         barChartUsecase()
     }
     public func allRecharge() -> [String: [MerchantService]] {
-        allRechargeUsecase()
+        categoriesAndServicesUsecase()
     }
     
     public func getDueBills() async throws -> [Invoice] {
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
         tinggRequest.billAccounts = billAccountUsecase()
-//        print("DueBillUsecase \(tinggRequest)")
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
     

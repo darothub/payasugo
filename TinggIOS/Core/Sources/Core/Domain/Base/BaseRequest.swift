@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+/// Base request configuration for making Tingg API request
 public class BaseRequest: ObservableObject, TinggApiServices {
     public init () {
         //Public init
@@ -55,7 +56,6 @@ extension DataRequest {
                 print("responseError \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
             case .success(let baseResponse):
-//                print("responseSuccess \(baseResponse)")
                 onCompletion(.success(baseResponse))
             }
         }
