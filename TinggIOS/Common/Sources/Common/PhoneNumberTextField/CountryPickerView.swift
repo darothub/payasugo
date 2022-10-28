@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
-public struct CountryCodesView: View {
+public struct CountryPickerView: View {
     @Binding public var phoneNumber: String
     @Binding public var countryCode: String
     @Binding public var countryFlag: String
@@ -84,14 +84,14 @@ struct SwiftUIView_Previews: PreviewProvider {
         @State var countries = [String:String]()
 
         var body: some View {
-            CountryCodesView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
+            CountryPickerView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
         }
     }
     static var previews: some View {
         CountryViewHolder()
     }
 }
-public extension CountryCodesView {
+public extension CountryPickerView {
     func countryFieldViewStyle<Style: ViewModifier>(_ style: Style) -> some View {
         ModifiedContent(content: self, modifier: style)
     }

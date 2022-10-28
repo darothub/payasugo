@@ -36,7 +36,7 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 topView(geo: geometry)
                 MobileNumberView()
-                CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countryFlag: $vm.countryFlag, countries: vm.countryDictionary)
+                CountryPickerView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countryFlag: $vm.countryFlag, countries: vm.countryDictionary)
                     .countryFieldViewStyle(
                         CountryViewDropDownStyle(
                             isValidPhoneNumber: $vm.isValidPhoneNumber
