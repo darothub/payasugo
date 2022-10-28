@@ -17,6 +17,12 @@ public struct CountryPickerView: View {
     @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
     @Environment(\.colorScheme) var colorScheme
+    /// ``CountryPickerView`` initialiser
+    /// - Parameters:
+    ///   - phoneNumber: input phone number string
+    ///   - countryCode: ``Country/code``
+    ///   - countryFlag: Flag
+    ///   - countries: A dictionary of countries and their code
     public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: [String: String]){
         self._phoneNumber = phoneNumber
         self._countryCode = countryCode

@@ -57,11 +57,11 @@ public struct ViewState: ViewModifier {
         .alert(error, isPresented: $showAlert) {
             buttonEvent()
         }
-//        .hiddenConditionally(isHidden: $showAlert)
     }
 }
 
 
+/// A view modifier to handle view state changes
 public struct ViewStates: ViewModifier {
     @Binding var uiModel: UIModel
     @Binding var showAlert: Bool

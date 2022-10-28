@@ -7,9 +7,14 @@
 
 import Foundation
 import SwiftUI
+/// Custom dialog
 public struct CustomDialog<DialogContent: View>: ViewModifier {
     @Binding public var isPresented: Bool
     public let dialogContent: DialogContent
+    /// ``CustomDialog``
+    /// - Parameters:
+    ///   - isPresented: Binded flag value for dialog presentation status
+    ///   - dialogContent: content of dialog
   public init(isPresented: Binding<Bool>, @ViewBuilder dialogContent: () -> DialogContent) {
     _isPresented = isPresented
      self.dialogContent = dialogContent()
