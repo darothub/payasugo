@@ -7,7 +7,7 @@
 // swiftlint:disable all
 import Foundation
 import SwiftUI
-public struct CountryCodes : View {
+public struct CountryListView : View {
     @Binding public var countryCode: String
     @Binding public var countryFlag: String
     public var countries = [String: String]()

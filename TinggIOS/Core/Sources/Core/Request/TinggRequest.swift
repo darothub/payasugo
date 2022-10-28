@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+/// A type for parameterized for tingg request
 public struct TinggRequest: Encodable {
     public var service: String?
     public var accountNumber: String?

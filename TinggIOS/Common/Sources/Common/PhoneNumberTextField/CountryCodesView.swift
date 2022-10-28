@@ -48,7 +48,7 @@ public struct CountryCodesView: View {
                     .accessibility(identifier: "countrytextfield")
             }
         }.sheet(isPresented: $showPhoneSheet) {
-            CountryCodes(
+            CountryListView(
                 countryCode: $countryCode,
                 countryFlag: $countryFlag,
                 countries: countries

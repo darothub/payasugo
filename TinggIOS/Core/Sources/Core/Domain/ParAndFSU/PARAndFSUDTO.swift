@@ -7,6 +7,7 @@
 // swiftlint:disable all
 
 // MARK: - ParResponse
+/// A type for PARandFSU request
 public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var statusCode: Int
     public var statusMessage, activationKey: String

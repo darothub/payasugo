@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import WebKit
+/// A struct to hold gif image
 public struct GifImage: UIViewRepresentable {
     private let url: URL
     public init(_ url: URL) {

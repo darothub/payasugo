@@ -8,6 +8,7 @@
 import Alamofire
 import Foundation
 import SwiftUI
+/// A protocol/interface for Tingg API services
 public protocol TinggApiServices {
     func makeRequest<T: BaseDTOprotocol>(
         tinggRequest: TinggRequest,

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Custom checkbox view
 public struct CheckBoxView: View {
     @Binding var checkboxChecked: Bool
     @Environment(\.colorScheme) var colorScheme

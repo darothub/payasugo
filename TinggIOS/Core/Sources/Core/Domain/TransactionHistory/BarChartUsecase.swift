@@ -8,10 +8,14 @@
 import Foundation
 public class BarChartUsecase {
     private let transactHistoryRepository: TransactionHistoryRepository
+    /// ``BarChartUsecase`` initialiser
+    /// - Parameter : ``TransactionHistoryImpl``
     public init(transactHistoryRepository: TransactionHistoryRepository) {
         self.transactHistoryRepository = transactHistoryRepository
     }
     
+    /// A call as function method to consummate transaction history into bar chart data
+    /// - Returns: A dictionary
     public func callAsFunction() -> [Int:Double] {
         var chartDataMap = [Int:Double]()
         let histories = transactHistoryRepository.getHistory()
