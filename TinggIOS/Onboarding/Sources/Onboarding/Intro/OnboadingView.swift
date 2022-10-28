@@ -11,8 +11,8 @@ import Theme
 
 /// A blue print of the Onboarding view
 struct OnboadingView: View {
-    let onboadingItem: OnboardingItem
     @Environment(\.colorScheme) var colorScheme
+    let onboadingItem: OnboardingItem
     let screenSize: CGSize
     var body: some View {
         VStack {

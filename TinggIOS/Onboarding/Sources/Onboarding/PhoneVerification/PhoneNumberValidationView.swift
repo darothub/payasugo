@@ -13,7 +13,7 @@ import Theme
 /// The view for phone number input and validation
 /// User can also have access to support features
 /// Upon successful input validation user is taken to ``OtpConfirmationView``
-/// User is directed to the Home view after OTP confirmation
+/// User is directed to the Home view after OTP confirmation 
 public struct PhoneNumberValidationView: View {
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()

@@ -8,6 +8,7 @@
 import Foundation
 import Core
 
+/// Dependency injection struct for onboarding package
 public struct OnboardingDI {
     public init() {
         //public init

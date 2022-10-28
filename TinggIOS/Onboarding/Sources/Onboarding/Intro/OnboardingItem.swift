@@ -6,14 +6,14 @@
 //
 
 import Foundation
-/// A blue print object for onboarding item
-/// Every onboarding view displays the onboarding item property
+/// A blue print object for onboarding item.
+/// Every onboarding view displays the onboarding item property.
 struct OnboardingItem {
-    /// The center image is the gif image animating at the center of the page
+    /// The center image is the gif image animating at the center of the page.
     let centerImage: String
-    /// Display information that corroborate the image
+    /// Display information that corroborate the image.
     let info: String
-    /// Provides more information about TinggiOS features
+    /// Provides more information about TinggiOS features.
     let subInfo: String
 }
 

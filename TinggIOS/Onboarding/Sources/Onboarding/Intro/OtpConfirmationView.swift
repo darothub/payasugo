@@ -10,8 +10,8 @@ import Core
 import SwiftUI
 import Theme
 
-///  Displays OTP text field for confirmation
-///  Upon successful OTP confirmation user returns to Phone number verification view
+///  Displays OTP text field for confirmation.
+///  Upon successful OTP confirmation user returns to Phone number verification view.
 public struct OtpConfirmationView: View {
     @State var otpSize = 4
     @State var otp = ""
