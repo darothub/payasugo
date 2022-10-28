@@ -62,6 +62,7 @@
 		714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITestLaunchTests.swift; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		715CE27F28F5EC6D00E63E19 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
+		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
 		71867FBA28946EF0008A5411 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
@@ -186,6 +187,7 @@
 				71E2BE26289BE97A0025ED12 /* Core */,
 				71929B6128A6F97600D84B98 /* Common */,
 				715CE27F28F5EC6D00E63E19 /* Permissions */,
+				71707E5028FFBDD700CD9BB6 /* Permissions */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
