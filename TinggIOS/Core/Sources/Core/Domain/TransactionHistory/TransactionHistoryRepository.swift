@@ -8,6 +8,8 @@
 import Foundation
 public class TransactionHistoryImpl: TransactionHistoryRepository {
     var dbObserver: Observer<TransactionHistory>
+    /// ``TransactionHistoryImpl`` initialiser
+    /// - Parameter dbObserver: ``Observer``
     public init(dbObserver: Observer<TransactionHistory>) {
         self.dbObserver = dbObserver
     }

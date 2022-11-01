@@ -11,6 +11,10 @@ import RealmSwift
 public class CountryRepositoryImpl: CountryRepository {
     private var baseRequest: BaseRequest
     private var dbObserver: Observer<Country>
+    /// ``CountryRepositoryImpl`` initialiser
+    /// - Parameters:
+    ///   - baseRequest: ``BaseRequest``
+    ///   - dbObserver: ``Observer``
     public init(baseRequest: BaseRequest, dbObserver: Observer<Country>) {
         self.baseRequest = baseRequest
         self.dbObserver =  dbObserver
@@ -32,6 +36,8 @@ public class CountryRepositoryImpl: CountryRepository {
             }
         }
     }
+    /// A method to get countries from local and remote repositories
+    /// - Returns: a list of ``Country``
     public func getCountries() async throws -> [Country] {
         let dbCountries = await dbObserver.getEntities()
         if dbCountries.isEmpty {

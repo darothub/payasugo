@@ -8,14 +8,17 @@
 import Foundation
 public class BarChartUsecase {
     private let transactHistoryRepository: TransactionHistoryRepository
+    /// ``BarChartUsecase`` initialiser
+    /// - Parameter : ``TransactionHistoryImpl``
     public init(transactHistoryRepository: TransactionHistoryRepository) {
         self.transactHistoryRepository = transactHistoryRepository
     }
     
+    /// A call as function method to consummate transaction history into bar chart data
+    /// - Returns: A dictionary
     public func callAsFunction() -> [Int:Double] {
         var chartDataMap = [Int:Double]()
         let histories = transactHistoryRepository.getHistory()
-//        print("History \(histories) ")
         histories.forEach { history in
             guard let validDateString = history.paymentDate?.split(separator: ".").first else {
                 fatalError("Invalid date format")
@@ -30,7 +33,6 @@ public class BarChartUsecase {
                 let amount = existingAmount + newAmount
                 chartDataMap[monthIndex] = amount
             }
-//            print("History \(chartDataMap) ")
         }
         return chartDataMap
     }

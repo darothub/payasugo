@@ -6,7 +6,8 @@
 //
 
 import Foundation
-public class AuthenticateRepositoryImpl:  AuthenticateRepository {
+/// Class type repository for requesting and confirming activation
+public class ActivationRepositoryImpl:  ActivationRepository {
     public var baseRequest: BaseRequest
     public init (baseRequest: BaseRequest) {
         self.baseRequest = baseRequest
@@ -19,7 +20,7 @@ public class AuthenticateRepositoryImpl:  AuthenticateRepository {
     }
 }
 
-public protocol AuthenticateRepository {
+public protocol ActivationRepository {
     func requestForActivationCode(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>
     func confirmActivationCode(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>
 }

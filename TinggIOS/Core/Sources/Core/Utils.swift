@@ -62,7 +62,7 @@ public func validatePhoneNumber(with regex: String, phoneNumber: String) -> Bool
     }
 }
 
-//Mark: 
+// MARK: Optional Extension
 extension Optional: RawRepresentable where Wrapped: Codable {
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self),

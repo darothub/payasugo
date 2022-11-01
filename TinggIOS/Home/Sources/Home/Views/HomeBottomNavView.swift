@@ -8,6 +8,8 @@
 import SwiftUI
 import Core
 import Theme
+
+/// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     public init() {
@@ -40,7 +42,7 @@ public struct HomeBottomNavView: View {
             }
         }.navigationBarBackButtonHidden(true)
         .sheet(isPresented: $hvm.gotoAllRechargesView) {
-               AllRechargeUIView()
+            CategoriesAndServicesView()
         }
     }
     @ViewBuilder

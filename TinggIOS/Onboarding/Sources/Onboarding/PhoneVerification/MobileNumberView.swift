@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Theme
+/// A mobile number title text view
 struct MobileNumberView: View {
     var body: some View {
         Text("Mobile Number")

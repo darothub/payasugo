@@ -8,6 +8,8 @@
 import Foundation
 public class SaveBillUsecase {
     private let fetchBillRepository: FetchBillRepository
+    /// Save bills
+    /// - Parameter fetchBillRepository: ``FetchBillRepositoryImpl``
     public init(fetchBillRepository: FetchBillRepository) {
         self.fetchBillRepository = fetchBillRepository
     }

@@ -11,46 +11,21 @@ import Onboarding
 import SwiftUI
 import Theme
 @main
+/// This is entry point into the application.
+/// The first screen displayed to the user is the ``LaunchScreenView``.
+/// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodels
 struct TinggIOSApp: App {
-    @StateObject var enviromentUtils = EnvironmentUtils()
     @StateObject var navigation = NavigationUtils()
     @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
-    @StateObject var hvm = HomeDI.createHomeViewModel()
-
+    @StateObject var  hvm = HomeDI.createHomeViewModel()
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                appBody()
-            }
-        }
-    }
-    @ViewBuilder
-    fileprivate func appBody() -> some View {
-        ZStack {
-            NavigationLink(destination: destination, isActive: $navigation.navigatePermission) {
-                LaunchScreenView()
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .environmentObject(navigation)
-            }
-        }
-        .onAppear {
-              UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-              print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
-        }
-    }
-    @ViewBuilder
-    var destination: some View {
-        switch navigation.screen {
-        case .home:
-            HomeBottomNavView()
-        case .intro:
-            IntroView()
+            LaunchScreenView()
                 .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
                 .environmentObject(navigation)
                 .environmentObject(ovm)
-        case .buyAirtime:
-            BuyAirtimeView(airtimeServices: hvm.airTimeServices)
+                .environmentObject(hvm)
         }
     }
 }

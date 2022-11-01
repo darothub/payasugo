@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Theme
+/// Displays a verification advice to the user
 struct VerificationCodeAdviceTextView: View {
     var body: some View {
         Text("We'll send verification code to this number")

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// An util class for handling navigation stack
 public class NavigationUtils: ObservableObject {
     @Published public var screen = Screens.intro
     @Published public var current = Screens.intro

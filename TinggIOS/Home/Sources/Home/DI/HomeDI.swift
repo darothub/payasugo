@@ -71,8 +71,8 @@ public struct HomeDI {
         )
     }
     
-    public static func createAllRechargeUsecase() -> AllRechargeUsecase {
-        return AllRechargeUsecase(
+    public static func createCategoriesAndServicesUsecase() -> CategoriesAndServicesUsecase {
+        return CategoriesAndServicesUsecase(
             serviceRepository: createMerchantServiceRepository(),
             categoryRepository: createCategoryRepository()
         )
@@ -93,7 +93,7 @@ public struct HomeDI {
             singleDueBillUsecase: createSingleDueBillUsecase(),
             saveBillUsecase:  createSaveBillUsecase(),
             postMCPUsecase: createPostMCPUsecase(),
-            allRechargeUsecase: createAllRechargeUsecase(),
+            categoriesAndServicesUsecase: createCategoriesAndServicesUsecase(),
             updateDefaultNetworkIdUsecase: createUpdateDefaultNetworkUsecase()
         )
     }

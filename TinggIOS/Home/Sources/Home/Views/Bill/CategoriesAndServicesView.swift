@@ -8,7 +8,7 @@ import Core
 import SwiftUI
 import Theme
 
-struct AllRechargeUIView: View {
+struct CategoriesAndServicesView: View {
     @State var searchText = ""
     @State var searching = false
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
@@ -131,9 +131,9 @@ struct Item: View {
     }
 }
 
-struct AllRechargeUIView_Previews: PreviewProvider {
+struct CategoriesAndServicesView_Previews: PreviewProvider {
     static var previews: some View {
-        AllRechargeUIView()
+        CategoriesAndServicesView()
     }
 }
 

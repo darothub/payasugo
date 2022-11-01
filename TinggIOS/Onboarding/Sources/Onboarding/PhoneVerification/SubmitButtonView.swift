@@ -9,6 +9,8 @@ import Common
 import Core
 import SwiftUI
 import Theme
+/// Specifically part of the ``PhoneNumberValidationView``
+/// to submit phone number verification request
 struct SubmitButtonView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @State private var subscriptions = Set<AnyCancellable>()
@@ -36,6 +38,7 @@ struct SubmitButtonView: View {
         .handleViewState(uiModel: $onboardingViewModel.onSubmitUIModel)
     }
     
+    /// Observes UI state
     func observeUIModel() {
         onboardingViewModel.observeUIModel(model: onboardingViewModel.$onSubmitUIModel) { dto in
             onboardingViewModel.showOTPView = true
@@ -52,6 +55,8 @@ struct SubmitButtonView_Previews: PreviewProvider {
 }
 
 extension OnboardingViewModel {
+    /// Validates phone number input
+    /// - Returns: true or false
     func validatePhoneNumberIsNotEmpty() -> Bool {
         if phoneNumber.isEmpty {
             warning = "Phone number can not be empty"
@@ -65,15 +70,18 @@ extension OnboardingViewModel {
         }
         return true
     }
+    /// Saves phone number in user default
     func retainPhoneNumber() {
         AppStorageManager.retainPhoneNumber(number: countryCode+phoneNumber)
     }
     func saveActiveCountryName(countryName: String) {
         AppStorageManager.retainActiveCountry(country: countryName)
     }
+    /// Saves country in user default
     func saveActiveCountry(country: Country?) {
         AppStorageManager.retainActiveCountry(country: country)
     }
+    /// Saves client id in user default
     func saveClientId(clientId: String) {
         AppStorageManager.retainClientId(id: clientId)
     }

@@ -10,6 +10,8 @@ import Core
 import SwiftUI
 import Theme
 
+///  Displays OTP text field for confirmation.
+///  Upon successful OTP confirmation user returns to Phone number verification view.
 public struct OtpConfirmationView: View {
     @State var otpSize = 4
     @State var otp = ""
@@ -55,9 +57,12 @@ public struct OtpConfirmationView: View {
             observingUIModel()
         }
     }
+    /// Reset the count down timer for OTP receipt
     fileprivate func resetTimer() {
         timeLeft = 60
     }
+    /// Handles countdown timer
+    /// A new otp request is made when the countdown times out
     fileprivate func handleCountDown() {
         if timeLeft > 0 {
             timeLeft -= 1
@@ -72,6 +77,7 @@ public struct OtpConfirmationView: View {
             resetTimer()
         }
     }
+    /// Observes the UI state
     fileprivate func observingUIModel() {
         otpViewOVM.observeUIModel(model: otpViewOVM.$onSubmitUIModel) { dto in
             DispatchQueue.main.async {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+/// A class to manage storage in user default
 public struct AppStorageManager {
     @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: Country? = nil
     @AppStorage(LocalProperties.countryName.rawValue) fileprivate static var userCountry: String = ""

@@ -7,9 +7,14 @@
 
 import SwiftUI
 
+/// A custom radio button view
 public struct RadioButtonView: View {
     @Binding var selected: String
     private var id: String = ""
+    /// ``RadioButtonView``
+    /// - Parameters:
+    ///   - selected: A flag that inidicate the selected radio button
+    ///   - id: Radio button Id
     public init(selected: Binding<String>, id: String) {
         self.id = id
         self._selected = selected

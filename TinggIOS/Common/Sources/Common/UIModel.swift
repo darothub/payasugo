@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 // Mark:
+/// An enum class that holds UI states
 public enum UIModel {
     public struct Content  {
         public var data: Any?

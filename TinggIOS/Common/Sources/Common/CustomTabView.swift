@@ -8,10 +8,15 @@
 import SwiftUI
 
 
+/// Custom tab view
 public struct CustomTabView: View {
     @Binding var tabColor: Color
     @State private var selectedTab = ""
     @State var items: [TabLayoutItem]
+    /// ``CustomTabView`` initialiser
+    /// - Parameters:
+    ///   - items: List of tab layouts
+    ///   - tabColor: tab color
     public init(items: [TabLayoutItem], tabColor: Binding<Color>) {
         self._tabColor = tabColor
         self._items = State(initialValue: items)

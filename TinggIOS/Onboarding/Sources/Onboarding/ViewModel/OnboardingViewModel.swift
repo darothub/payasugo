@@ -8,6 +8,9 @@ import Foundation
 import SwiftUI
 import RealmSwift
 @MainActor
+/// Onboarding view model
+/// It connects the views to the usecases and repositories
+/// It manages the data and UI state of the ``IntroView``
 public class OnboardingViewModel: ObservableObject {
     @Published var phoneNumber = ""
     @Published var countryCode = ""
@@ -38,6 +41,7 @@ public class OnboardingViewModel: ObservableObject {
         self.onboardingUseCase = onboardingUseCase
         getCountryDictionary()
     }
+    /// Request for activation code
     func makeActivationCodeRequest() {
         onSubmitUIModel = UIModel.loading
         Task {
@@ -47,6 +51,7 @@ public class OnboardingViewModel: ObservableObject {
             handleResultState(model: &onSubmitUIModel, result)
         }
     }
+    /// Confirm activation code
     func confirmActivationCodeRequest(code: String) {
         onSubmitUIModel = UIModel.loading
         Task {
@@ -58,6 +63,7 @@ public class OnboardingViewModel: ObservableObject {
             handleResultState(model: &onSubmitUIModel, result)
         }
     }
+    /// Request for PARandFSU
     func makePARRequest() {
         DispatchQueue.main.async { [unowned self] in
             uiModel = UIModel.loading
@@ -71,7 +77,7 @@ public class OnboardingViewModel: ObservableObject {
             handleResultState(model: &uiModel, result)
         }
     }
-
+    /// Collect a dictionary of country code and dial code
     func getCountryDictionary() {
         phoneNumberFieldUIModel = UIModel.loading
         Task {
@@ -79,7 +85,7 @@ public class OnboardingViewModel: ObservableObject {
             phoneNumberFieldUIModel = UIModel.nothing
         }
     }
-        
+    /// Get a  country by code
     func getCountryByDialCode(dialCode: String) -> Country? {
         Task {
             do {
@@ -93,6 +99,7 @@ public class OnboardingViewModel: ObservableObject {
         }
         return currentCountry
     }
+    /// Handle result
     fileprivate func handleResultState<T: BaseDTOprotocol>(model: inout UIModel, _ result: Result<T, ApiError>) {
         switch result {
         case .failure(let apiError):
@@ -106,11 +113,13 @@ public class OnboardingViewModel: ObservableObject {
             return
         }
     }
+    ///  Receives UI state
     func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {
         model.sink { [unowned self] uiModel in
             uiModelCases(uiModel: uiModel, action: action)
         }.store(in: &subscriptions)
     }
+    /// Handle UI state
     func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
         switch uiModel {
         case .content(let data):

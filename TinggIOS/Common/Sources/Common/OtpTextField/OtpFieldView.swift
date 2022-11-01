@@ -7,12 +7,18 @@
 
 import SwiftUI
 
+/// Custom OTF field view
 public struct OtpFieldView: View {
     @Binding public var fieldSize: Int
     @Binding public var otpValue: String
     public var focusColor: Color
     @State fileprivate var fields = Array(repeating: "", count: 4)
     @FocusState fileprivate var cursor: Int?
+    /// ``OtpFieldView`` initialiser
+    /// - Parameters:
+    ///   - fieldSize: number of OTP field
+    ///   - otpValue: Binded OTP value
+    ///   - focusColor: Color of focused OTP field
     public init(fieldSize: Binding<Int>, otpValue: Binding<String>, focusColor: Color) {
         self._fieldSize = fieldSize
         self._otpValue = otpValue

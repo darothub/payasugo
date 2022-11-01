@@ -10,11 +10,15 @@ import Home
 import Onboarding
 import SwiftUI
 import Theme
+/// This view display the splash screen on launch.
+///
+/// This is the first screen  of ``TinggIOSApp``.
 public struct LaunchScreenView: View {
-    @EnvironmentObject var splashScreenWatcher: EnvironmentUtils
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var ovm: OnboardingViewModel
-    @StateObject var  hvm = HomeDI.createHomeViewModel()
+    @EnvironmentObject var  hvm: HomeViewModel
+    
+    /// Creates a view that display the splash screen
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -46,11 +50,10 @@ public struct LaunchScreenView: View {
         }
     }
 }
-
+/// Struct responsible for preview of changes in Xcode
 struct LaunchScreenView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreenView()
-            .environmentObject(EnvironmentUtils())
     }
 }
 

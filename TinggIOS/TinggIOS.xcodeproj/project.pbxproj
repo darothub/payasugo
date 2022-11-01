@@ -12,11 +12,10 @@
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
+		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
-		71BA90BA28FE7524007B85F2 /* EnvironmentUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90B928FE7524007B85F2 /* EnvironmentUtils.swift */; };
-		71BA90BC28FE7721007B85F2 /* SplashScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BB28FE7721007B85F2 /* SplashScreenState.swift */; };
 		71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */; };
 		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
@@ -62,6 +61,7 @@
 		714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITestLaunchTests.swift; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		715CE27F28F5EC6D00E63E19 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
+		71682415290B035200A80C26 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
@@ -74,8 +74,6 @@
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		71BA90B928FE7524007B85F2 /* EnvironmentUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentUtils.swift; sourceTree = "<group>"; };
-		71BA90BB28FE7721007B85F2 /* SplashScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SplashScreenState.swift; path = TinggIOS/SplashScreen/SplashScreenState.swift; sourceTree = SOURCE_ROOT; };
 		71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,6 +164,7 @@
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
 				71AED53C285D007300A4B14F /* Info.plist */,
+				71682415290B035200A80C26 /* Documentation.docc */,
 			);
 			path = TinggIOS;
 			sourceTree = "<group>";
@@ -196,8 +195,6 @@
 			isa = PBXGroup;
 			children = (
 				71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */,
-				71BA90BB28FE7721007B85F2 /* SplashScreenState.swift */,
-				71BA90B928FE7524007B85F2 /* EnvironmentUtils.swift */,
 			);
 			path = SplashScreen;
 			sourceTree = "<group>";
@@ -380,9 +377,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
-				71BA90BA28FE7524007B85F2 /* EnvironmentUtils.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
-				71BA90BC28FE7721007B85F2 /* SplashScreenState.swift in Sources */,
+				71682416290B035200A80C26 /* Documentation.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 import Foundation
 import RealmSwift
 import SwiftUI
+///  Class for managing Realm database
 public final class RealmManager: ObservableObject {
     private(set) var localDb: Realm?
     public init() {
@@ -60,6 +61,7 @@ public final class RealmManager: ObservableObject {
     }
 }
 
+/// Class for observing real time data changes from realm database
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
     var realmManager: RealmManager = .init()

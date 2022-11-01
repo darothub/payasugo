@@ -18,11 +18,10 @@ public struct ContactManager {
     
     public init(){
         fetchRequest = CNContactFetchRequest(keysToFetch: keys)
-        permission.requestAccess()
     }
     
     public func fetchContacts(onCompletion: @escaping (Result<CNContact, Error>) -> Void) async {
-        
+        permission.requestAccess()
         do{
             if permission.invalidPermission {
                 onCompletion(.failure(ContactPermissionError.Unauthorized))

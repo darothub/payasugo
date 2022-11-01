@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public class AllRechargeUsecase {
+public class CategoriesAndServicesUsecase {
     private var serviceRepository: MerchantServiceRepository
     private var categoryRepository: CategoryRepository
     public init(serviceRepository: MerchantServiceRepository, categoryRepository: CategoryRepository) {
@@ -14,6 +14,8 @@ public class AllRechargeUsecase {
         self.categoryRepository = categoryRepository
     }
     
+    /// A call as function method to group services by active categories
+    /// - Returns: A dictionary of category and list of services
     public func callAsFunction() -> [String: [MerchantService]] {
         let services = serviceRepository.getServices()
         let categories = categoryRepository.getCategories()

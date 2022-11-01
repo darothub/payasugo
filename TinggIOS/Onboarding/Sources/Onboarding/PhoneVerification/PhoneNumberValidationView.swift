@@ -3,15 +3,18 @@
 //  TinggIOS
 //
 //  Created by Abdulrasaq on 26/06/2022.
-//
+//  swiftlint:disable all
 
 import Combine
 import Common
 import Core
 import SwiftUI
 import Theme
+/// The view for phone number input and validation
+/// User can also have access to support features
+/// Upon successful input validation user is taken to ``OtpConfirmationView``
+/// User is directed to the Home view after OTP confirmation 
 public struct PhoneNumberValidationView: View {
-    // swiftlint:disable all
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
     let key = KeyEquivalent("p")
@@ -33,7 +36,7 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 topView(geo: geometry)
                 MobileNumberView()
-                CountryCodesView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countryFlag: $vm.countryFlag, countries: vm.countryDictionary)
+                CountryPickerView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countryFlag: $vm.countryFlag, countries: vm.countryDictionary)
                     .countryFieldViewStyle(
                         CountryViewDropDownStyle(
                             isValidPhoneNumber: $vm.isValidPhoneNumber

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// A text field view with a title label
 public struct TextFieldView: View {
     @Binding var fieldText: String
     @State var label: String

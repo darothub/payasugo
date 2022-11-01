@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Custom drop down menu view
 public struct DropDownView: View {
     @Binding var selectedText: String
     @State var dropDownList = [String]()

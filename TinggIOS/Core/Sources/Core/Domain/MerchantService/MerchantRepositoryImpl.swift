@@ -8,6 +8,8 @@
 import Foundation
 public class MerchantServiceRepositoryImpl: MerchantServiceRepository {
     var dbObserver: Observer<MerchantService>
+    /// ``MerchantServiceRepositoryImpl`` Initialiser
+    /// - Parameter dbObserver: ``Observer``
     public init(dbObserver: Observer<MerchantService>) {
         self.dbObserver = dbObserver
     }

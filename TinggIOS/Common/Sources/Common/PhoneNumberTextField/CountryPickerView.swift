@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
-public struct CountryCodesView: View {
+public struct CountryPickerView: View {
     @Binding public var phoneNumber: String
     @Binding public var countryCode: String
     @Binding public var countryFlag: String
@@ -17,6 +17,12 @@ public struct CountryCodesView: View {
     @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
     @Environment(\.colorScheme) var colorScheme
+    /// ``CountryPickerView`` initialiser
+    /// - Parameters:
+    ///   - phoneNumber: input phone number string
+    ///   - countryCode: ``Country/code``
+    ///   - countryFlag: Flag
+    ///   - countries: A dictionary of countries and their code
     public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: [String: String]){
         self._phoneNumber = phoneNumber
         self._countryCode = countryCode
@@ -48,7 +54,7 @@ public struct CountryCodesView: View {
                     .accessibility(identifier: "countrytextfield")
             }
         }.sheet(isPresented: $showPhoneSheet) {
-            CountryCodes(
+            CountryListView(
                 countryCode: $countryCode,
                 countryFlag: $countryFlag,
                 countries: countries
@@ -84,14 +90,14 @@ struct SwiftUIView_Previews: PreviewProvider {
         @State var countries = [String:String]()
 
         var body: some View {
-            CountryCodesView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
+            CountryPickerView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
         }
     }
     static var previews: some View {
         CountryViewHolder()
     }
 }
-public extension CountryCodesView {
+public extension CountryPickerView {
     func countryFieldViewStyle<Style: ViewModifier>(_ style: Style) -> some View {
         ModifiedContent(content: self, modifier: style)
     }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+/// Enum type for capturing Remote error
 public enum ApiError: Error {
     case networkError(String)
     public static var serverErrorString = "Server error, please try again"

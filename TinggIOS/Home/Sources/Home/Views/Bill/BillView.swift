@@ -7,10 +7,10 @@
 import Common
 import SwiftUI
 import Theme
-struct BillView: View {
-    @State var color: Color = .green
- 
+/// Shows a tab for users bills and receipt
+public struct BillView: View {
     @EnvironmentObject var hvm: HomeViewModel
+    @State var color: Color = .green
     @State var items = [
         TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
         TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
@@ -18,7 +18,10 @@ struct BillView: View {
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
-    var body: some View {
+    public init() {
+        // Intentionally unimplemented...modular accessibility
+    }
+    public var body: some View {
         VStack(spacing: 0) {
             ProfileImageAndHelpIconView(imageUrl: hvm.profile.photoURL!, title: "My Bills")
                 .background(secondaryColor)

@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - FetchedBill
+/// Type for Fetched Bill
 public class FetchedBill: NSObject, Codable {
     public var billDescription: String = ""
     public var billReference: String = ""

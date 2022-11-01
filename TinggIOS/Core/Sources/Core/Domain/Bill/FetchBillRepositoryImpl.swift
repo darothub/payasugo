@@ -9,6 +9,10 @@ import Foundation
 public class FetchBillRepositoryImpl: FetchBillRepository {
     private var baseRequest: TinggApiServices
     private var dbObserver: Observer<Invoice>
+    /// ``FetchBillRepositoryImpl`` initialiser
+    /// - Parameters:
+    ///   - baseRequest: an instance of ``BaseRequest``
+    ///   - dbObserver: an instance  of ``Observer``
     public init(baseRequest: TinggApiServices, dbObserver: Observer<Invoice>) {
         self.baseRequest = baseRequest
         self.dbObserver = dbObserver

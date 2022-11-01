@@ -8,6 +8,8 @@ import Core
 import Common
 import SwiftUI
 import Theme
+
+/// Part of the ``PhoneNumberValidationView`` for user to read and accept policies
 struct PolicySectionView: View {
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
