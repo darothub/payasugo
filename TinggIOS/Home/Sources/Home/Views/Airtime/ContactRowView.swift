@@ -12,7 +12,7 @@ struct ContactRowView: View {
     var onContactSelected: (ContactRow) -> Void
     var body: some View {
         List {
-            ForEach(listOfContactRow.sorted(by: <), id: \.phoneNumber) { row in
+            ForEach(listOfContactRow, id: \.phoneNumber) { row in
                 HImageAndNameView(text: row.name, image: row.image)
                     .onTapGesture {
                         onContactSelected(row)

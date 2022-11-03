@@ -111,7 +111,7 @@ public struct BuyAirtimeView: View {
             .environmentObject(hvm)
         }
         .sheet(isPresented: $showContact, content: {
-            ContactRowView(listOfContactRow: listOfContact.map{$0}){contact in
+            ContactRowView(listOfContactRow: listOfContact.sorted(by: <)){contact in
                 accountNumber = contact.phoneNumber
                 showContact.toggle()
             }
@@ -141,11 +141,9 @@ public struct BuyAirtimeView: View {
         if let thumbnailData = contacts.imageData, let uiImage = UIImage(data: thumbnailData) {
             let contactImage = Image(uiImage: uiImage)
             let contactRow = ContactRow(name: name, image: contactImage, phoneNumber: phoneNumber)
-//            listOfContact.append(contactRow)
             return contactRow
         }
         let contactRow = ContactRow(name: name, image: nil, phoneNumber: phoneNumber)
-//        listOfContact.append(contactRow)
         return contactRow
     }
     fileprivate func remotePhoneNumberValidation(_ country: Country?) {
