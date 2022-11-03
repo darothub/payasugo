@@ -12,8 +12,8 @@ import SwiftUI
 import Theme
 
 public struct BuyAirtimeView: View {
+    @StateObject var hvm: HomeViewModel
     @State var selectedButton: String = ""
-    @StateObject var hvm = HomeDI.createHomeViewModel()
     @State var services: [MerchantService] = [MerchantService]()
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
     @State var permission = ContactManager()
@@ -38,8 +38,11 @@ public struct BuyAirtimeView: View {
     var historyByAccountNumber: [TransactionHistory] {
         hvm.transactionHistory.map {$0}
     }
-    public init(airtimeServices: [MerchantService]) {
-        _services = State(initialValue: airtimeServices)
+    var airtimeServices:  [MerchantService] {
+        hvm.airTimeServices
+    }
+    public init(homeViewModel: HomeViewModel) {
+        _hvm = StateObject(wrappedValue: homeViewModel)
     }
     
     public var body: some View {

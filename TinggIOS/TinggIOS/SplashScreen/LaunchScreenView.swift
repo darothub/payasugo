@@ -44,7 +44,7 @@ public struct LaunchScreenView: View {
                         .environmentObject(navigation)
                         .environmentObject(ovm)
                 case .buyAirtime:
-                    BuyAirtimeView(airtimeServices: hvm.airTimeServices)
+                    BuyAirtimeView(homeViewModel: hvm)
                 }
             }
         }

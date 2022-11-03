@@ -43,7 +43,7 @@ struct CategoriesAndServicesView: View {
                 }
             }
         }.onAppear {
-            let dict = homeViewModel.allRechargePublisher
+            let dict = homeViewModel.categoryNameAndServices
             categoryNameAndServices = dict.keys
                 .sorted(by: <)
                 .map{TitleAndListItem(title: $0, services: dict[$0]!)}

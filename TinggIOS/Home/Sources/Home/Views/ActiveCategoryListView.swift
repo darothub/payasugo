@@ -19,13 +19,24 @@ struct ActiveCategoryListView: View {
                         imageUrl: logo
                     ).onTapGesture {
                         if eachCategory.categoryID == "2" {
-//                            hvm.buyAirtime = true
                             withAnimation {
                                 navigation.navigationStack = [.home, .buyAirtime]
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+    fileprivate func onEachCategoryClick(categoryId: String) {
+        switch categoryId {
+        case "2":
+            withAnimation {
+                navigation.navigationStack = [.home, .buyAirtime]
+            }
+        default:
+            withAnimation {
+                navigation.navigationStack = [.home, .buyAirtime]
             }
         }
     }
