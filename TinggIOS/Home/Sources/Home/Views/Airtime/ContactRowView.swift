@@ -12,12 +12,11 @@ struct ContactRowView: View {
     var onContactSelected: (ContactRow) -> Void
     var body: some View {
         List {
-            ForEach(listOfContactRow, id: \.id) { row in
+            ForEach(listOfContactRow.sorted(by: <), id: \.phoneNumber) { row in
                 HImageAndNameView(text: row.name, image: row.image)
                     .onTapGesture {
                         onContactSelected(row)
                     }
-                
             }
         }
     }
@@ -31,9 +30,18 @@ struct ContactRowView_Previews: PreviewProvider {
 }
 
 
-struct ContactRow: Identifiable {
-    var id = UUID()
+struct ContactRow: Hashable, Comparable {
     var name: String
     var image: Image?
     var phoneNumber: String
+    
+    public func hash(into hasher: inout Hasher) {
+          return hasher.combine(phoneNumber)
+    }
+    public static func == (lhs: ContactRow, rhs: ContactRow) -> Bool {
+          return lhs.phoneNumber == rhs.phoneNumber
+    }
+    static func < (lhs: ContactRow, rhs: ContactRow) -> Bool {
+        lhs.name < rhs.name
+    }
 }

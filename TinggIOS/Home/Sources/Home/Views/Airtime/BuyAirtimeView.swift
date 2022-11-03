@@ -14,13 +14,9 @@ import Theme
 public struct BuyAirtimeView: View {
     @StateObject var hvm: HomeViewModel
     @State var selectedButton: String = ""
-    @State var services: [MerchantService] = [MerchantService]()
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
-    @State var permission = ContactManager()
     @State var showContact = false
-    @State var listOfContact = [ContactRow]()
-    @State var strs = [String]()
-    @State var contactImage: Image?
+    @State var listOfContact = Set<ContactRow>()
     @State var phoneNumber: String = ""
     @State var accountNumber = ""
     @State var amount = ""
@@ -59,9 +55,10 @@ public struct BuyAirtimeView: View {
                 number: $accountNumber
             ) {
                 showContact.toggle()
-                listOfContact.removeAll()
                 Task {
-                    await hvm.fetchPhoneContacts {handleContacts(contacts: $0)}
+                    await hvm.fetchPhoneContacts {
+                        listOfContact.insert(handleContacts(contacts: $0))
+                    }
                 }
             }
             AirtimeProviderListView(
@@ -114,8 +111,7 @@ public struct BuyAirtimeView: View {
             .environmentObject(hvm)
         }
         .sheet(isPresented: $showContact, content: {
-            ContactRowView(listOfContactRow: listOfContact){contact in
-                print("Selected \(contact)")
+            ContactRowView(listOfContactRow: listOfContact.map{$0}){contact in
                 accountNumber = contact.phoneNumber
                 showContact.toggle()
             }
@@ -131,7 +127,7 @@ public struct BuyAirtimeView: View {
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
     
-    fileprivate func handleContacts(contacts: CNContact) {
+    fileprivate func handleContacts(contacts: CNContact) -> ContactRow {
         let name = contacts.givenName + " " + contacts.familyName
         var phoneNumber = ""
         for number in contacts.phoneNumbers  {
@@ -143,13 +139,14 @@ public struct BuyAirtimeView: View {
             }
         }
         if let thumbnailData = contacts.imageData, let uiImage = UIImage(data: thumbnailData) {
-            contactImage = Image(uiImage: uiImage)
+            let contactImage = Image(uiImage: uiImage)
             let contactRow = ContactRow(name: name, image: contactImage, phoneNumber: phoneNumber)
-            listOfContact.append(contactRow)
-            return
+//            listOfContact.append(contactRow)
+            return contactRow
         }
         let contactRow = ContactRow(name: name, image: nil, phoneNumber: phoneNumber)
-        listOfContact.append(contactRow)
+//        listOfContact.append(contactRow)
+        return contactRow
     }
     fileprivate func remotePhoneNumberValidation(_ country: Country?) {
         if let regex = country?.countryMobileRegex {
@@ -162,7 +159,7 @@ public struct BuyAirtimeView: View {
     }
     
     fileprivate func remoteAmountValidation() {
-        let selectedService = services.first {$0.serviceName == selectedButton}
+        let selectedService = airtimeServices.first {$0.serviceName == selectedButton}
         let intAmount = convertStringToInt(value: amount)
         let minAmount = convertStringToInt(value: selectedService?.minAmount ?? "10.0")
         let maxAmount = convertStringToInt(value: selectedService?.maxAmount ?? "100000.0")

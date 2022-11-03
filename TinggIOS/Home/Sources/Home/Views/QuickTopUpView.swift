@@ -41,10 +41,7 @@ struct QuickTopupView: View {
 
 struct QuickTopupView_Previews: PreviewProvider {
     static var previews: some View {
-        QuickTopupView(airtimeServices: services)
+        QuickTopupView(airtimeServices: sampleServices)
     }
 }
 
-var services: [MerchantService] {
-    [MerchantService(), MerchantService(), MerchantService()]
-}
