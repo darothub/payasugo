@@ -6,6 +6,6 @@
 //
 
 import Foundation
-public enum Screens: String, CaseIterable {
-    case intro, home, buyAirtime
+public enum Screens: Hashable {
+    case intro, home, buyAirtime, billers(String, [MerchantService], [Enrollment])
 }

@@ -28,7 +28,7 @@ public struct BuyAirtimeView: View {
         return ""
     }
     var enrollments : [Enrollment] {
-        return hvm.nominationInfo.map {$0}
+        return hvm.nominationInfo.getEntities()
     }
   
     var historyByAccountNumber: [TransactionHistory] {
@@ -45,7 +45,7 @@ public struct BuyAirtimeView: View {
         VStack(alignment: .leading) {
             FavouriteListView(
                 enrollments: enrollments,
-                airtimeServices: hvm.airTimeServices,
+                services: hvm.airTimeServices,
                 accountNumber: $accountNumber,
                 selectedNetwork: $selectedButton
             )

@@ -9,12 +9,11 @@ import SwiftUI
 import Theme
 struct FavouriteListView: View {
     var enrollments = [Enrollment]()
-    var airtimeServices = [MerchantService]()
-    @State var imageLogo = ""
+    var services = [MerchantService]()
     @Binding var accountNumber: String
     @Binding var selectedNetwork: String
     var enrollmentResult: [Enrollment] {
-        let service = airtimeServices.first { theService in
+        let service = services.first { theService in
             theService.serviceName == selectedNetwork
         }
         let nomination = enrollments.filter { enrollment in

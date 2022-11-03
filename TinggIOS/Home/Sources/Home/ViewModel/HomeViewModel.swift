@@ -11,10 +11,10 @@ import SwiftUI
 @MainActor
 public class HomeViewModel: ObservableObject {
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String!
-    @Published public var nominationInfo = Observer<Enrollment>().objects
+    @Published public var nominationInfo = Observer<Enrollment>()
     @Published public var airTimeServices = [MerchantService]()
     @Published public var servicesByCategory = [[Categorys]]()
-    @Published public var service = MerchantService()
+    @Published public var services = Observer<MerchantService>()
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
