@@ -7,13 +7,40 @@
 import Core
 import SwiftUI
 import Theme
+import Common
 
-struct CategoriesAndServicesView: View {
+public struct CategoriesAndServicesView: View {
     @State var searchText = ""
     @State var searching = false
     @State var categoryNameAndServices: [TitleAndListItem] = [TitleAndListItem]()
     @State var searchResult : [TitleAndListItem] = [TitleAndListItem]()
-    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var navigateToBillForm = false
+    @State var bills: BillDetails = BillDetails(service: .init(), info: .init())
+    @EnvironmentObject var hvm: HomeViewModel
+    public init(categoryNameAndServices: [TitleAndListItem]) {
+        self._categoryNameAndServices = State(initialValue: categoryNameAndServices)
+//        self.bills = bills
+       
+    }
+    public var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack (alignment: .leading) {
+                Text("Add new bill")
+                    .font(.title)
+                    .foregroundColor(.black)
+                    .padding()
+                SearchSection(searchText: $searchText)
+                    .padding()
+                    .onChange(of: searchText, perform: onSearch(text:))
+                ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, nominations: .constant(hvm.nominationInfo.getEntities()), bills: $bills, onclick: .constant({ service in
+                    if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
+//                        self.bills = bills
+                    }
+                }))
+            }
+        }
+        .background(.gray.opacity(0.1))
+    }
     fileprivate func searchService(_ newValue: String) -> [TitleAndListItem] {
         return categoryNameAndServices
             .filter({ rechargeItem in
@@ -26,29 +53,6 @@ struct CategoriesAndServicesView: View {
     fileprivate func onSearch(text: String) {
         searching = !text.isEmpty
         searchResult = searchService(text)
-    }
-    
-    var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack (alignment: .leading) {
-                Text("Add new bill")
-                    .font(.title)
-                    .foregroundColor(.black)
-                    .padding()
-                SearchSection(searchText: $searchText)
-                    .padding()
-                    .onChange(of: searchText, perform: onSearch(text:))
-                ForEach(searching ? searchResult : categoryNameAndServices, id: \.title) { item in
-                    RowView(title: item.title, itemList: item.services)
-                }
-            }
-        }.onAppear {
-            let dict = homeViewModel.categoryNameAndServices
-            categoryNameAndServices = dict.keys
-                .sorted(by: <)
-                .map{TitleAndListItem(title: $0, services: dict[$0]!)}
-        }
-        .background(.gray.opacity(0.1))
     }
 }
 
@@ -79,16 +83,36 @@ struct SearchSection: View {
         }
     }
 }
+
+struct ColumnBody: View {
+    @Binding var categoryNameAndServices: [TitleAndListItem]
+    @Binding var searchResult : [TitleAndListItem]
+    @Binding var searching: Bool
+    @Binding var nominations: [Enrollment]
+    @Binding var bills: BillDetails
+    @Binding var onclick: (MerchantService) -> Void
+    var body: some View {
+        ForEach(searching ? searchResult : categoryNameAndServices, id: \.title) { item in
+            RowView(title: .constant(item.title), itemList: .constant(item.services), onclick: $onclick)
+        }
+    }
+}
+
 struct RowView: View {
-    @State var title = "Title"
-    @State var itemList = [MerchantService]()
+    @Binding var title: String
+    @Binding var itemList: [MerchantService]
+    @Binding var onclick: (MerchantService) -> Void
+    @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.system(size: PrimaryTheme.mediumTextSize))
                 .foregroundColor(.black)
                 .textCase(.uppercase)
-            RowBody(services: itemList)
+            ServicesGridView(services: itemList, showTitle: true){ service in
+                print("Service")
+                onclick(service)
+            }
         }
         .padding()
         .background(
@@ -98,23 +122,6 @@ struct RowView: View {
         )
     }
 }
-
-struct RowBody: View {
-    @State var services = [MerchantService]()
-    let gridColumn = [
-        GridItem(.adaptive(minimum: 90))
-    ]
-    var body: some View {
-        LazyVGrid(columns: gridColumn, spacing: 0){
-            ForEach(services, id: \.serviceName) { item in
-                if let name = item.serviceName, let logo = item.serviceLogo {
-                    Item(name: name, logo: logo)
-                }
-            }
-        }
-    }
-}
-
 
 
 struct Item: View {
@@ -132,12 +139,16 @@ struct Item: View {
 }
 
 struct CategoriesAndServicesView_Previews: PreviewProvider {
+    struct CategoriesAndServicesViewHolder: View {
+        @State var bill = BillDetails(service: .init(), info: .init())
+        var body: some View {
+            CategoriesAndServicesView(categoryNameAndServices: [TitleAndListItem]())
+                .environmentObject(HomeDI.createHomeViewModel())
+        }
+    }
     static var previews: some View {
-        CategoriesAndServicesView()
+        CategoriesAndServicesViewHolder()
+            
     }
 }
 
-struct TitleAndListItem {
-    let title:String
-    let services: [MerchantService]
-}

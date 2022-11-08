@@ -9,9 +9,8 @@ import SwiftUI
 import Common
 import Theme
 import Core
-struct BillFormView: View {
+public struct BillFormView: View {
     @State var accountNumber: String = ""
-    @Binding var service: MerchantService
     @Binding var billDetails: BillDetails
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     var accountNumberList: [String] {
@@ -19,19 +18,20 @@ struct BillFormView: View {
             info.accountNumber!
         }
     }
-    @Environment(\.dismiss) var dismiss
-    @State var showAccounts = false
-    var body: some View {
+    public init(billDetails: Binding<BillDetails> ) {
+        self._billDetails = billDetails
+    }
+    public var body: some View {
         GeometryReader { geo in
             VStack {
                 ZStack(alignment: .top) {
                     TopBackground()
                         .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
                         .frame(height: geo.size.height * 0.1)
-                    RemoteImageCard(imageUrl: billDetails.logo)
+                    RemoteImageCard(imageUrl: billDetails.service.serviceLogo)
                         .scaleEffect(1.2)
                 }
-                Text(billDetails.serviceName)
+                Text(billDetails.service.serviceName)
                     .padding(20)
                     .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)
@@ -39,16 +39,14 @@ struct BillFormView: View {
                 DropDownView(
                     selectedText: $accountNumber,
                     dropDownList: accountNumberList,
-                    label: "Enter your \(billDetails.label)",
-                    placeHoder: billDetails.label
+                    label: "Enter your \(billDetails.service.referenceLabel)",
+                    placeHoder: billDetails.service.referenceLabel
                 ).padding()
-
                 Spacer()
-                
                 NavigationLink(
                     destination: BillDetailsView(
                         fetchBill: homeViewModel.singleBill,
-                        service: service)
+                        service: billDetails.service)
                     .environmentObject(homeViewModel),
                     isActive: $homeViewModel.navigateBillDetailsView) {
                     button(
@@ -57,24 +55,23 @@ struct BillFormView: View {
                     ) {
                         homeViewModel.getSingleDueBill(
                             accountNumber: accountNumber,
-                            serviceId: billDetails.serviceId
+                            serviceId: billDetails.service.hubServiceID
                         )
                     }.handleViewState(uiModel: $homeViewModel.uiModel)
                 }
             }
+        }.onAppear {
+            print("AccountList \(accountNumberList) Account \(billDetails.info)")
         }
-    }
-    func onTextFieldTap() {
-        showAccounts = true
     }
 }
 
 struct BillFormView_Previews: PreviewProvider {
     struct BillFormViewHolder: View {
-        @State var service: MerchantService = .init()
-        @State var bills = BillDetails(logo: "", label: "", serviceName: "", serviceId: "", info: [Enrollment]())
+        @State var service: MerchantService = sampleServices[0]
+        @State var bills = BillDetails(service: sampleServices[0], info: sampleNominations)
         var body: some View {
-            BillFormView(service: $service, billDetails: $bills)
+            BillFormView(billDetails: $bills)
         }
     }
     static var previews: some View {
@@ -91,10 +88,4 @@ struct TopBackground: View {
     }
 }
 
-struct BillDetails {
-    let logo:String
-    let label: String
-    let serviceName: String
-    let serviceId: String
-    let info: [Enrollment]
-}
+

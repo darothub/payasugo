@@ -31,7 +31,9 @@ public class HomeViewModel: ObservableObject {
     @Published var defaultNetworkUIModel = UIModel.nothing
     @Published var buyAirtimeUiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
-    @Published var gotoAllRechargesView = false
+    @Published var navigateToBillForm = false
+    @Published var gotoCategoriesAndServicesView = false
+    @Published var showBillers = false
     @Published var buyAirtime = false
     @Published var selectedDefaultNetworkName = ""
     @Published var showNetworkList = false
@@ -219,6 +221,28 @@ public class HomeViewModel: ObservableObject {
             print("nothingState")
         }
     }
+    func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
+        if service.presentmentType != "None" {
+            let nominations: [Enrollment] = nomination.filter { enrollment in
+                return filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
+            }
+            let billDetails = BillDetails(service: service, info: nominations)
+            return billDetails
+        }
+        return nil
+    }
+    func filterNominationInfoByHubServiceId(enrollment: Enrollment, service: MerchantService) -> Bool {
+        String(enrollment.hubServiceID) == service.hubServiceID
+    }
 }
 
+
+public class HomeNavigationUtils: ObservableObject {
+    @Published public var current = Home.categoriesAndServices
+    @Published public var navigatePermission = true
+    @Published public var navigationStack: [Home] = []
+    public init() {
+        // Intentionally unimplemented...needed for modular accessibility
+    }
+}
 

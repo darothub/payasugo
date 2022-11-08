@@ -48,6 +48,9 @@ public struct DropDownView: View {
                             showDropDown = false
                         }
                     Image(systemName: showDropDown ? "chevron.down" : "chevron.right")
+                        .onTapGesture {
+                            showDropDown.toggle()
+                        }
                         .padding()
                 } .overlay(
                     RoundedRectangle(cornerRadius: 5)
