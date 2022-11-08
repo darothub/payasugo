@@ -11,17 +11,17 @@ import SwiftUI
 @MainActor
 public class HomeViewModel: ObservableObject {
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String!
-    @Published public var nominationInfo = Observer<Enrollment>().objects
+    @Published public var nominationInfo = Observer<Enrollment>()
     @Published public var airTimeServices = [MerchantService]()
     @Published public var servicesByCategory = [[Categorys]]()
-    @Published public var service = MerchantService()
+    @Published public var services = Observer<MerchantService>()
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>().objects
     @Published public var dueBill = [Invoice]()
     @Published public var singleBill = Invoice()
     @Published public var savedBill = SavedBill()
-    @Published public var allRechargePublisher = [String: [MerchantService]]()
+    @Published public var categoryNameAndServices = [String: [MerchantService]]()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
     @Published var categoryUIModel = UIModel.nothing
@@ -115,7 +115,7 @@ public class HomeViewModel: ObservableObject {
             promise(.success(recharges))
             rechargeAndBillUIModel = UIModel.nothing
         }
-        .assign(to: \.allRechargePublisher, on: self)
+        .assign(to: \.categoryNameAndServices, on: self)
         .store(in: &subscriptions)
         return
      

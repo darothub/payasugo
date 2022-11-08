@@ -28,7 +28,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var isPrepaidService:String = ""
     @Persisted public var paybill:String = ""
     @Persisted public var networkID:String = ""
-    @Persisted public var  webTemplateID: String = ""
+    @Persisted public var webTemplateID: String = ""
     @Persisted public var receiverSourceAddress:String = ""
     @Persisted public var referenceLabel:String = ""
     @Persisted public var presentmentType:String = ""
@@ -132,3 +132,12 @@ public class ServicesDatum: Object, ObjectKeyIdentifiable, Codable {
     }
 }
 
+public var sampleServices:[MerchantService]  {
+    let service1 = MerchantService()
+    service1.serviceLogo = "https://cdn3.vectorstock.com/i/1000x1000/35/52/placeholder-rgb-color-icon-vector-32173552.jpg"
+    service1.serviceName = "Service one"
+    let service2 = MerchantService()
+    service2.serviceLogo = "https://cdn3.vectorstock.com/i/1000x1000/35/52/placeholder-rgb-color-icon-vector-32173552.jpg"
+    service2.serviceName = "Service two"
+    return [service1, service2]
+}

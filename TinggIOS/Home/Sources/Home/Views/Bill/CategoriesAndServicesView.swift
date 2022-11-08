@@ -11,11 +11,11 @@ import Theme
 struct CategoriesAndServicesView: View {
     @State var searchText = ""
     @State var searching = false
+    @State var categoryNameAndServices: [TitleAndListItem] = [TitleAndListItem]()
+    @State var searchResult : [TitleAndListItem] = [TitleAndListItem]()
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
-    @State var allRechargesData: [RechargeItem] = [RechargeItem]()
-    @State var searchResult : [RechargeItem] = [RechargeItem]()
-    fileprivate func searchService(_ newValue: String) -> [RechargeItem] {
-        return allRechargesData
+    fileprivate func searchService(_ newValue: String) -> [TitleAndListItem] {
+        return categoryNameAndServices
             .filter({ rechargeItem in
                 let items = rechargeItem.services.contains { service in
                     service.serviceName.lowercased().contains(newValue.lowercased())
@@ -38,15 +38,15 @@ struct CategoriesAndServicesView: View {
                 SearchSection(searchText: $searchText)
                     .padding()
                     .onChange(of: searchText, perform: onSearch(text:))
-                ForEach(searching ? searchResult : allRechargesData, id: \.title) { item in
+                ForEach(searching ? searchResult : categoryNameAndServices, id: \.title) { item in
                     RowView(title: item.title, itemList: item.services)
                 }
             }
         }.onAppear {
-            let dict = homeViewModel.allRechargePublisher
-            allRechargesData = dict.keys
+            let dict = homeViewModel.categoryNameAndServices
+            categoryNameAndServices = dict.keys
                 .sorted(by: <)
-                .map{RechargeItem(title: $0, services: dict[$0]!)}
+                .map{TitleAndListItem(title: $0, services: dict[$0]!)}
         }
         .background(.gray.opacity(0.1))
     }
@@ -137,7 +137,7 @@ struct CategoriesAndServicesView_Previews: PreviewProvider {
     }
 }
 
-struct RechargeItem {
+struct TitleAndListItem {
     let title:String
     let services: [MerchantService]
 }

@@ -43,6 +43,10 @@ public extension View {
     func hiddenConditionally(isHidden: Binding<Bool>) -> some View {
         isHidden.wrappedValue ? self : self.hidden() as? Self
     }
+    @ViewBuilder
+    func showIf(_ value: Binding<Bool>) -> some View {
+        value.wrappedValue ? self : self.hidden() as? Self
+    }
 }
 
 public struct TabItemStyle: ViewModifier {

@@ -13,19 +13,28 @@ struct ActiveCategoryListView: View {
     var body: some View {
         HStack(alignment: .top) {
             ForEach(categories, id: \.categoryID) { eachCategory in
-                if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo {
+                if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo, let id = eachCategory.categoryID {
                     VImageAndNameView(
                         title: name,
                         imageUrl: logo
                     ).onTapGesture {
-                        if eachCategory.categoryID == "2" {
-//                            hvm.buyAirtime = true
-                            withAnimation {
-                                navigation.navigationStack = [.home, .buyAirtime]
-                            }
-                        }
+                        onEachCategoryClick(categoryId: id, categoryName: name)
                     }
                 }
+            }
+        }
+    }
+    fileprivate func onEachCategoryClick(categoryId: String, categoryName: String) {
+        switch categoryId {
+        case "2":
+            withAnimation {
+                navigation.navigationStack = [.home, .buyAirtime]
+            }
+        default:
+            let services = hvm.services.getEntities().filter {$0.categoryID == categoryId}
+            let enrolments = hvm.nominationInfo.getEntities().filter {$0.serviceCategoryID == categoryId}
+            withAnimation {
+                navigation.navigationStack = [.home, .billers(categoryName, services, enrolments)]
             }
         }
     }
