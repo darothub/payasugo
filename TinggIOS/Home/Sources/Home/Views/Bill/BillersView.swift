@@ -6,6 +6,7 @@
 //
 import Core
 import SwiftUI
+
 @MainActor
 public struct BillersView: View {
     @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
@@ -121,6 +122,5 @@ struct BillersView_Previews: PreviewProvider {
     }
     static var previews: some View {
         BillersViewHolder()
-        
     }
 }
