@@ -67,7 +67,7 @@ struct RechargeAndBillView: View {
     fileprivate func onImageCardClick(service: MerchantService) {
         if service.presentmentType != "None" {
             self.service = service
-            let info: [Enrollment] = hvm.nominationInfo.filter(filterNominationInfo(enrollment:))
+            let info: [Enrollment] = hvm.nominationInfo.getEntities().filter(filterNominationInfo(enrollment:))
             let billDetails = BillDetails(logo: service.serviceLogo, label: service.referenceLabel, serviceName: service.serviceName, serviceId: service.hubServiceID, info: info)
             self.bills = billDetails
             navigateToBillForm.toggle()

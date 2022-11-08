@@ -8,7 +8,7 @@
 import Contacts
 import Foundation
 
-public struct ContactManager {
+public class ContactManager: ObservableObject {
     
     let store = CNContactStore()
     let keys = [CNContactGivenNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactFamilyNameKey, CNContactImageDataKey] as [CNKeyDescriptor]
@@ -27,7 +27,6 @@ public struct ContactManager {
                 onCompletion(.failure(ContactPermissionError.Unauthorized))
             } else {
                 try store.enumerateContacts(with: fetchRequest, usingBlock: { contact, unsafeMutablePoint in
-//                    print(contact)
                     onCompletion(.success(contact))
                 })
             }
