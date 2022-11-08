@@ -8,14 +8,11 @@ import Core
 import SwiftUI
 @MainActor
 public struct BillersView: View {
-    @State var billers = [MerchantService]()
+    @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
     @State var enrolments = [Enrollment]()
-    @State var title = ""
-    @State var showBillers = false
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
-    public init( title: String, billers: [MerchantService], enrolments : [Enrollment]) {
-        _title = State(initialValue: title)
+    public init(billers: TitleAndListItem, enrolments : [Enrollment]) {
         _billers = State(initialValue: billers)
         _enrolments = State(initialValue: enrolments)
         
@@ -40,7 +37,7 @@ public struct BillersView: View {
                 .scaleEffect(1)
                 .onTapGesture {
                     let selectedBiller = hvm.categoryNameAndServices.filter { dict in
-                        dict.key == title
+                        dict.key == billers.title
                     }
                     let categoryNameAndServices = selectedBiller.keys
                         .sorted(by: <)
@@ -48,18 +45,18 @@ public struct BillersView: View {
                     withAnimation {
                         navigation.navigationStack = [
                             .home,
-                            .billers(title, billers, enrolments),
+                            .billers(billers, enrolments),
                             .categoriesAndServices(categoryNameAndServices)
                         ]
                     }
                 }
-        }.navigationTitle(title)
+        }
     }
     
     @ViewBuilder
     fileprivate func viewBody() -> some View {
         List {
-            ForEach(billers, id: \.id) { service in
+            ForEach(billers.services, id: \.id) { service in
                 NavigationLink(value: service) {
                     HStack {
                         RemoteImageCard(imageUrl: service.serviceLogo)
@@ -97,7 +94,6 @@ struct SingleNominationView: View {
                     Text(nomination.accountAlias?.uppercased() ?? "None")
                         .foregroundColor(.gray)
                         .font(.caption)
-                    
                 }
             }
             Spacer()
@@ -115,14 +111,12 @@ struct SingleNominationView: View {
 
 struct BillersView_Previews: PreviewProvider {
     struct BillersViewHolder: View {
-        var billers:[MerchantService]  {
-            sampleServices
-        }
+        @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
         var nom: [Enrollment] {
             sampleNominations
         }
         var body: some View {
-            BillersView(title: "Test", billers: billers, enrolments: nom)
+            BillersView(billers: billers, enrolments: nom)
         }
     }
     static var previews: some View {

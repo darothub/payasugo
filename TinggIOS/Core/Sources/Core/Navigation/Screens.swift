@@ -10,7 +10,7 @@ public enum Screens: Hashable {
     case intro,
          home,
          buyAirtime,
-         billers(String, [MerchantService], [Enrollment]),
+         billers(TitleAndListItem, [Enrollment]),
          categoriesAndServices([TitleAndListItem]),
          billFormView(BillDetails)
     

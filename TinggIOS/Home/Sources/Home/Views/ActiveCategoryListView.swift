@@ -32,9 +32,12 @@ struct ActiveCategoryListView: View {
             }
         default:
             let services = hvm.services.getEntities().filter {$0.categoryID == categoryId}
+            let titleAndItemList = TitleAndListItem(title: categoryName, services: services)
             let enrolments = hvm.nominationInfo.getEntities().filter {$0.serviceCategoryID == categoryId}
             withAnimation {
-                navigation.navigationStack = [.home, .billers(categoryName, services, enrolments)]
+                navigation.navigationStack = [
+                    .home, .billers(titleAndItemList, enrolments)
+                ]
             }
         }
     }

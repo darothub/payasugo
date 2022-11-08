@@ -17,10 +17,10 @@ public struct CategoriesAndServicesView: View {
     @State var navigateToBillForm = false
     @State var bills: BillDetails = BillDetails(service: .init(), info: .init())
     @EnvironmentObject var hvm: HomeViewModel
+    @EnvironmentObject var navigation: NavigationUtils
     public init(categoryNameAndServices: [TitleAndListItem]) {
         self._categoryNameAndServices = State(initialValue: categoryNameAndServices)
-//        self.bills = bills
-       
+        
     }
     public var body: some View {
         ScrollView(showsIndicators: false) {
@@ -34,7 +34,13 @@ public struct CategoriesAndServicesView: View {
                     .onChange(of: searchText, perform: onSearch(text:))
                 ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, nominations: .constant(hvm.nominationInfo.getEntities()), bills: $bills, onclick: .constant({ service in
                     if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
-//                        self.bills = bills
+                        withAnimation {
+                            navigation.navigationStack = [
+                                .home,
+                                .categoriesAndServices(categoryNameAndServices),
+                                .billFormView(bills)
+                            ]
+                        }
                     }
                 }))
             }
@@ -75,7 +81,7 @@ struct SearchSection: View {
             )  .background(.white)
             Image(systemName: "plus")
                 .padding()
-             
+            
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 0.0)
@@ -148,7 +154,7 @@ struct CategoriesAndServicesView_Previews: PreviewProvider {
     }
     static var previews: some View {
         CategoriesAndServicesViewHolder()
-            
+        
     }
 }
 

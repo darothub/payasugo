@@ -45,8 +45,8 @@ public struct LaunchScreenView: View {
                         .environmentObject(ovm)
                 case .buyAirtime:
                     BuyAirtimeView(homeViewModel: hvm)
-                case let .billers(title, billers, nomination):
-                    BillersView(title: title, billers: billers, enrolments: nomination)
+                case let .billers(billers, nomination):
+                    BillersView(billers: billers, enrolments: nomination)
                         .environmentObject(hvm)
                 case .categoriesAndServices(let items):
                     CategoriesAndServicesView(categoryNameAndServices: items)
