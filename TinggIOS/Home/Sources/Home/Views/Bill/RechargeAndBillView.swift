@@ -13,9 +13,11 @@ struct RechargeAndBillView: View {
     @State var rechargeAndBill = [MerchantService]()
     @State var navigateToBillForm = false
     @State var service = MerchantService()
-    @State var bills = BillDetails(logo: "", label: "", serviceName: "", serviceId: "", info: [Enrollment]())
+    @State var bills = BillDetails(service: .init(), info: .init())
     @State var gotoAllRechargesView = false
     @EnvironmentObject var hvm: HomeViewModel
+    @EnvironmentObject var navigation: NavigationUtils
+    
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
     ]
@@ -23,9 +25,7 @@ struct RechargeAndBillView: View {
         Section {
             VStack {
                 heading()
-                NavigationLink(destination: BillFormView(service: $service, billDetails: $bills), isActive: $navigateToBillForm) {
-                    viewBody()
-                }
+                viewBody()
             }
         }.padding()
     }
@@ -48,42 +48,63 @@ struct RechargeAndBillView: View {
                     .foregroundColor(.black)
                 Image(systemName: "chevron.right")
                     .foregroundColor(.black)
-            }.onTapGesture(perform: onclickSeeAll)
+            }.onTapGesture(perform: onClickSeeAll)
         }
     }
-    private func onclickSeeAll() {
-        hvm.gotoAllRechargesView = true
+    private func onClickSeeAll() {
+        let selectedBiller = hvm.categoryNameAndServices
+        let categoryNameAndServices = hvm.categoryNameAndServices.keys
+            .sorted(by: <)
+            .map{TitleAndListItem(title: $0, services: selectedBiller[$0]!)}
+        withAnimation {
+            navigation.navigationStack = [.home, .categoriesAndServices(categoryNameAndServices)]
+        }
     }
     @ViewBuilder
     fileprivate func viewBody() -> some View {
-        LazyVGrid(columns: gridColumn, spacing: 0){
-            ForEach(rechargeAndBill, id: \.id) { service in
-                RemoteImageCard(imageUrl: service.serviceLogo)
-                    .padding(.vertical)
-                    .onTapGesture {onImageCardClick(service: service)}
+        ServicesGridView(services: rechargeAndBill, showTitle: false) { service in
+            if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
+                withAnimation {
+                    navigation.navigationStack = [.home, .billFormView(bills)]
+                }
+            } else {
+                hvm.rechargeAndBillUIModel = UIModel.error("Service not available")
             }
         }
     }
-    fileprivate func onImageCardClick(service: MerchantService) {
-        if service.presentmentType != "None" {
-            self.service = service
-            let info: [Enrollment] = hvm.nominationInfo.getEntities().filter(filterNominationInfo(enrollment:))
-            let billDetails = BillDetails(logo: service.serviceLogo, label: service.referenceLabel, serviceName: service.serviceName, serviceId: service.hubServiceID, info: info)
-            self.bills = billDetails
-            navigateToBillForm.toggle()
-            return
+}
+
+struct ServicesGridView: View {
+    @State var services:[MerchantService] = .init()
+    @State var showTitle = false
+    @State var gridColumn = [
+        GridItem(.adaptive(minimum: 90))
+    ]
+    @State var onclick: (MerchantService) -> Void = {_ in }
+    var body: some View {
+        LazyVGrid(columns: gridColumn, spacing: 0){
+            ForEach(services, id: \.id) { service in
+                VStack {
+                    RemoteImageCard(imageUrl: service.serviceLogo)
+                        .padding(.vertical)
+                        .onTapGesture {
+                            print("Inner service")
+                            onclick(service)
+                        }
+                    Text(service.serviceName)
+                        .font(.caption)
+                        .showIf($showTitle)
+                }
+            }
         }
-        hvm.rechargeAndBillUIModel = UIModel.error("Service not available")
-    }
-    
-    fileprivate func filterNominationInfo(enrollment: Enrollment) -> Bool {
-        String(enrollment.hubServiceID) == self.service.hubServiceID
     }
 }
 
 struct RechargeAndBillView_Previews: PreviewProvider {
     static var previews: some View {
-        RechargeAndBillView(rechargeAndBill: [MerchantService]())
-            .environmentObject(HomeDI.createHomeViewModel())
+        NavigationStack {
+            RechargeAndBillView(rechargeAndBill: [MerchantService]())
+                .environmentObject(HomeDI.createHomeViewModel())
+        }
     }
 }

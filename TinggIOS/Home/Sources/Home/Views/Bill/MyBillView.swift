@@ -45,7 +45,7 @@ public struct MyBillView: View {
         }
     }
     private func onclickAddBill() {
-        hvm.gotoAllRechargesView = true
+        hvm.gotoCategoriesAndServicesView = true
     }
 }
 

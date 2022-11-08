@@ -82,3 +82,21 @@ extension Optional: RawRepresentable where Wrapped: Codable {
         self = value
     }
 }
+
+public struct TitleAndListItem: Hashable {
+    public let title: String
+    public let services: [MerchantService]
+    public init(title: String, services: [MerchantService]) {
+        self.title = title
+        self.services = services
+    }
+}
+
+public struct BillDetails: Hashable {
+    public let service: MerchantService
+    public let info: [Enrollment]
+    public init(service: MerchantService, info: [Enrollment]) {
+        self.service = service
+        self.info = info
+    }
+}

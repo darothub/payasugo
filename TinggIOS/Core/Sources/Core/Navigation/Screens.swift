@@ -7,5 +7,16 @@
 
 import Foundation
 public enum Screens: Hashable {
-    case intro, home, buyAirtime, billers(String, [MerchantService], [Enrollment])
+    case intro,
+         home,
+         buyAirtime,
+         billers(TitleAndListItem, [Enrollment]),
+         categoriesAndServices([TitleAndListItem]),
+         billFormView(BillDetails)
 }
+public enum Home: Hashable {
+    case categoriesAndServices, billFormView, home
+}
+
+
+

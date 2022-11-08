@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 // MARK: - Enrollment
 public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
-//    @Persisted(primaryKey: true) public var id: ObjectId
+    @Persisted(primaryKey: true) public var clientProfileAccountID: Int = 0
     @Persisted public var merchantName: String?
     @Persisted public var merchantID: Int?
     @Persisted public var merchantCode: String?
@@ -20,7 +20,6 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var accountName: String?
     @Persisted public var accountAlias: String?
     @Persisted public var accountID: String?
-    @Persisted(primaryKey: true) public var clientProfileAccountID: Int = 0
     @Persisted public var isExplicit: String?
     @Persisted public var extraData: String?
     @Persisted public var serviceCategoryID: String?
@@ -56,4 +55,52 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
         case isContracted = "IS_CONTRACTED"
         case accountStatus = "ACCOUNT_STATUS"
     }
+}
+
+
+public var sampleNomination: Enrollment {
+    let nom = Enrollment()
+    nom.serviceName = "PDSL Postpaid"
+    nom.serviceCategoryID = "3"
+    nom.serviceLogo = "https://mula.co.ke/mula_ke/api/v1/images/services/KPLC_PayBill.png"
+    nom.accountStatus = 1
+    nom.hubServiceID = 44
+    nom.accountNumber = "112796982"
+    nom.accountName = "KPLC Postpaid"
+    nom.accountAlias = "FARGO COURIER LTD"
+    nom.clientProfileAccountID = 35732900
+    return nom
+}
+public var sampleNomination2: Enrollment {
+    let nom = Enrollment()
+    nom.serviceName = "Startimes Kenya"
+    nom.serviceCategoryID = "1"
+    nom.serviceLogo = "https://mula.co.ke/mula_ke/api/v1/images/services/Startimes-logo-400x400.gif"
+    nom.accountStatus = 1
+    nom.hubServiceID = 54
+    nom.accountNumber = "1801744410"
+    nom.accountName = "Startimes"
+    nom.accountAlias = "N/A"
+    nom.clientProfileAccountID = 42815952
+    return nom
+}
+
+public var sampleNomination3: Enrollment {
+    let nom = Enrollment()
+    nom.serviceName = "GOTV Kenya"
+    nom.serviceCategoryID = "1"
+    nom.serviceLogo = "https://mula.co.ke/mula_ke/api/v1/images/services/gotv.jpg"
+    nom.accountStatus = 1
+    nom.hubServiceID = 2
+    nom.accountNumber = "2014183174"
+    nom.accountName = "GOtv"
+    nom.accountAlias = "DANIEL KIMAN"
+    nom.clientProfileAccountID = 35732528
+    return nom
+}
+public var sampleNominations: [Enrollment] {
+    let nom1 = sampleNomination
+    let nom2 = sampleNomination2
+    let nom3 = sampleNomination3
+    return [nom1, nom2, nom3]
 }

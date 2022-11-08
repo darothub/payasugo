@@ -40,10 +40,9 @@ public struct HomeBottomNavView: View {
                         image: PrimaryTheme.getImage(image: .explore)
                     )
             }
+            
         }.navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $hvm.gotoAllRechargesView) {
-            CategoriesAndServicesView()
-        }
+      
     }
     @ViewBuilder
     func homeView() -> some View {

@@ -30,7 +30,7 @@ public struct LaunchScreenView: View {
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.navigationStack = [.intro]
+                    navigation.navigationStack = [.home]
                 }
             }
             .edgesIgnoringSafeArea(.all)
@@ -45,8 +45,14 @@ public struct LaunchScreenView: View {
                         .environmentObject(ovm)
                 case .buyAirtime:
                     BuyAirtimeView(homeViewModel: hvm)
-                case .billers(let title, let billers, let nomination):
-                    BillersView(title: title, billers: billers, enrolments: nomination)
+                case let .billers(billers, nomination):
+                    BillersView(billers: billers, enrolments: nomination)
+                        .environmentObject(hvm)
+                case .categoriesAndServices(let items):
+                    CategoriesAndServicesView(categoryNameAndServices: items)
+            
+                case .billFormView(let billDetails):
+                    BillFormView(billDetails: .constant(billDetails))
                 }
                 
             }
