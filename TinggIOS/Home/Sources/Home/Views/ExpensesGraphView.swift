@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 16/08/2022.
 //
-
+import Charts
 import Common
 import SwiftUI
 
@@ -12,7 +12,12 @@ struct ExpensesGraphView: View {
     var chartData = [ChartData]()
     var body: some View {
         Section{
-            BarChartView(data: chartData, colors: [.green, .green])
+            Chart(chartData, id: \.xName) { datum in
+                BarMark(
+                    x: .value("Month", datum.xName.rawValue),
+                    y: .value("Amount", datum.point)
+                )
+            }
         }.padding(20)
             .frame(maxWidth: .infinity)
     }
@@ -20,6 +25,6 @@ struct ExpensesGraphView: View {
 
 struct ExpensesGraphView_Previews: PreviewProvider {
     static var previews: some View {
-        ExpensesGraphView()
+        ExpensesGraphView(chartData: yearlyDefault)
     }
 }

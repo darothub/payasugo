@@ -20,18 +20,18 @@ public enum ChartMonth: String, CaseIterable {
     June, July, Aug, Sept, Oct, Nov, Dec
 }
 
-let yearlyDefault = [
-    ChartData(xName: .Jan, point: 0),
-    ChartData(xName: .Feb, point: 0),
-    ChartData(xName: .March, point: 0),
+public let yearlyDefault = [
+    ChartData(xName: .Jan, point: 1000),
+    ChartData(xName: .Feb, point: 500),
+    ChartData(xName: .March, point: 200),
     ChartData(xName: .April, point: 0),
     ChartData(xName: .May, point: 0),
     ChartData(xName: .June, point: 0),
-    ChartData(xName: .July, point: 0),
+    ChartData(xName: .July, point: 300),
     ChartData(xName: .Aug, point: 0),
-    ChartData(xName: .Sept, point: 0),
+    ChartData(xName: .Sept, point: 400),
     ChartData(xName: .Oct, point: 0),
     ChartData(xName: .Nov, point: 0),
-    ChartData(xName: .Dec, point: 0),
+    ChartData(xName: .Dec, point: 2000),
 ]
 
