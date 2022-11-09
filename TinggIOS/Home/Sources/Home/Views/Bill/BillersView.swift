@@ -37,17 +37,11 @@ public struct BillersView: View {
                 .padding(30)
                 .scaleEffect(1)
                 .onTapGesture {
-                    let selectedBiller = hvm.categoryNameAndServices.filter { dict in
-                        dict.key == billers.title
-                    }
-                    let categoryNameAndServices = selectedBiller.keys
-                        .sorted(by: <)
-                        .map{TitleAndListItem(title: $0, services: selectedBiller[$0]!)}
                     withAnimation {
                         navigation.navigationStack = [
                             .home,
                             .billers(billers, enrolments),
-                            .categoriesAndServices(categoryNameAndServices)
+                            .categoriesAndServices([billers])
                         ]
                     }
                 }
