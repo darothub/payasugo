@@ -16,10 +16,10 @@ struct ExpensesGraphView: View {
                 BarMark(
                     x: .value("Month", datum.xName.rawValue),
                     y: .value("Amount", datum.point)
-                )
+                ).foregroundStyle(.green)
             }
         }.padding(20)
-            .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity)
     }
 }
 
