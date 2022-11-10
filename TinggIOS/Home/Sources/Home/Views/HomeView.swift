@@ -71,6 +71,7 @@ struct HomeView: View {
                 ).environmentObject(hvm)
                 .handleViewState(uiModel: $hvm.rechargeAndBillUIModel)
             ExpensesGraphView(chartData: chartData)
+                .frame(height: geo.size.height * 0.35)
                 .background(
                     RoundedRectangle(cornerRadius: 0)
                         .foregroundColor(.white)

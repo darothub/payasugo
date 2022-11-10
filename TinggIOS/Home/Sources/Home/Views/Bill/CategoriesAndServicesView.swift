@@ -32,7 +32,7 @@ public struct CategoriesAndServicesView: View {
                 SearchSection(searchText: $searchText)
                     .padding()
                     .onChange(of: searchText, perform: onSearch(text:))
-                ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, nominations: .constant(hvm.nominationInfo.getEntities()), bills: $bills, onclick: .constant({ service in
+                ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, onclick: .constant({ service in
                     if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                         withAnimation {
                             navigation.navigationStack = [
@@ -94,12 +94,11 @@ struct ColumnBody: View {
     @Binding var categoryNameAndServices: [TitleAndListItem]
     @Binding var searchResult : [TitleAndListItem]
     @Binding var searching: Bool
-    @Binding var nominations: [Enrollment]
-    @Binding var bills: BillDetails
     @Binding var onclick: (MerchantService) -> Void
     var body: some View {
         ForEach(searching ? searchResult : categoryNameAndServices, id: \.title) { item in
             RowView(title: .constant(item.title), itemList: .constant(item.services), onclick: $onclick)
+                .showIf(.constant(!item.services.isEmpty))
         }
     }
 }
