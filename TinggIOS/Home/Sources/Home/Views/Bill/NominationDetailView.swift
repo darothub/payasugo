@@ -11,7 +11,7 @@ import SwiftUI
 public struct NominationDetailView: View {
     @State var invoice: Invoice = sampleInvoice
     @State var imageUrl = ""
-    @State var chartData = yearlyDefault
+   
     @EnvironmentObject var hvm: HomeViewModel
     @State var disableTextField: Bool = true
     @Environment(\.editMode) private var editMode
@@ -19,6 +19,9 @@ public struct NominationDetailView: View {
         hvm.transactionHistory.getEntities().filter { transaction in
             transaction.serviceID == invoice.serviceID
         }
+    }
+    var chartData: [ChartData] {
+        hvm.mapHistoryIntoChartData(transactionHistory: transactionHistory)
     }
     public init(invoice: Invoice, imageUrl: String) {
         self._invoice = State(initialValue: invoice)
@@ -67,24 +70,22 @@ public struct NominationDetailView: View {
                             .shadowBackground()
                                                       
                             VStack(alignment: .leading) {
-                                VStack(alignment: .leading) {
-                                    Text("Bill summary")
-                                        .textCase(.uppercase)
-                                    ExpensesGraphView(chartData: chartData)
-                                }
-                                .padding()
-                                .shadowBackground()
-                                
-                                VStack(alignment: .leading) {
-                                    Text("Transactions")
-                                        .textCase(.uppercase)
-                                    ForEach(transactionHistory, id:\.payerTransactionID) { transaction in
-                                        SingleTransactionSummaryView(transaction: transaction)
-                                    }.listStyle(.plain)
-                                }
-                                .padding()
-                                .shadowBackground()
-                            }.padding(.top)
+                                Text("Bill summary")
+                                    .textCase(.uppercase)
+                                ExpensesGraphView(chartData: chartData)
+                            }
+                            .padding()
+                            .shadowBackground()
+                            
+                            VStack(alignment: .leading) {
+                                Text("Transactions")
+                                    .textCase(.uppercase)
+                                ForEach(transactionHistory, id:\.payerTransactionID) { transaction in
+                                    SingleTransactionSummaryView(transaction: transaction)
+                                }.listStyle(.plain)
+                            }
+                            .padding()
+                            .shadowBackground()
 
                         }
                     }
@@ -127,7 +128,6 @@ struct TopViewDesign: View {
                 .frame(height: geo.size.height/5)
             HStack {
                 RemoteImageCard(imageUrl: imageUrl)
-                 
                 Spacer()
             }.padding(.top, 100)
             .padding(.horizontal)

@@ -36,4 +36,5 @@ public class BarChartUsecase {
         }
         return chartDataMap
     }
+
 }

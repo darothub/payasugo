@@ -88,12 +88,39 @@ public class HomeViewModel: ObservableObject {
     
     public func mapHistoryIntoChartData() -> [ChartData] {
         return homeUsecase.getBarChartMappedData().map { (key, value) in
-            print("Key \(key), value \(value)")
             return ChartData(xName: ChartMonth.allCases[key], point: value)
         }.sorted { cd1, cd2 in
             ChartMonth.allCases.firstIndex(of: cd1.xName)! <  ChartMonth.allCases.firstIndex(of: cd2.xName)!
         }
         
+    }
+    public func mapHistoryIntoChartData(transactionHistory: [TransactionHistory]) -> [ChartData] {
+        return mapTransactionHistoryIntoDictionary(transactionHistory: transactionHistory).map { (key, value) in
+            return ChartData(xName: ChartMonth.allCases[key], point: value)
+        }.sorted { cd1, cd2 in
+            ChartMonth.allCases.firstIndex(of: cd1.xName)! <  ChartMonth.allCases.firstIndex(of: cd2.xName)!
+        }
+        
+    }
+    public func mapTransactionHistoryIntoDictionary(transactionHistory: [TransactionHistory]) -> [Int:Double] {
+        var chartDataMap = [Int:Double]()
+        let histories = transactionHistory
+        histories.forEach { history in
+            guard let validDateString = history.paymentDate.split(separator: ".").first else {
+                fatalError("Invalid date format")
+            }
+            let date = makeDateFromString(validDateString: String(validDateString))
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day, .hour], from: date)
+            let monthIndex = components.month!
+            let existingAmount = chartDataMap[monthIndex] ?? 0
+           
+            if let newAmount = Double( history.amount){
+                let amount = existingAmount + newAmount
+                chartDataMap[monthIndex] = amount
+            }
+        }
+        return chartDataMap
     }
     public func displayedRechargeAndBill() {
         rechargeAndBillUIModel =  UIModel.loading

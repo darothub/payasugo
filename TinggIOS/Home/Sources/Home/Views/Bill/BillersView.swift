@@ -93,7 +93,6 @@ struct NomintaionListView: View {
             ForEach(enrolments, id: \.clientProfileAccountID) { enrolment in
                 NavigationLink(value: enrolment) {
                     SingleNominationView(nomination: enrolment)
-                        
                 }
             }
         }
@@ -121,9 +120,17 @@ struct SingleNominationView: View {
             }
             Spacer()
             VStack(alignment: .leading, spacing: 7) {
-                Text("Updated")
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                HStack {
+                    Text("Updated")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text(Date(), style:.relative )
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text("ago")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
                 Text("A/C No. \(nomination.accountNumber ?? "N/A")")
                     .font(.caption)
                     .bold()
