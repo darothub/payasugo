@@ -13,6 +13,7 @@ public struct BillFormView: View {
     @State var accountNumber: String = ""
     @Binding var billDetails: BillDetails
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var navigateBillDetailsView = false
     var accountNumberList: [String] {
         billDetails.info.map { info in
             info.accountNumber!
@@ -48,7 +49,7 @@ public struct BillFormView: View {
                         fetchBill: homeViewModel.singleBill,
                         service: billDetails.service)
                     .environmentObject(homeViewModel),
-                    isActive: $homeViewModel.navigateBillDetailsView) {
+                    isActive: $navigateBillDetailsView) {
                     button(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Get bill"
@@ -57,11 +58,15 @@ public struct BillFormView: View {
                             accountNumber: accountNumber,
                             serviceId: billDetails.service.hubServiceID
                         )
-                    }.handleViewState(uiModel: $homeViewModel.uiModel)
+                    }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: .constant(false))
                 }
             }
         }.onAppear {
-            print("AccountList \(accountNumberList) Account \(billDetails.info)")
+            homeViewModel.observeUIModel(model: homeViewModel.$uiModel) { content in
+                let invoice = content.data as! Invoice
+                print("Invoice \(invoice)")
+                navigateBillDetailsView.toggle()
+            }
         }
     }
 }
@@ -81,9 +86,10 @@ struct BillFormView_Previews: PreviewProvider {
 
 
 struct TopBackground: View {
+    @State var color = Color.gray.opacity(0.3)
     var body: some View {
         Rectangle()
-            .foregroundColor(.gray.opacity(0.3))
+            .foregroundColor(color)
             .edgesIgnoringSafeArea(.all)
     }
 }

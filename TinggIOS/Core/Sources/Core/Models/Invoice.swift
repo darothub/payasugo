@@ -37,7 +37,7 @@ public class Invoice: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case serviceID = "SERVICE_ID"
         case customerName = "CUSTOMER_NAME"
         case invoiceNumber = "INVOICE_NUMBER"
-        //        case amount = "AMOUNT"
+        case amount = "AMOUNT"
         case currency = "CURRENCY"
         case dueDate = "DUE_DATE"
         case beepTransactionID = "BEEP_TRANSACTION_ID"
@@ -52,4 +52,32 @@ public class Invoice: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case lastFetchDate = "LAST_FETCH_DATE"
 //        case statusCode = "STATUS_CODE"
     }
+}
+
+public var sampleInvoice : Invoice {
+    let invoice = Invoice()
+    invoice.customerName = "DANIEL KIMANI"
+    invoice.biller = "GOTVKE"
+    invoice.billReference = "2014183174"
+    invoice.serviceID = "2"
+    invoice.currency = "KES"
+    invoice.dueDate = "2022-11-11"
+    invoice.amount = "930"
+    return invoice
+}
+
+public var sampleInvoice2: Invoice {
+    let invoice = Invoice()
+    invoice.customerName = "DANIEL KIMANI"
+    invoice.biller = "GOTVKE"
+    invoice.billReference = "2014183175"
+    invoice.serviceID = "2"
+    invoice.currency = "KES"
+    invoice.dueDate = "2022-11-11"
+    invoice.amount = "930"
+    return invoice
+}
+
+public var sampleInvoices: [Invoice] {
+    return [sampleInvoice, sampleInvoice2]
 }

@@ -17,7 +17,7 @@ public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var ovm: OnboardingViewModel
     @EnvironmentObject var  hvm: HomeViewModel
-    
+    @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
         // Intentionally unimplemented...modular accessibility
@@ -30,7 +30,7 @@ public struct LaunchScreenView: View {
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.navigationStack = [.intro]
+                    navigation.navigationStack = [.home]
                 }
             }
             .edgesIgnoringSafeArea(.all)
@@ -48,15 +48,24 @@ public struct LaunchScreenView: View {
                 case let .billers(billers, nomination):
                     BillersView(billers: billers, enrolments: nomination)
                         .environmentObject(hvm)
+                        .onAppear {
+                            colorTint = .blue
+                        }
                 case .categoriesAndServices(let items):
                     CategoriesAndServicesView(categoryNameAndServices: items)
             
                 case .billFormView(let billDetails):
                     BillFormView(billDetails: .constant(billDetails))
+                        
+                case let .nominationDetails(invoice, imageUrl):
+                    NominationDetailView(invoice: invoice, imageUrl:  imageUrl)
+                        .onAppear {
+                            colorTint = .white
+                        }
                 }
-                
             }
-        }
+            
+        }.changeTint($colorTint)
     }
 }
 /// Struct responsible for preview of changes in Xcode

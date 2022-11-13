@@ -97,7 +97,6 @@ struct DueBillCardView: View {
 struct LeftHandSideView: View {
     @State var serviceName: String = ""
     @State var serviceImageString = ""
-//    @State var updatedTime = ""
     @State var beneficiaryName = ""
     @State var accountNumber = ""
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -129,7 +128,6 @@ struct LeftHandSideView: View {
         }
     }
     func updatedTimeInUnits(time: Int) -> String {
-      
         if time > 3599 {
             return "\(time / 3600) hours ago"
         }

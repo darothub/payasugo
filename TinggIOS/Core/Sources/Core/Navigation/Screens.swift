@@ -12,7 +12,8 @@ public enum Screens: Hashable {
          buyAirtime,
          billers(TitleAndListItem, [Enrollment]),
          categoriesAndServices([TitleAndListItem]),
-         billFormView(BillDetails)
+         billFormView(BillDetails),
+         nominationDetails(Invoice, String)
 }
 public enum Home: Hashable {
     case categoriesAndServices, billFormView, home

@@ -11,7 +11,7 @@ import Core
 
 struct BillDetailsView: View {
     @State var fetchBill = Invoice()
-    @State var service = MerchantService()
+    @State var service = sampleServices[0]
     @State var textFieldText = ""
     @State var amount = ""
     @State var dueDate = ""

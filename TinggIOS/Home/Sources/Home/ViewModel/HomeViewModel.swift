@@ -17,7 +17,7 @@ public class HomeViewModel: ObservableObject {
     @Published public var services = Observer<MerchantService>()
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
-    @Published public var transactionHistory = Observer<TransactionHistory>().objects
+    @Published public var transactionHistory = Observer<TransactionHistory>()
     @Published public var dueBill = [Invoice]()
     @Published public var singleBill = Invoice()
     @Published public var savedBill = SavedBill()
@@ -39,6 +39,7 @@ public class HomeViewModel: ObservableObject {
     @Published var showNetworkList = false
     @Published var showAlert = false
     @Published var permission = ContactManager()
+    @Published var country = AppStorageManager.getCountry()
     @Published public var subscriptions = Set<AnyCancellable>()
 
     public var homeUsecase: HomeUsecase
@@ -139,8 +140,8 @@ public class HomeViewModel: ObservableObject {
         Task {
             do {
                 singleBill = try await homeUsecase.getSingleDueBills(accountNumber: accountNumber, serviceId: serviceId)
-                uiModel = UIModel.nothing
-                navigateBillDetailsView.toggle()
+                let content = UIModel.Content(data: singleBill, statusCode: 200, statusMessage: "Successful")
+                uiModel = UIModel.content(content)
             }catch {
                 uiModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
@@ -199,18 +200,15 @@ public class HomeViewModel: ObservableObject {
             }
         }
     }
-    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {
+    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (UIModel.Content) -> Void) {
         model.sink { [unowned self] uiModel in
             uiModelCases(uiModel: uiModel, action: action)
         }.store(in: &subscriptions)
     }
-    func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
+    func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void) {
         switch uiModel {
         case .content(let data):
-            if data.statusMessage.lowercased().contains("succ"),
-               let baseDto = data.data as? BaseDTOprotocol {
-                action(baseDto)
-            }
+            action(data)
             return
         case .loading:
             print("loadingState")

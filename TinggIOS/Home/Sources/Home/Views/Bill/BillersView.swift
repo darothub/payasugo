@@ -4,6 +4,7 @@
 //
 //  Created by Abdulrasaq on 03/11/2022.
 //
+import Combine
 import Core
 import SwiftUI
 
@@ -11,6 +12,7 @@ import SwiftUI
 public struct BillersView: View {
     @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
     @State var enrolments = [Enrollment]()
+    @State var imageUrl = ""
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     public init(billers: TitleAndListItem, enrolments : [Enrollment]) {
@@ -68,15 +70,41 @@ public struct BillersView: View {
         List {
             ForEach(enrolments, id: \.clientProfileAccountID) { enrolment in
                 NavigationLink(value: enrolment) {
+                    SingleNominationView(nomination: enrolment) { nomination, invoice in
+                        navigation.navigationStack = [
+                            .home,
+                            .billers(billers, enrolments),
+                            .nominationDetails(invoice, nomination.serviceLogo ?? "")
+                        ]
+                    }
+                }
+            }.onDelete { index in
+                print("index \(index)")
+            }
+        }
+        
+    }
+}
+
+struct NomintaionListView: View {
+    @State var enrolments = sampleNominations
+    var body: some View {
+        List {
+            ForEach(enrolments, id: \.clientProfileAccountID) { enrolment in
+                NavigationLink(value: enrolment) {
                     SingleNominationView(nomination: enrolment)
+                        
                 }
             }
-        }.listStyle(.plain)
+        }
+        .listStyle(.plain)
     }
 }
 
 struct SingleNominationView: View {
-    var nomination: Enrollment
+    @State var nomination: Enrollment
+    @State var onClick: (Enrollment, Invoice) -> Void = {_,_ in}
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     var body: some View {
         HStack(alignment: .top) {
             HStack(alignment: .top) {
@@ -100,7 +128,20 @@ struct SingleNominationView: View {
                     .font(.caption)
                     .bold()
             }
-        }.padding()
+        }
+        .handleViewStates(uiModel: $hvm.uiModel, showAlert: .constant(true))
+        .padding()
+        .onTapGesture {
+            if let accountNumber = nomination.accountNumber {
+                hvm.getSingleDueBill(accountNumber: accountNumber, serviceId: String(nomination.hubServiceID))
+                hvm.observeUIModel(model: hvm.$uiModel) { content in
+                    let invoice = content.data as! Invoice
+                    onClick(nomination, invoice)
+                }
+            }
+
+           
+        }
     }
 }
 
@@ -115,6 +156,14 @@ struct BillersView_Previews: PreviewProvider {
         }
     }
     static var previews: some View {
-        BillersViewHolder()
+        NavigationStack {
+            BillersViewHolder()
+                .environmentObject(HomeDI.createHomeViewModel())
+        }
     }
+}
+
+struct NominationDetailsViewObj {
+    let imageUrl: String
+    let invoice: Invoice
 }

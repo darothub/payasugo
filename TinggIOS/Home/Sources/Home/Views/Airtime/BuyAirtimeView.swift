@@ -21,18 +21,12 @@ public struct BuyAirtimeView: View {
     @State var accountNumber = ""
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
-    var currency: String {
-        if let currentCurrency = hvm.transactionHistory.first?.currencyCode {
-            return currentCurrency
-        }
-        return ""
-    }
     var enrollments : [Enrollment] {
         return hvm.nominationInfo.getEntities()
     }
   
-    var historyByAccountNumber: [TransactionHistory] {
-        hvm.transactionHistory.map {$0}
+    var history: [TransactionHistory] {
+        hvm.transactionHistory.getEntities()
     }
     var airtimeServices:  [MerchantService] {
         hvm.airTimeServices
@@ -72,9 +66,11 @@ public struct BuyAirtimeView: View {
                 .padding(.vertical)
             Text("Amount")
                 .padding(.top)
-            TextFieldAndLeftIcon(amount: $amount, currency: currency)
+            if let currency = hvm.country?.currency {
+                TextFieldAndLeftIcon(amount: $amount, currency: currency)
+            }
             SuggestedAmountListView(
-                history: historyByAccountNumber,
+                history: history,
                 selectedServiceName: $selectedButton,
                 amount: $amount,
                 accountNumber: $accountNumber
@@ -84,8 +80,7 @@ public struct BuyAirtimeView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-                let country = AppStorageManager.getCountry()
-                remotePhoneNumberValidation(country)
+                remotePhoneNumberValidation(hvm.country)
                 remoteAmountValidation()
             }
         }
