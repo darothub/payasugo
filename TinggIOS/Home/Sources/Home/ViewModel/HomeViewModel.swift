@@ -19,14 +19,14 @@ public class HomeViewModel: ObservableObject {
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>()
     @Published public var dueBill = [Invoice]()
-    @Published public var singleBill = Invoice()
-    @Published public var savedBill = SavedBill()
+    @Published public var singleBillInvoice = Invoice()
+    @Published public var serviceBill = Bill()
     @Published public var categoryNameAndServices = [String: [MerchantService]]()
     @Published var fetchBillUIModel = UIModel.nothing
     @Published var quickTopUIModel = UIModel.nothing
     @Published var categoryUIModel = UIModel.nothing
     @Published var rechargeAndBillUIModel = UIModel.nothing
-    @Published var saveBillUIModel = UIModel.nothing
+    @Published var serviceBillUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     @Published var defaultNetworkUIModel = UIModel.nothing
     @Published var buyAirtimeUiModel = UIModel.nothing
@@ -155,7 +155,8 @@ public class HomeViewModel: ObservableObject {
         Task {
             do {
                 dueBill = try await homeUsecase.getDueBills()
-                fetchBillUIModel = UIModel.nothing
+                let content = UIModel.Content(data: dueBill)
+                fetchBillUIModel = UIModel.content(content)
             } catch {
                 showAlert = true
                 fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
@@ -166,26 +167,49 @@ public class HomeViewModel: ObservableObject {
         uiModel = UIModel.loading
         Task {
             do {
-                singleBill = try await homeUsecase.getSingleDueBills(accountNumber: accountNumber, serviceId: serviceId)
-                let content = UIModel.Content(data: singleBill, statusCode: 200, statusMessage: "Successful")
+                singleBillInvoice = try await homeUsecase.getSingleDueBills(accountNumber: accountNumber, serviceId: serviceId)
+                let content = UIModel.Content(data: singleBillInvoice)
                 uiModel = UIModel.content(content)
             }catch {
                 uiModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }
     }
-    public func saveBill(tinggRequest: TinggRequest) {
-        saveBillUIModel = UIModel.loading
+//    public func saveBill(tinggRequest: TinggRequest) {
+//        serviceBillUIModel = UIModel.loading
+//        Task {
+//            do {
+//                serviceBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest, invoice: singleBillInvoice)
+//                let message = "Bill with reference \(serviceBill.merchantAccountNumber) created"
+//                let content = UIModel.Content(statusMessage: message)
+//                serviceBillUIModel = UIModel.content(content)
+//            } catch {
+//                serviceBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+//            }
+//        }
+//    }
+    public func handleMCPRequest(action: MCPAction, profileInfoComputed: String) {
+        serviceBillUIModel = UIModel.loading
+        var request = TinggRequest()
+        request.service = "MCP"
+        request.profileInfo = profileInfoComputed
+        request.action = action.rawValue
         Task {
             do {
-                savedBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest, invoice: singleBill)
-                let message = "Bill with reference \(savedBill.merchantAccountNumber) created"
-                let content = UIModel.Content(statusMessage: message)
-                saveBillUIModel = UIModel.content(content)
+                print("States: Before")
+                serviceBill = try await homeUsecase.handleMCPRequest(tinggRequest: request, action: action)
+                let message = "Request carried out successfully"
+                let content = UIModel.Content(statusMessage: serviceBill.statusMessage)
+                serviceBillUIModel = UIModel.content(content)
+                print("States: After")
             } catch {
-                saveBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+                serviceBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }
+    }
+    
+    public func handlePostMCPUsecase(bill: Bill, invoice: Invoice) -> Bill {
+        return  homeUsecase.handlePostMCPUsecase(bill: bill, invoice: invoice)
     }
     func updateDefaultNetworkId(serviceName: String) {
         if !serviceName.isEmpty {
@@ -227,23 +251,24 @@ public class HomeViewModel: ObservableObject {
             }
         }
     }
-    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (UIModel.Content) -> Void) {
+    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
         model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action)
+            uiModelCases(uiModel: uiModel, action: action, onError: onError)
         }.store(in: &subscriptions)
     }
-    func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void) {
+    func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in }) {
         switch uiModel {
         case .content(let data):
             action(data)
-            return
+            print("State: content")
         case .loading:
-            print("loadingState")
-        case .error:
-            print("errorState")
-            return
+            print("State: loading..")
+        case .error(let err):
+            onError(err)
+            print("State error \(err)")
+            
         case .nothing:
-            print("nothingState")
+            print("State: nothing")
         }
     }
     func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
@@ -261,13 +286,4 @@ public class HomeViewModel: ObservableObject {
     }
 }
 
-
-public class HomeNavigationUtils: ObservableObject {
-    @Published public var current = Home.categoriesAndServices
-    @Published public var navigatePermission = true
-    @Published public var navigationStack: [Home] = []
-    public init() {
-        // Intentionally unimplemented...needed for modular accessibility
-    }
-}
 

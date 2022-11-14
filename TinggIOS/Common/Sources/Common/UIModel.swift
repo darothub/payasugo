@@ -22,6 +22,9 @@ public enum UIModel {
         public init(statusMessage: String) {
             self.statusMessage = statusMessage
         }
+        public init(data: Any?){
+            self.data = data
+        }
     }
     case loading
     case content(Content)

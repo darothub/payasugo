@@ -10,29 +10,28 @@ import SwiftUI
 
 public struct NominationDetailView: View {
     @State var invoice: Invoice = sampleInvoice
-    @State var imageUrl = ""
-   
+    @State var nomination: Enrollment = .init()
     @EnvironmentObject var hvm: HomeViewModel
     @State var disableTextField: Bool = true
     @Environment(\.editMode) private var editMode
     var transactionHistory: [TransactionHistory] {
         hvm.transactionHistory.getEntities().filter { transaction in
-            transaction.serviceID == invoice.serviceID
+            transaction.serviceID == invoice.serviceID && transaction.accountNumber == invoice.billReference
         }
     }
     var chartData: [ChartData] {
         hvm.mapHistoryIntoChartData(transactionHistory: transactionHistory)
     }
-    public init(invoice: Invoice, imageUrl: String) {
+    public init(invoice: Invoice, nomination: Enrollment) {
         self._invoice = State(initialValue: invoice)
-        self._imageUrl = State(initialValue: imageUrl)
+        self._nomination = State(initialValue: nomination)
     }
     public var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .bottomTrailing) {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 0) {
-                        TopViewDesign(imageUrl: $imageUrl, geo: geo)
+                        TopViewDesign(imageUrl: .constant(nomination.serviceLogo ?? ""), geo: geo)
                         VStack(alignment: .leading) {
                             Text("Monthly Bill")
                                 .textCase(.uppercase)
@@ -106,13 +105,19 @@ public struct NominationDetailView: View {
         .toolbar {
             EditButton()
                 .foregroundColor(.white)
-           
         }
         .onChange(of: editMode?.wrappedValue) { newValue in
             if newValue != nil && newValue!.isEditing {
                 disableTextField = false
             } else {
                 disableTextField = true
+                let service = hvm.services.getEntities().first { service in
+                    service.categoryID == nomination.serviceCategoryID
+                }
+                if let s = service, let accountNumber = nomination.accountNumber {
+                    let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
+                    hvm.handleMCPRequest(action: .UPDATE, profileInfoComputed: profileInfo)
+                }
             }
         }
         
@@ -191,7 +196,7 @@ struct HTextAndTextFieldWithDivider: View {
 
 struct NominationDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        NominationDetailView(invoice: sampleInvoice, imageUrl: "")
+        NominationDetailView(invoice: sampleInvoice, nomination: .init())
             .environmentObject(HomeDI.createHomeViewModel())
     }
 }

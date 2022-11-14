@@ -7,11 +7,11 @@
 
 import Foundation
 // MARK: - SaveBillDTO
-public struct SaveBillDTO: BaseDTOprotocol, Codable {
+public struct BillDTO: BaseDTOprotocol, Codable {
     public var statusCode: Int
     public var statusMessage: String
-    public var savedBill: [SavedBill]
-    public init(statusCode: Int, statusMessage: String, savedBill: [SavedBill]) {
+    public var savedBill: [Bill] = .init()
+    public init(statusCode: Int, statusMessage: String, savedBill: [Bill] = .init()) {
         self.statusCode = statusCode
         self.statusMessage = statusMessage
         self.savedBill = savedBill
@@ -24,7 +24,7 @@ public struct SaveBillDTO: BaseDTOprotocol, Codable {
 }
 
 // MARK: - SavedBill
-public class SavedBill: NSObject, Codable {
+public class Bill: NSObject, Codable {
     public var statusCode: Int = 0
     public var manualBillID: String = ""
     public var statusMessage: String = ""
@@ -49,7 +49,7 @@ public class SavedBill: NSObject, Codable {
 }
 
 
-extension SavedBill {
+extension Bill {
     func convertBillToEnrollment(accountNumber: String) -> Enrollment {
         let enrollment = Enrollment()
         enrollment.accountAlias = self.accountAlias

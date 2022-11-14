@@ -100,3 +100,7 @@ public struct BillDetails: Hashable {
         self.info = info
     }
 }
+
+public func computeProfileInfo(service: MerchantService, accountNumber: String) -> String {
+    "\(service.receiverSourceAddress)|\(accountNumber)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
+}

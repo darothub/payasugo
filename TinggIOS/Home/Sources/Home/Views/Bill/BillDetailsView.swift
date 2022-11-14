@@ -15,6 +15,7 @@ struct BillDetailsView: View {
     @State var textFieldText = ""
     @State var amount = ""
     @State var dueDate = ""
+    @Binding var isNewInput: Bool
     @EnvironmentObject var homeViewModel: HomeViewModel
     var dueDateComputed: String {
         let date = makeDateFromString(validDateString: fetchBill.estimateExpiryDate)
@@ -24,7 +25,7 @@ struct BillDetailsView: View {
         fetchBill.currency + String(fetchBill.amount)
     }
     var profileInfoComputed: String {
-        "\(service.receiverSourceAddress)|\(fetchBill.billReference)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
+        computeProfileInfo(service: service, accountNumber: fetchBill.billReference)
     }
     
     var body: some View {
@@ -73,12 +74,11 @@ struct BillDetailsView: View {
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Save bill"
                     ) {
-                        var request = TinggRequest()
-                        request.service = "MCP"
-                        request.profileInfo = profileInfoComputed
-                        request.action = "ADD"
-                        homeViewModel.saveBill(tinggRequest: request)
-                    }.handleViewState(uiModel: $homeViewModel.saveBillUIModel)
+                        homeViewModel.handleMCPRequest(action: .ADD, profileInfoComputed: profileInfoComputed)
+                    }
+                    .disabled(isNewInput ? false : true)
+                    .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)
+                    
                     button(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Pay bill"
@@ -90,13 +90,18 @@ struct BillDetailsView: View {
         }.onAppear {
             amount = amountComputed
             dueDate = dueDateComputed
+            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel) { content in
+                let bill = content.data as! Bill
+                homeViewModel.handlePostMCPUsecase(bill: bill, invoice: homeViewModel.singleBillInvoice)
+            }
+            print("Newinput: \(isNewInput)")
         }
     }
 }
 
 struct BillDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        BillDetailsView()
+        BillDetailsView(isNewInput: .constant(false))
             .environmentObject(HomeDI.createHomeViewModel())
     }
 }

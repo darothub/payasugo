@@ -14,7 +14,7 @@ public class SaveBillUsecase {
         self.fetchBillRepository = fetchBillRepository
     }
     
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> SavedBill {
+    public func callAsFunction(tinggRequest: TinggRequest) async throws -> Bill {
         try await fetchBillRepository.saveBill(tinggRequest: tinggRequest)
     }
 }

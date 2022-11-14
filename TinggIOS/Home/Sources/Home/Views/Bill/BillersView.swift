@@ -15,6 +15,11 @@ public struct BillersView: View {
     @State var imageUrl = ""
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
+    var profileInfoComputed: String {
+        ""
+//        "\(service.receiverSourceAddress)|\(fetchBill.billReference)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
+        
+    }
     public init(billers: TitleAndListItem, enrolments : [Enrollment]) {
         _billers = State(initialValue: billers)
         _enrolments = State(initialValue: enrolments)
@@ -74,12 +79,21 @@ public struct BillersView: View {
                         navigation.navigationStack = [
                             .home,
                             .billers(billers, enrolments),
-                            .nominationDetails(invoice, nomination.serviceLogo ?? "")
+                            .nominationDetails(invoice, nomination)
                         ]
                     }
                 }
             }.onDelete { index in
-                print("index \(index)")
+                let nom: Enrollment = enrolments[index.count]
+                let service = billers.services.first { service in
+                    service.categoryID == nom.serviceCategoryID
+                }
+                if let s = service, let accountNumber = nom.accountNumber {
+                    let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
+    //                homeViewModel.saveBill(tinggRequest: request)
+                    hvm.handleMCPRequest(action: .DELETE, profileInfoComputed: profileInfo)
+                }
+                hvm.nominationInfo.$objects.remove(nom)
             }
         }
         
@@ -127,9 +141,6 @@ struct SingleNominationView: View {
                     Text(Date(), style:.relative )
                         .font(.caption)
                         .foregroundColor(.gray)
-                    Text("ago")
-                        .font(.caption)
-                        .foregroundColor(.gray)
                 }
                 Text("A/C No. \(nomination.accountNumber ?? "N/A")")
                     .font(.caption)
@@ -146,8 +157,6 @@ struct SingleNominationView: View {
                     onClick(nomination, invoice)
                 }
             }
-
-           
         }
     }
 }
@@ -170,7 +179,3 @@ struct BillersView_Previews: PreviewProvider {
     }
 }
 
-struct NominationDetailsViewObj {
-    let imageUrl: String
-    let invoice: Invoice
-}

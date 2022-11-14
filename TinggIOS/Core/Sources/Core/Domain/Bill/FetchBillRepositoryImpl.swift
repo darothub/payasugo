@@ -32,15 +32,21 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
         return data
     }
     
-    public func saveBill(tinggRequest: TinggRequest) async throws -> SavedBill {
-        let dto: SaveBillDTO = try await billRequest(tinggRequest: tinggRequest)
+    public func saveBill(tinggRequest: TinggRequest) async throws -> Bill {
+        let dto: BillDTO = try await billRequest(tinggRequest: tinggRequest)
         let savedBill = dto.savedBill[0]
         return savedBill
     }
+    
     
     public func insertInvoiceInDb(invoice: Invoice) {
         dbObserver.saveEntity(obj: invoice)
     }
     
 }
+
+public enum MCPAction: String {
+    case ADD, UPDATE, DELETE
+}
+
 

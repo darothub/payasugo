@@ -59,7 +59,7 @@ public struct TinggRequest: Encodable {
     }
 }
 
-public struct BillAccount: Codable {
+public struct BillAccount: Codable, Hashable {
     public let serviceId: String
     public let accountNumber: String
     public init(serviceId: String, accountNumber: String){

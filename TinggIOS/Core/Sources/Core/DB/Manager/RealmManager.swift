@@ -49,6 +49,15 @@ public final class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
+    public func delete<O>(data: O) where O: Object {
+        do {
+            try localDb?.write {
+                self.localDb?.delete(data)
+            }
+        } catch {
+            print("RealmManager save \(error.localizedDescription)")
+        }
+    }
     public func invalidate() {
         do {
             try  localDb?.write { [unowned self] in

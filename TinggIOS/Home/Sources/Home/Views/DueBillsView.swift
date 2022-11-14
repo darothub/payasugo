@@ -10,6 +10,7 @@ import Theme
 import Core
 struct DueBillsView: View {
     @State var fetchedBill = [Invoice]()
+    @Binding var showDueBills:Bool
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     @State var updatedTimeString: String = ""
     var body: some View {
@@ -21,7 +22,7 @@ struct DueBillsView: View {
                 tinggAssistAndBillText()
                 Spacer()
             }
-            Spacer()
+            
             ForEach(fetchedBill, id: \.billReference) { bill in
                 let now = Date()
                 let dueDate = makeDateFromString(validDateString: bill.dueDate)
@@ -37,6 +38,21 @@ struct DueBillsView: View {
             }
           
         }.padding()
+        .onAppear {
+            homeViewModel.observeUIModel(model: homeViewModel.$fetchBillUIModel) { content in
+                fetchedBill = content.data as! [Invoice]
+                withAnimation {
+                    showDueBills = !fetchedBill.isEmpty
+                }
+            } onError: { err in
+                withAnimation {
+                    showDueBills = err.isEmpty
+                    print("State error \(err)")
+                }
+            }
+            
+        }.handleViewStates(uiModel: $homeViewModel.fetchBillUIModel, showAlert: $homeViewModel.showAlert)
+           
     }
     @ViewBuilder
     func tinggAssistAndBillText() -> some View {
@@ -67,7 +83,7 @@ struct DueBillsView: View {
 
 struct DueBillsView_Previews: PreviewProvider {
     static var previews: some View {
-        DueBillsView()
+        DueBillsView(fetchedBill: sampleInvoices, showDueBills: .constant(true))
     }
 }
 

@@ -9,6 +9,6 @@ import Foundation
 /// Protocol that defines operations for bills
 public protocol FetchBillRepository {
     func getDueBills(tinggRequest: TinggRequest) async throws -> [Invoice]
-    func saveBill(tinggRequest: TinggRequest) async throws -> SavedBill
+    func saveBill(tinggRequest: TinggRequest) async throws -> Bill
     func insertInvoiceInDb(invoice: Invoice)
 }

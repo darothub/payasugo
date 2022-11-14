@@ -57,8 +57,8 @@ public struct LaunchScreenView: View {
                 case .billFormView(let billDetails):
                     BillFormView(billDetails: .constant(billDetails))
                         
-                case let .nominationDetails(invoice, imageUrl):
-                    NominationDetailView(invoice: invoice, imageUrl:  imageUrl)
+                case let .nominationDetails(invoice, nomination):
+                    NominationDetailView(invoice: invoice, nomination:  nomination)
                         .onAppear {
                             colorTint = .white
                         }
@@ -72,6 +72,9 @@ public struct LaunchScreenView: View {
 struct LaunchScreenView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreenView()
+            .environmentObject(NavigationUtils())
+            .environmentObject(OnboardingDI.createOnboardingViewModel())
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 

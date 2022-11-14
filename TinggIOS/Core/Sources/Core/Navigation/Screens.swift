@@ -13,7 +13,7 @@ public enum Screens: Hashable {
          billers(TitleAndListItem, [Enrollment]),
          categoriesAndServices([TitleAndListItem]),
          billFormView(BillDetails),
-         nominationDetails(Invoice, String)
+         nominationDetails(Invoice, Enrollment)
 }
 public enum Home: Hashable {
     case categoriesAndServices, billFormView, home

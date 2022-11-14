@@ -14,6 +14,7 @@ public struct BillFormView: View {
     @Binding var billDetails: BillDetails
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     @State var navigateBillDetailsView = false
+    @State var isNewInput = false
     var accountNumberList: [String] {
         billDetails.info.map { info in
             info.accountNumber!
@@ -46,8 +47,9 @@ public struct BillFormView: View {
                 Spacer()
                 NavigationLink(
                     destination: BillDetailsView(
-                        fetchBill: homeViewModel.singleBill,
-                        service: billDetails.service)
+                        fetchBill: homeViewModel.singleBillInvoice,
+                        service: billDetails.service, isNewInput: $isNewInput
+                    )
                     .environmentObject(homeViewModel),
                     isActive: $navigateBillDetailsView) {
                     button(
@@ -58,6 +60,7 @@ public struct BillFormView: View {
                             accountNumber: accountNumber,
                             serviceId: billDetails.service.hubServiceID
                         )
+                        isNewInput = accountNumberList.contains(accountNumber)
                     }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: .constant(false))
                 }
             }

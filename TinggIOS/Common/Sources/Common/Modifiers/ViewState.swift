@@ -12,6 +12,7 @@ public struct ViewState: ViewModifier {
     @Binding var uiModel: UIModel
     @State var showAlert = false
     @State var error = ""
+
     @State var duplicateMessage = "empty"
     public init(uiModel: Binding<UIModel>) {
         _uiModel = uiModel
@@ -66,6 +67,7 @@ public struct ViewStates: ViewModifier {
     @Binding var uiModel: UIModel
     @Binding var showAlert: Bool
     @State var error = ""
+    @State var errorFlag = false
     public init(uiModel: Binding<UIModel>, showAlert: Binding<Bool>) {
         _uiModel = uiModel
         _showAlert = showAlert
@@ -93,6 +95,8 @@ public struct ViewStates: ViewModifier {
                 }
             case .error(let err):
                 handleMessage(err)
+                content
+                    .showIf($showAlert)
             case .nothing:
                 content
             }

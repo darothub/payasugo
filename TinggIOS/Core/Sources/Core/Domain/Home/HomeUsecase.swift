@@ -100,11 +100,17 @@ public class HomeUsecase {
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
     
-    public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> SavedBill {
+    public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> Bill {
         let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
         return  postMCPUsecase(bill: bill, invoice: invoice)
     }
-    
+    public func handlePostMCPUsecase(bill: Bill, invoice: Invoice) -> Bill {
+        return  postMCPUsecase(bill: bill, invoice: invoice)
+    }
+    public func handleMCPRequest(tinggRequest: TinggRequest, action: MCPAction) async throws -> Bill {
+        let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
+        return  bill
+    }
     public func getSingleDueBills(accountNumber: String, serviceId: String) async throws -> Invoice {
         var tinggRequest: TinggRequest = .init()
         tinggRequest.service = "FB"
