@@ -81,6 +81,10 @@ public struct HomeDI {
         return UpdateDefaultNetworkUsecase(baseRequest: BaseRequest())
     }
     
+    public static func createMCPDeleteAndUpdateUsecase() -> MCPDeleteAndUpdateUsecase {
+        return MCPDeleteAndUpdateUsecase(repository: createFetchBillRepository())
+    }
+    
     @MainActor public static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecase(
             billAccountUsecase: createBillAccountUsecase(),
@@ -92,7 +96,7 @@ public struct HomeDI {
             dueBillsUsecase: createDueBillUsecase(),
             singleDueBillUsecase: createSingleDueBillUsecase(),
             saveBillUsecase:  createSaveBillUsecase(),
-            postMCPUsecase: createPostMCPUsecase(),
+            mcpDeleteAndUpdateUsecase: createMCPDeleteAndUpdateUsecase(),
             categoriesAndServicesUsecase: createCategoriesAndServicesUsecase(),
             updateDefaultNetworkIdUsecase: createUpdateDefaultNetworkUsecase()
         )

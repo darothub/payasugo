@@ -26,10 +26,7 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
     }
     public func getDueBills(tinggRequest: TinggRequest) async throws -> [Invoice] {
         let dto: FetchBillDTO = try await billRequest(tinggRequest: tinggRequest)
-        let data = dto.fetchedBills.filter { bill in
-            !bill.billDescription.contains("invalid account")
-        }
-        return data
+        return dto.fetchedBills
     }
     
     public func saveBill(tinggRequest: TinggRequest) async throws -> Bill {
@@ -38,6 +35,15 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
         return savedBill
     }
     
+    public func deleteBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
+        let dto: BaseDTO = try await billRequest(tinggRequest: tinggRequest)
+        return dto
+    }
+    
+    public func updateBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
+        let dto: BaseDTO = try await billRequest(tinggRequest: tinggRequest)
+        return dto
+    }
     
     public func insertInvoiceInDb(invoice: Invoice) {
         dbObserver.saveEntity(obj: invoice)

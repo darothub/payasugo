@@ -45,9 +45,9 @@ public struct OtpConfirmationView: View {
                 buttonLabel: "Confirm"
             ) {
                 otpViewOVM.confirmActivationCodeRequest(code: otp)
-                print("OTP on`submit \(otp)")
+//                print("OTP on`submit \(otp)")
                
-            }.handleViewState(uiModel: $otpViewOVM.onSubmitUIModel)
+            }.handleViewStates(uiModel: $otpViewOVM.onSubmitUIModel, showAlert: $onboardingViewModel.showAlert)
         }
         .padding(20)
         .onReceive(timer) { _ in
@@ -81,7 +81,7 @@ public struct OtpConfirmationView: View {
     fileprivate func observingUIModel() {
         otpViewOVM.observeUIModel(model: otpViewOVM.$onSubmitUIModel) { dto in
             DispatchQueue.main.async {
-                print("OTP onObserve \(otp)")
+//                print("OTP onObserve \(otp)")
                 onboardingViewModel.showOTPView = false
                 onboardingViewModel.confirmedOTP = true
             }

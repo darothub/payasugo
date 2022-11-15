@@ -28,7 +28,7 @@ public class Invoice: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var dateEstimated: String = ""
     @Persisted public var estimateExpiryDate: String = ""
     @Persisted public var lastFetchDate: String = ""
-    @Persisted public var enrollment: Enrollment? = nil
+//    @Persisted public var enrollment: Enrollment? = nil
 //    public var statusCode: Int = 0
     enum CodingKeys: String, CodingKey {
         case billDescription = "BILL_DESCRIPTION"

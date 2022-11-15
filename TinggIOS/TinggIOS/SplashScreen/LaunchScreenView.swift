@@ -45,8 +45,8 @@ public struct LaunchScreenView: View {
                         .environmentObject(ovm)
                 case .buyAirtime:
                     BuyAirtimeView(homeViewModel: hvm)
-                case let .billers(billers, nomination):
-                    BillersView(billers: billers, enrolments: nomination)
+                case let .billers(billers):
+                    BillersView(billers: billers)
                         .environmentObject(hvm)
                         .onAppear {
                             colorTint = .blue
@@ -62,6 +62,11 @@ public struct LaunchScreenView: View {
                         .onAppear {
                             colorTint = .white
                         }
+                case let .billDetailsView(invoice, service):
+                    BillDetailsView(
+                        fetchBill: invoice,
+                        service: service
+                    )
                 }
             }
             

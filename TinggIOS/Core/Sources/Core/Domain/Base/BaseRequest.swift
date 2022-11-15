@@ -36,7 +36,6 @@ public class BaseRequest: ObservableObject, TinggApiServices {
     func result<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws -> Result<T, ApiError> {
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
-                print("Result \(result)")
                 continuation.resume(returning: result)
             }
         }
@@ -47,7 +46,7 @@ public class BaseRequest: ObservableObject, TinggApiServices {
 extension DataRequest {
     func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
         responseString { response in
-            print("ResponseString \(response)")
+//            print("ResponseString \(response)")
         }
         responseJSON { response in
             print("ResponseJson \(response)")
@@ -55,7 +54,7 @@ extension DataRequest {
         responseDecodable(of: T.self) { response in
             switch response.result {
             case .failure(let error):
-                Log("responseError \(error.asAFError.debugDescription)")
+//                Log("responseError \(error.asAFError.debugDescription)")
 //                print("responseError \(error.asAFError.debugDescription)")
                 onCompletion(.failure(.networkError( error.localizedDescription)))
             case .success(let baseResponse):

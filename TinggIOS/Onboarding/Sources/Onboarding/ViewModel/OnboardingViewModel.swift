@@ -58,7 +58,7 @@ public class OnboardingViewModel: ObservableObject {
             var tinggRequest: TinggRequest = .init()
             tinggRequest.service = "VAK"
             tinggRequest.activationCode = code
-            print("requestVAK \(tinggRequest)")
+//            print("requestVAK \(tinggRequest)")
             let result = try await onboardingUseCase.confirmActivationCodeRequest(tinggRequest: tinggRequest, code: code)
             handleResultState(model: &onSubmitUIModel, result)
         }
@@ -71,9 +71,9 @@ public class OnboardingViewModel: ObservableObject {
         Task {
             var tinggRequest: TinggRequest = .init()
             tinggRequest.service = "PAR"
-            print("requestPAR \(tinggRequest)")
+//            print("requestPAR \(tinggRequest)")
             let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest )
-            print("Result2 \(result)")
+//            print("Result2 \(result)")
             handleResultState(model: &uiModel, result)
         }
     }
@@ -104,10 +104,14 @@ public class OnboardingViewModel: ObservableObject {
         switch result {
         case .failure(let apiError):
             model = UIModel.error(apiError.localizedString)
-            print("Failure \(apiError.localizedString)")
+//            print("Failure \(apiError.localizedString)")
+            showAlert = true
             return
         case .success(let data):
-            print("Success \(data)")
+//            print("Success \(data)")
+            if data.statusCode > 201 {
+                showAlert = true
+            }
             let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
             model = UIModel.content(content)
             return
@@ -131,7 +135,6 @@ public class OnboardingViewModel: ObservableObject {
         case .loading:
             print("loadingState")
         case .error:
-            showAlert = true
             print("errorState")
             return
         case .nothing:

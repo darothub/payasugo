@@ -13,15 +13,18 @@ public struct BillFormView: View {
     @State var accountNumber: String = ""
     @Binding var billDetails: BillDetails
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var navUtils: NavigationUtils
+    @State var invoice: Invoice = .init()
     @State var navigateBillDetailsView = false
-    @State var isNewInput = false
+    @State var isNotNewInput = false
     var accountNumberList: [String] {
         billDetails.info.map { info in
             info.accountNumber!
-        }
+        }.filter { !$0.isEmpty }
     }
     public init(billDetails: Binding<BillDetails> ) {
         self._billDetails = billDetails
+        
     }
     public var body: some View {
         GeometryReader { geo in
@@ -45,31 +48,31 @@ public struct BillFormView: View {
                     placeHoder: billDetails.service.referenceLabel
                 ).padding()
                 Spacer()
-                NavigationLink(
-                    destination: BillDetailsView(
-                        fetchBill: homeViewModel.singleBillInvoice,
-                        service: billDetails.service, isNewInput: $isNewInput
+                button(
+                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                    buttonLabel: "Get bill"
+                ) {
+                    homeViewModel.getSingleDueBill(
+                        accountNumber: accountNumber,
+                        serviceId: billDetails.service.hubServiceID
                     )
-                    .environmentObject(homeViewModel),
-                    isActive: $navigateBillDetailsView) {
-                    button(
-                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                        buttonLabel: "Get bill"
-                    ) {
-                        homeViewModel.getSingleDueBill(
-                            accountNumber: accountNumber,
-                            serviceId: billDetails.service.hubServiceID
-                        )
-                        isNewInput = accountNumberList.contains(accountNumber)
-                    }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: .constant(false))
-                }
+
+                    isNotNewInput = accountNumberList.contains(accountNumber)
+                 
+                }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: $homeViewModel.showAlert)
             }
         }.onAppear {
             homeViewModel.observeUIModel(model: homeViewModel.$uiModel) { content in
                 let invoice = content.data as! Invoice
-                print("Invoice \(invoice)")
-                navigateBillDetailsView.toggle()
+                self.invoice = invoice
+                navUtils.navigationStack = [
+                    .billFormView(billDetails),
+                    .billDetailsView(invoice, billDetails.service)
+                ]
+            } onError: { err in
+                print("AddNewBILLError: \(err)")
             }
+
         }
     }
 }
@@ -96,5 +99,8 @@ struct TopBackground: View {
             .edgesIgnoringSafeArea(.all)
     }
 }
+
+
+
 
 

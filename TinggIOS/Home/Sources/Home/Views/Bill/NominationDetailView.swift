@@ -116,7 +116,7 @@ public struct NominationDetailView: View {
                 }
                 if let s = service, let accountNumber = nomination.accountNumber {
                     let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
-                    hvm.handleMCPRequest(action: .UPDATE, profileInfoComputed: profileInfo)
+                    hvm.handleMCPRequests(action: .UPDATE, profileInfoComputed: profileInfo)
                 }
             }
         }

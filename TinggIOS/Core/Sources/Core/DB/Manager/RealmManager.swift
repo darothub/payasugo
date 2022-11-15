@@ -76,6 +76,7 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     var realmManager: RealmManager = .init()
     public init() {
         //public initializer
+        
     }
     
     public func getEntities() ->[T] {

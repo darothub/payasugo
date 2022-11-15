@@ -26,6 +26,9 @@ struct TinggIOSApp: App {
                 .environmentObject(navigation)
                 .environmentObject(ovm)
                 .environmentObject(hvm)
+                .onAppear {
+                    print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
+                }
         }
     }
 }

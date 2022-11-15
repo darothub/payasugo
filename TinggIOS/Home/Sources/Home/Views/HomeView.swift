@@ -12,6 +12,7 @@ import Theme
 
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
+    
     var categories: [[Categorys]] {
         hvm.servicesByCategory
     }
@@ -27,6 +28,7 @@ struct HomeView: View {
     var rechargeAndBill: [MerchantService] {
         hvm.rechargeAndBill
     }
+    
     @State var showDueBills = true
     var body: some View {
         GeometryReader { geo in
@@ -37,6 +39,7 @@ struct HomeView: View {
         .background(PrimaryTheme.getColor(.cellulantLightGray))
         .navigationBarHidden(true)
     }
+ 
     @ViewBuilder
     func bodyView(geo: GeometryProxy) -> some View {
         VStack(spacing: 20) {
@@ -67,7 +70,6 @@ struct HomeView: View {
                 .shadowBackground()
             AddNewBillCardView()
         }
-        .environmentObject(hvm)
     }
 }
 

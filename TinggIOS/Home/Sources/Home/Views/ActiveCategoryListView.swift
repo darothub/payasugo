@@ -6,6 +6,7 @@
 //
 import Core
 import SwiftUI
+import RealmSwift
 struct ActiveCategoryListView: View {
     @State var categories = [Categorys]()
     @EnvironmentObject var hvm: HomeViewModel
@@ -33,10 +34,11 @@ struct ActiveCategoryListView: View {
         default:
             let services = hvm.services.getEntities().filter {$0.categoryID == categoryId}
             let titleAndItemList = TitleAndListItem(title: categoryName, services: services)
+            
             let enrolments = hvm.nominationInfo.getEntities().filter {$0.serviceCategoryID == categoryId}
             withAnimation {
                 navigation.navigationStack = [
-                    .home, .billers(titleAndItemList, enrolments)
+                    .home, .billers(titleAndItemList)
                 ]
             }
         }

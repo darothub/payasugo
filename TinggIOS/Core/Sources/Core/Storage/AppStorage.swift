@@ -46,7 +46,3 @@ public enum LocalProperties: String {
     case clientId
 }
 
-
-class User: Codable {
-    var name = "Somebody"
-}

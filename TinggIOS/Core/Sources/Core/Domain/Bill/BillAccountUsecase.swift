@@ -36,7 +36,7 @@ public class BillAccountUsecase {
         }
         let setOfBillAccounts = Set(billAccounts)
         
-        print("BillAccount \(setOfBillAccounts)")
+//        print("BillAccount \(setOfBillAccounts)")
         return setOfBillAccounts.map {$0}
     }
 }

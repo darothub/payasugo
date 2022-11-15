@@ -165,12 +165,17 @@ public class HomeViewModel: ObservableObject {
     }
     public func getSingleDueBill(accountNumber: String, serviceId: String) {
         uiModel = UIModel.loading
+        var tinggRequest: TinggRequest = .init()
+        tinggRequest.service = "FB"
+        tinggRequest.accountNumber = accountNumber
+        tinggRequest.serviceId = serviceId
         Task {
             do {
-                singleBillInvoice = try await homeUsecase.getSingleDueBills(accountNumber: accountNumber, serviceId: serviceId)
+                let singleBillInvoice = try await homeUsecase.getSingleDueBills(tinggRequest: tinggRequest)
                 let content = UIModel.Content(data: singleBillInvoice)
                 uiModel = UIModel.content(content)
             }catch {
+                showAlert = true
                 uiModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
             }
         }
@@ -188,7 +193,7 @@ public class HomeViewModel: ObservableObject {
 //            }
 //        }
 //    }
-    public func handleMCPRequest(action: MCPAction, profileInfoComputed: String) {
+    public func handleMCPRequests(action: MCPAction, profileInfoComputed: String) {
         serviceBillUIModel = UIModel.loading
         var request = TinggRequest()
         request.service = "MCP"
@@ -197,9 +202,13 @@ public class HomeViewModel: ObservableObject {
         Task {
             do {
                 print("States: Before")
-                serviceBill = try await homeUsecase.handleMCPRequest(tinggRequest: request, action: action)
-                let message = "Request carried out successfully"
-                let content = UIModel.Content(statusMessage: serviceBill.statusMessage)
+                var content = UIModel.Content(statusMessage: "Loading")
+                switch action {
+                case .ADD:
+                    content = UIModel.Content(data: try await homeUsecase.handleMCPRequest(tinggRequest: request))
+                case .UPDATE, .DELETE:
+                    content = UIModel.Content(data: try await homeUsecase.handleMCPDeleteAndUpdateRequest(tinggRequest: request))
+                }
                 serviceBillUIModel = UIModel.content(content)
                 print("States: After")
             } catch {
@@ -208,9 +217,6 @@ public class HomeViewModel: ObservableObject {
         }
     }
     
-    public func handlePostMCPUsecase(bill: Bill, invoice: Invoice) -> Bill {
-        return  homeUsecase.handlePostMCPUsecase(bill: bill, invoice: invoice)
-    }
     func updateDefaultNetworkId(serviceName: String) {
         if !serviceName.isEmpty {
             let service = airTimeServices.first { serv in

@@ -8,15 +8,14 @@ import Common
 import Theme
 import SwiftUI
 import Core
-
-struct BillDetailsView: View {
-    @State var fetchBill = Invoice()
-    @State var service = sampleServices[0]
+public struct BillDetailsView: View {
+    @State var fetchBill: Invoice = sampleInvoice
+    @State var service: MerchantService = sampleServices[0]
     @State var textFieldText = ""
     @State var amount = ""
     @State var dueDate = ""
-    @Binding var isNewInput: Bool
     @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var navUtils: NavigationUtils
     var dueDateComputed: String {
         let date = makeDateFromString(validDateString: fetchBill.estimateExpiryDate)
         return date.formatted(with: "EE, dd MM yyyy")
@@ -27,8 +26,13 @@ struct BillDetailsView: View {
     var profileInfoComputed: String {
         computeProfileInfo(service: service, accountNumber: fetchBill.billReference)
     }
-    
-    var body: some View {
+    public init(fetchBill: Invoice, service: MerchantService ) {
+        self._fetchBill = State(initialValue: fetchBill)
+        self._service = State(initialValue: service)
+      
+
+    }
+    public var body: some View {
         GeometryReader { geo in
             VStack {
                 ZStack(alignment: .top) {
@@ -38,7 +42,7 @@ struct BillDetailsView: View {
                     RemoteImageCard(imageUrl: service.serviceLogo )
                         .scaleEffect(1.2)
                 }
-                Text(service.serviceName )
+                Text(fetchBill.biller)
                     .padding([.horizontal, .top], 20)
                     .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)
@@ -66,7 +70,8 @@ struct BillDetailsView: View {
                         label: "Due date",
                         placeHolder: dueDate
                     )
-                }.disabled(true)
+                }
+                .disabled(amount.isEmpty ? false: true)
                 .padding(.top, 10)
                 Spacer()
                 HStack {
@@ -74,9 +79,9 @@ struct BillDetailsView: View {
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Save bill"
                     ) {
-                        homeViewModel.handleMCPRequest(action: .ADD, profileInfoComputed: profileInfoComputed)
+                        homeViewModel.handleMCPRequests(action: .ADD, profileInfoComputed: profileInfoComputed)
                     }
-                    .disabled(isNewInput ? false : true)
+                    .disabled(amount.isEmpty ? false: true)
                     .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)
                     
                     button(
@@ -92,16 +97,19 @@ struct BillDetailsView: View {
             dueDate = dueDateComputed
             homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel) { content in
                 let bill = content.data as! Bill
-                homeViewModel.handlePostMCPUsecase(bill: bill, invoice: homeViewModel.singleBillInvoice)
+                let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
+                homeViewModel.nominationInfo.$objects.append(enrol)
+                navUtils.navigationStack = [.home]
             }
-            print("Newinput: \(isNewInput)")
+           
         }
     }
 }
 
 struct BillDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        BillDetailsView(isNewInput: .constant(false))
+        BillDetailsView(fetchBill: sampleInvoice, service: sampleServices[0])
             .environmentObject(HomeDI.createHomeViewModel())
     }
 }
+

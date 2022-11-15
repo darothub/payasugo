@@ -13,17 +13,11 @@ public struct BillersView: View {
     @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
     @State var enrolments = [Enrollment]()
     @State var imageUrl = ""
+    @State var serviceCategoryId = ""
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
-    var profileInfoComputed: String {
-        ""
-//        "\(service.receiverSourceAddress)|\(fetchBill.billReference)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
-        
-    }
-    public init(billers: TitleAndListItem, enrolments : [Enrollment]) {
+    public init(billers: TitleAndListItem) {
         _billers = State(initialValue: billers)
-        _enrolments = State(initialValue: enrolments)
-        
     }
     public var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -47,11 +41,15 @@ public struct BillersView: View {
                     withAnimation {
                         navigation.navigationStack = [
                             .home,
-                            .billers(billers, enrolments),
+                            .billers(billers),
                             .categoriesAndServices([billers])
                         ]
                     }
                 }
+        }.onAppear {
+            serviceCategoryId = billers.services[0].categoryID
+            enrolments = hvm.nominationInfo.objects.where { $0.serviceCategoryID.equals(serviceCategoryId)
+            }.map {$0}
         }
     }
     
@@ -78,25 +76,43 @@ public struct BillersView: View {
                     SingleNominationView(nomination: enrolment) { nomination, invoice in
                         navigation.navigationStack = [
                             .home,
-                            .billers(billers, enrolments),
+                            .billers(billers),
                             .nominationDetails(invoice, nomination)
                         ]
                     }
                 }
-            }.onDelete { index in
-                let nom: Enrollment = enrolments[index.count]
-                let service = billers.services.first { service in
-                    service.categoryID == nom.serviceCategoryID
-                }
-                if let s = service, let accountNumber = nom.accountNumber {
-                    let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
-    //                homeViewModel.saveBill(tinggRequest: request)
-                    hvm.handleMCPRequest(action: .DELETE, profileInfoComputed: profileInfo)
-                }
-                hvm.nominationInfo.$objects.remove(nom)
-            }
+            }.onDelete(perform: removeBill)
         }
         
+    }
+    
+    func removeBill(at offSet: IndexSet) {
+      
+        print("Offset: \(offSet.first)")
+        
+        let nom: Enrollment = enrolments[offSet.first ?? 0]
+        let service = billers.services.first { service in
+            service.categoryID == nom.serviceCategoryID
+        }
+        if let s = service, let accountNumber = nom.accountNumber {
+            let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
+//                homeViewModel.saveBill(tinggRequest: request)
+            hvm.handleMCPRequests(action: .DELETE, profileInfoComputed: profileInfo)
+            
+        }
+        
+        hvm.observeUIModel(model: hvm.$serviceBillUIModel) { content in
+            print("Content: \(content)")
+            if let off = offSet.first {
+                print("Offset \(off)")
+//                enrolments.remove(at: off)
+                hvm.nominationInfo.$objects.remove(nom)
+            }
+   
+        } onError: { err in
+            print("BillersViewError: \(err)")
+        }
+      
     }
 }
 
@@ -164,11 +180,8 @@ struct SingleNominationView: View {
 struct BillersView_Previews: PreviewProvider {
     struct BillersViewHolder: View {
         @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
-        var nom: [Enrollment] {
-            sampleNominations
-        }
         var body: some View {
-            BillersView(billers: billers, enrolments: nom)
+            BillersView(billers: billers)
         }
     }
     static var previews: some View {
