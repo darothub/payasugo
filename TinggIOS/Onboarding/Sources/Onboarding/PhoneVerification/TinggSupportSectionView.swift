@@ -11,10 +11,10 @@ import Theme
 /// Part of the ``PhoneNumberValidationView``
 struct TinggSupportSectionView: View {
     var geometry: GeometryProxy
-    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
+    @Binding var showSupportTeamContact: Bool
     var body: some View {
         Button {
-            $onboardingViewModel.showSupportTeamContact.wrappedValue.toggle()
+            showSupportTeamContact.toggle()
         } label: {
             HStack(alignment: .center) {
                 Image(systemName: "phone.circle.fill")
@@ -31,8 +31,7 @@ struct TinggSupportSectionView: View {
 struct TinggSupportSectionView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
-            TinggSupportSectionView(geometry: geo)
-                .environmentObject(OnboardingDI.createOnboardingViewModel())
+            TinggSupportSectionView(geometry: geo, showSupportTeamContact: .constant(true))
         }
     }
 }

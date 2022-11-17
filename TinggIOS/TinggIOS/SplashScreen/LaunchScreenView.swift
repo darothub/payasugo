@@ -44,7 +44,7 @@ public struct LaunchScreenView: View {
                         .environmentObject(navigation)
                         .environmentObject(ovm)
                 case .buyAirtime:
-                    BuyAirtimeView(homeViewModel: hvm)
+                    BuyAirtimeView()
                 case let .billers(billers):
                     BillersView(billers: billers)
                         .environmentObject(hvm)
@@ -94,3 +94,4 @@ private extension LaunchScreenView {
             .foregroundColor(Color.white)
     }
 }
+

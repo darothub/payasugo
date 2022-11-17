@@ -155,11 +155,9 @@ public class HomeViewModel: ObservableObject {
         Task {
             do {
                 dueBill = try await homeUsecase.getDueBills()
-                let content = UIModel.Content(data: dueBill)
-                fetchBillUIModel = UIModel.content(content)
+                handleResultState(model: &fetchBillUIModel, Result.success(dueBill))
             } catch {
-                showAlert = true
-                fetchBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+                handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }
@@ -170,29 +168,15 @@ public class HomeViewModel: ObservableObject {
         tinggRequest.accountNumber = accountNumber
         tinggRequest.serviceId = serviceId
         Task {
+         
             do {
                 let singleBillInvoice = try await homeUsecase.getSingleDueBills(tinggRequest: tinggRequest)
-                let content = UIModel.Content(data: singleBillInvoice)
-                uiModel = UIModel.content(content)
+                handleResultState(model: &uiModel, Result.success(singleBillInvoice))
             }catch {
-                showAlert = true
-                uiModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }
-//    public func saveBill(tinggRequest: TinggRequest) {
-//        serviceBillUIModel = UIModel.loading
-//        Task {
-//            do {
-//                serviceBill = try await homeUsecase.saveBill(tinggRequest: tinggRequest, invoice: singleBillInvoice)
-//                let message = "Bill with reference \(serviceBill.merchantAccountNumber) created"
-//                let content = UIModel.Content(statusMessage: message)
-//                serviceBillUIModel = UIModel.content(content)
-//            } catch {
-//                serviceBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
-//            }
-//        }
-//    }
     public func handleMCPRequests(action: MCPAction, profileInfoComputed: String, nom: Enrollment?=nil) {
         serviceBillUIModel = UIModel.loading
         var request = TinggRequest()
@@ -201,23 +185,22 @@ public class HomeViewModel: ObservableObject {
         request.action = action.rawValue
         Task {
             do {
-                print("States: Before")
-                var content = UIModel.Content(statusMessage: "Loading")
+                let response: Any
                 switch action {
                 case .ADD:
-                    content = UIModel.Content(data: try await homeUsecase.handleMCPRequest(tinggRequest: request))
+                    response = try await homeUsecase.handleMCPRequest(tinggRequest: request)
                 case .UPDATE, .DELETE:
-                    content = UIModel.Content(data: try await homeUsecase.handleMCPDeleteAndUpdateRequest(tinggRequest: request))
+                    response = try await homeUsecase.handleMCPDeleteAndUpdateRequest(tinggRequest: request)
                 }
-                serviceBillUIModel = UIModel.content(content)
-                print("States: After")
+                handleResultState(model: &serviceBillUIModel, Result.success(response))
             } catch {
-                serviceBillUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }
     
     func updateDefaultNetworkId(serviceName: String) {
+        showAlert = true
         if !serviceName.isEmpty {
             let service = airTimeServices.first { serv in
                 serv.serviceName == serviceName
@@ -226,23 +209,18 @@ public class HomeViewModel: ObservableObject {
             request.defaultNetworkServiceId = service!.hubServiceID
             request.service = "UPN"
             defaultNetworkUIModel = UIModel.loading
-           
+           print("Request \(request)")
             Task {
                 do {
                     let result = try await homeUsecase.updateDefaultNetwork(request: request)
-                    if result.statusCode == 200 {
-                        showAlert = true
-                        uiModel = UIModel.content(UIModel.Content(statusMessage: result.statusMessage))
-                        defaultNetworkServiceId = service?.hubServiceID
-                    }
-                    showNetworkList = false
+                    handleResultState(model: &defaultNetworkUIModel, Result.success(result))
+                    defaultNetworkServiceId = service?.hubServiceID
                 } catch {
-                    showAlert = true
-                    defaultNetworkUIModel = UIModel.error((error as? ApiError)?.localizedString ?? ApiError.serverErrorString)
+                    handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
                 }
             }
         } else {
-            showAlert = true
+           
             defaultNetworkUIModel = UIModel.error("You have not selected a network")
         }
     }
@@ -255,6 +233,33 @@ public class HomeViewModel: ObservableObject {
             case .success(let contacts):
                 action(contacts)
             }
+        }
+    }
+    func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
+        if service.presentmentType != "None" {
+            let nominations: [Enrollment] = nomination.filter { enrollment in
+                return filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
+            }
+            let billDetails = BillDetails(service: service, info: nominations)
+            return billDetails
+        }
+        return nil
+    }
+    func filterNominationInfoByHubServiceId(enrollment: Enrollment, service: MerchantService) -> Bool {
+        String(enrollment.hubServiceID) == service.hubServiceID
+    }
+
+    /// Handle result
+    fileprivate func handleResultState<T: Any>(model: inout UIModel, _ result: Result<T, ApiError>) {
+        switch result {
+        case .failure(let apiError):
+            model = UIModel.error(apiError.localizedString)
+            showAlert = true
+            return
+        case .success(let data):
+            let content = UIModel.Content(data: data)
+            model = UIModel.content(content)
+            return
         }
     }
     func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
@@ -277,19 +282,7 @@ public class HomeViewModel: ObservableObject {
             print("State: nothing")
         }
     }
-    func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
-        if service.presentmentType != "None" {
-            let nominations: [Enrollment] = nomination.filter { enrollment in
-                return filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
-            }
-            let billDetails = BillDetails(service: service, info: nominations)
-            return billDetails
-        }
-        return nil
-    }
-    func filterNominationInfoByHubServiceId(enrollment: Enrollment, service: MerchantService) -> Bool {
-        String(enrollment.hubServiceID) == service.hubServiceID
-    }
+
 }
 
 

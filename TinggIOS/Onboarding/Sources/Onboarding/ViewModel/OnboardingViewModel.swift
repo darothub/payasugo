@@ -30,6 +30,9 @@ public class OnboardingViewModel: ObservableObject {
     @Published var statusCode = 0
     @Published var phoneNumberFieldUIModel = UIModel.nothing
     @Published var onSubmitUIModel = UIModel.nothing
+    @Published var onParRequestUIModel = UIModel.nothing
+    @Published var onActivationRequestUIModel = UIModel.nothing
+    @Published var onConfirmActivationUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
     private var subscriptions = Set<AnyCancellable>()
     @Published public var countryDictionary = [String: String]()
@@ -43,38 +46,37 @@ public class OnboardingViewModel: ObservableObject {
     }
     /// Request for activation code
     func makeActivationCodeRequest() {
-        onSubmitUIModel = UIModel.loading
+        onActivationRequestUIModel = UIModel.loading
         Task {
             var tinggRequest: TinggRequest = .init()
             tinggRequest.service = "MAK"
             let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
-            handleResultState(model: &onSubmitUIModel, result)
+            handleResultState(model: &onActivationRequestUIModel, result)
         }
     }
     /// Confirm activation code
     func confirmActivationCodeRequest(code: String) {
-        onSubmitUIModel = UIModel.loading
+        onConfirmActivationUIModel = UIModel.loading
         Task {
             var tinggRequest: TinggRequest = .init()
             tinggRequest.service = "VAK"
             tinggRequest.activationCode = code
 //            print("requestVAK \(tinggRequest)")
             let result = try await onboardingUseCase.confirmActivationCodeRequest(tinggRequest: tinggRequest, code: code)
-            handleResultState(model: &onSubmitUIModel, result)
+        
+            handleResultState(model: &onConfirmActivationUIModel, result)
         }
     }
     /// Request for PARandFSU
     func makePARRequest() {
-        DispatchQueue.main.async { [unowned self] in
-            uiModel = UIModel.loading
-        }
+        onParRequestUIModel = UIModel.loading
         Task {
             var tinggRequest: TinggRequest = .init()
             tinggRequest.service = "PAR"
 //            print("requestPAR \(tinggRequest)")
             let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest )
 //            print("Result2 \(result)")
-            handleResultState(model: &uiModel, result)
+            handleResultState(model: &onParRequestUIModel, result)
         }
     }
     /// Collect a dictionary of country code and dial code
@@ -104,41 +106,42 @@ public class OnboardingViewModel: ObservableObject {
         switch result {
         case .failure(let apiError):
             model = UIModel.error(apiError.localizedString)
-//            print("Failure \(apiError.localizedString)")
             showAlert = true
             return
         case .success(let data):
-//            print("Success \(data)")
-            if data.statusCode > 201 {
-                showAlert = true
+            let dto = data as? BaseDTO
+            if let statusCode = dto?.statusCode {
+                if statusCode > 201 {
+                    showAlert = true
+                    model = UIModel.error(data.statusMessage)
+                    return
+                }
             }
-            let content = UIModel.Content(data: data, statusCode: data.statusCode, statusMessage: data.statusMessage)
+            let content = UIModel.Content(data: data)
             model = UIModel.content(content)
+            
             return
         }
     }
-    ///  Receives UI state
-    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (BaseDTOprotocol) -> Void) {
+  
+    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
         model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action)
+            uiModelCases(uiModel: uiModel, action: action, onError: onError)
         }.store(in: &subscriptions)
     }
-    /// Handle UI state
-    func uiModelCases(uiModel: UIModel, action: @escaping (BaseDTOprotocol) -> Void) {
+    func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in }) {
         switch uiModel {
         case .content(let data):
-            if data.statusMessage.lowercased().contains("succ"),
-               let baseDto = data.data as? BaseDTOprotocol {
-                action(baseDto)
-            }
-            return
+            action(data)
+            print("State: content")
         case .loading:
-            print("loadingState")
-        case .error:
-            print("errorState")
-            return
+            print("State: loading..")
+        case .error(let err):
+            onError(err)
+            print("State error \(err)")
+            
         case .nothing:
-            print("nothingState")
+            print("State: nothing")
         }
     }
 }

@@ -18,12 +18,10 @@ public protocol TinggApiServices {
 
 extension TinggApiServices {
     public func request(tinggRequest: TinggRequest) -> DataRequest {
-        print("Request \(tinggRequest)")
         return AF.request(Utils.baseUrlStaging, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }
     public func request(urlPath: String, tinggRequest: TinggRequest) -> DataRequest {
-        print("Request2 \(tinggRequest)")
         return AF.request(Utils.baseUrlStaging+urlPath, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }

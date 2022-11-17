@@ -17,16 +17,19 @@ import Theme
 public struct PhoneNumberValidationView: View {
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
     @StateObject var vm = OnboardingDI.createOnboardingViewModel()
-    let key = KeyEquivalent("p")
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
-    @State private var subscriptions = Set<AnyCancellable>()
     @Environment(\.realmManager) var realmManager
-    var categoriesDbObserver = Observer<Categorys>()
-    var merchantServicesDbObserver = Observer<MerchantService>()
-    var enrollmentDbObserver = Observer<Enrollment>()
-    var transactionHistoryDbObserver = Observer<TransactionHistory>()
-    var profileDbObserver = Observer<Profile>()
+    @State var showOTPView = false
+    @State var isOTPConfirmed = false
+    @State var phoneNumber = ""
+    @State var countryCode = ""
+    @State var countryFlag = ""
+    @State var isValidPhoneNumber = false
+    @State var warning = ""
+    @State var hasCheckedTermsAndPolicy = false
+    @State var showSupportTeamContact = false
+    @State var showAlert = false
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -36,60 +39,76 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 topView(geo: geometry)
                 MobileNumberView()
-                CountryPickerView(phoneNumber: $vm.phoneNumber, countryCode: $vm.countryCode, countryFlag: $vm.countryFlag, countries: vm.countryDictionary)
+                CountryPickerView(phoneNumber: $phoneNumber, countryCode: $countryCode, countryFlag: $countryFlag, countries: vm.countryDictionary)
                     .countryFieldViewStyle(
                         CountryViewDropDownStyle(
-                            isValidPhoneNumber: $vm.isValidPhoneNumber
+                            isValidPhoneNumber: $isValidPhoneNumber
                         )
                     )
                     .onChange(
-                        of: vm.phoneNumber,
+                        of: phoneNumber,
                         perform: onPhoneNumberInput(number:)
                     )
-                    .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $vm.showAlert)
                 VerificationCodeAdviceTextView()
-                PolicySectionView()
-                    .environmentObject(vm)
+                PolicySectionView(hasCheckedTermsAndPolicy: $hasCheckedTermsAndPolicy)
                 Spacer()
-                TinggSupportSectionView(geometry: geometry)
-                    .environmentObject(vm)
-                SubmitButtonView()
-                    .environmentObject(vm)
-            }
-            .alert(vm.warning, isPresented: $vm.showAlert) {
-                warningButtonAction()
+                TinggSupportSectionView(geometry: geometry, showSupportTeamContact: $showSupportTeamContact)
+                button(
+                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                    buttonLabel: "Continue"
+                ) {
+                    prepareActivationRequest()
+                }.keyboardShortcut(.return)
+                  .accessibility(identifier: "continuebtn")
+                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $vm.showAlert)
+
             }
             .navigationBarTitleDisplayMode(.inline)
-            .confirmationDialog("Contact", isPresented: $vm.showSupportTeamContact) {
+            .confirmationDialog("Contact", isPresented: $showSupportTeamContact) {
                callSupportActions()
             } message: {
                 Text("Support")
             }
-            .sheet(isPresented: $vm.showOTPView, onDismiss: {
-                if vm.confirmedOTP {
+            .sheet(isPresented: $showOTPView, onDismiss: {
+                if isOTPConfirmed {
                     vm.makePARRequest()
                 }
             }, content: {
                 OtpConfirmationView(
-                    activeCountry: $vm.currentCountry,
-                    phoneNumber: $vm.phoneNumber,
-                    otpConfirmed: $vm.confirmedOTP
-                ).environmentObject(vm)
+                    otpConfirmed: $isOTPConfirmed
+                )
             })
+            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $vm.showAlert)
+            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showAlert)
             .background(PrimaryTheme.getColor(.tinggwhite))
-            .handleViewStates(uiModel: $vm.uiModel, showAlert: $vm.showAlert)
             .onAppear {
                 observeUIModel()
             }
         }
     }
-    fileprivate func observeUIModel() {
-        vm.observeUIModel(model: vm.$uiModel) { dto in
-            confirmRegistration(data: dto)
-        }
+    @ViewBuilder
+    fileprivate func topRectangleBackground(geometry: GeometryProxy) -> some View {
+        Rectangle()
+            .fill(PrimaryTheme.getColor(.cellulantLightGray))
+            .frame(width: geometry.size.width, height: abs(geometry.size.height * 1.4 * 0.25))
+            .edgesIgnoringSafeArea(.all)
     }
-    fileprivate func onPhoneNumberInput(number: String) -> Void {
-        vm.verifyPhoneNumber(number: number)
+    @ViewBuilder
+    fileprivate func topCameraImage(geometry: GeometryProxy) -> some View {
+        Image(systemName: "camera.fill")
+            .frame(width: geometry.size.width * 0.21,
+                   height: geometry.size.height * 0.1,
+                   alignment: .center)
+            .scaleEffect(1.5)
+            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
+            .background(.white)
+            .clipShape(Circle())
+            .padding(EdgeInsets(top: 15, leading: 10, bottom: 15, trailing: 10))
+            .shadow(radius: 3)
+            .padding(.bottom, 10)
+            .alignmentGuide(VerticalAlignment.top) { align in
+                -align[VerticalAlignment.center] * 0.5
+            }
     }
     @ViewBuilder
     fileprivate func topView(geo: GeometryProxy) -> some View {
@@ -97,13 +116,6 @@ public struct PhoneNumberValidationView: View {
             topRectangleBackground(geometry: geo)
         }
         .frame(width: geo.size.width, height: abs(geo.size.height * 0.25))
-    }
-    fileprivate func callSupport() {
-        let tel = "tel://"
-        let supportNumber = "+254708802299"
-        let formattedPhoneNumber = tel+supportNumber
-        guard let url = URL(string: formattedPhoneNumber) else {return}
-        openURL(url)
     }
     @ViewBuilder
     fileprivate func warningButtonAction() -> some View {
@@ -132,77 +144,94 @@ struct PhoneNumberValidationView_Previews: PreviewProvider {
 }
 
 extension PhoneNumberValidationView {
-    fileprivate func topRectangleBackground(geometry: GeometryProxy) -> some View {
-        Rectangle()
-            .fill(PrimaryTheme.getColor(.cellulantLightGray))
-            .frame(width: geometry.size.width, height: abs(geometry.size.height * 1.4 * 0.25))
-            .edgesIgnoringSafeArea(.all)
+    fileprivate func callSupport() {
+        let tel = "tel://"
+        let supportNumber = "+254708802299"
+        let formattedPhoneNumber = tel+supportNumber
+        guard let url = URL(string: formattedPhoneNumber) else {return}
+        openURL(url)
     }
-    fileprivate func topCameraImage(geometry: GeometryProxy) -> some View {
-        Image(systemName: "camera.fill")
-            .frame(width: geometry.size.width * 0.21,
-                   height: geometry.size.height * 0.1,
-                   alignment: .center)
-            .scaleEffect(1.5)
-            .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-            .background(.white)
-            .clipShape(Circle())
-            .padding(EdgeInsets(top: 15, leading: 10, bottom: 15, trailing: 10))
-            .shadow(radius: 3)
-            .padding(.bottom, 10)
-            .alignmentGuide(VerticalAlignment.top) { align in
-                -align[VerticalAlignment.center] * 0.5
-            }
+    fileprivate func observeUIModel() {
+        vm.observeUIModel(model: vm.$onActivationRequestUIModel) { content in
+            showOTPView = true
+        } onError: { err in
+            print("PhoneNumberValidationView \(err)")
+        }
+        vm.observeUIModel(model: vm.$onParRequestUIModel) { content in
+            let dto = content.data as! PARAndFSUDTO
+            saveDataIntoDBAndNavigateToHome(data: dto)
+        } onError: { err in
+            print("PhoneNumberValidationView \(err)")
+        }
     }
-    func confirmRegistration(data: BaseDTOprotocol) {
-        if let parResponse = data as? PARAndFSUDTO, !vm.showOTPView && vm.confirmedOTP  {
-            Task {
-                let sortedCategories = parResponse.categories.sorted { category1, category2 in
-                    Int(category1.categoryOrderID!)! < Int(category2.categoryOrderID!)!
-                }.filter { category in
-                    category.activeStatus == "1"
-                }
-                realmManager.save(data: sortedCategories)
-                let services = parResponse.services.filter { service in
-                    service.activeStatus != "0"
-                }
-                realmManager.save(data: services)
-                realmManager.save(data: parResponse.transactionSummaryInfo)
-                let nominationInfo = parResponse.nominationInfo.filter { enrolment in
-                    enrolment.isReminder == "0" && enrolment.accountStatus == 1
-                }
-                realmManager.save(data: nominationInfo)
-                let profile = parResponse.mulaProfileInfo.mulaProfile[0]
-                realmManager.save(data: profile)
-                defaultNetworkServiceId = parResponse.defaultNetworkServiceID ?? ""
-//                navigation.screen = .home
-                navigation.navigationStack = [.home]
+    fileprivate func onPhoneNumberInput(number: String) -> Void {
+        isValidPhoneNumber = validatePhoneNumberInput(number: "\(countryCode)\(phoneNumber)")
+    }
+    fileprivate func prepareActivationRequest() {
+        let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
+        if isPhoneNumberNotEmpty {
+            let number = "\(countryCode)\(phoneNumber)"
+            AppStorageManager.retainPhoneNumber(number: number)
+            if let country = getCountryByDialCode(dialCode: countryCode) {
+                AppStorageManager.retainActiveCountry(country: country)
+                print("Current \(country) number \(number)")
             }
+            vm.makeActivationCodeRequest()
+            return
+        }
+        showAlert = true
+        if !hasCheckedTermsAndPolicy {
+            vm.phoneNumberFieldUIModel = UIModel.error("Kindly accept terms and policy")
+            return
+        }
+        vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
+    }
+    func validatePhoneNumberInput(number: String) -> Bool {
+        var result = false
+        if let regex = getSelectedCountryRegexByDialcode(dialCode: countryCode) {
+            result = validatePhoneNumber(with: regex, phoneNumber: number)
+        }
+        if  number.count < 8 {
+            result = false
+        }
+        return result
+    }
+    
+    func getSelectedCountryRegexByDialcode(dialCode: String) -> String? {
+        if let country = getCountryByDialCode(dialCode: dialCode)  {
+            return country.countryMobileRegex
+        }
+        return nil
+    }
+    
+    func getCountryByDialCode(dialCode: String) -> Country? {
+        if let country = vm.getCountryByDialCode(dialCode: dialCode)  {
+            return country
+        }
+        return nil
+    }
+    func saveDataIntoDBAndNavigateToHome(data: PARAndFSUDTO) {
+        Task {
+            let sortedCategories = data.categories.sorted { category1, category2 in
+                Int(category1.categoryOrderID!)! < Int(category2.categoryOrderID!)!
+            }.filter { category in
+                category.activeStatus == "1"
+            }
+            realmManager.save(data: sortedCategories)
+            let services = data.services.filter { service in
+                service.activeStatus != "0"
+            }
+            realmManager.save(data: services)
+            realmManager.save(data: data.transactionSummaryInfo)
+            let nominationInfo = data.nominationInfo.filter { enrolment in
+                enrolment.isReminder == "0" && enrolment.accountStatus == 1
+            }
+            realmManager.save(data: nominationInfo)
+            let profile = data.mulaProfileInfo.mulaProfile[0]
+            realmManager.save(data: profile)
+            defaultNetworkServiceId = data.defaultNetworkServiceID ?? ""
+            navigation.navigationStack = [.home]
         }
     }
 }
 
-extension OnboardingViewModel {
-    func verifyPhoneNumber(number: String) {
-        let phoneNumber = "+\(countryCode)\(number)"
-        do {
-            let regex = try getSelectedCountryRegex()
-            isValidPhoneNumber = validatePhoneNumber(with: regex, phoneNumber: phoneNumber)
-            if  number.count < 8 {
-                isValidPhoneNumber = false
-                return
-            }
-            isValidPhoneNumber = true
-        } catch {
-            phoneNumberFieldUIModel = UIModel.error(error.localizedDescription)
-        }
-    }
-    func getSelectedCountryRegex() throws -> String {
-        guard getCountryByDialCode(dialCode: countryCode) != nil else {
-            throw "Country witn \(countryCode) not found"
-        }
-        guard let regex = currentCountry.countryMobileRegex else { return ""}
-        return regex
-    }
-
-}

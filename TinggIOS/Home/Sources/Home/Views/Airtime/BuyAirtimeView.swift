@@ -12,7 +12,7 @@ import SwiftUI
 import Theme
 
 public struct BuyAirtimeView: View {
-    @StateObject var hvm: HomeViewModel
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     @State var selectedButton: String = ""
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
     @State var showContact = false
@@ -21,6 +21,7 @@ public struct BuyAirtimeView: View {
     @State var accountNumber = ""
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
+    @State var showNetworkList = false
     var enrollments : [Enrollment] {
         return hvm.nominationInfo.getEntities()
     }
@@ -31,8 +32,8 @@ public struct BuyAirtimeView: View {
     var airtimeServices:  [MerchantService] {
         hvm.airTimeServices
     }
-    public init(homeViewModel: HomeViewModel) {
-        _hvm = StateObject(wrappedValue: homeViewModel)
+    public init() {
+        //
     }
     
     public var body: some View {
@@ -66,7 +67,7 @@ public struct BuyAirtimeView: View {
                 .padding(.vertical)
             Text("Amount")
                 .padding(.top)
-            if let currency = hvm.country?.currency {
+            if let currency = AppStorageManager.getCountry()?.currency {
                 TextFieldAndLeftIcon(amount: $amount, currency: currency)
             }
             SuggestedAmountListView(
@@ -88,15 +89,16 @@ public struct BuyAirtimeView: View {
         .onAppear {
             phoneNumber = hvm.profile.msisdn!
             accountNumber = hvm.profile.msisdn!
-            hvm.$airTimeServices.sink { services in
-                defaultNetwork = services.filter {
-                    $0.hubServiceID == hvm.defaultNetworkServiceId
-                }
-                hvm.showNetworkList = defaultNetwork.isEmpty
-            }.store(in: &hvm.subscriptions)
+            let defaultNetwork = hvm.airTimeServices.first { $0.hubServiceID == hvm.defaultNetworkServiceId }
+            showNetworkList = defaultNetwork == nil
+            
+            hvm.observeUIModel(model: hvm.$defaultNetworkUIModel) { content in
+                showNetworkList = false
+                
+            }
            
         }
-        .customDialog(isPresented: $hvm.showNetworkList) {
+        .customDialog(isPresented: $showNetworkList) {
             DialogContentView(
                 phoneNumber: phoneNumber,
                 airtimeServices: hvm.airTimeServices,
@@ -118,6 +120,9 @@ public struct BuyAirtimeView: View {
             } else {
                 whoseNumber = WhoseNumberLabel.other
             }
+        })
+        .onChange(of: selectedButton, perform: { newValue in
+            accountNumber = ""
         })
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }

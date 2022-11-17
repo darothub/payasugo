@@ -62,6 +62,13 @@ public func validatePhoneNumber(with regex: String, phoneNumber: String) -> Bool
     }
 }
 
+
+public func validatePhoneNumberIsNotEmpty(number: String) -> Bool {
+    if number.isEmpty {
+        return false
+    }
+    return true
+}
 // MARK: Optional Extension
 extension Optional: RawRepresentable where Wrapped: Codable {
     public var rawValue: String {

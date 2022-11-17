@@ -11,13 +11,13 @@ import Theme
 
 /// Part of the ``PhoneNumberValidationView`` for user to read and accept policies
 struct PolicySectionView: View {
-    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
+    @Binding var hasCheckedTermsAndPolicy: Bool
     var body: some View {
         HStack(alignment: .top) {
             Group {
-                CheckBoxView(checkboxChecked: $onboardingViewModel.isCheckedTermsAndPolicy)
+                CheckBoxView(checkboxChecked: $hasCheckedTermsAndPolicy)
                     .accessibility(identifier: "policycheckbox")
                 Text("By proceeding you agree with the ")
                 + Text(.init(termOfAgreementLink))
@@ -34,8 +34,7 @@ struct PolicySectionView: View {
 struct PolicySectionView_Previews: PreviewProvider {
     struct PolicySectionViewHolder: View {
         var body: some View {
-            PolicySectionView()
-                .environmentObject(OnboardingDI.createOnboardingViewModel())
+            PolicySectionView(hasCheckedTermsAndPolicy: .constant(false))
         }
     }
     static var previews: some View {

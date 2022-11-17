@@ -53,12 +53,17 @@ extension DataRequest {
         }
         responseDecodable(of: T.self) { response in
             switch response.result {
+            case .success(let data):
+                let dto = data as? BaseDTO
+                if let statusCode = dto?.statusCode {
+                    if statusCode > 201 {
+                        onCompletion(.failure(.networkError(data.statusMessage)))
+                        break
+                    }
+                }
+                onCompletion(.success(data))
             case .failure(let error):
-//                Log("responseError \(error.asAFError.debugDescription)")
-//                print("responseError \(error.asAFError.debugDescription)")
-                onCompletion(.failure(.networkError( error.localizedDescription)))
-            case .success(let baseResponse):
-                onCompletion(.success(baseResponse))
+                onCompletion(.failure(.networkError(error.localizedDescription)))
             }
         }
     }

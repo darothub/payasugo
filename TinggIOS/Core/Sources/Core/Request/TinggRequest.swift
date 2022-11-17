@@ -12,7 +12,7 @@ public struct TinggRequest: Encodable {
     public var service: String?
     public var accountNumber: String?
     public var msisdn: String? = AppStorageManager.getPhoneNumber()
-    public var clientId: String? = AppStorageManager.getClientId()
+    public var clientId: String? = AppStorageManager.getCountry()?.mulaClientID
     public var activationCode: String?
     public var uuid: String = uuidForVendor
     public var osVersion: String = deviceOSVersion()
