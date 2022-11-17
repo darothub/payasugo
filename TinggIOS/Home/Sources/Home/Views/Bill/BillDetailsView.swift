@@ -26,11 +26,10 @@ public struct BillDetailsView: View {
     var profileInfoComputed: String {
         computeProfileInfo(service: service, accountNumber: fetchBill.billReference)
     }
+    @State var isNewAccountNumber = false
     public init(fetchBill: Invoice, service: MerchantService ) {
         self._fetchBill = State(initialValue: fetchBill)
         self._service = State(initialValue: service)
-      
-
     }
     public var body: some View {
         GeometryReader { geo in
@@ -71,7 +70,7 @@ public struct BillDetailsView: View {
                         placeHolder: dueDate
                     )
                 }
-                .disabled(amount.isEmpty ? false: true)
+                .disabled(true)
                 .padding(.top, 10)
                 Spacer()
                 HStack {
@@ -81,7 +80,7 @@ public struct BillDetailsView: View {
                     ) {
                         homeViewModel.handleMCPRequests(action: .ADD, profileInfoComputed: profileInfoComputed)
                     }
-                    .disabled(amount.isEmpty ? false: true)
+                    .disabled(isNewAccountNumber ? false: true)
                     .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)
                     
                     button(
@@ -101,6 +100,9 @@ public struct BillDetailsView: View {
                 homeViewModel.nominationInfo.$objects.append(enrol)
                 navUtils.navigationStack = [.home]
             }
+            isNewAccountNumber = homeViewModel.nominationInfo.getEntities().first { e in
+                e.accountNumber == fetchBill.billReference
+            } == nil
            
         }
     }
