@@ -16,7 +16,6 @@ public struct BillFormView: View {
     @EnvironmentObject var navUtils: NavigationUtils
     @State var invoice: Invoice = .init()
     @State var navigateBillDetailsView = false
-    @State var isNotNewInput = false
     var accountNumberList: [String] {
         billDetails.info.map { info in
             info.accountNumber!
@@ -56,8 +55,6 @@ public struct BillFormView: View {
                         accountNumber: accountNumber,
                         serviceId: billDetails.service.hubServiceID
                     )
-
-                    isNotNewInput = accountNumberList.contains(accountNumber)
                  
                 }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: $homeViewModel.showAlert)
             }
@@ -70,7 +67,7 @@ public struct BillFormView: View {
                     .billDetailsView(invoice, billDetails.service)
                 ]
             } onError: { err in
-                print("AddNewBILLError: \(err)")
+                print("BILLFORM: \(err)")
             }
 
         }
