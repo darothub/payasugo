@@ -73,7 +73,7 @@ public final class RealmManager: ObservableObject {
 /// Class for observing real time data changes from realm database
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
-    var realmManager: RealmManager = .init()
+    private var realmManager: RealmManager = .init()
     public init() {
         //public initializer
         
@@ -85,6 +85,9 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     
     public func saveEntity(obj: T){
         realmManager.save(data: obj)
+    }
+    public func delete(obj: T) {
+        realmManager.delete(data: obj)
     }
     public func saveEntities(objs: [T]){
         realmManager.save(data: objs)

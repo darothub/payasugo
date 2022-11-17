@@ -7,8 +7,8 @@
 import Combine
 import Core
 import SwiftUI
+import RealmSwift
 
-@MainActor
 public struct BillersView: View {
     @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
     @State var enrolments = [Enrollment]()
@@ -48,11 +48,15 @@ public struct BillersView: View {
                 }
         }.onAppear {
             serviceCategoryId = billers.services[0].categoryID
-            enrolments = hvm.nominationInfo.objects.where { $0.serviceCategoryID.equals(serviceCategoryId)
-            }.map {$0}
+            enrolments = hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == serviceCategoryId
+            }
+            
         }
+        
     }
-    
+    fileprivate func filterNominationByServiceCategoryId(id: String) -> [Enrollment] {
+        hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == id }
+    }
     @ViewBuilder
     fileprivate func viewBody() -> some View {
         List {
@@ -73,7 +77,7 @@ public struct BillersView: View {
         List {
             ForEach(enrolments, id: \.clientProfileAccountID) { enrolment in
                 NavigationLink(value: enrolment) {
-                    SingleNominationView(nomination: enrolment) { nomination, invoice in
+                    SingleNominationView(nomination: enrolment.freeze()) { nomination, invoice in
                         navigation.navigationStack = [
                             .home,
                             .billers(billers),
@@ -81,57 +85,35 @@ public struct BillersView: View {
                         ]
                     }
                 }
-            }.onDelete(perform: removeBill)
+            }.onDelete(perform: removeBill(at:))
         }
         
     }
     
     func removeBill(at offSet: IndexSet) {
-      
-        print("Offset: \(offSet.first)")
-        
         let nom: Enrollment = enrolments[offSet.first ?? 0]
         let service = billers.services.first { service in
             service.categoryID == nom.serviceCategoryID
         }
         if let s = service, let accountNumber = nom.accountNumber {
             let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
-//                homeViewModel.saveBill(tinggRequest: request)
-            hvm.handleMCPRequests(action: .DELETE, profileInfoComputed: profileInfo)
-            
-        }
-        
-        hvm.observeUIModel(model: hvm.$serviceBillUIModel) { content in
-            print("Content: \(content)")
+            hvm.handleMCPRequests(action: .DELETE, profileInfoComputed: profileInfo, nom: nom)
             if let off = offSet.first {
-                print("Offset \(off)")
-//                enrolments.remove(at: off)
-                hvm.nominationInfo.$objects.remove(nom)
+                enrolments.remove(at: off)
             }
-   
-        } onError: { err in
-            print("BillersViewError: \(err)")
-        }
-      
-    }
-}
-
-struct NomintaionListView: View {
-    @State var enrolments = sampleNominations
-    var body: some View {
-        List {
-            ForEach(enrolments, id: \.clientProfileAccountID) { enrolment in
-                NavigationLink(value: enrolment) {
-                    SingleNominationView(nomination: enrolment)
+            hvm.observeUIModel(model: hvm.$serviceBillUIModel) { content in
+                if !nom.isInvalidated {
+                    hvm.nominationInfo.$objects.remove( nom)
                 }
+            } onError: { err in
+                print("BillersViewError: \(err)")
             }
         }
-        .listStyle(.plain)
     }
 }
 
 struct SingleNominationView: View {
-    @State var nomination: Enrollment
+    var nomination: Enrollment
     @State var onClick: (Enrollment, Invoice) -> Void = {_,_ in}
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     var body: some View {
