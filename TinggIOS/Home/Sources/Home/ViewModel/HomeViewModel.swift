@@ -183,6 +183,8 @@ public class HomeViewModel: ObservableObject {
         request.service = "MCP"
         request.profileInfo = profileInfoComputed
         request.action = action.rawValue
+        request.isNomination = "1"
+        print("Request \(request)")
         Task {
             do {
                 let response: Any
@@ -194,7 +196,7 @@ public class HomeViewModel: ObservableObject {
                 }
                 handleResultState(model: &serviceBillUIModel, Result.success(response))
             } catch {
-                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &serviceBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }
@@ -209,7 +211,7 @@ public class HomeViewModel: ObservableObject {
             request.defaultNetworkServiceId = service!.hubServiceID
             request.service = "UPN"
             defaultNetworkUIModel = UIModel.loading
-           print("Request \(request)")
+
             Task {
                 do {
                     let result = try await homeUsecase.updateDefaultNetwork(request: request)
@@ -257,8 +259,14 @@ public class HomeViewModel: ObservableObject {
             showAlert = true
             return
         case .success(let data):
-            let content = UIModel.Content(data: data)
+            var content: UIModel.Content
+            if data is BaseDTOprotocol {
+                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTO).statusMessage)
+            } else {
+                content = UIModel.Content(data: data)
+            }
             model = UIModel.content(content)
+            showAlert = true
             return
         }
     }

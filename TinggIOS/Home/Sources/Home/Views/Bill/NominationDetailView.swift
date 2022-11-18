@@ -102,10 +102,6 @@ public struct NominationDetailView: View {
                 .someShadow(showShadow: .constant(true))
             }
         }
-        .toolbar {
-            EditButton()
-                .foregroundColor(.white)
-        }
         .onChange(of: editMode?.wrappedValue) { newValue in
             if newValue != nil && newValue!.isEditing {
                 disableTextField = false
@@ -119,6 +115,10 @@ public struct NominationDetailView: View {
                     hvm.handleMCPRequests(action: .UPDATE, profileInfoComputed: profileInfo)
                 }
             }
+        }.handleViewStates(uiModel: $hvm.serviceBillUIModel, showAlert: $hvm.showAlert)
+        .toolbar {
+            EditButton()
+                .foregroundColor(.white)
         }
         
     }

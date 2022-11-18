@@ -89,9 +89,8 @@ public struct ViewStates: ViewModifier {
                     .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                     .scaleEffect(2)
             case .content(let data):
-                let message = data.statusMessage.lowercased().contains("succ") ? "" : data.statusMessage
-                if !message.isEmpty {
-                    handleMessage(message)
+                if !data.statusMessage.isEmpty {
+                    handleMessage(data.statusMessage)
                 }
             case .error(let err):
                 handleMessage(err)
@@ -103,6 +102,7 @@ public struct ViewStates: ViewModifier {
         }
     }
     fileprivate func handleMessage(_ message: String) -> some View {
+        print("Message \(message)")
         return VStack {
             // Intentionally unimplemented...placeholder view
         }
