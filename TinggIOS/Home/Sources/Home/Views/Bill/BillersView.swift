@@ -24,7 +24,7 @@ public struct BillersView: View {
             VStack {
                 nominations()
                     .showIf(.constant(!enrolments.isEmpty))
-                viewBody()
+                billersList()
                     .showIf(.constant(enrolments.isEmpty))
                     
             }
@@ -58,7 +58,7 @@ public struct BillersView: View {
         hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == id }
     }
     @ViewBuilder
-    fileprivate func viewBody() -> some View {
+    fileprivate func billersList() -> some View {
         List {
             ForEach(billers.services, id: \.id) { service in
                 NavigationLink(value: service) {
@@ -66,6 +66,18 @@ public struct BillersView: View {
                         RemoteImageCard(imageUrl: service.serviceLogo)
                             .scaleEffect(0.8)
                         Text(service.serviceName)
+                    }.onTapGesture {
+                        withAnimation {
+                            if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
+                                withAnimation {
+                                    navigation.navigationStack = [
+                                        .home,
+                                        .billers(billers),
+                                        .billFormView(bills)
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             }
