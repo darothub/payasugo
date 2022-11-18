@@ -17,7 +17,7 @@ public class HomeUsecase {
     private var dueBillsUsecase: DueBillsUsecase
     private var singleDueBillUsecase: SingleDueBillUsecase
     private var saveBillUsecase: SaveBillUsecase
-    private var postMCPUsecase: PostMCPUsecase
+    private var mcpDeleteAndUpdateUsecase: MCPDeleteAndUpdateUsecase
     private var categoriesAndServicesUsecase: CategoriesAndServicesUsecase
     private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
     
@@ -45,7 +45,7 @@ public class HomeUsecase {
         dueBillsUsecase: DueBillsUsecase,
         singleDueBillUsecase: SingleDueBillUsecase,
         saveBillUsecase: SaveBillUsecase,
-        postMCPUsecase: PostMCPUsecase,
+        mcpDeleteAndUpdateUsecase: MCPDeleteAndUpdateUsecase,
         categoriesAndServicesUsecase: CategoriesAndServicesUsecase,
         updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
 
@@ -59,7 +59,7 @@ public class HomeUsecase {
         self.dueBillsUsecase = dueBillsUsecase
         self.singleDueBillUsecase = singleDueBillUsecase
         self.saveBillUsecase = saveBillUsecase
-        self.postMCPUsecase = postMCPUsecase
+        self.mcpDeleteAndUpdateUsecase = mcpDeleteAndUpdateUsecase
         self.categoriesAndServicesUsecase = categoriesAndServicesUsecase
         self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
     }
@@ -100,16 +100,19 @@ public class HomeUsecase {
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
     
-    public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> SavedBill {
+    public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> Bill {
         let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
-        return  postMCPUsecase(bill: bill, invoice: invoice)
+        return  bill
     }
-    
-    public func getSingleDueBills(accountNumber: String, serviceId: String) async throws -> Invoice {
-        var tinggRequest: TinggRequest = .init()
-        tinggRequest.service = "FB"
-        tinggRequest.accountNumber = accountNumber
-        tinggRequest.serviceId = serviceId
+    public func handleMCPDeleteAndUpdateRequest(tinggRequest: TinggRequest) async throws -> BaseDTO {
+        return  try await mcpDeleteAndUpdateUsecase(request: tinggRequest)
+    }
+    public func handleMCPRequest(tinggRequest: TinggRequest) async throws -> Bill {
+        let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
+        return  bill
+    }
+    public func getSingleDueBills(tinggRequest: TinggRequest) async throws -> Invoice {
+      
         return try await singleDueBillUsecase(tinggRequest: tinggRequest)
     }
     

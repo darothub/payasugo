@@ -40,15 +40,19 @@ extension Date {
 /// - Returns: a Date
 public func makeDateFromString(validDateString: String) -> Date {
     let dateFormatter = DateFormatter()
+    var dateString = validDateString
+    if validDateString.contains(".") {
+        dateString = String(validDateString.split(separator: ".").first!)
+    }
     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    if validDateString.count > 10 {
+    if dateString.count > 10 {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     }
     else {
         dateFormatter.dateFormat = "yyyy-MM-dd"
     }
     
-    let date = dateFormatter.date(from: validDateString)
+    let date = dateFormatter.date(from: dateString)
     guard let date = date else {
        return Date()
     }

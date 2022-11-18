@@ -62,6 +62,13 @@ public func validatePhoneNumber(with regex: String, phoneNumber: String) -> Bool
     }
 }
 
+
+public func validatePhoneNumberIsNotEmpty(number: String) -> Bool {
+    if number.isEmpty {
+        return false
+    }
+    return true
+}
 // MARK: Optional Extension
 extension Optional: RawRepresentable where Wrapped: Codable {
     public var rawValue: String {
@@ -99,4 +106,8 @@ public struct BillDetails: Hashable {
         self.service = service
         self.info = info
     }
+}
+
+public func computeProfileInfo(service: MerchantService, accountNumber: String) -> String {
+    "\(service.receiverSourceAddress)|\(accountNumber)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
 }

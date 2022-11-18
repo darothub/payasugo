@@ -17,13 +17,10 @@ public struct OtpConfirmationView: View {
     @State var otp = ""
     @State var timeLeft = 60
     @State var timeAdvice = ""
-    @State private var subscriptions = Set<AnyCancellable>()
-    @Binding var activeCountry: Country
-    @Binding var phoneNumber: String
     @Binding var otpConfirmed: Bool
-    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @StateObject var otpViewOVM = OnboardingDI.createOnboardingViewModel()
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
     @State var onSubmit = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -45,9 +42,9 @@ public struct OtpConfirmationView: View {
                 buttonLabel: "Confirm"
             ) {
                 otpViewOVM.confirmActivationCodeRequest(code: otp)
-                print("OTP on`submit \(otp)")
                
-            }.handleViewState(uiModel: $otpViewOVM.onSubmitUIModel)
+            }.handleViewStates(uiModel: $otpViewOVM.onConfirmActivationUIModel, showAlert: $otpViewOVM.showAlert)
+            
         }
         .padding(20)
         .onReceive(timer) { _ in
@@ -56,6 +53,7 @@ public struct OtpConfirmationView: View {
         .onAppear {
             observingUIModel()
         }
+        .handleViewStates(uiModel: $otpViewOVM.onActivationRequestUIModel, showAlert: $otpViewOVM.showAlert)
     }
     /// Reset the count down timer for OTP receipt
     fileprivate func resetTimer() {
@@ -72,19 +70,18 @@ public struct OtpConfirmationView: View {
                 timeAdvice = "Resend code in 00:\(timeLeft)"
             }
         } else {
-            onboardingViewModel.makeActivationCodeRequest()
+            otpViewOVM.makeActivationCodeRequest()
             timeAdvice = "Code resent"
             resetTimer()
         }
     }
     /// Observes the UI state
     fileprivate func observingUIModel() {
-        otpViewOVM.observeUIModel(model: otpViewOVM.$onSubmitUIModel) { dto in
-            DispatchQueue.main.async {
-                print("OTP onObserve \(otp)")
-                onboardingViewModel.showOTPView = false
-                onboardingViewModel.confirmedOTP = true
-            }
+        otpViewOVM.observeUIModel(model: otpViewOVM.$onConfirmActivationUIModel) { content in
+            dismiss()
+            otpConfirmed = true
+        } onError: { err in
+            print("OTPView \(err)")
         }
     }
 }
@@ -95,11 +92,10 @@ struct OtpConfirmationView_Previews: PreviewProvider {
         @State var phoneNumber: String = ""
         @State var confirmedOTP: Bool = false
         var body: some View {
-            OtpConfirmationView(activeCountry: $country, phoneNumber: $phoneNumber, otpConfirmed: $confirmedOTP)
+            OtpConfirmationView(otpConfirmed: $confirmedOTP)
         }
     }
     static var previews: some View {
         OtpConfirmationViewHolder()
-            .environmentObject(OnboardingDI.createOnboardingViewModel())
     }
 }

@@ -63,13 +63,16 @@ public struct DropDownView: View {
                         Text("\(number)")
                             .padding(.horizontal)
                             .font(.caption)
+                            .frame(alignment: .leading)
                         Divider()
+
                     }
                     .background(rowColor.opacity(0.4))
                     .onTapGesture {
                         selectedText = "\(number)"
                         showDropDown.toggle()
                     }
+              
                 }
                 .hiddenConditionally(isHidden: $showDropDown)
             }

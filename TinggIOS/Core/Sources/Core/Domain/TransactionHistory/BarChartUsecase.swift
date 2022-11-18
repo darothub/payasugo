@@ -20,7 +20,7 @@ public class BarChartUsecase {
         var chartDataMap = [Int:Double]()
         let histories = transactHistoryRepository.getHistory()
         histories.forEach { history in
-            guard let validDateString = history.paymentDate?.split(separator: ".").first else {
+            guard let validDateString = history.paymentDate.split(separator: ".").first else {
                 fatalError("Invalid date format")
             }
             let date = makeDateFromString(validDateString: String(validDateString))
@@ -29,11 +29,12 @@ public class BarChartUsecase {
             let monthIndex = components.month!
             let existingAmount = chartDataMap[monthIndex] ?? 0
            
-            if let newAmount = Double( history.amount ?? "0.0" ){
+            if let newAmount = Double( history.amount){
                 let amount = existingAmount + newAmount
                 chartDataMap[monthIndex] = amount
             }
         }
         return chartDataMap
     }
+
 }

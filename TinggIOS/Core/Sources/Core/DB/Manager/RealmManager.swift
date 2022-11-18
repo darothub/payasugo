@@ -49,6 +49,15 @@ public final class RealmManager: ObservableObject {
             print("RealmManager save \(error.localizedDescription)")
         }
     }
+    public func delete<O>(data: O) where O: Object {
+        do {
+            try localDb?.write {
+                self.localDb?.delete(data)
+            }
+        } catch {
+            print("RealmManager save \(error.localizedDescription)")
+        }
+    }
     public func invalidate() {
         do {
             try  localDb?.write { [unowned self] in
@@ -64,9 +73,10 @@ public final class RealmManager: ObservableObject {
 /// Class for observing real time data changes from realm database
 public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     @ObservedResults(T.self) public var objects
-    var realmManager: RealmManager = .init()
+    private var realmManager: RealmManager = .init()
     public init() {
         //public initializer
+        
     }
     
     public func getEntities() ->[T] {
@@ -75,6 +85,9 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     
     public func saveEntity(obj: T){
         realmManager.save(data: obj)
+    }
+    public func delete(obj: T) {
+        realmManager.delete(data: obj)
     }
     public func saveEntities(objs: [T]){
         realmManager.save(data: objs)

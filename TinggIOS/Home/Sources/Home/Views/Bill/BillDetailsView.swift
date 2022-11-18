@@ -8,14 +8,14 @@ import Common
 import Theme
 import SwiftUI
 import Core
-
-struct BillDetailsView: View {
-    @State var fetchBill = Invoice()
-    @State var service = MerchantService()
+public struct BillDetailsView: View {
+    @State var fetchBill: Invoice = sampleInvoice
+    @State var service: MerchantService = sampleServices[0]
     @State var textFieldText = ""
     @State var amount = ""
     @State var dueDate = ""
     @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var navUtils: NavigationUtils
     var dueDateComputed: String {
         let date = makeDateFromString(validDateString: fetchBill.estimateExpiryDate)
         return date.formatted(with: "EE, dd MM yyyy")
@@ -24,10 +24,14 @@ struct BillDetailsView: View {
         fetchBill.currency + String(fetchBill.amount)
     }
     var profileInfoComputed: String {
-        "\(service.receiverSourceAddress)|\(fetchBill.billReference)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
+        computeProfileInfo(service: service, accountNumber: fetchBill.billReference)
     }
-    
-    var body: some View {
+    @State var isNewAccountNumber = false
+    public init(fetchBill: Invoice, service: MerchantService ) {
+        self._fetchBill = State(initialValue: fetchBill)
+        self._service = State(initialValue: service)
+    }
+    public var body: some View {
         GeometryReader { geo in
             VStack {
                 ZStack(alignment: .top) {
@@ -37,7 +41,7 @@ struct BillDetailsView: View {
                     RemoteImageCard(imageUrl: service.serviceLogo )
                         .scaleEffect(1.2)
                 }
-                Text(service.serviceName )
+                Text(fetchBill.biller)
                     .padding([.horizontal, .top], 20)
                     .font(.system(size: PrimaryTheme.mediumTextSize).bold())
                     .foregroundColor(.black)
@@ -65,7 +69,8 @@ struct BillDetailsView: View {
                         label: "Due date",
                         placeHolder: dueDate
                     )
-                }.disabled(true)
+                }
+                .disabled(true)
                 .padding(.top, 10)
                 Spacer()
                 HStack {
@@ -73,12 +78,11 @@ struct BillDetailsView: View {
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Save bill"
                     ) {
-                        var request = TinggRequest()
-                        request.service = "MCP"
-                        request.profileInfo = profileInfoComputed
-                        request.action = "ADD"
-                        homeViewModel.saveBill(tinggRequest: request)
-                    }.handleViewState(uiModel: $homeViewModel.saveBillUIModel)
+                        homeViewModel.handleMCPRequests(action: .ADD, profileInfoComputed: profileInfoComputed)
+                    }
+                    .disabled(isNewAccountNumber ? false: true)
+                    .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)
+                    
                     button(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Pay bill"
@@ -90,13 +94,24 @@ struct BillDetailsView: View {
         }.onAppear {
             amount = amountComputed
             dueDate = dueDateComputed
+            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel) { content in
+                let bill = content.data as! Bill
+                let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
+                homeViewModel.nominationInfo.$objects.append(enrol)
+                navUtils.navigationStack = [.home]
+            }
+            isNewAccountNumber = homeViewModel.nominationInfo.getEntities().first { e in
+                e.accountNumber == fetchBill.billReference
+            } == nil
+           
         }
     }
 }
 
 struct BillDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        BillDetailsView()
+        BillDetailsView(fetchBill: sampleInvoice, service: sampleServices[0])
             .environmentObject(HomeDI.createHomeViewModel())
     }
 }
+

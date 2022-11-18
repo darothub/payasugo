@@ -12,6 +12,7 @@ import Theme
 
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
+    
     var categories: [[Categorys]] {
         hvm.servicesByCategory
     }
@@ -27,6 +28,8 @@ struct HomeView: View {
     var rechargeAndBill: [MerchantService] {
         hvm.rechargeAndBill
     }
+    
+    @State var showDueBills = true
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -36,6 +39,7 @@ struct HomeView: View {
         .background(PrimaryTheme.getColor(.cellulantLightGray))
         .navigationBarHidden(true)
     }
+ 
     @ViewBuilder
     func bodyView(geo: GeometryProxy) -> some View {
         VStack(spacing: 20) {
@@ -47,39 +51,25 @@ struct HomeView: View {
                 .background(.white)
                 .shadow(radius: 0, y: 3)
                 .padding(.vertical, 10)
-                .handleViewState(uiModel: $hvm.categoryUIModel)
+                .handleViewStates(uiModel: $hvm.categoryUIModel, showAlert: $hvm
+                    .showAlert)
             
             QuickTopupView(airtimeServices: airtimeServices)
-                .background(
-                    RoundedRectangle(cornerRadius: 0)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3, x: 0, y: 3)
-                )
-                .handleViewState(uiModel: $hvm.quickTopUIModel)
-            DueBillsView(fetchedBill: fetchedBill)
-                .background(
-                    RoundedRectangle(cornerRadius: 0)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3, x: 0, y: 3)
-                )
-                .handleViewStates(uiModel: $hvm.fetchBillUIModel, showAlert: $hvm.showAlert)
+                .shadowBackground()
+                .handleViewStates(uiModel: $hvm.quickTopUIModel, showAlert: $hvm.showAlert)
+            DueBillsView(fetchedBill: fetchedBill, showDueBills: $showDueBills)
+                .shadowBackground()
+                .showIf($showDueBills)
+            
             RechargeAndBillView(rechargeAndBill: rechargeAndBill)
-                .background(
-                    RoundedRectangle(cornerRadius: 0)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3, x: 0, y: 3)
-                ).environmentObject(hvm)
-                .handleViewState(uiModel: $hvm.rechargeAndBillUIModel)
+                .shadowBackground()
+                .environmentObject(hvm)
+                .handleViewStates(uiModel: $hvm.rechargeAndBillUIModel, showAlert: $hvm.showAlert)
             ExpensesGraphView(chartData: chartData)
                 .frame(height: geo.size.height * 0.35)
-                .background(
-                    RoundedRectangle(cornerRadius: 0)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3, x: 0, y: 3)
-                )
+                .shadowBackground()
             AddNewBillCardView()
         }
-        .environmentObject(hvm)
     }
 }
 

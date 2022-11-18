@@ -21,7 +21,7 @@ final class PostMCPUsecaseTest: XCTestCase {
     }
     
     func testSavedBillWasConvertedToEnrollmentAndSavedInTheDB() {
-        let bill = SavedBill()
+        let bill = Bill()
         bill.clientProfileAccountID = "1245678"
         let invoice = Invoice()
         invoice.billReference  = "1245678"
@@ -40,7 +40,7 @@ final class PostMCPUsecaseTest: XCTestCase {
     }
     
     func testInvoiceIsSavedInTheDB() {
-        let bill = SavedBill()
+        let bill = Bill()
         bill.clientProfileAccountID = "1245678"
         let mockInvoice = Invoice()
         mockInvoice.billReference  = "1245678"

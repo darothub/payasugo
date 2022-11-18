@@ -7,17 +7,17 @@
 
 // MARK: - FetchBillDTO
 /// Fetch bill DTO
-public struct FetchBillDTO: BaseDTOprotocol, Codable {
+public struct FetchBillDTO: BaseDTOprotocol, Decodable {
     public var statusCode: Int
     public var statusMessage: String
-    public var fetchedBills: [Invoice]
+    public var fetchedBills: [DynamicInvoiceType]
     
     /// ``FetchBillDTO`` initializer
     /// - Parameters:
     ///   - statusCode: http status code
     ///   - statusMessage: remote message
     ///   - fetchedBills: List of fetched bills
-    public init(statusCode: Int, statusMessage: String, fetchedBills: [Invoice]) {
+    public init(statusCode: Int, statusMessage: String, fetchedBills: [DynamicInvoiceType]) {
         self.statusCode = statusCode
         self.statusMessage = statusMessage
         self.fetchedBills = fetchedBills

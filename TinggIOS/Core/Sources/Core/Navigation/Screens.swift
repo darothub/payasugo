@@ -10,9 +10,11 @@ public enum Screens: Hashable {
     case intro,
          home,
          buyAirtime,
-         billers(TitleAndListItem, [Enrollment]),
+         billers(TitleAndListItem),
          categoriesAndServices([TitleAndListItem]),
-         billFormView(BillDetails)
+         billFormView(BillDetails),
+         billDetailsView(Invoice, MerchantService),
+         nominationDetails(Invoice, Enrollment)
 }
 public enum Home: Hashable {
     case categoriesAndServices, billFormView, home

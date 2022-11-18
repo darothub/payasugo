@@ -104,3 +104,5 @@ public var sampleNominations: [Enrollment] {
     let nom3 = sampleNomination3
     return [nom1, nom2, nom3]
 }
+
+

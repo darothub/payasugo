@@ -17,7 +17,7 @@ public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var ovm: OnboardingViewModel
     @EnvironmentObject var  hvm: HomeViewModel
-    
+    @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
         // Intentionally unimplemented...modular accessibility
@@ -44,25 +44,42 @@ public struct LaunchScreenView: View {
                         .environmentObject(navigation)
                         .environmentObject(ovm)
                 case .buyAirtime:
-                    BuyAirtimeView(homeViewModel: hvm)
-                case let .billers(billers, nomination):
-                    BillersView(billers: billers, enrolments: nomination)
+                    BuyAirtimeView()
+                case let .billers(billers):
+                    BillersView(billers: billers)
                         .environmentObject(hvm)
+                        .onAppear {
+                            colorTint = .blue
+                        }
                 case .categoriesAndServices(let items):
                     CategoriesAndServicesView(categoryNameAndServices: items)
             
                 case .billFormView(let billDetails):
                     BillFormView(billDetails: .constant(billDetails))
+                        
+                case let .nominationDetails(invoice, nomination):
+                    NominationDetailView(invoice: invoice, nomination:  nomination)
+                        .onAppear {
+                            colorTint = .white
+                        }
+                case let .billDetailsView(invoice, service):
+                    BillDetailsView(
+                        fetchBill: invoice,
+                        service: service
+                    )
                 }
-                
             }
-        }
+            
+        }.changeTint($colorTint)
     }
 }
 /// Struct responsible for preview of changes in Xcode
 struct LaunchScreenView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreenView()
+            .environmentObject(NavigationUtils())
+            .environmentObject(OnboardingDI.createOnboardingViewModel())
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 
@@ -77,3 +94,4 @@ private extension LaunchScreenView {
             .foregroundColor(Color.white)
     }
 }
+

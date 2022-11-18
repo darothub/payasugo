@@ -12,29 +12,31 @@ struct SuggestedAmountListView: View {
     @Binding var selectedServiceName: String
     @Binding var amount: String
     @Binding var accountNumber: String
-    var historyByAccountNumber: [TransactionHistory] {
-        history.filter {
-            ($0.accountNumber == accountNumber) &&
-            ($0.serviceName == selectedServiceName)
-        }
+    var historyByAccountNumber: [String] {
+       Set(
+            history.filter {
+                ($0.accountNumber == accountNumber) &&
+                ($0.serviceName == selectedServiceName)
+            }.map{$0.amount ?? "10.0"}
+       ).sorted(by: <)
+        
     }
     @State var selectedIndex = -1
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(historyByAccountNumber, id: \.payerTransactionID) { transaction in
-                    let index = historyByAccountNumber.firstIndex(of: transaction)
-                    let intAmount = convertStringToInt(value: transaction.amount ?? "10.0")
+                ForEach(historyByAccountNumber, id: \.self) { amount in
+                    let index = historyByAccountNumber.firstIndex(of: amount)
+                    let intAmount = convertStringToInt(value: amount )
                     let strAmount = "\(String(describing: intAmount))"
+                    
                     BoxedTextView(text: .constant(strAmount))
                         .background(index == selectedIndex ? .red : .white)
                         .onTapGesture {
                             if let tIndex = index {
                                 selectedIndex = tIndex
                             }
-                            if let tAmount = transaction.amount {
-                                amount = tAmount
-                            }
+                            self.amount = amount
                         }
                 }
             }

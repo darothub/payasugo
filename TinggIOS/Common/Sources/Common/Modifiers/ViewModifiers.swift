@@ -11,6 +11,10 @@ public extension View {
         shadow(color: showShadow.wrappedValue ? .green : .red, radius: 1)
     }
     @ViewBuilder
+    func shadowBackground(color: Color = .white) -> some View {
+        self.modifier(ShadowBackground(color: color))
+    }
+    @ViewBuilder
     func someForegroundColor(condition: Binding<Bool>) -> some View {
         shadow(color: condition.wrappedValue ? .green : .red, radius: 1)
     }
@@ -47,6 +51,11 @@ public extension View {
     func showIf(_ value: Binding<Bool>) -> some View {
         value.wrappedValue ? self : self.hidden() as? Self
     }
+    
+    @ViewBuilder
+    func changeTint(_ value: Binding<Color>) -> some View {
+        self.modifier(ChangeTint(color: value))
+    }
 }
 
 public struct TabItemStyle: ViewModifier {
@@ -65,5 +74,42 @@ public struct TabItemStyle: ViewModifier {
                     image
                 }
             }
+    }
+}
+
+public struct ShadowBackground: ViewModifier {
+    public var color: Color = .white
+    public init(color: Color) {
+        self.color = color
+    }
+    public func body(content: Content) -> some View {
+        content
+            .background(
+            Rectangle()
+                .fill(color)
+                .shadow(radius: 1, x: 1, y: 1)
+        )
+    }
+}
+
+public struct ChangeTint: ViewModifier {
+    @Binding public var color: Color
+    public init(color: Binding<Color>) {
+        self._color = color
+    }
+    public func body(content: Content) -> some View {
+        content
+            .tint(color)
+    }
+}
+
+public struct EnableEditing: ViewModifier {
+    @Binding public var enable: Bool
+    public init(enable: Binding<Bool>) {
+        self._enable = enable
+    }
+    public func body(content: Content) -> some View {
+        content
+            .disabled(enable)
     }
 }

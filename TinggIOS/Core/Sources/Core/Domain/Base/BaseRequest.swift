@@ -17,6 +17,7 @@ public class BaseRequest: ObservableObject, TinggApiServices {
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
         request(tinggRequest: tinggRequest)
+            .validate(statusCode: 200..<400)
             .execute { (result:Result<T, ApiError>) in
                 onCompletion(result)
             }
@@ -26,6 +27,7 @@ public class BaseRequest: ObservableObject, TinggApiServices {
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
         request(urlPath: urlPath)
+            .validate(statusCode: 200..<400)
              .execute { (result:Result<T, ApiError>) in
                  onCompletion(result)
              }
@@ -34,7 +36,6 @@ public class BaseRequest: ObservableObject, TinggApiServices {
     func result<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws -> Result<T, ApiError> {
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
-                print("Result \(result)")
                 continuation.resume(returning: result)
             }
         }
@@ -45,25 +46,27 @@ public class BaseRequest: ObservableObject, TinggApiServices {
 extension DataRequest {
     func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
         responseString { response in
-            print("ResponseString \(response)")
+//            print("ResponseString \(response)")
         }
         responseJSON { response in
             print("ResponseJson \(response)")
         }
         responseDecodable(of: T.self) { response in
             switch response.result {
+            case .success(let data):
+                let dto = data as? BaseDTO
+                if let statusCode = dto?.statusCode {
+                    if statusCode > 201 {
+                        onCompletion(.failure(.networkError(data.statusMessage)))
+                        break
+                    }
+                }
+                onCompletion(.success(data))
             case .failure(let error):
-                print("responseError \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
-            case .success(let baseResponse):
-                onCompletion(.success(baseResponse))
             }
         }
     }
 }
 
-func Log(_ logString: String?) {
-    if logString?.isEmpty ?? false { return }
-    NSLog("%@", logString!)
-    Log(String(logString!.dropFirst(1024)))
-}
+

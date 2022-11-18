@@ -26,16 +26,26 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
     }
     public func getDueBills(tinggRequest: TinggRequest) async throws -> [Invoice] {
         let dto: FetchBillDTO = try await billRequest(tinggRequest: tinggRequest)
-        let data = dto.fetchedBills.filter { bill in
-            !bill.billDescription.contains("invalid account")
+        if dto.statusCode > 200 {
+            throw ApiError.networkError(dto.statusMessage)
         }
-        return data
+        return dto.fetchedBills.map { $0.convertToInvoice() }
     }
     
-    public func saveBill(tinggRequest: TinggRequest) async throws -> SavedBill {
-        let dto: SaveBillDTO = try await billRequest(tinggRequest: tinggRequest)
+    public func saveBill(tinggRequest: TinggRequest) async throws -> Bill {
+        let dto: BillDTO = try await billRequest(tinggRequest: tinggRequest)
         let savedBill = dto.savedBill[0]
         return savedBill
+    }
+    
+    public func deleteBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
+        let dto: BaseDTO = try await billRequest(tinggRequest: tinggRequest)
+        return dto
+    }
+    
+    public func updateBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
+        let dto: BaseDTO = try await billRequest(tinggRequest: tinggRequest)
+        return dto
     }
     
     public func insertInvoiceInDb(invoice: Invoice) {
@@ -43,4 +53,9 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
     }
     
 }
+
+public enum MCPAction: String {
+    case ADD, UPDATE, DELETE
+}
+
 

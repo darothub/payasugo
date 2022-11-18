@@ -12,7 +12,7 @@ public struct TinggRequest: Encodable {
     public var service: String?
     public var accountNumber: String?
     public var msisdn: String? = AppStorageManager.getPhoneNumber()
-    public var clientId: String? = AppStorageManager.getClientId()
+    public var clientId: String? = AppStorageManager.getCountry()?.mulaClientID
     public var activationCode: String?
     public var uuid: String = uuidForVendor
     public var osVersion: String = deviceOSVersion()
@@ -30,6 +30,7 @@ public struct TinggRequest: Encodable {
     public var serviceId: String? = ""
     public var action: String = ""
     public var defaultNetworkServiceId = ""
+    public var isNomination = ""
     public static var shared = TinggRequest()
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
@@ -56,10 +57,11 @@ public struct TinggRequest: Encodable {
         case billAccounts = "BILL_ACCOUNTS"
         case action = "ACTION"
         case defaultNetworkServiceId = "DEFAULT_NETWORK_SERVICE_ID"
+        case isNomination = "IS_NOMINATION"
     }
 }
 
-public struct BillAccount: Codable {
+public struct BillAccount: Codable, Hashable {
     public let serviceId: String
     public let accountNumber: String
     public init(serviceId: String, accountNumber: String){
