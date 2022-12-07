@@ -8,7 +8,7 @@
 
 // MARK: - ParResponse
 /// A type for PARandFSU request
-public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
+public struct PARAndFSUDTO: Decodable, BaseDTOprotocol {
     public var statusCode: Int
     public var statusMessage, activationKey: String
     public var profileInfo: [CoreProfileInfo]
@@ -28,7 +28,7 @@ public struct PARAndFSUDTO: Codable, BaseDTOprotocol {
     public var defaultNetworkServiceID: String?
     public var manualBillsSetup: ManualBillsSetup
     public var manualBillAccounts: [ManualBill]
-    public var bundleData: [BundleDatum]
+    public var bundleData: [BundleDataStruct]
     public var bundleChecksum, bundleSyncDate: String
     public var countriesExtraInfo: Country
     public var securityQuestions: [SecurityQuestion]
@@ -144,7 +144,7 @@ public struct BannerDatum: Codable {
 }
 
 // MARK: - BundleDatum
-public struct BundleDatum: Codable {
+public struct BundleDataStruct: Decodable {
     public var bundleCategoryID: Int
     public var categoryName: String
     public var position, serviceID: Int
@@ -157,14 +157,24 @@ public struct BundleDatum: Codable {
         case serviceID = "SERVICE_ID"
         case bundles = "BUNDLES"
     }
+    
+    public func convert() -> BundleData {
+        let b = BundleData()
+        b.position = self.position
+        b.serviceID = self.serviceID
+        b.bundleCategoryID = self.bundleCategoryID
+        b.categoryName = self.categoryName
+        b.bundles.append(objectsIn: self.bundles.map{$0.convert()})
+        return b
+    }
 }
 
 // MARK: - Bundle
-public struct Bundle: Codable {
+public struct Bundle: Decodable {
     public var bundleID: Int
     public var bundleName: String
     public var position: Int
-    public var cost: ActiveStatus
+    public var cost: Flex<Int, String>
     public var bundleCode: String?
 
     enum CodingKeys: String, CodingKey {
@@ -174,6 +184,16 @@ public struct Bundle: Codable {
         case cost = "COST"
         case bundleCode = "BUNDLE_CODE"
     }
+    public func convert() -> BundleObject {
+        let b = BundleObject()
+        b.bundleID = self.bundleID
+        b.bundleName = self.bundleName
+        b.position = self.position
+        b.bundleCode = self.bundleCode
+        b.cost = self.cost.value
+        return b
+    }
+    
 }
 
 public enum ActiveStatus: Codable {

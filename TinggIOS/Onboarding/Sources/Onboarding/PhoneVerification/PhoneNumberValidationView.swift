@@ -229,6 +229,13 @@ extension PhoneNumberValidationView {
             realmManager.save(data: nominationInfo)
             let profile = data.mulaProfileInfo.mulaProfile[0]
             realmManager.save(data: profile)
+            Observer<BundleData>().getEntities().forEach { data in
+                realmManager.delete(data: data)
+            }
+            Observer<BundleObject>().getEntities().forEach { data in
+                realmManager.delete(data: data)
+            }
+            realmManager.save(data: data.bundleData.map {$0.convert()})
             defaultNetworkServiceId = data.defaultNetworkServiceID ?? ""
             navigation.navigationStack = [.home]
         }

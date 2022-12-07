@@ -10,6 +10,7 @@ import SwiftUI
 public func button(
     backgroundColor: Color = Color.red,
     buttonLabel: String = "Get started",
+    padding: CGFloat = 25,
     action: @escaping () -> Void
 ) -> some View {
     Button {
@@ -21,7 +22,7 @@ public func button(
             .foregroundColor(.white)
             .background(backgroundColor)
             .cornerRadius(10)
-            .padding(.horizontal, 25)
+            .padding(.horizontal, padding)
     }
 }
 

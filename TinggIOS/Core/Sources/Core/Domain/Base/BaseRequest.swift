@@ -63,6 +63,7 @@ extension DataRequest {
                 }
                 onCompletion(.success(data))
             case .failure(let error):
+                print("Error \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
             }
         }

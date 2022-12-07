@@ -111,6 +111,16 @@ extension Int: Flexible {
         }
     }
 }
+extension String: Flexible {
+    public func convert<Output: Decodable>(to output: Output.Type) -> Output {
+        switch output {
+        case is Int.Type:
+            return Int("0") as! Output
+        default:
+            fatalError()
+        }
+    }
+}
 
 
 public struct DynamicInvoiceType: Decodable   {

@@ -42,7 +42,7 @@ public struct BillFormView: View {
                 
                 DropDownView(
                     selectedText: $accountNumber,
-                    dropDownList: accountNumberList,
+                    dropDownList: .constant(accountNumberList),
                     label: "Enter your \(billDetails.service.referenceLabel)",
                     placeHoder: billDetails.service.referenceLabel
                 ).padding()
