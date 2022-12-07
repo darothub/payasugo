@@ -10,7 +10,7 @@ import SwiftUI
 /// Custom drop down menu view
 public struct DropDownView: View {
     @Binding var selectedText: String
-    @State var dropDownList = [String]()
+    @Binding var dropDownList:[String]
     @State var showDropDown = false
     @State var rowColor: Color
     @State var outlineColor: Color
@@ -18,14 +18,18 @@ public struct DropDownView: View {
     @State var label: String
     @State var placeHolder: String
     @State var showLabel = false
-    public init(selectedText: Binding<String>, dropDownList: [String], rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "") {
+    @State var disableEdit = false
+    public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "",
+        lockTyping: Bool = false
+    ) {
         self._selectedText = selectedText
-        self._dropDownList = State(initialValue: dropDownList)
+        self._dropDownList = dropDownList
         self._rowColor = State(initialValue: rowColor)
         self._outlineColor = State(initialValue: outlineColor)
         self._selectedTextColor = State(initialValue: selectedTextColor)
         self._label = State(initialValue: label)
         self._placeHolder = State(initialValue: placeHoder)
+        self._disableEdit = State(initialValue: lockTyping)
     }
     public var body: some View {
         VStack(alignment: .leading) {
@@ -36,6 +40,7 @@ public struct DropDownView: View {
                     .hiddenConditionally(isHidden: $showLabel)
                 HStack {
                     TextField(placeHolder, text: $selectedText)
+                        .disabled(disableEdit)
                         .padding([.horizontal, .vertical], 15)
                         .font(.caption)
                         .foregroundColor(selectedTextColor)
@@ -49,7 +54,9 @@ public struct DropDownView: View {
                         }
                     Image(systemName: showDropDown ? "chevron.down" : "chevron.right")
                         .onTapGesture {
-                            showDropDown.toggle()
+                            withAnimation {
+                                showDropDown.toggle()
+                            }
                         }
                         .padding()
                 } .overlay(
@@ -57,25 +64,32 @@ public struct DropDownView: View {
                         .stroke(lineWidth: 0.5)
                 ).foregroundColor(outlineColor)
             }
-            ScrollView(showsIndicators: false){
+            List {
                 ForEach(dropDownList, id: \.self) { number in
                     VStack(alignment: .leading) {
                         Text("\(number)")
                             .padding(.horizontal)
                             .font(.caption)
                             .frame(alignment: .leading)
-                        Divider()
+                      
 
                     }
                     .background(rowColor.opacity(0.4))
                     .onTapGesture {
                         selectedText = "\(number)"
-                        showDropDown.toggle()
+                        withAnimation {
+                            showDropDown.toggle()
+                        }
                     }
               
+                }.listRowInsets(EdgeInsets())
+                
+            }.hiddenConditionally(isHidden: $showDropDown)
+                .listStyle(.plain)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.gray, lineWidth: 0.5)
                 }
-                .hiddenConditionally(isHidden: $showDropDown)
-            }
         }.onAppear {
             showLabel = !label.isEmpty
         }
@@ -85,8 +99,9 @@ public struct DropDownView: View {
 struct DropDownView_Previews: PreviewProvider {
     struct DropDownViewHolder: View {
         @State var text = "Number"
+        @State var list = ["egg", "liver", "cassava", "tomato"]
         var body: some View {
-            DropDownView(selectedText: $text, dropDownList: ["egg", "liver", "cassava", "tomato"])
+            DropDownView(selectedText: $text, dropDownList: $list)
         }
     }
     static var previews: some View {

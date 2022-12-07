@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 03/11/2022.
 //
 import Combine
+import Common
 import Core
 import SwiftUI
 import RealmSwift
@@ -14,6 +15,12 @@ public struct BillersView: View {
     @State var enrolments = [Enrollment]()
     @State var imageUrl = ""
     @State var serviceCategoryId = ""
+    @State var showBundles = false
+    @State var selectedBundle = ""
+    @State var selectedAccount = ""
+    @State var mobileNumber = ""
+    @State var bundleService: [BundleData] = .init()
+    @State var selectedMerchantService = sampleServices[0]
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     public init(billers: TitleAndListItem) {
@@ -26,7 +33,7 @@ public struct BillersView: View {
                     .showIf(.constant(!enrolments.isEmpty))
                 billersList()
                     .showIf(.constant(enrolments.isEmpty))
-                    
+                
             }
             Image(systemName: "plus")
                 .padding(20)
@@ -46,10 +53,23 @@ public struct BillersView: View {
                         ]
                     }
                 }
-        }.onAppear {
-            serviceCategoryId = billers.services[0].categoryID
-            enrolments = hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == serviceCategoryId
+        }
+        .customDialog(
+            isPresented: $showBundles,
+            backgroundColor: .constant(.clear),
+            cancelOnTouchOutside: .constant(true)
+        ) {
+            BundleSelectionView(selectedBundle: selectedBundle, selectedAccount: selectedAccount, mobileNumber: mobileNumber, service: selectedMerchantService, enrollments: enrolments, bundleInfo: bundleService)
+            
+        }
+        .onAppear {
+            let services = billers.services
+            if !services.isEmpty {
+                serviceCategoryId = services[0].categoryID
+                enrolments = hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == serviceCategoryId
+                }
             }
+            
             
         }
         
@@ -67,7 +87,13 @@ public struct BillersView: View {
                             .scaleEffect(0.8)
                         Text(service.serviceName)
                     }.onTapGesture {
-                        withAnimation {
+                        if service.isBundleService == "1" {
+                            showBundles.toggle()
+                            selectedMerchantService = service
+                            bundleService = Observer<BundleData>().getEntities().filter({ data in
+                                String(data.serviceID) == service.hubServiceID
+                            })
+                        } else {
                             if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                                 withAnimation {
                                     navigation.navigationStack = [

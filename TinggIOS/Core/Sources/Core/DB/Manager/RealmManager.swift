@@ -20,7 +20,7 @@ public final class RealmManager: ObservableObject {
     }
     private func openRealmDb() {
         do {
-            var config = Realm.Configuration(schemaVersion: 2)
+            var config = Realm.Configuration(schemaVersion: 3)
             config.deleteRealmIfMigrationNeeded = true
             Realm.Configuration.defaultConfiguration = config
             localDb = try Realm()

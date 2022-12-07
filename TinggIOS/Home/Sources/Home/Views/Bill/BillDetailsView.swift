@@ -95,10 +95,12 @@ public struct BillDetailsView: View {
             amount = amountComputed
             dueDate = dueDateComputed
             homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel) { content in
-                let bill = content.data as! Bill
-                let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
-                homeViewModel.nominationInfo.$objects.append(enrol)
-                navUtils.navigationStack = [.home]
+                if let bill = content.data as? Bill {
+                    let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
+                    homeViewModel.nominationInfo.$objects.append(enrol)
+                    navUtils.navigationStack = [.home]
+                }
+               
             }
             isNewAccountNumber = homeViewModel.nominationInfo.getEntities().first { e in
                 e.accountNumber == fetchBill.billReference

@@ -1,0 +1,6 @@
+[init]
+	defaultBranch = none
+[fetch]
+	recurseSubmodules = false
+[http "https://thanos.cellulant.africa"]
+	sslCAInfo = /Users/darot/XcodeProject/tinggios/builds/7fDANA7t/0/tingg-omnichannel/channels/mula/mula-app/tingg-ios.tmp/CI_SERVER_TLS_CA_FILE

@@ -20,9 +20,11 @@ public extension View {
     }
     func customDialog<DialogContent: View>(
       isPresented: Binding<Bool>,
+      backgroundColor: Binding<Color> = .constant(.white),
+      cancelOnTouchOutside: Binding<Bool> = .constant(false),
       @ViewBuilder dialogContent: @escaping () -> DialogContent
     ) -> some View {
-      self.modifier(CustomDialog(isPresented: isPresented, dialogContent: dialogContent))
+        self.modifier(CustomDialog(isPresented: isPresented, backgroundColor: backgroundColor, cancelOnTouchOutside: cancelOnTouchOutside,  dialogContent: dialogContent))
     }
     @available(swift, deprecated: 5.0 , message: "This has been deprecated in build 6.0 v0.1.0 use handleViewStates instead")
     func handleViewState(
