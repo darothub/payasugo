@@ -88,7 +88,7 @@ public class HomeViewModel: ObservableObject {
     
     public func mapHistoryIntoChartData() -> [ChartData] {
         return homeUsecase.getBarChartMappedData().map { (key, value) in
-            return ChartData(xName: ChartMonth.allCases[key], point: value)
+            return ChartData(xName: ChartMonth.allCases[key-1], point: value)
         }.sorted { cd1, cd2 in
             ChartMonth.allCases.firstIndex(of: cd1.xName)! <  ChartMonth.allCases.firstIndex(of: cd2.xName)!
         }

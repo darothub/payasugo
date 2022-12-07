@@ -34,6 +34,7 @@ public class BaseRequest: ObservableObject, TinggApiServices {
     }
     
     func result<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws -> Result<T, ApiError> {
+        print("TinggRequest \(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
                 continuation.resume(returning: result)

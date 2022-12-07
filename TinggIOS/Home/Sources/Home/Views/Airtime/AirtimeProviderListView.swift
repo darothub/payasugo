@@ -27,7 +27,7 @@ struct AirtimeProviderListView: View {
                         onResetAccountNumber()
                         }
                         .overlay(alignment: .topTrailing) {
-                            if service.hubServiceID == defaultNetworkId {
+                            if selectedProvider == service.serviceName {
                                 onDefaultNetworkDetected(service: service)
                             }
                         }
