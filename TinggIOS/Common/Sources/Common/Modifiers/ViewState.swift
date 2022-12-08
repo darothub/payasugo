@@ -94,15 +94,15 @@ public struct ViewStates: ViewModifier {
                 }
             case .error(let err):
                 handleMessage(err)
-                content
-                    .showIf($showAlert)
+//                content
+//                    .showIf($showAlert)
             case .nothing:
                 content
             }
         }
     }
     fileprivate func handleMessage(_ message: String) -> some View {
-        print("Message \(message)")
+        print("AlertMessage \(message)")
         return VStack {
             // Intentionally unimplemented...placeholder view
         }

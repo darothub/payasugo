@@ -175,6 +175,11 @@ extension PhoneNumberValidationView {
             vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
             return
         }
+        if !isValidPhoneNumber {
+            showAlert = true
+            vm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
+            return
+        }
         if !hasCheckedTermsAndPolicy {
             showAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Kindly accept terms and policy")
