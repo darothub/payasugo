@@ -12,6 +12,9 @@ import Theme
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @State var showBottomSheet = true
+    let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
+
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -39,6 +42,10 @@ public struct HomeBottomNavView: View {
                         title: "Explore",
                         image: PrimaryTheme.getImage(image: .explore)
                     )
+            }
+            .sheet(isPresented: $showBottomSheet) {
+                Text("This app was brought to you by Hacking with Swift")
+                    .presentationDetents([.medium, .large])
             }
             
         }.navigationBarBackButtonHidden(true)

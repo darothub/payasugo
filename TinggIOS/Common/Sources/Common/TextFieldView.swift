@@ -32,7 +32,7 @@ public struct TextFieldView: View {
                     ).foregroundColor(.black)
                     .font(.caption)
                 
-            }.padding(.horizontal, 25)
+            }
         }
     }
 }
