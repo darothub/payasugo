@@ -21,7 +21,7 @@ public struct BillersView: View {
     @State var mobileNumber = ""
     @State var bundleService: [BundleData] = .init()
     @State var selectedMerchantService = sampleServices[0]
-    @EnvironmentObject var hvm: HomeViewModel
+    @StateObject var hvm = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationUtils
     public init(billers: TitleAndListItem) {
         _billers = State(initialValue: billers)
