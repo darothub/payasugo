@@ -37,7 +37,7 @@ public struct DropDownView: View {
                 Text(label)
                     .font(.caption)
                     .foregroundColor(.black)
-                    .hiddenConditionally(isHidden: $showLabel)
+                    .hideIf(isHidden: $showLabel)
                 HStack {
                     TextField(placeHolder, text: $selectedText)
                         .disabled(disableEdit)
@@ -84,7 +84,7 @@ public struct DropDownView: View {
               
                 }.listRowInsets(EdgeInsets())
                 
-            }.hiddenConditionally(isHidden: $showDropDown)
+            }.hideIf(isHidden: $showDropDown)
                 .listStyle(.plain)
                 .overlay {
                     RoundedRectangle(cornerRadius: 5)

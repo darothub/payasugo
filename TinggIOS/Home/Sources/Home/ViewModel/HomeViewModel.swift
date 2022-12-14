@@ -10,7 +10,7 @@ import SwiftUI
 
 @MainActor
 public class HomeViewModel: ObservableObject {
-    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String!
+    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
     @Published public var nominationInfo = Observer<Enrollment>()
     @Published public var airTimeServices = sampleServices
     @Published public var servicesByCategory = [[Categorys]]()
@@ -18,6 +18,7 @@ public class HomeViewModel: ObservableObject {
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>()
+    @Published public var payers = Observer<MerchantPayer>()
     @Published public var dueBill = [Invoice]()
     @Published public var singleBillInvoice = Invoice()
     @Published public var serviceBill = Bill()
@@ -216,7 +217,7 @@ public class HomeViewModel: ObservableObject {
                 do {
                     let result = try await homeUsecase.updateDefaultNetwork(request: request)
                     handleResultState(model: &defaultNetworkUIModel, Result.success(result))
-                    defaultNetworkServiceId = service?.hubServiceID
+                    defaultNetworkServiceId = service?.hubServiceID ?? ""
                 } catch {
                     handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
                 }
@@ -227,15 +228,18 @@ public class HomeViewModel: ObservableObject {
         }
     }
     func fetchPhoneContacts(action: @escaping (CNContact) -> Void) async {
-        await permission.fetchContacts { [unowned self] result in
-            switch result {
-            case .failure(let error):
-                showAlert = true
-                uiModel = UIModel.error(error.localizedDescription)
-            case .success(let contacts):
-                action(contacts)
+        Task {
+           await self.permission.fetchContacts { [unowned self] result in
+                switch result {
+                case .failure(let error):
+                    showAlert = true
+                    uiModel = UIModel.error(error.localizedDescription)
+                case .success(let contacts):
+                    action(contacts)
+                }
             }
         }
+        
     }
     func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
         if service.presentmentType != "None" {

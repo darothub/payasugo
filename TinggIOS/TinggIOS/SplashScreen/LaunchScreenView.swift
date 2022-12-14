@@ -6,6 +6,7 @@
 //
 
 import Core
+import Permissions
 import Home
 import Onboarding
 import SwiftUI
@@ -17,6 +18,8 @@ public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var ovm: OnboardingViewModel
     @EnvironmentObject var  hvm: HomeViewModel
+    @EnvironmentObject var checkout: Checkout
+    @EnvironmentObject var contactViewModel: ContactViewModel
     @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
@@ -30,7 +33,7 @@ public struct LaunchScreenView: View {
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.navigationStack = [.intro]
+                    navigation.navigationStack = [.home]
                 }
             }
             .edgesIgnoringSafeArea(.all)
@@ -38,6 +41,7 @@ public struct LaunchScreenView: View {
                 switch screen {
                 case .home:
                     HomeBottomNavView()
+                        .environmentObject(checkout)
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
@@ -45,6 +49,8 @@ public struct LaunchScreenView: View {
                         .environmentObject(ovm)
                 case .buyAirtime:
                     BuyAirtimeView()
+                        .environmentObject(checkout)
+                        .environmentObject(contactViewModel)
                 case let .billers(billers):
                     BillersView(billers: billers)
                         .environmentObject(hvm)

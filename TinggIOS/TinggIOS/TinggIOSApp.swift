@@ -6,6 +6,7 @@
 //
 
 import Core
+import Permissions
 import Home
 import Onboarding
 import SwiftUI
@@ -18,6 +19,8 @@ struct TinggIOSApp: App {
     @StateObject var navigation = NavigationUtils()
     @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
     @StateObject var  hvm = HomeDI.createHomeViewModel()
+    @StateObject var checkout: Checkout = .init()
+    @StateObject var contactViewModel: ContactViewModel = .init()
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -26,9 +29,28 @@ struct TinggIOSApp: App {
                 .environmentObject(navigation)
                 .environmentObject(ovm)
                 .environmentObject(hvm)
+                .environmentObject(checkout)
+                .environmentObject(contactViewModel)
                 .onAppear {
                     print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
                 }
+                .sheet(isPresented: $contactViewModel.showContact, content: {
+                    showContactView()
+                })
+                .sheet(isPresented: $checkout.showCheckOutView) {
+                    BuyAirtimeCheckoutView()
+                        .presentationDetents([.fraction(0.9)])
+                        .environmentObject(checkout)
+                        .environmentObject(contactViewModel)
+                }
+        }
+
+    }
+    
+    func showContactView() -> some View {
+        return ContactRowView(listOfContactRow: contactViewModel.listOfContact.sorted(by: <)){contact in
+            contactViewModel.selectedContact = contact.phoneNumber
+            contactViewModel.showContact = false
         }
     }
 }

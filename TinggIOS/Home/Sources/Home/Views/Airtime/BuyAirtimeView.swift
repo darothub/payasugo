@@ -22,6 +22,10 @@ public struct BuyAirtimeView: View {
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
     @State var showNetworkList = false
+    @State var selectedService: MerchantService = sampleServices[0]
+    @EnvironmentObject var showCheckout: Checkout
+    @EnvironmentObject var contactViewModel: ContactViewModel
+    @State var show = false
     var enrollments : [Enrollment] {
         return hvm.nominationInfo.getEntities()
     }
@@ -47,16 +51,15 @@ public struct BuyAirtimeView: View {
             Text("Mobile number")
                 .padding(.top)
             TextFieldAndRightIcon(
-                number: $accountNumber
+                number: $contactViewModel.selectedContact
             ) {
-                showContact.toggle()
                 Task {
-                    await hvm.fetchPhoneContacts {
-                        listOfContact.insert(handleContacts(contacts: $0))
+                    await contactViewModel.fetchPhoneContacts { err in
+                        hvm.uiModel = UIModel.error(err.localizedDescription)
                     }
                 }
             }
-            AirtimeProviderListView(
+            ProviderListView(
                 selectedProvider: $selectedButton,
                 airtimeProviders: $hvm.airTimeServices,
                 defaultNetworkId: $hvm.defaultNetworkServiceId
@@ -81,8 +84,13 @@ public struct BuyAirtimeView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-                remotePhoneNumberValidation(hvm.country)
-                remoteAmountValidation()
+//                remotePhoneNumberValidation(hvm.country)
+                let selectedService = airtimeServices.first {$0.serviceName == selectedButton}
+                if let service = selectedService {
+//                    remoteAmountValidation(selectedService: service)
+                    showCheckout.showCheckOutView = true
+                    showCheckout.service = service
+                }
             }
         }
         .padding()
@@ -94,7 +102,6 @@ public struct BuyAirtimeView: View {
             
             hvm.observeUIModel(model: hvm.$defaultNetworkUIModel) { content in
                 showNetworkList = false
-                
             }
            
         }
@@ -107,12 +114,6 @@ public struct BuyAirtimeView: View {
             .padding(20)
             .environmentObject(hvm)
         }
-        .sheet(isPresented: $showContact, content: {
-            ContactRowView(listOfContactRow: listOfContact.sorted(by: <)){contact in
-                accountNumber = contact.phoneNumber
-                showContact.toggle()
-            }
-        })
         .onChange(of: accountNumber, perform: { newValue in
             print("Phone number \(phoneNumber)\nAccount number \(newValue)")
             if phoneNumber == newValue {
@@ -127,25 +128,12 @@ public struct BuyAirtimeView: View {
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
     
-    fileprivate func handleContacts(contacts: CNContact) -> ContactRow {
-        let name = contacts.givenName + " " + contacts.familyName
-        var phoneNumber = ""
-        for number in contacts.phoneNumbers  {
-            print("Numbers \(number)")
-            switch number.label {
-            default:
-                let mobile = number.value.stringValue
-                phoneNumber = mobile
-            }
+    func handleContactFetch() async {
+       await hvm.fetchPhoneContacts {
+            listOfContact.insert(handleContacts(contacts: $0))
         }
-        if let thumbnailData = contacts.imageData, let uiImage = UIImage(data: thumbnailData) {
-            let contactImage = Image(uiImage: uiImage)
-            let contactRow = ContactRow(name: name, image: contactImage, phoneNumber: phoneNumber)
-            return contactRow
-        }
-        let contactRow = ContactRow(name: name, image: nil, phoneNumber: phoneNumber)
-        return contactRow
     }
+    
     fileprivate func remotePhoneNumberValidation(_ country: Country?) {
         if let regex = country?.countryMobileRegex {
             let result = validatePhoneNumber(with: regex, phoneNumber: accountNumber)
@@ -156,11 +144,10 @@ public struct BuyAirtimeView: View {
         }
     }
     
-    fileprivate func remoteAmountValidation() {
-        let selectedService = airtimeServices.first {$0.serviceName == selectedButton}
+    fileprivate func remoteAmountValidation(selectedService: MerchantService) {
         let intAmount = convertStringToInt(value: amount)
-        let minAmount = convertStringToInt(value: selectedService?.minAmount ?? "10.0")
-        let maxAmount = convertStringToInt(value: selectedService?.maxAmount ?? "100000.0")
+        let minAmount = convertStringToInt(value: selectedService.minAmount)
+        let maxAmount = convertStringToInt(value: selectedService.maxAmount)
         if amount.isEmpty {
             hvm.showAlert = true
             hvm.uiModel = UIModel.error("Amount field can not be empty")
@@ -305,5 +292,7 @@ struct BuyAirtimeView_Previews: PreviewProvider {
     }
     static var previews: some View {
         BuyAirtimePreviewHolder()
+            .environmentObject(Checkout())
+            .environmentObject(ContactViewModel())
     }
 }

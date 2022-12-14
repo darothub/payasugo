@@ -241,6 +241,8 @@ extension PhoneNumberValidationView {
             Observer<BundleObject>().getEntities().forEach { data in
                 realmManager.delete(data: data)
             }
+            let payers: [MerchantPayer] = data.merchantPayers.map {$0.convertToPayer()}
+            realmManager.save(data: payers)
             realmManager.save(data: data.bundleData.map {$0.convert()})
             defaultNetworkServiceId = data.defaultNetworkServiceID ?? ""
             navigation.navigationStack = [.home]

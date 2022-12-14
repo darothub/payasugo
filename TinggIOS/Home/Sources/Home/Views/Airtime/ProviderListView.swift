@@ -7,17 +7,18 @@
 import Core
 import SwiftUI
 import Theme
-struct AirtimeProviderListView: View {
+struct ProviderListView: View {
     @Binding var selectedProvider: String
     @Binding var airtimeProviders: [MerchantService]
     @Binding var defaultNetworkId: String
+    @State var selectPaymentTitle = "Select network provider"
     var onResetAccountNumber: () -> Void
     let gridColumn = [
         GridItem(.adaptive(minimum: 110))
     ]
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Select network provider")
+            Text(selectPaymentTitle)
                 .font(.body)
                 .padding(.top, 30)
             LazyVGrid(columns: gridColumn, spacing: 5){
@@ -109,26 +110,15 @@ struct Triangle: Shape {
 struct AirtimeProviderListView_Previews: PreviewProvider {
     struct AirtimeProviderPreview: View {
         @State var defaultNetworkId = ""
-        @State var services: [MerchantService] = .init()
+        @State var services: [MerchantService] = sampleServices
         @State var selectedProvider = ""
         var body: some View {
-            AirtimeProviderListView(
+            ProviderListView(
                 selectedProvider: $selectedProvider,
                 airtimeProviders: $services,
                 defaultNetworkId: $defaultNetworkId
             ){
                 resetAccountNumber()
-            }
-            .onAppear {
-                let service1 = MerchantService()
-                service1.serviceName = "Airtel"
-                service1.hubServiceID = "1"
-                service1.serviceLogo = "https://logoeps.com/wp-content/uploads/2012/10/airtel-logo-vector.png"
-                let service2 = MerchantService()
-                service2.serviceName = "Safaricom"
-                service2.hubServiceID = "2"
-                service2.serviceLogo = "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0021/8754/brand.gif?itok=vXzzoRXw"
-                services =  [service1, service2]
             }
         }
         func resetAccountNumber() {

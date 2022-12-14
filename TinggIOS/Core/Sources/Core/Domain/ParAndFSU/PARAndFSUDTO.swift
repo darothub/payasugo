@@ -14,7 +14,7 @@ public struct PARAndFSUDTO: Decodable, BaseDTOprotocol {
     public var profileInfo: [CoreProfileInfo]
     public var services: [MerchantService]
     public var smsRegex: [SMSRegex]
-    public var merchantPayers: [MerchantPayer]
+    public var merchantPayers: [MerchantPayerStruct]
     public var categories: [Categorys]
     public var contactInfo: [Contact]
     public var nominationInfo: [Enrollment]
