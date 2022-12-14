@@ -31,18 +31,21 @@ struct TinggIOSApp: App {
                 .environmentObject(hvm)
                 .environmentObject(checkout)
                 .environmentObject(contactViewModel)
+                .sheet(isPresented: $contactViewModel.showContact) {
+                    showContactView()
+                }
+                .sheet(isPresented: $checkout.showCheckOutView) {
+                    BuyAirtimeCheckoutView()
+                        .environmentObject(checkout)
+                        .environmentObject(contactViewModel)
+                        .presentationDetents([.fraction(0.9)])
+                      
+                }
                 .onAppear {
                     print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
                 }
-                .sheet(isPresented: $contactViewModel.showContact, content: {
-                    showContactView()
-                })
-                .sheet(isPresented: $checkout.showCheckOutView) {
-                    BuyAirtimeCheckoutView()
-                        .presentationDetents([.fraction(0.9)])
-                        .environmentObject(checkout)
-                        .environmentObject(contactViewModel)
-                }
+            
+             
         }
 
     }

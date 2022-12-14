@@ -43,9 +43,11 @@ public class ContactViewModel: ObservableObject {
              case .failure(let error):
                  onError(error)
              case .success(let c):
-                 DispatchQueue.main.async { [unowned self] in
-                     listOfContact.insert(handleContacts(contacts: c))
-                     showContact = true
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [unowned self] in
+                     withAnimation {
+                         listOfContact.insert(handleContacts(contacts: c))
+                         showContact = true
+                     }
                  }
              }
          }
