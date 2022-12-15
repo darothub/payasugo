@@ -223,7 +223,6 @@ public class HomeViewModel: ObservableObject {
                 }
             }
         } else {
-           
             defaultNetworkUIModel = UIModel.error("You have not selected a network")
         }
     }

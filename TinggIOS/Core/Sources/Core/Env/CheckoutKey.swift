@@ -10,18 +10,18 @@ import Foundation
 import SwiftUI
 
 public struct CheckoutKey: EnvironmentKey {
-    public static let defaultValue: Checkout = .init()
+    public static let defaultValue: CheckoutViewModel = .init()
 }
 
 public extension EnvironmentValues {
-    var checkout: Checkout {
+    var checkout: CheckoutViewModel {
         get { self[CheckoutKey.self] }
         set { self[CheckoutKey.self] = newValue }
     }
 }
 
 extension View {
-    public func checkout(_ checkout: Checkout) -> some View {
+    public func checkout(_ checkout: CheckoutViewModel) -> some View {
         environment(\.checkout, checkout)
     }
 }

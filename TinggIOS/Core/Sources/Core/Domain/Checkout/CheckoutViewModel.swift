@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-public class Checkout: ObservableObject {
+public class CheckoutViewModel: ObservableObject {
     @Published public var showCheckOutView: Bool = false
     @Published public var service: MerchantService = sampleServices[0]
     @Published public var amount: Int = 0

@@ -8,19 +8,10 @@ import Core
 import SwiftUI
 
 struct SuggestedAmountListView: View {
-    @State var history: [TransactionHistory] = .init()
     @Binding var selectedServiceName: String
     @Binding var amount: String
     @Binding var accountNumber: String
-    var historyByAccountNumber: [String] {
-       Set(
-            history.filter {
-                ($0.accountNumber == accountNumber) &&
-                ($0.serviceName == selectedServiceName)
-            }.map{$0.amount ?? "10.0"}
-       ).sorted(by: <)
-        
-    }
+    @Binding var historyByAccountNumber: [String]
     @State var selectedIndex = -1
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -29,7 +20,6 @@ struct SuggestedAmountListView: View {
                     let index = historyByAccountNumber.firstIndex(of: amount)
                     let intAmount = convertStringToInt(value: amount )
                     let strAmount = "\(String(describing: intAmount))"
-                    
                     BoxedTextView(text: .constant(strAmount))
                         .background(index == selectedIndex ? .red : .white)
                         .onTapGesture {
@@ -74,7 +64,7 @@ struct SuggestedAmountListView_Previews: PreviewProvider {
             return [hist1, hist2]
         }
         var body: some View {
-            SuggestedAmountListView(history: historys, selectedServiceName: $serviceName, amount: $number, accountNumber: $accountNumber)
+            SuggestedAmountListView(selectedServiceName: $serviceName, amount: $number, accountNumber: $accountNumber, historyByAccountNumber: .constant(["10.0", "20.0"]))
         }
     }
     static var previews: some View {

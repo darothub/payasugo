@@ -22,10 +22,11 @@ public struct BuyAirtimeCheckoutView: View {
     @State var selectPaymentTitle = "Select payment method"
     @State var someoneElsePaying = false
     @State var history: [TransactionHistory] = sampleTransactions
-    @EnvironmentObject var checkout: Checkout
+    @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @State var providerDetails: [ProviderDetails] = .init()
     @State var networkId = "1"
+    @State var historyByAccountNumber: [String] = .init()
     public init () {
         //
     }
@@ -45,14 +46,14 @@ public struct BuyAirtimeCheckoutView: View {
                 }
                 TextFieldView(fieldText: $amount, label: amount, placeHolder: amountTextFieldPlaceHolder)
                 SuggestedAmountListView(
-                    history: history,
                     selectedServiceName: $selectedButton,
                     amount: $amount,
-                    accountNumber: $accountNumber
+                    accountNumber: $accountNumber,
+                    historyByAccountNumber: $historyByAccountNumber
                 ).padding(.top)
                 .hideIf(isHidden: .constant(false))
 
-                ProvidersListView(selectedProvider: $checkout.selectedMerchantPayerName, details: $providerDetails, canOthersPay: $checkout.isSomeoneElsePaying) {}
+//                ProvidersListView(selectedProvider: $checkout.selectedMerchantPayerName, details: $providerDetails, canOthersPay: $checkout.isSomeoneElsePaying) {}
 
                 Divider()
                 Toggle("Ask someone else to pay", isOn:  $checkout.isSomeoneElsePaying)
@@ -79,12 +80,13 @@ public struct BuyAirtimeCheckoutView: View {
         .onAppear {
             providerDetails = Observer<MerchantPayer>().getEntities()
                 .filter{$0.activeStatus != "0"}.map {
-                    ProviderDetails(
-                        logo: $0.logo ?? "",
-                        name: $0.clientName ?? "None",
-                        othersCanPay: $0.canPayForOther == "0" ? false : true
-                    )
-                }
+                    ProviderDetails(payer: $0)
+            }
+            let amount = history.filter {
+                ($0.accountNumber == accountNumber && $0.serviceName == selectedButton)
+            }.map {$0.amount}
+            let uniqueAmount = Set(amount).sorted(by: <)
+            historyByAccountNumber = uniqueAmount
         }
     }
 }
@@ -92,7 +94,7 @@ public struct BuyAirtimeCheckoutView: View {
 struct BuyAirtimeCheckoutView_Previews: PreviewProvider {
     static var previews: some View {
         BuyAirtimeCheckoutView()
-            .environmentObject(Checkout())
+            .environmentObject(CheckoutViewModel())
             .environmentObject(ContactViewModel())
     }
 }

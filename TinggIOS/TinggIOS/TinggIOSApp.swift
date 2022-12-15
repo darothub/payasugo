@@ -19,7 +19,7 @@ struct TinggIOSApp: App {
     @StateObject var navigation = NavigationUtils()
     @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
     @StateObject var  hvm = HomeDI.createHomeViewModel()
-    @StateObject var checkout: Checkout = .init()
+    @StateObject var checkout: CheckoutViewModel = .init()
     @StateObject var contactViewModel: ContactViewModel = .init()
     var body: some Scene {
         WindowGroup {

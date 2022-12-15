@@ -6,72 +6,65 @@
 //
 
 import SwiftUI
-
+import Core
 struct ProvidersListView: View {
-    @Binding var selectedProvider: String
-    @Binding var details: [ProviderDetails]
-    @State var selectPaymentTitle = "Select network provider"
-    @Binding var canOthersPay: Bool
-    @State var orientation = ListOrientation.horizontal
+    @Binding var plm: ProvidersListModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 110))
     ]
     var onChangeSelection: () -> Void
     var body: some View {
         VStack(alignment: .leading) {
-            Text(selectPaymentTitle)
+            Text(plm.selectPaymentTitle)
                 .font(.body)
                 .padding(.top, 30)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(details, id: \.self) { detail in
-                        RectangleImageCardView(imageUrl: detail.logo, tag: detail.name, selected: $selectedProvider) {
+                    ForEach(plm.details, id: \.self) { detail in
+                        RectangleImageCardView(imageUrl: detail.service.serviceLogo, tag: detail.service.serviceName, selected: $plm.selectedProvider) {
                             onChangeSelection()
                             }
                             .overlay(alignment: .topTrailing) {
-                                if selectedProvider == detail.name {
+                                if plm.selectedProvider == detail.service.serviceName {
                                     onDefaultNetworkDetected(detail: detail)
                                 }
                             }
                     }
                 }
-            }.showIf(.constant(orientation == .horizontal))
+            }.showIf(.constant(plm.orientation == .horizontal))
             LazyVGrid(columns: gridColumn, spacing: 5){
-                ForEach(details, id: \.self) { detail in
-                    RectangleImageCardView(imageUrl: detail.logo, tag: detail.name, selected: $selectedProvider) {
+                ForEach(plm.details, id: \.self) { detail in
+                    RectangleImageCardView(imageUrl: detail.service.serviceLogo, tag: detail.service.serviceName, selected: $plm.selectedProvider) {
                         onChangeSelection()
                         }
                         .overlay(alignment: .topTrailing) {
-                            if selectedProvider == detail.name {
+                            if plm.selectedProvider == detail.service.serviceName {
                                 onDefaultNetworkDetected(detail: detail)
                             }
                         }
                 }
-            }.showIf(.constant(orientation == .grid))
+            }.showIf(.constant(plm.orientation == .grid))
         }
         .frame(maxWidth: .infinity)
         .background(.white)
     }
     func onDefaultNetworkDetected(detail: ProviderDetails) -> some View  {
         return NetworkFavouritedMarkedView().onAppear {
-            selectedProvider = detail.name
-            canOthersPay = detail.othersCanPay
+//            plm.selectedProvider = detail.name
+            plm.canOthersPay = detail.othersCanPay
         }
     }
 }
 
 struct ProvidersListView_Previews: PreviewProvider {
     struct ProvidersListViewPreviewHolder: View {
-        @State var defaultNetworkId = ""
         @State var details: [ProviderDetails] = [
-            ProviderDetails(logo: "https://play-lh.googleusercontent.com/gpVc8uC8x1M5d7Lmw0HtZIy2tF5aIWYctIQuZd406Nw8Sn7tl_MysEqEsOqHbqLvazg", name: "Quick"),
-            ProviderDetails(logo: "https://play-lh.googleusercontent.com/gpVc8uC8x1M5d7Lmw0HtZIy2tF5aIWYctIQuZd406Nw8Sn7tl_MysEqEsOqHbqLvazg", name: "Quicku"),
-            ProviderDetails(logo: "https://play-lh.googleusercontent.com/gpVc8uC8x1M5d7Lmw0HtZIy2tF5aIWYctIQuZd406Nw8Sn7tl_MysEqEsOqHbqLvazg", name: "Quickus"),
-            ProviderDetails(logo: "https://play-lh.googleusercontent.com/gpVc8uC8x1M5d7Lmw0HtZIy2tF5aIWYctIQuZd406Nw8Sn7tl_MysEqEsOqHbqLvazg", name: "Quickuss")
+            ProviderDetails(service: sampleServices[0]),
+            ProviderDetails(service: sampleServices[1]),
+            ProviderDetails(service: sampleServices[2]),
         ]
-        @State var selectedProvider = ""
         var body: some View {
-            ProvidersListView(selectedProvider: $selectedProvider, details: $details, canOthersPay: .constant(true)){}
+            ProvidersListView(plm: .constant(.init())){}
         }
     }
     static var previews: some View {
@@ -81,14 +74,20 @@ struct ProvidersListView_Previews: PreviewProvider {
 
 
 public struct ProviderDetails: Hashable {
-    public var logo: String
-    public var name: String
-    public var othersCanPay: Bool = false
-    public init(logo: String, name: String, othersCanPay: Bool = false) {
-        self.logo = logo
-        self.name = name
+    public var service: MerchantService
+    public var payer: MerchantPayer
+    public var othersCanPay: Bool
+    public var accountNumber: String
+    public var uniqueAmount: [String]
+    
+    init(service: MerchantService  = sampleServices[0], payer: MerchantPayer = .init(), othersCanPay: Bool = false, accountNumber: String = "", uniqueAmount: [String] = .init()) {
+        self.service = service
+        self.payer = payer
         self.othersCanPay = othersCanPay
+        self.accountNumber = accountNumber
+        self.uniqueAmount = uniqueAmount
     }
+ 
 }
 
 public enum ListOrientation : Hashable, Equatable{

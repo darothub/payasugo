@@ -18,7 +18,7 @@ public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var ovm: OnboardingViewModel
     @EnvironmentObject var  hvm: HomeViewModel
-    @EnvironmentObject var checkout: Checkout
+    @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
@@ -33,7 +33,7 @@ public struct LaunchScreenView: View {
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.navigationStack = [.home]
+                    navigation.navigationStack = [.intro]
                 }
             }
             .edgesIgnoringSafeArea(.all)

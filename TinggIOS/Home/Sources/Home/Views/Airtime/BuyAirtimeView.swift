@@ -13,6 +13,7 @@ import Theme
 
 public struct BuyAirtimeView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @StateObject var bavm = BuyAirtimeViewModel()
     @State var selectedButton: String = ""
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
     @State var showContact = false
@@ -22,36 +23,26 @@ public struct BuyAirtimeView: View {
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
     @State var showNetworkList = false
-    @State var selectedService: MerchantService = sampleServices[0]
-    @EnvironmentObject var showCheckout: Checkout
+    @EnvironmentObject var showCheckout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @State var show = false
-    var enrollments : [Enrollment] {
-        return hvm.nominationInfo.getEntities()
-    }
-  
-    var history: [TransactionHistory] {
-        hvm.transactionHistory.getEntities()
-    }
-    var airtimeServices:  [MerchantService] {
-        hvm.airTimeServices
-    }
+    @State var enrollments : [Enrollment] = sampleNominations
+    @State var providerDetails: [ProviderDetails] = .init()
+    @State var history: [TransactionHistory] = sampleTransactions
+    @State var airtimeServices:  [MerchantService] = sampleServices
+    @State var historyByAccountNumber: [String] = .init()
+    @State var currency = ""
     public init() {
         //
     }
     
     public var body: some View {
         VStack(alignment: .leading) {
-            FavouriteListView(
-                enrollments: enrollments,
-                services: hvm.airTimeServices,
-                accountNumber: $accountNumber,
-                selectedNetwork: $selectedButton
-            )
+            FavouriteListView(flvm: $bavm.favouriteEnrollmentListModel)
             Text("Mobile number")
                 .padding(.top)
             TextFieldAndRightIcon(
-                number: $contactViewModel.selectedContact
+                number: $bavm.favouriteEnrollmentListModel.accountNumber
             ) {
                 Task {
                     await contactViewModel.fetchPhoneContacts { err in
@@ -59,25 +50,21 @@ public struct BuyAirtimeView: View {
                     }
                 }
             }
-            ProviderListView(
-                selectedProvider: $selectedButton,
-                airtimeProviders: $hvm.airTimeServices,
-                defaultNetworkId: $hvm.defaultNetworkServiceId
-            ){
-                
+            ProvidersListView(
+                plm: $bavm.providersListModel
+            ) {
+                bavm.favouriteEnrollmentListModel.accountNumber = ""
             }
             WhoseNumberOptionView(selected: $whoseNumber)
                 .padding(.vertical)
             Text("Amount")
                 .padding(.top)
-            if let currency = AppStorageManager.getCountry()?.currency {
-                TextFieldAndLeftIcon(amount: $amount, currency: currency)
-            }
+            TextFieldAndLeftIcon(amount: $amount, currency: currency)
             SuggestedAmountListView(
-                history: history,
                 selectedServiceName: $selectedButton,
                 amount: $amount,
-                accountNumber: $accountNumber
+                accountNumber: $accountNumber,
+                historyByAccountNumber: $historyByAccountNumber
             ).padding(.top)
             Spacer()
             button(
@@ -96,23 +83,42 @@ public struct BuyAirtimeView: View {
         .padding()
         .onAppear {
             phoneNumber = hvm.profile.msisdn!
-            accountNumber = hvm.profile.msisdn!
+            accountNumber = phoneNumber
+            bavm.servicesDialogModel.phoneNumber = phoneNumber
+            bavm.servicesDialogModel.airtimeServices = hvm.airTimeServices
             let defaultNetwork = hvm.airTimeServices.first { $0.hubServiceID == hvm.defaultNetworkServiceId }
             showNetworkList = defaultNetwork == nil
-            
+//            selectedButton = defaultNetwork?.serviceName ?? ""
             hvm.observeUIModel(model: hvm.$defaultNetworkUIModel) { content in
                 showNetworkList = false
             }
-           
+            currency = AppStorageManager.getCountry()?.currency ?? ""
+            enrollments = hvm.nominationInfo.getEntities()
+            history = hvm.transactionHistory.getEntities()
+            airtimeServices = hvm.airTimeServices
+            bavm.providersListModel.details = airtimeServices.map {
+                ProviderDetails(service: $0)
+            }
+        
+            
+            //    var enrollmentResult: [Enrollment] {
+            //        let service = services.first { theService in
+            //            theService.serviceName == selectedNetwork
+            //        }
+            //        let nomination = enrollments.filter { enrollment in
+            //            String(enrollment.hubServiceID) == service?.hubServiceID
+            //        }
+            //        return nomination.map {$0}
+            //    }
         }
         .customDialog(isPresented: $showNetworkList) {
-            DialogContentView(
-                phoneNumber: phoneNumber,
-                airtimeServices: hvm.airTimeServices,
-                selectedButton: $selectedButton
-            )
+            DialogContentView() {
+                hvm.updateDefaultNetworkId(serviceName: bavm.servicesDialogModel.selectedButton)
+            }
             .padding(20)
             .environmentObject(hvm)
+            .environmentObject(bavm)
+            .handleViewStates(uiModel: $hvm.defaultNetworkUIModel, showAlert: $hvm.showAlert)
         }
         .onChange(of: accountNumber, perform: { newValue in
             print("Phone number \(phoneNumber)\nAccount number \(newValue)")
@@ -121,9 +127,36 @@ public struct BuyAirtimeView: View {
             } else {
                 whoseNumber = WhoseNumberLabel.other
             }
+            let amount = history.filter {
+                ($0.accountNumber == accountNumber && $0.serviceName == selectedButton)
+            }.map {$0.amount}
+            let uniqueAmount = Set(amount).sorted(by: <)
+            historyByAccountNumber = uniqueAmount
+         
         })
-        .onChange(of: selectedButton, perform: { newValue in
-            accountNumber = ""
+        .onChange(of: bavm.servicesDialogModel, perform: { newValue in
+            bavm.favouriteEnrollmentListModel.enrollments =
+            hvm.nominationInfo.getEntities().filter { e in
+                newValue.airtimeServices.first {
+                    $0.serviceName == bavm.servicesDialogModel.selectedButton
+                }?.hubServiceID == String(e.hubServiceID)
+            }
+            print("Number \(newValue.phoneNumber) \(phoneNumber)")
+        })
+        .onChange(of: bavm.favouriteEnrollmentListModel, perform: { newValue in
+            if phoneNumber == newValue.accountNumber {
+                whoseNumber = WhoseNumberLabel.my
+            } else {
+                whoseNumber = WhoseNumberLabel.other
+            }
+        })
+        .onChange(of: bavm.providersListModel, perform: { newValue in
+            bavm.favouriteEnrollmentListModel.enrollments =
+            hvm.nominationInfo.getEntities().filter { e in
+                newValue.details.first {
+                    $0.service.serviceName == newValue.selectedProvider
+                }?.service.hubServiceID == String(e.hubServiceID)
+            }
         })
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
@@ -160,33 +193,35 @@ public struct BuyAirtimeView: View {
 }
 
 struct DialogContentView: View {
-    var phoneNumber: String = "080"
-    var airtimeServices = [MerchantService]()
-    @Binding var selectedButton: String
-    @EnvironmentObject var hvm: HomeViewModel
+//    var phoneNumber: String = "080"
+//    var airtimeServices = [MerchantService]()
+//    @Binding var selectedButton: String
+    @EnvironmentObject var bavm: BuyAirtimeViewModel
+//    @EnvironmentObject var hvm: HomeViewModel
+    var onSubmit: () -> Void = {}
     var body: some View {
         VStack {
             Text("Select mobile network")
             Group {
                 Text("Please select the mobile network that")
-                + Text(" \(phoneNumber)").foregroundColor(.green)
+                + Text(" \(bavm.servicesDialogModel.phoneNumber)").foregroundColor(.green)
                 + Text(" belongs to")
             }.multilineTextAlignment(.center)
                 .font(.caption)
             Divider()
-            ForEach(airtimeServices, id: \.serviceName) { service in
+            ForEach(bavm.servicesDialogModel.airtimeServices, id: \.serviceName) { service in
                 NetworkSelectionRowView(
                     imageUrl: service.serviceLogo,
                     networkName: service.serviceName,
-                    selectedButton: $selectedButton
+                    selectedButton: $bavm.servicesDialogModel.selectedButton
                 )
             }
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Done"
             ) {
-                hvm.updateDefaultNetworkId(serviceName: selectedButton)
-            }.handleViewStates(uiModel: $hvm.defaultNetworkUIModel, showAlert: $hvm.showAlert)
+                onSubmit()
+            }
         }
     }
 }
@@ -203,7 +238,7 @@ struct NetworkSelectionRowView: View {
                     .clipShape(Circle())
                     .padding()
             } placeholder: {
-                PrimaryTheme.getImage(image: .tinggIcon)
+                Image(systemName: "camera.fill")
                     .frame(width: 40, height: 40)
                     .clipShape(Circle())
                     .padding()
@@ -289,12 +324,12 @@ struct BuyAirtimeView_Previews: PreviewProvider {
     struct BuyAirtimePreviewHolder: View {
         @State var number = "200"
         var body: some View {
-            BoxedTextView(text: $number)
+            BuyAirtimeView()
         }
     }
     static var previews: some View {
         BuyAirtimePreviewHolder()
-            .environmentObject(Checkout())
+            .environmentObject(CheckoutViewModel())
             .environmentObject(ContactViewModel())
     }
 }
