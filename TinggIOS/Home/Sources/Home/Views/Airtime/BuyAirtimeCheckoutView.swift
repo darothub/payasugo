@@ -14,6 +14,7 @@ import Permissions
 
 public struct BuyAirtimeCheckoutView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @StateObject var bavm = BuyAirtimeViewModel()
     @State var selectedButton: String = "Diamond Trust Bank"
     @State var accountNumber = ""
     @State var title: String = "Buy Airtime"
@@ -44,16 +45,16 @@ public struct BuyAirtimeCheckoutView: View {
                         scaleEffect: 0.7
                     )
                 }
-                TextFieldView(fieldText: $amount, label: amount, placeHolder: amountTextFieldPlaceHolder)
-//                SuggestedAmountListView(
-//                    selectedServiceName: $selectedButton,
-//                    amount: $amount,
-//                    accountNumber: $accountNumber,
-//                    historyByAccountNumber: $historyByAccountNumber
-//                ).padding(.top)
-                .hideIf(isHidden: .constant(false))
-
-//                ProvidersListView(selectedProvider: $checkout.selectedMerchantPayerName, details: $providerDetails, canOthersPay: $checkout.isSomeoneElsePaying) {}
+                TextFieldView(fieldText: $bavm.suggestedAmountModel.amount, label: amount, placeHolder: amountTextFieldPlaceHolder)
+                SuggestedAmountListView(
+                    sam: $bavm.suggestedAmountModel
+                ).padding(.top)
+                
+                MerchantPayerListView(
+                    plm: $bavm.providersListModel
+                ) {
+                    bavm.favouriteEnrollmentListModel.accountNumber = ""
+                }
 
                 Divider()
                 Toggle("Ask someone else to pay", isOn:  $checkout.isSomeoneElsePaying)
@@ -78,15 +79,19 @@ public struct BuyAirtimeCheckoutView: View {
             }
         }
         .onAppear {
-            providerDetails = Observer<MerchantPayer>().getEntities()
+            bavm.providersListModel.details = Observer<MerchantPayer>().getEntities()
                 .filter{$0.activeStatus != "0"}.map {
-                    ProviderDetails(payer: $0)
+                    ProviderDetails(payer: $0, othersCanPay: $0.canPayForOther  != "0" ? true : false)
             }
-            let amount = history.filter {
-                ($0.accountNumber == accountNumber && $0.serviceName == selectedButton)
+            let amount = hvm.transactionHistory.getEntities().filter {
+                ($0.accountNumber == checkout.accountNumber && $0.serviceName == checkout.service.serviceName)
             }.map {$0.amount}
             let uniqueAmount = Set(amount).sorted(by: <)
-            historyByAccountNumber = uniqueAmount
+            contactViewModel.selectedContact = checkout.accountNumber
+            bavm.suggestedAmountModel.historyByAccountNumber = uniqueAmount
+        }
+        .onChange(of: bavm.providersListModel) { model in
+            checkout.isSomeoneElsePaying = model.canOthersPay
         }
     }
 }

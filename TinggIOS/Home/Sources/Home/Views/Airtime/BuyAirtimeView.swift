@@ -23,7 +23,7 @@ public struct BuyAirtimeView: View {
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
     @State var showNetworkList = false
-    @EnvironmentObject var showCheckout: CheckoutViewModel
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @State var show = false
     @State var enrollments : [Enrollment] = sampleNominations
@@ -50,7 +50,7 @@ public struct BuyAirtimeView: View {
                     }
                 }
             }
-            ProvidersListView(
+            MerchantServiceListView(
                 plm: $bavm.providersListModel
             ) {
                 bavm.favouriteEnrollmentListModel.accountNumber = ""
@@ -69,12 +69,14 @@ public struct BuyAirtimeView: View {
                 buttonLabel: "Buy airtime"
             ) {
 //                remotePhoneNumberValidation(hvm.country)
-                let selectedService = airtimeServices.first {$0.serviceName == selectedButton}
+                let selectedService = airtimeServices.first {$0.serviceName == bavm.providersListModel.selectedProvider}
                 if let service = selectedService {
 //                    remoteAmountValidation(selectedService: service)
-                    showCheckout.showCheckOutView = true
-                    showCheckout.service = service
+                    checkoutVm.showCheckOutView = true
+                    checkoutVm.service = service
+                    checkoutVm.accountNumber = bavm.favouriteEnrollmentListModel.accountNumber
                 }
+              
             }
         }
         .padding()
@@ -85,7 +87,6 @@ public struct BuyAirtimeView: View {
             bavm.servicesDialogModel.airtimeServices = hvm.airTimeServices
             let defaultNetwork = hvm.airTimeServices.first { $0.hubServiceID == hvm.defaultNetworkServiceId }
             showNetworkList = defaultNetwork == nil
-//            selectedButton = defaultNetwork?.serviceName ?? ""
             hvm.observeUIModel(model: hvm.$defaultNetworkUIModel) { content in
                 showNetworkList = false
             }

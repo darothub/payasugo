@@ -13,6 +13,7 @@ public class CheckoutViewModel: ObservableObject {
     @Published public var amount: Int = 0
     @Published public var isSomeoneElsePaying: Bool = false
     @Published public var selectedMerchantPayerName: String = ""
+    @Published public var accountNumber: String = ""
     public init() {
         //
     }
