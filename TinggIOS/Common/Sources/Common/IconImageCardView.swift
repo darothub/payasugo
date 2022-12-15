@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Theme
 public struct IconImageCardView: View {
     @State var imageUrl: String = ""
     @State var radius: CGFloat = 10
@@ -23,7 +22,7 @@ public struct IconImageCardView: View {
                 .clipShape(Circle())
                 .padding()
         } placeholder: {
-            PrimaryTheme.getImage(image: .tinggIcon)
+            Image(systemName: "camera.fill")
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
                 .padding()
@@ -35,10 +34,6 @@ public struct IconImageCardView: View {
     }
 }
 
-public enum BackgroundShape: Hashable, Equatable {
-    case rectangle
-    case circle
-}
 struct IconImageCardView_Previews: PreviewProvider {
     static var previews: some View {
         IconImageCardView(imageUrl: "")
