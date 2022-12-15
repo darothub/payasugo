@@ -8,7 +8,6 @@ import Contacts
 import Foundation
 import SwiftUI
 import Combine
-@MainActor
 public class ContactViewModel: ObservableObject {
     @Published public var selectedContact: String = ""
     @Published public var showContact = false
@@ -44,7 +43,7 @@ public class ContactViewModel: ObservableObject {
              case .failure(let error):
                  onError(error)
              case .success(let c):
-                 withAnimation {
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [unowned self] in
                      listOfContact.insert(handleContacts(contacts: c))
                      showContact = true
                  }
