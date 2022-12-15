@@ -59,12 +59,9 @@ public struct BuyAirtimeView: View {
                 .padding(.vertical)
             Text("Amount")
                 .padding(.top)
-            TextFieldAndLeftIcon(amount: $amount, currency: currency)
+            TextFieldAndLeftIcon(amount: $bavm.suggestedAmountModel.amount, currency: currency)
             SuggestedAmountListView(
-                selectedServiceName: $selectedButton,
-                amount: $amount,
-                accountNumber: $accountNumber,
-                historyByAccountNumber: $historyByAccountNumber
+                sam: $bavm.suggestedAmountModel
             ).padding(.top)
             Spacer()
             button(
@@ -99,17 +96,6 @@ public struct BuyAirtimeView: View {
             bavm.providersListModel.details = airtimeServices.map {
                 ProviderDetails(service: $0)
             }
-        
-            
-            //    var enrollmentResult: [Enrollment] {
-            //        let service = services.first { theService in
-            //            theService.serviceName == selectedNetwork
-            //        }
-            //        let nomination = enrollments.filter { enrollment in
-            //            String(enrollment.hubServiceID) == service?.hubServiceID
-            //        }
-            //        return nomination.map {$0}
-            //    }
         }
         .customDialog(isPresented: $showNetworkList) {
             DialogContentView() {
@@ -120,28 +106,17 @@ public struct BuyAirtimeView: View {
             .environmentObject(bavm)
             .handleViewStates(uiModel: $hvm.defaultNetworkUIModel, showAlert: $hvm.showAlert)
         }
-        .onChange(of: accountNumber, perform: { newValue in
-            print("Phone number \(phoneNumber)\nAccount number \(newValue)")
-            if phoneNumber == newValue {
-                whoseNumber = WhoseNumberLabel.my
-            } else {
-                whoseNumber = WhoseNumberLabel.other
-            }
-            let amount = history.filter {
-                ($0.accountNumber == accountNumber && $0.serviceName == selectedButton)
-            }.map {$0.amount}
-            let uniqueAmount = Set(amount).sorted(by: <)
-            historyByAccountNumber = uniqueAmount
-         
-        })
         .onChange(of: bavm.servicesDialogModel, perform: { newValue in
-            bavm.favouriteEnrollmentListModel.enrollments =
-            hvm.nominationInfo.getEntities().filter { e in
-                newValue.airtimeServices.first {
-                    $0.serviceName == bavm.servicesDialogModel.selectedButton
-                }?.hubServiceID == String(e.hubServiceID)
+            let service = newValue.airtimeServices.first {
+                $0.serviceName == bavm.servicesDialogModel.selectedButton
             }
-            print("Number \(newValue.phoneNumber) \(phoneNumber)")
+            let nomination =  hvm.nominationInfo.getEntities().filter { e in
+                service?.hubServiceID == String(e.hubServiceID)
+            }
+            bavm.favouriteEnrollmentListModel.enrollments = nomination.map {$0}
+            bavm.providersListModel.selectedProvider = newValue.selectedButton
+            bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedButton
+            bavm.favouriteEnrollmentListModel.accountNumber = newValue.phoneNumber
         })
         .onChange(of: bavm.favouriteEnrollmentListModel, perform: { newValue in
             if phoneNumber == newValue.accountNumber {
@@ -149,14 +124,21 @@ public struct BuyAirtimeView: View {
             } else {
                 whoseNumber = WhoseNumberLabel.other
             }
+            let amount = history.filter {
+                ($0.accountNumber == newValue.accountNumber && $0.serviceName == newValue.selectedNetwork)
+            }.map {$0.amount}
+            let uniqueAmount = Set(amount).sorted(by: <)
+            bavm.suggestedAmountModel.historyByAccountNumber = uniqueAmount
         })
         .onChange(of: bavm.providersListModel, perform: { newValue in
-            bavm.favouriteEnrollmentListModel.enrollments =
-            hvm.nominationInfo.getEntities().filter { e in
-                newValue.details.first {
-                    $0.service.serviceName == newValue.selectedProvider
-                }?.service.hubServiceID == String(e.hubServiceID)
+            let provider = newValue.details.first {
+                $0.service.serviceName == newValue.selectedProvider
             }
+            let nomination =  hvm.nominationInfo.getEntities().filter { e in
+                provider?.service.hubServiceID == String(e.hubServiceID)
+            }
+            bavm.favouriteEnrollmentListModel.enrollments = nomination.map {$0}
+            bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedProvider
         })
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }

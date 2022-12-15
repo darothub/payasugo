@@ -45,12 +45,12 @@ public struct BuyAirtimeCheckoutView: View {
                     )
                 }
                 TextFieldView(fieldText: $amount, label: amount, placeHolder: amountTextFieldPlaceHolder)
-                SuggestedAmountListView(
-                    selectedServiceName: $selectedButton,
-                    amount: $amount,
-                    accountNumber: $accountNumber,
-                    historyByAccountNumber: $historyByAccountNumber
-                ).padding(.top)
+//                SuggestedAmountListView(
+//                    selectedServiceName: $selectedButton,
+//                    amount: $amount,
+//                    accountNumber: $accountNumber,
+//                    historyByAccountNumber: $historyByAccountNumber
+//                ).padding(.top)
                 .hideIf(isHidden: .constant(false))
 
 //                ProvidersListView(selectedProvider: $checkout.selectedMerchantPayerName, details: $providerDetails, canOthersPay: $checkout.isSomeoneElsePaying) {}

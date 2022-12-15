@@ -8,16 +8,13 @@ import Core
 import SwiftUI
 
 struct SuggestedAmountListView: View {
-    @Binding var selectedServiceName: String
-    @Binding var amount: String
-    @Binding var accountNumber: String
-    @Binding var historyByAccountNumber: [String]
+    @Binding var sam: SuggestedAmountModel
     @State var selectedIndex = -1
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(historyByAccountNumber, id: \.self) { amount in
-                    let index = historyByAccountNumber.firstIndex(of: amount)
+                ForEach(sam.historyByAccountNumber, id: \.self) { amount in
+                    let index = sam.historyByAccountNumber.firstIndex(of: amount)
                     let intAmount = convertStringToInt(value: amount )
                     let strAmount = "\(String(describing: intAmount))"
                     BoxedTextView(text: .constant(strAmount))
@@ -26,7 +23,7 @@ struct SuggestedAmountListView: View {
                             if let tIndex = index {
                                 selectedIndex = tIndex
                             }
-                            self.amount = amount
+                            sam.amount = amount
                         }
                 }
             }
@@ -51,20 +48,8 @@ struct BoxedTextView: View {
 }
 struct SuggestedAmountListView_Previews: PreviewProvider {
     struct SuggestedAmountListViewHolder: View {
-        @State var number = "200"
-        @State var accountNumber: String = ""
-        @State var serviceName = "Safaricom"
-        var historys: [TransactionHistory] {
-            let hist1 = TransactionHistory.init()
-            hist1.payerTransactionID = "1"
-            hist1.amount = "100"
-            let hist2 = TransactionHistory.init()
-            hist2.payerTransactionID = "2"
-            hist2.amount = "10"
-            return [hist1, hist2]
-        }
         var body: some View {
-            SuggestedAmountListView(selectedServiceName: $serviceName, amount: $number, accountNumber: $accountNumber, historyByAccountNumber: .constant(["10.0", "20.0"]))
+            SuggestedAmountListView(sam: .constant(.init()))
         }
     }
     static var previews: some View {

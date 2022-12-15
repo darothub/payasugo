@@ -20,9 +20,7 @@ class BuyAirtimeViewModel: ObservableObject {
 
 
 struct SuggestedAmountModel: Hashable, Equatable {
-    var selectedServiceName: String = ""
     var amount: String = ""
-    var accountNumber: String = ""
     var historyByAccountNumber: [String] = .init()
 }
 
