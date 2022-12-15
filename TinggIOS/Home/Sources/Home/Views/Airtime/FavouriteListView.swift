@@ -8,20 +8,7 @@ import Core
 import SwiftUI
 import Theme
 struct FavouriteListView: View {
-//    var enrollments = [Enrollment]()
-//    var services = [MerchantService]()
-//    @Binding var accountNumber: String
-//    @Binding var selectedNetwork: String
     @Binding var flvm: FavouriteEnrollmentModel
-//    var enrollmentResult: [Enrollment] {
-//        let service = services.first { theService in
-//            theService.serviceName == selectedNetwork
-//        }
-//        let nomination = enrollments.filter { enrollment in
-//            String(enrollment.hubServiceID) == service?.hubServiceID
-//        }
-//        return nomination.map {$0}
-//    }
     var body: some View {
         VStack(alignment: .leading) {
             Text("MY FAVOURITES")

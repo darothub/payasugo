@@ -110,10 +110,7 @@ public struct BuyAirtimeView: View {
             let service = newValue.airtimeServices.first {
                 $0.serviceName == bavm.servicesDialogModel.selectedButton
             }
-            let nomination =  hvm.nominationInfo.getEntities().filter { e in
-                service?.hubServiceID == String(e.hubServiceID)
-            }
-            bavm.favouriteEnrollmentListModel.enrollments = nomination.map {$0}
+            bavm.favouriteEnrollmentListModel.enrollments = filterNomination(by: service ?? .init())
             bavm.providersListModel.selectedProvider = newValue.selectedButton
             bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedButton
             bavm.favouriteEnrollmentListModel.accountNumber = newValue.phoneNumber
@@ -134,10 +131,7 @@ public struct BuyAirtimeView: View {
             let provider = newValue.details.first {
                 $0.service.serviceName == newValue.selectedProvider
             }
-            let nomination =  hvm.nominationInfo.getEntities().filter { e in
-                provider?.service.hubServiceID == String(e.hubServiceID)
-            }
-            bavm.favouriteEnrollmentListModel.enrollments = nomination.map {$0}
+            bavm.favouriteEnrollmentListModel.enrollments = filterNomination(by: provider?.service ?? .init())
             bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedProvider
         })
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
@@ -148,7 +142,12 @@ public struct BuyAirtimeView: View {
             listOfContact.insert(handleContacts(contacts: $0))
         }
     }
-    
+    func filterNomination(by service: MerchantService) -> [Enrollment] {
+        let nomination =  hvm.nominationInfo.getEntities().filter { e in
+            service.hubServiceID == String(e.hubServiceID)
+        }
+        return nomination.map {$0}
+    }
     fileprivate func remotePhoneNumberValidation(_ country: Country?) {
         if let regex = country?.countryMobileRegex {
             let result = validatePhoneNumber(with: regex, phoneNumber: accountNumber)
@@ -175,11 +174,7 @@ public struct BuyAirtimeView: View {
 }
 
 struct DialogContentView: View {
-//    var phoneNumber: String = "080"
-//    var airtimeServices = [MerchantService]()
-//    @Binding var selectedButton: String
     @EnvironmentObject var bavm: BuyAirtimeViewModel
-//    @EnvironmentObject var hvm: HomeViewModel
     var onSubmit: () -> Void = {}
     var body: some View {
         VStack {
