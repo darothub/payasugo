@@ -14,7 +14,7 @@ import Permissions
 
 public struct BuyAirtimeCheckoutView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
-    @State var selectedButton: String = ""
+    @State var selectedButton: String = "Diamond Trust Bank"
     @State var accountNumber = ""
     @State var title: String = "Buy Airtime"
     @State var amount: String = "Amount"
@@ -37,7 +37,11 @@ public struct BuyAirtimeCheckoutView: View {
                         .frame(alignment: .center)
                         .padding(.vertical)
                     Spacer()
-                    RemoteImageCard(imageUrl: checkout.service.serviceLogo)
+                    IconImageCardView(
+                        imageUrl: checkout.service.serviceLogo,
+                        radius: 50,
+                        scaleEffect: 0.7
+                    )
                 }
                 TextFieldView(fieldText: $amount, label: amount, placeHolder: amountTextFieldPlaceHolder)
                 SuggestedAmountListView(
@@ -47,11 +51,11 @@ public struct BuyAirtimeCheckoutView: View {
                     accountNumber: $accountNumber
                 ).padding(.top)
                 .hideIf(isHidden: .constant(false))
-                
-                ProvidersListView(selectedProvider: $selectedButton, details: $providerDetails, canOthersPay: $someoneElsePaying) {}
+
+                ProvidersListView(selectedProvider: $checkout.selectedMerchantPayerName, details: $providerDetails, canOthersPay: $checkout.isSomeoneElsePaying) {}
 
                 Divider()
-                Toggle("Ask someone else to pay", isOn: $someoneElsePaying)
+                Toggle("Ask someone else to pay", isOn:  $checkout.isSomeoneElsePaying)
                     .toggleStyle(SwitchToggleStyle(tint: PrimaryTheme.getColor(.primaryColor)))
                 Divider()
                 TextFieldAndRightIcon(
@@ -62,7 +66,7 @@ public struct BuyAirtimeCheckoutView: View {
                             hvm.uiModel = UIModel.error(err.localizedDescription)
                         }
                     }
-                }
+                }.disabled(checkout.isSomeoneElsePaying ? false : true)
             }.padding(.horizontal)
             Spacer()
             button(
@@ -74,11 +78,11 @@ public struct BuyAirtimeCheckoutView: View {
         }
         .onAppear {
             providerDetails = Observer<MerchantPayer>().getEntities()
-                .filter{$0.activeStatus == "1"}.map {
+                .filter{$0.activeStatus != "0"}.map {
                     ProviderDetails(
                         logo: $0.logo ?? "",
                         name: $0.clientName ?? "None",
-                        othersCanPay: $0.canPayForOther == "0" ? true : false
+                        othersCanPay: $0.canPayForOther == "0" ? false : true
                     )
                 }
         }
@@ -89,5 +93,6 @@ struct BuyAirtimeCheckoutView_Previews: PreviewProvider {
     static var previews: some View {
         BuyAirtimeCheckoutView()
             .environmentObject(Checkout())
+            .environmentObject(ContactViewModel())
     }
 }

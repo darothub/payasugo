@@ -134,7 +134,7 @@ struct Item: View {
     var logo: String = ""
     var body: some View {
         VStack {
-            RemoteImageCard(imageUrl: logo)
+            IconImageCardView(imageUrl: logo)
                 .padding(.vertical)
             Text(name)
                 .font(.caption)

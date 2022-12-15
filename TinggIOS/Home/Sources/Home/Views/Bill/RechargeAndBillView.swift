@@ -85,7 +85,7 @@ struct ServicesGridView: View {
         LazyVGrid(columns: gridColumn, spacing: 0){
             ForEach(services, id: \.id) { service in
                 VStack {
-                    RemoteImageCard(imageUrl: service.serviceLogo)
+                    IconImageCardView(imageUrl: service.serviceLogo)
                         .padding(.vertical)
                         .onTapGesture {
                             print("Inner service")

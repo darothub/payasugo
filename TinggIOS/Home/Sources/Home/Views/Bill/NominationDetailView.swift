@@ -132,7 +132,7 @@ struct TopViewDesign: View {
                 .alignmentGuide(.top) { d in d[.bottom] * 0.17 }
                 .frame(height: geo.size.height/5)
             HStack {
-                RemoteImageCard(imageUrl: imageUrl)
+                IconImageCardView(imageUrl: imageUrl)
                 Spacer()
             }.padding(.top, 100)
             .padding(.horizontal)

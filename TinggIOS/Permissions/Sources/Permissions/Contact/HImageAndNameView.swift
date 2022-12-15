@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Theme
+
 public struct HImageAndNameView: View {
     @State var text: String = "test"
     @State var image: Image?

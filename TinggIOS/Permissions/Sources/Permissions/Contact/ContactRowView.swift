@@ -10,6 +10,7 @@ import SwiftUI
 public struct ContactRowView: View {
     @State var listOfContactRow = [ContactRow]()
     var onContactSelected: (ContactRow) -> Void
+    @Environment(\.dismiss) var dismiss
     public init(listOfContactRow: [ContactRow] = [ContactRow](), onContactSelected: @escaping (ContactRow) -> Void) {
         self._listOfContactRow = State(initialValue: listOfContactRow)
         self.onContactSelected = onContactSelected
@@ -20,6 +21,7 @@ public struct ContactRowView: View {
                 HImageAndNameView(text: row.name, image: row.image)
                     .onTapGesture {
                         onContactSelected(row)
+                        dismiss()
                     }
             }
         }

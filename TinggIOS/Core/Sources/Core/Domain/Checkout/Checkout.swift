@@ -12,7 +12,7 @@ public class Checkout: ObservableObject {
     @Published public var service: MerchantService = sampleServices[0]
     @Published public var amount: Int = 0
     @Published public var isSomeoneElsePaying: Bool = false
-    
+    @Published public var selectedMerchantPayerName: String = ""
     public init() {
         //
     }

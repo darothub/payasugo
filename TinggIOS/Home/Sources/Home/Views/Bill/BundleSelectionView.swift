@@ -56,7 +56,7 @@ struct BundleSelectionView: View {
                 d[.top] - 50
             }
             .padding()
-            RemoteImageCard(imageUrl: service.serviceLogo)
+            IconImageCardView(imageUrl: service.serviceLogo)
                 .clipShape(Circle())
                 .scaleEffect(0.9)
     

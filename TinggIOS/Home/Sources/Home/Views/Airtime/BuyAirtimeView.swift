@@ -221,6 +221,7 @@ struct TextFieldAndRightIcon: View {
     var body: some View {
         HStack {
             TextField("Mobile number", text: $number)
+                .keyboardType(.phonePad)
             Image(systemName: "person")
                 .onTapGesture {
                     onImageClick()
@@ -240,6 +241,7 @@ struct TextFieldAndLeftIcon: View {
             Text(currency)
                 .bold()
             TextField("Enter amount", text: $amount)
+                .keyboardType(.numberPad)
         }.padding()
         .background(
             RoundedRectangle(cornerRadius: 5)

@@ -120,7 +120,7 @@ struct LeftHandSideView: View {
     @Binding var updatedTimeString: String
     var body: some View {
         HStack(alignment: .top) {
-            RemoteImageCard(imageUrl: serviceImageString)
+            IconImageCardView(imageUrl: serviceImageString)
             VStack(alignment: .leading) {
                 Text("\(serviceName)")
                     .bold()

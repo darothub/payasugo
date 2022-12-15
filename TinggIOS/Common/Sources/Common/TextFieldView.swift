@@ -22,10 +22,9 @@ public struct TextFieldView: View {
         VStack(alignment: .leading) {
             Group {
                 Text(label)
-                    .font(.caption)
                     .foregroundColor(.black)
                 TextField(placeHolder, text: $fieldText)
-                    .padding([.horizontal, .vertical], 15)
+                    .padding()
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)

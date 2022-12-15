@@ -53,7 +53,7 @@ struct TinggIOSApp: App {
     func showContactView() -> some View {
         return ContactRowView(listOfContactRow: contactViewModel.listOfContact.sorted(by: <)){contact in
             contactViewModel.selectedContact = contact.phoneNumber
-            contactViewModel.showContact = false
+           
         }
     }
 }
