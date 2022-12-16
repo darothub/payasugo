@@ -21,7 +21,7 @@ public struct BuyAirtimeCheckoutView: View {
     @State var amount: String = "Amount"
     @State var amountTextFieldPlaceHolder = "Enter amount"
     @State var selectPaymentTitle = "Select payment method"
-    @State var someoneElsePaying = false
+    @State var someoneElseIsPaying = false
     @State var history: [TransactionHistory] = sampleTransactions
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
@@ -56,10 +56,15 @@ public struct BuyAirtimeCheckoutView: View {
                     bavm.favouriteEnrollmentListModel.accountNumber = ""
                 }
 
-                Divider()
-                Toggle("Ask someone else to pay", isOn:  $checkout.isSomeoneElsePaying)
+                Toggle("Ask someone else to pay", isOn:  $someoneElseIsPaying)
                     .toggleStyle(SwitchToggleStyle(tint: PrimaryTheme.getColor(.primaryColor)))
-                Divider()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(lineWidth: 0.5)
+                           
+                    )
+                    .showIf($checkout.isSomeoneElsePaying)
                 TextFieldAndRightIcon(
                     number: $contactViewModel.selectedContact
                 ) {
@@ -69,6 +74,7 @@ public struct BuyAirtimeCheckoutView: View {
                         }
                     }
                 }.disabled(checkout.isSomeoneElsePaying ? false : true)
+                .showIf($someoneElseIsPaying)
             }.padding(.horizontal)
             Spacer()
             button(
