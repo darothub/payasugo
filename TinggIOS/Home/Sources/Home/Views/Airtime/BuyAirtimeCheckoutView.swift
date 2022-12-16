@@ -95,6 +95,8 @@ public struct BuyAirtimeCheckoutView: View {
             let uniqueAmount = Set(amount).sorted(by: <)
             contactViewModel.selectedContact = checkout.accountNumber
             bavm.suggestedAmountModel.historyByAccountNumber = uniqueAmount
+            print("Amount \(checkout.amount)")
+            bavm.suggestedAmountModel.amount = String(checkout.amount)
         }
         .onChange(of: bavm.providersListModel) { model in
             checkout.isSomeoneElsePaying = model.canOthersPay

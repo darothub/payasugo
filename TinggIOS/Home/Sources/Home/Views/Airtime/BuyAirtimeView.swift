@@ -75,6 +75,7 @@ public struct BuyAirtimeView: View {
                     checkoutVm.showCheckOutView = true
                     checkoutVm.service = service
                     checkoutVm.accountNumber = bavm.favouriteEnrollmentListModel.accountNumber
+                    checkoutVm.amount = convertStringToInt(value: bavm.suggestedAmountModel.amount)
                 }
               
             }
