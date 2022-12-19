@@ -225,17 +225,20 @@ public enum ActiveStatus: Codable {
 }
 
 // MARK: - CardDetail
-public struct CardDetail: Codable {
-    public var cardAlias, payerClientID, cardType, activeStatus: String
-
-    enum CodingKeys: String, CodingKey {
-        case cardAlias = "CARD_ALIAS"
-        case payerClientID = "PAYER_CLIENT_ID"
-        case cardType = "CARD_TYPE"
-        case activeStatus = "ACTIVE_STATUS"
+public struct CardDetailDTO: Hashable, Equatable {
+    public var cardAlias, payerClientID, cardType, activeStatus, logoUrl: String
+    public init(cardAlias: String, payerClientID: String, cardType: String, activeStatus: String, logoUrl: String) {
+        self.cardAlias = cardAlias
+        self.payerClientID = payerClientID
+        self.cardType = cardType
+        self.activeStatus = activeStatus
+        self.logoUrl = logoUrl
     }
+   
 }
-
+public var sampleCardDTO = CardDetailDTO(cardAlias: "0000", payerClientID: "162", cardType: "002", activeStatus: "1", logoUrl: "")
+public var sampleCardDTO2 = CardDetailDTO(cardAlias: "0002", payerClientID: "162", cardType: "002", activeStatus: "1", logoUrl: "")
+public var sampleCardDTO3 = CardDetailDTO(cardAlias: "0003", payerClientID: "162", cardType: "002", activeStatus: "1", logoUrl: "")
 
 // MARK: - ContactInfo
 public struct ContactInfo: Codable {

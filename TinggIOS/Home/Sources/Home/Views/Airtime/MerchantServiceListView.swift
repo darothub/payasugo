@@ -98,7 +98,7 @@ struct MerchantPayerListView: View {
     }
     func onDefaultNetworkDetected(detail: ProviderDetails) -> some View  {
         return NetworkFavouritedMarkedView().onAppear {
-//            plm.selectedProvider = detail.name
+//            plm.selectedProvider = detail.payer.clientName ?? "None"
             plm.canOthersPay = detail.othersCanPay
         }
     }

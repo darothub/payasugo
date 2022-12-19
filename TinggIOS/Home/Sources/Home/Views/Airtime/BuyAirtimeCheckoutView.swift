@@ -33,11 +33,12 @@ public struct BuyAirtimeCheckoutView: View {
     }
     public var body: some View {
         VStack(alignment: .leading) {
-            Group {
+            Section {
                 HStack {
                     Text(title)
                         .frame(alignment: .center)
                         .padding(.vertical)
+                        .bold()
                     Spacer()
                     IconImageCardView(
                         imageUrl: checkout.service.serviceLogo,
@@ -55,7 +56,8 @@ public struct BuyAirtimeCheckoutView: View {
                 ) {
                     bavm.favouriteEnrollmentListModel.accountNumber = ""
                 }
-
+            }.padding(.horizontal)
+            Section {
                 Toggle("Ask someone else to pay", isOn:  $someoneElseIsPaying)
                     .toggleStyle(SwitchToggleStyle(tint: PrimaryTheme.getColor(.primaryColor)))
                     .padding()
@@ -64,7 +66,6 @@ public struct BuyAirtimeCheckoutView: View {
                             .stroke(lineWidth: 0.5)
                            
                     )
-                    .showIf($checkout.isSomeoneElsePaying)
                 TextFieldAndRightIcon(
                     number: $contactViewModel.selectedContact
                 ) {
@@ -76,6 +77,10 @@ public struct BuyAirtimeCheckoutView: View {
                 }.disabled(checkout.isSomeoneElsePaying ? false : true)
                 .showIf($someoneElseIsPaying)
             }.padding(.horizontal)
+            .showIf($checkout.isSomeoneElsePaying)
+            DebitCardDropDownView(dcddm: $bavm.dcddm)
+                .padding()
+                .showIf($bavm.showCardOptions)
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
@@ -99,7 +104,23 @@ public struct BuyAirtimeCheckoutView: View {
             bavm.suggestedAmountModel.amount = String(checkout.amount)
         }
         .onChange(of: bavm.providersListModel) { model in
+            someoneElseIsPaying = false
             checkout.isSomeoneElsePaying = model.canOthersPay
+           
+            if model.selectedProvider == "Card" {
+                let selectedDetails = model.details.first {$0.payer.clientName == model.selectedProvider}
+                let listOfCards = getListOfCards(imageUrl: selectedDetails?.payer.logo ?? "")
+                bavm.dcddm.selectedCardDetails = listOfCards[0]
+                bavm.dcddm.cardDetails = listOfCards
+                bavm.showCardOptions = true
+            } else {
+                bavm.showCardOptions = false
+            }
+        }
+    }
+    func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
+        return Observer<Card>().getEntities().map { c in
+             CardDetailDTO(cardAlias: c.cardAlias ?? "", payerClientID: c.payerClientID ?? "", cardType: c.cardType ?? "", activeStatus: c.activeStatus ?? "", logoUrl: imageUrl)
         }
     }
 }

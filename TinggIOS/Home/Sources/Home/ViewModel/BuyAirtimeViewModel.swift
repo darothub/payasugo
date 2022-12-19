@@ -13,6 +13,9 @@ class BuyAirtimeViewModel: ObservableObject {
     @Published public var favouriteEnrollmentListModel: FavouriteEnrollmentModel = .init()
     @Published public var providersListModel: ProvidersListModel = .init()
     @Published public var servicesDialogModel: ServicesDialogModel = .init()
+    @Published public var dcm: DebitCardModel = .init()
+    @Published public var dcddm: DebitCardDropDownModel = .init()
+    @Published public var showCardOptions: Bool = false
     public init() {
         //
     }
@@ -42,4 +45,16 @@ struct ServicesDialogModel: Hashable, Equatable {
     var phoneNumber: String = "080"
     var airtimeServices = [MerchantService]()
     var selectedButton: String = ""
+}
+
+struct DebitCardModel: Hashable, Equatable {
+    var cardDetails: CardDetailDTO = sampleCardDTO
+    var cardType: String = ""
+    var imageUrl: String = ""
+}
+
+struct DebitCardDropDownModel: Hashable, Equatable {
+    var selectedCardDetails: CardDetailDTO = sampleCardDTO
+    var cardDetails: [CardDetailDTO] = [sampleCardDTO, sampleCardDTO2, sampleCardDTO3]
+    var showDropDown = false
 }

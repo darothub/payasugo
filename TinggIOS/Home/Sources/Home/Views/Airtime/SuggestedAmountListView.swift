@@ -18,7 +18,6 @@ struct SuggestedAmountListView: View {
                     let intAmount = convertStringToInt(value: amount )
                     let strAmount = "\(String(describing: intAmount))"
                     BoxedTextView(text: .constant(strAmount))
-                        .background(index == selectedIndex ? .red : .white)
                         .onTapGesture {
                             if let tIndex = index {
                                 selectedIndex = tIndex
@@ -43,6 +42,7 @@ struct BoxedTextView: View {
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(lineWidth: 0.1)
             ).foregroundColor(.black)
+//            .background(index == selectedIndex ? .red : .white)
             
     }
 }
