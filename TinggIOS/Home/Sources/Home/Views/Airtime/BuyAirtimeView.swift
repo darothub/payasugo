@@ -14,6 +14,8 @@ import Theme
 public struct BuyAirtimeView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     @StateObject var bavm = BuyAirtimeViewModel()
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
+    @EnvironmentObject var contactViewModel: ContactViewModel
     @State var selectedButton: String = ""
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
     @State var showContact = false
@@ -23,8 +25,6 @@ public struct BuyAirtimeView: View {
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
     @State var showNetworkList = false
-    @EnvironmentObject var checkoutVm: CheckoutViewModel
-    @EnvironmentObject var contactViewModel: ContactViewModel
     @State var show = false
     @State var enrollments : [Enrollment] = sampleNominations
     @State var providerDetails: [ProviderDetails] = .init()
@@ -42,7 +42,7 @@ public struct BuyAirtimeView: View {
             Text("Mobile number")
                 .padding(.top)
             TextFieldAndRightIcon(
-                number: $bavm.favouriteEnrollmentListModel.accountNumber
+                number: $contactViewModel.selectedContact 
             ) {
                 Task {
                     await contactViewModel.fetchPhoneContacts { err in
@@ -59,7 +59,7 @@ public struct BuyAirtimeView: View {
                 .padding(.vertical)
             Text("Amount")
                 .padding(.top)
-            TextFieldAndLeftIcon(amount: $bavm.suggestedAmountModel.amount, currency: currency)
+            AmountAndCurrencyTextField(amount: $bavm.suggestedAmountModel.amount, currency: $bavm.suggestedAmountModel.currency)
             SuggestedAmountListView(
                 sam: $bavm.suggestedAmountModel
             ).padding(.top)
@@ -68,16 +68,28 @@ public struct BuyAirtimeView: View {
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-//                remotePhoneNumberValidation(hvm.country)
-                let selectedService = airtimeServices.first {$0.serviceName == bavm.providersListModel.selectedProvider}
-                if let service = selectedService {
-//                    remoteAmountValidation(selectedService: service)
-                    checkoutVm.showCheckOutView = true
-                    checkoutVm.service = service
-                    checkoutVm.accountNumber = bavm.favouriteEnrollmentListModel.accountNumber
-                    checkoutVm.amount = convertStringToInt(value: bavm.suggestedAmountModel.amount)
+                let isValidated = checkoutVm.validatePhoneNumberByCountry(hvm.country, phoneNumber: bavm.favouriteEnrollmentListModel.accountNumber)
+                print("Phone number \(bavm.favouriteEnrollmentListModel.accountNumber)\(isValidated)")
+                if !isValidated {
+                    hvm.showAlert = true
+                    hvm.uiModel = UIModel.error("Invalid phone number")
+                    return
                 }
-              
+                let selectedService = airtimeServices.first {$0.serviceName == bavm.providersListModel.selectedProvider}
+                   
+                if let service = selectedService {
+                    let response = checkoutVm.validateAmountByService(selectedService: service, amount: bavm.suggestedAmountModel.amount)
+                    if !response.isEmpty {
+                        hvm.showAlert = true
+                        hvm.uiModel = UIModel.error(response)
+                        return
+                    }
+                    checkoutVm.cm.showCheckOutView = true
+                    checkoutVm.cm.service = service
+                    checkoutVm.cm.accountNumber = bavm.favouriteEnrollmentListModel.accountNumber
+                    checkoutVm.cm.amount = bavm.suggestedAmountModel.amount
+                    checkoutVm.cm.currency = bavm.suggestedAmountModel.currency
+                }
             }
         }
         .padding()
@@ -91,7 +103,7 @@ public struct BuyAirtimeView: View {
             hvm.observeUIModel(model: hvm.$defaultNetworkUIModel) { content in
                 showNetworkList = false
             }
-            currency = AppStorageManager.getCountry()?.currency ?? ""
+            bavm.suggestedAmountModel.currency = AppStorageManager.getCountry()?.currency ?? ""
             enrollments = hvm.nominationInfo.getEntities()
             history = hvm.transactionHistory.getEntities()
             airtimeServices = hvm.airTimeServices
@@ -128,6 +140,7 @@ public struct BuyAirtimeView: View {
             }.map {$0.amount}
             let uniqueAmount = Set(amount).sorted(by: <)
             bavm.suggestedAmountModel.historyByAccountNumber = uniqueAmount
+            contactViewModel.selectedContact = newValue.accountNumber
         })
         .onChange(of: bavm.providersListModel, perform: { newValue in
             let provider = newValue.details.first {
@@ -136,6 +149,9 @@ public struct BuyAirtimeView: View {
             bavm.favouriteEnrollmentListModel.enrollments = filterNomination(by: provider?.service ?? .init())
             bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedProvider
         })
+        .sheet(isPresented: $contactViewModel.showContact) {
+            showContactView(contactViewModel: contactViewModel)
+        }
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
     
@@ -149,29 +165,6 @@ public struct BuyAirtimeView: View {
             service.hubServiceID == String(e.hubServiceID)
         }
         return nomination.map {$0}
-    }
-    fileprivate func remotePhoneNumberValidation(_ country: Country?) {
-        if let regex = country?.countryMobileRegex {
-            let result = validatePhoneNumber(with: regex, phoneNumber: accountNumber)
-            if !result {
-                hvm.showAlert = true
-                hvm.uiModel = UIModel.error("Invalid phone number")
-            }
-        }
-    }
-    
-    fileprivate func remoteAmountValidation(selectedService: MerchantService) {
-        let intAmount = convertStringToInt(value: amount)
-        let minAmount = convertStringToInt(value: selectedService.minAmount)
-        let maxAmount = convertStringToInt(value: selectedService.maxAmount)
-        if amount.isEmpty {
-            hvm.showAlert = true
-            hvm.uiModel = UIModel.error("Amount field can not be empty")
-        }
-        else if intAmount < minAmount || intAmount > maxAmount {
-            hvm.showAlert = true
-            hvm.uiModel = UIModel.error("Amount should between \(minAmount) and \(maxAmount)")
-        }
     }
 }
 
@@ -247,9 +240,9 @@ struct TextFieldAndRightIcon: View {
         ).foregroundColor(.black)
     }
 }
-struct TextFieldAndLeftIcon: View {
+struct AmountAndCurrencyTextField: View {
     @Binding var amount: String
-    var currency: String = ""
+    @Binding var currency: String
     var body: some View {
         HStack {
             Text(currency)
@@ -312,3 +305,4 @@ struct BuyAirtimeView_Previews: PreviewProvider {
             .environmentObject(ContactViewModel())
     }
 }
+

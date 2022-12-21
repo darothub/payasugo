@@ -36,6 +36,7 @@ struct BundleSelectionView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
                     )
+                Spacer()
                 
                 button(
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),

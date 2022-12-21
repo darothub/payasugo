@@ -111,3 +111,9 @@ public struct BillDetails: Hashable {
 public func computeProfileInfo(service: MerchantService, accountNumber: String) -> String {
     "\(service.receiverSourceAddress)|\(accountNumber)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
 }
+
+public func convertStringToInt(value: String) -> Int {
+    let floatValue = Float(value)
+    let intAmount = Int(floatValue ?? 0.0)
+    return intAmount
+}

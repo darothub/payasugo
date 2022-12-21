@@ -25,6 +25,7 @@ class BuyAirtimeViewModel: ObservableObject {
 struct SuggestedAmountModel: Hashable, Equatable {
     var amount: String = ""
     var historyByAccountNumber: [String] = .init()
+    var currency: String = ""
 }
 
 struct FavouriteEnrollmentModel: Hashable, Equatable {

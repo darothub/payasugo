@@ -21,6 +21,7 @@ struct TinggIOSApp: App {
     @StateObject var  hvm = HomeDI.createHomeViewModel()
     @StateObject var checkout: CheckoutViewModel = .init()
     @StateObject var contactViewModel: ContactViewModel = .init()
+
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -31,10 +32,7 @@ struct TinggIOSApp: App {
                 .environmentObject(hvm)
                 .environmentObject(checkout)
                 .environmentObject(contactViewModel)
-                .sheet(isPresented: $contactViewModel.showContact) {
-                    showContactView()
-                }
-                .sheet(isPresented: $checkout.showCheckOutView) {
+                .sheet(isPresented: $checkout.cm.showCheckOutView) {
                     BuyAirtimeCheckoutView()
                         .environmentObject(checkout)
                         .environmentObject(contactViewModel)
@@ -44,8 +42,6 @@ struct TinggIOSApp: App {
                 .onAppear {
                     print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
                 }
-            
-             
         }
 
     }

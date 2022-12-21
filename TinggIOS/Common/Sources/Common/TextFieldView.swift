@@ -29,8 +29,6 @@ public struct TextFieldView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
                     ).foregroundColor(.black)
-                    .font(.caption)
-                
             }
         }
     }

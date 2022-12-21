@@ -57,8 +57,4 @@ struct SuggestedAmountListView_Previews: PreviewProvider {
     }
 }
 
-func convertStringToInt(value: String) -> Int {
-    let floatValue = Float(value)
-    let intAmount = Int(floatValue ?? 0.0)
-    return intAmount
-}
+

@@ -106,7 +106,7 @@ public struct BillersView: View {
                         }
                     }
                 }
-            }
+            }.listRowInsets(EdgeInsets())
         }.listStyle(.plain)
     }
     
