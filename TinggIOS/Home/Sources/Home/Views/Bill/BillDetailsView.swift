@@ -38,7 +38,7 @@ public struct BillDetailsView: View {
                     TopBackground()
                         .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
                         .frame(height: geo.size.height * 0.1)
-                    RemoteImageCard(imageUrl: service.serviceLogo )
+                    IconImageCardView(imageUrl: service.serviceLogo )
                         .scaleEffect(1.2)
                 }
                 Text(fetchBill.biller)

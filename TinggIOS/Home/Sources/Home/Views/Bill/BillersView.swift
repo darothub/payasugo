@@ -21,7 +21,7 @@ public struct BillersView: View {
     @State var mobileNumber = ""
     @State var bundleService: [BundleData] = .init()
     @State var selectedMerchantService = sampleServices[0]
-    @EnvironmentObject var hvm: HomeViewModel
+    @StateObject var hvm = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationUtils
     public init(billers: TitleAndListItem) {
         _billers = State(initialValue: billers)
@@ -83,7 +83,7 @@ public struct BillersView: View {
             ForEach(billers.services, id: \.id) { service in
                 NavigationLink(value: service) {
                     HStack {
-                        RemoteImageCard(imageUrl: service.serviceLogo)
+                        IconImageCardView(imageUrl: service.serviceLogo)
                             .scaleEffect(0.8)
                         Text(service.serviceName)
                     }.onTapGesture {
@@ -106,7 +106,7 @@ public struct BillersView: View {
                         }
                     }
                 }
-            }
+            }.listRowInsets(EdgeInsets())
         }.listStyle(.plain)
     }
     
@@ -157,7 +157,7 @@ struct SingleNominationView: View {
     var body: some View {
         HStack(alignment: .top) {
             HStack(alignment: .top) {
-                RemoteImageCard(imageUrl: nomination.serviceLogo ?? "")
+                IconImageCardView(imageUrl: nomination.serviceLogo ?? "")
                     .scaleEffect(0.9)
                 VStack(alignment: .leading, spacing: 7) {
                     Text(nomination.accountName ?? "None")

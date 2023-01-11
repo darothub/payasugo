@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
-import Theme
-struct HImageAndNameView: View {
+
+public struct HImageAndNameView: View {
     @State var text: String = "test"
     @State var image: Image?
     @State var name: String = ""
-    var body: some View {
+    public init(text: String, image: Image? = nil, name: String = "") {
+        self._text = State(initialValue: text)
+        self._image = State(initialValue: image)
+        self._name = State(initialValue: name)
+    }
+    public var body: some View {
         HStack {
             if image == nil {
                 let initials = text.prefix(2).uppercased()
@@ -38,6 +43,6 @@ struct HImageAndNameView: View {
 
 struct HImageAndNameView_Previews: PreviewProvider {
     static var previews: some View {
-        HImageAndNameView()
+        HImageAndNameView(text: "Test")
     }
 }

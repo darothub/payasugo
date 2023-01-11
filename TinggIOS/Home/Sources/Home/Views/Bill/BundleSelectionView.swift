@@ -36,6 +36,7 @@ struct BundleSelectionView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
                     )
+                Spacer()
                 
                 button(
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
@@ -56,7 +57,7 @@ struct BundleSelectionView: View {
                 d[.top] - 50
             }
             .padding()
-            RemoteImageCard(imageUrl: service.serviceLogo)
+            IconImageCardView(imageUrl: service.serviceLogo)
                 .clipShape(Circle())
                 .scaleEffect(0.9)
     

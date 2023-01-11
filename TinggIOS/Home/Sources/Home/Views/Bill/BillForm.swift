@@ -32,7 +32,7 @@ public struct BillFormView: View {
                     TopBackground()
                         .alignmentGuide(.top) { d in d[.bottom] * 0.4 }
                         .frame(height: geo.size.height * 0.1)
-                    RemoteImageCard(imageUrl: billDetails.service.serviceLogo)
+                    IconImageCardView(imageUrl: billDetails.service.serviceLogo)
                         .scaleEffect(1.2)
                 }
                 Text(billDetails.service.serviceName)

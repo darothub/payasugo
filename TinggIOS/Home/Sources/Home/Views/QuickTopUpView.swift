@@ -8,6 +8,7 @@
 import SwiftUI
 import Theme
 import Core
+import Common
 struct QuickTopupView: View {
     var airtimeServices = [MerchantService]()
     var body: some View {
@@ -30,7 +31,7 @@ struct QuickTopupView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(airtimeServices, id: \.id) { service in
-                    RemoteImageCard(imageUrl: service.serviceLogo)
+                    IconImageCardView(imageUrl: service.serviceLogo)
                         .padding(.vertical)
                 }
             }

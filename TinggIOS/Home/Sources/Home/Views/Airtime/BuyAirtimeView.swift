@@ -13,6 +13,9 @@ import Theme
 
 public struct BuyAirtimeView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @StateObject var bavm = BuyAirtimeViewModel()
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
+    @EnvironmentObject var contactViewModel: ContactViewModel
     @State var selectedButton: String = ""
     @State var defaultNetwork: [MerchantService] = [MerchantService]()
     @State var showContact = false
@@ -22,184 +25,175 @@ public struct BuyAirtimeView: View {
     @State var amount = ""
     @State var whoseNumber = WhoseNumberLabel.other
     @State var showNetworkList = false
-    var enrollments : [Enrollment] {
-        return hvm.nominationInfo.getEntities()
-    }
-  
-    var history: [TransactionHistory] {
-        hvm.transactionHistory.getEntities()
-    }
-    var airtimeServices:  [MerchantService] {
-        hvm.airTimeServices
-    }
+    @State var show = false
+    @State var enrollments : [Enrollment] = sampleNominations
+    @State var providerDetails: [ProviderDetails] = .init()
+    @State var history: [TransactionHistory] = sampleTransactions
+    @State var airtimeServices:  [MerchantService] = sampleServices
+    @State var historyByAccountNumber: [String] = .init()
+    @State var currency = ""
     public init() {
         //
     }
     
     public var body: some View {
         VStack(alignment: .leading) {
-            FavouriteListView(
-                enrollments: enrollments,
-                services: hvm.airTimeServices,
-                accountNumber: $accountNumber,
-                selectedNetwork: $selectedButton
-            )
+            FavouriteListView(flvm: $bavm.favouriteEnrollmentListModel)
             Text("Mobile number")
                 .padding(.top)
             TextFieldAndRightIcon(
-                number: $accountNumber
+                number: $contactViewModel.selectedContact 
             ) {
-                showContact.toggle()
                 Task {
-                    await hvm.fetchPhoneContacts {
-                        listOfContact.insert(handleContacts(contacts: $0))
+                    await contactViewModel.fetchPhoneContacts { err in
+                        hvm.uiModel = UIModel.error(err.localizedDescription)
                     }
                 }
             }
-            AirtimeProviderListView(
-                selectedProvider: $selectedButton,
-                airtimeProviders: $hvm.airTimeServices,
-                defaultNetworkId: $hvm.defaultNetworkServiceId
-            ){
-                
+            MerchantServiceListView(
+                plm: $bavm.providersListModel
+            ) {
+                bavm.favouriteEnrollmentListModel.accountNumber = ""
             }
             WhoseNumberOptionView(selected: $whoseNumber)
                 .padding(.vertical)
             Text("Amount")
                 .padding(.top)
-            if let currency = AppStorageManager.getCountry()?.currency {
-                TextFieldAndLeftIcon(amount: $amount, currency: currency)
-            }
+            AmountAndCurrencyTextField(amount: $bavm.suggestedAmountModel.amount, currency: $bavm.suggestedAmountModel.currency)
             SuggestedAmountListView(
-                history: history,
-                selectedServiceName: $selectedButton,
-                amount: $amount,
-                accountNumber: $accountNumber
+                sam: $bavm.suggestedAmountModel
             ).padding(.top)
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-                remotePhoneNumberValidation(hvm.country)
-                remoteAmountValidation()
+                let isValidated = checkoutVm.validatePhoneNumberByCountry(hvm.country, phoneNumber: bavm.favouriteEnrollmentListModel.accountNumber)
+                print("Phone number \(bavm.favouriteEnrollmentListModel.accountNumber)\(isValidated)")
+                if !isValidated {
+                    hvm.showAlert = true
+                    hvm.uiModel = UIModel.error("Invalid phone number")
+                    return
+                }
+                let selectedService = airtimeServices.first {$0.serviceName == bavm.providersListModel.selectedProvider}
+                   
+                if let service = selectedService {
+                    let response = checkoutVm.validateAmountByService(selectedService: service, amount: bavm.suggestedAmountModel.amount)
+                    if !response.isEmpty {
+                        hvm.showAlert = true
+                        hvm.uiModel = UIModel.error(response)
+                        return
+                    }
+                    checkoutVm.cm.showCheckOutView = true
+                    checkoutVm.cm.service = service
+                    checkoutVm.cm.accountNumber = bavm.favouriteEnrollmentListModel.accountNumber
+                    checkoutVm.cm.amount = bavm.suggestedAmountModel.amount
+                    checkoutVm.cm.currency = bavm.suggestedAmountModel.currency
+                }
             }
         }
         .padding()
         .onAppear {
             phoneNumber = hvm.profile.msisdn!
-            accountNumber = hvm.profile.msisdn!
+            accountNumber = phoneNumber
+            bavm.servicesDialogModel.phoneNumber = phoneNumber
+            bavm.servicesDialogModel.airtimeServices = hvm.airTimeServices
             let defaultNetwork = hvm.airTimeServices.first { $0.hubServiceID == hvm.defaultNetworkServiceId }
             showNetworkList = defaultNetwork == nil
-            
             hvm.observeUIModel(model: hvm.$defaultNetworkUIModel) { content in
                 showNetworkList = false
-                
             }
-           
+            bavm.suggestedAmountModel.currency = AppStorageManager.getCountry()?.currency ?? ""
+            enrollments = hvm.nominationInfo.getEntities()
+            history = hvm.transactionHistory.getEntities()
+            airtimeServices = hvm.airTimeServices
+            bavm.providersListModel.details = airtimeServices.map {
+                ProviderDetails(service: $0)
+            }
         }
         .customDialog(isPresented: $showNetworkList) {
-            DialogContentView(
-                phoneNumber: phoneNumber,
-                airtimeServices: hvm.airTimeServices,
-                selectedButton: $selectedButton
-            )
+            DialogContentView() {
+                hvm.updateDefaultNetworkId(serviceName: bavm.servicesDialogModel.selectedButton)
+            }
             .padding(20)
             .environmentObject(hvm)
+            .environmentObject(bavm)
+            .handleViewStates(uiModel: $hvm.defaultNetworkUIModel, showAlert: $hvm.showAlert)
         }
-        .sheet(isPresented: $showContact, content: {
-            ContactRowView(listOfContactRow: listOfContact.sorted(by: <)){contact in
-                accountNumber = contact.phoneNumber
-                showContact.toggle()
+        .onChange(of: bavm.servicesDialogModel, perform: { newValue in
+            let service = newValue.airtimeServices.first {
+                $0.serviceName == bavm.servicesDialogModel.selectedButton
             }
+            bavm.favouriteEnrollmentListModel.enrollments = filterNomination(by: service ?? .init())
+            bavm.providersListModel.selectedProvider = newValue.selectedButton
+            bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedButton
+            bavm.favouriteEnrollmentListModel.accountNumber = newValue.phoneNumber
         })
-        .onChange(of: accountNumber, perform: { newValue in
-            print("Phone number \(phoneNumber)\nAccount number \(newValue)")
-            if phoneNumber == newValue {
+        .onChange(of: bavm.favouriteEnrollmentListModel, perform: { newValue in
+            if phoneNumber == newValue.accountNumber {
                 whoseNumber = WhoseNumberLabel.my
             } else {
                 whoseNumber = WhoseNumberLabel.other
             }
+            let amount = history.filter {
+                ($0.accountNumber == newValue.accountNumber && $0.serviceName == newValue.selectedNetwork)
+            }.map {$0.amount}
+            let uniqueAmount = Set(amount).sorted(by: <)
+            bavm.suggestedAmountModel.historyByAccountNumber = uniqueAmount
+            contactViewModel.selectedContact = newValue.accountNumber
         })
-        .onChange(of: selectedButton, perform: { newValue in
-            accountNumber = ""
+        .onChange(of: bavm.providersListModel, perform: { newValue in
+            let provider = newValue.details.first {
+                $0.service.serviceName == newValue.selectedProvider
+            }
+            bavm.favouriteEnrollmentListModel.enrollments = filterNomination(by: provider?.service ?? .init())
+            bavm.favouriteEnrollmentListModel.selectedNetwork = newValue.selectedProvider
         })
+        .sheet(isPresented: $contactViewModel.showContact) {
+            showContactView(contactViewModel: contactViewModel)
+        }
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
     }
     
-    fileprivate func handleContacts(contacts: CNContact) -> ContactRow {
-        let name = contacts.givenName + " " + contacts.familyName
-        var phoneNumber = ""
-        for number in contacts.phoneNumbers  {
-            print("Numbers \(number)")
-            switch number.label {
-            default:
-                let mobile = number.value.stringValue
-                phoneNumber = mobile
-            }
-        }
-        if let thumbnailData = contacts.imageData, let uiImage = UIImage(data: thumbnailData) {
-            let contactImage = Image(uiImage: uiImage)
-            let contactRow = ContactRow(name: name, image: contactImage, phoneNumber: phoneNumber)
-            return contactRow
-        }
-        let contactRow = ContactRow(name: name, image: nil, phoneNumber: phoneNumber)
-        return contactRow
-    }
-    fileprivate func remotePhoneNumberValidation(_ country: Country?) {
-        if let regex = country?.countryMobileRegex {
-            let result = validatePhoneNumber(with: regex, phoneNumber: accountNumber)
-            if !result {
-                hvm.showAlert = true
-                hvm.uiModel = UIModel.error("Invalid phone number")
-            }
+    func handleContactFetch() async {
+       await hvm.fetchPhoneContacts {
+            listOfContact.insert(handleContacts(contacts: $0))
         }
     }
-    
-    fileprivate func remoteAmountValidation() {
-        let selectedService = airtimeServices.first {$0.serviceName == selectedButton}
-        let intAmount = convertStringToInt(value: amount)
-        let minAmount = convertStringToInt(value: selectedService?.minAmount ?? "10.0")
-        let maxAmount = convertStringToInt(value: selectedService?.maxAmount ?? "100000.0")
-        if amount.isEmpty {
-            hvm.showAlert = true
-            hvm.uiModel = UIModel.error("Amount field can not be empty")
+    func filterNomination(by service: MerchantService) -> [Enrollment] {
+        let nomination =  hvm.nominationInfo.getEntities().filter { e in
+            service.hubServiceID == String(e.hubServiceID)
         }
-        else if intAmount < minAmount || intAmount > maxAmount {
-            hvm.showAlert = true
-            hvm.uiModel = UIModel.error("Amount should between \(minAmount) and \(maxAmount)")
-        }
+        return nomination.map {$0}
     }
 }
 
 struct DialogContentView: View {
-    var phoneNumber: String = "080"
-    var airtimeServices = [MerchantService]()
-    @Binding var selectedButton: String
-    @EnvironmentObject var hvm: HomeViewModel
+    @EnvironmentObject var bavm: BuyAirtimeViewModel
+    var onSubmit: () -> Void = {}
     var body: some View {
         VStack {
             Text("Select mobile network")
             Group {
                 Text("Please select the mobile network that")
-                + Text(" \(phoneNumber)").foregroundColor(.green)
+                + Text(" \(bavm.servicesDialogModel.phoneNumber)").foregroundColor(.green)
                 + Text(" belongs to")
             }.multilineTextAlignment(.center)
                 .font(.caption)
             Divider()
-            ForEach(airtimeServices, id: \.serviceName) { service in
+            ForEach(bavm.servicesDialogModel.airtimeServices, id: \.serviceName) { service in
                 NetworkSelectionRowView(
                     imageUrl: service.serviceLogo,
                     networkName: service.serviceName,
-                    selectedButton: $selectedButton
+                    selectedButton: $bavm.servicesDialogModel.selectedButton
                 )
             }
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Done"
             ) {
-                hvm.updateDefaultNetworkId(serviceName: selectedButton)
-            }.handleViewStates(uiModel: $hvm.defaultNetworkUIModel, showAlert: $hvm.showAlert)
+                onSubmit()
+            }
         }
     }
 }
@@ -216,7 +210,7 @@ struct NetworkSelectionRowView: View {
                     .clipShape(Circle())
                     .padding()
             } placeholder: {
-                PrimaryTheme.getImage(image: .tinggIcon)
+                Image(systemName: "camera.fill")
                     .frame(width: 40, height: 40)
                     .clipShape(Circle())
                     .padding()
@@ -234,6 +228,7 @@ struct TextFieldAndRightIcon: View {
     var body: some View {
         HStack {
             TextField("Mobile number", text: $number)
+                .keyboardType(.phonePad)
             Image(systemName: "person")
                 .onTapGesture {
                     onImageClick()
@@ -245,14 +240,15 @@ struct TextFieldAndRightIcon: View {
         ).foregroundColor(.black)
     }
 }
-struct TextFieldAndLeftIcon: View {
+struct AmountAndCurrencyTextField: View {
     @Binding var amount: String
-    var currency: String = ""
+    @Binding var currency: String
     var body: some View {
         HStack {
             Text(currency)
                 .bold()
             TextField("Enter amount", text: $amount)
+                .keyboardType(.numberPad)
         }.padding()
         .background(
             RoundedRectangle(cornerRadius: 5)
@@ -300,10 +296,13 @@ struct BuyAirtimeView_Previews: PreviewProvider {
     struct BuyAirtimePreviewHolder: View {
         @State var number = "200"
         var body: some View {
-            BoxedTextView(text: $number)
+            BuyAirtimeView()
         }
     }
     static var previews: some View {
         BuyAirtimePreviewHolder()
+            .environmentObject(CheckoutViewModel())
+            .environmentObject(ContactViewModel())
     }
 }
+

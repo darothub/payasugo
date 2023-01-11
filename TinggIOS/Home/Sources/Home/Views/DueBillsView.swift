@@ -8,6 +8,7 @@
 import SwiftUI
 import Theme
 import Core
+import Common
 struct DueBillsView: View {
     @State var fetchedBill = [Invoice]()
     @Binding var showDueBills:Bool
@@ -120,7 +121,7 @@ struct LeftHandSideView: View {
     @Binding var updatedTimeString: String
     var body: some View {
         HStack(alignment: .top) {
-            RemoteImageCard(imageUrl: serviceImageString)
+            IconImageCardView(imageUrl: serviceImageString)
             VStack(alignment: .leading) {
                 Text("\(serviceName)")
                     .bold()

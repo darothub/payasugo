@@ -169,22 +169,28 @@ extension PhoneNumberValidationView {
     }
     fileprivate func prepareActivationRequest() {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
-        if isPhoneNumberNotEmpty {
-            let number = "\(countryCode)\(phoneNumber)"
-            AppStorageManager.retainPhoneNumber(number: number)
-            if let country = getCountryByDialCode(dialCode: countryCode) {
-                AppStorageManager.retainActiveCountry(country: country)
-                print("Current \(country) number \(number)")
-            }
-            vm.makeActivationCodeRequest()
+        
+        if !isPhoneNumberNotEmpty {
+            showAlert = true
+            vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
             return
         }
-        showAlert = true
+        if !isValidPhoneNumber {
+            showAlert = true
+            vm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
+            return
+        }
         if !hasCheckedTermsAndPolicy {
+            showAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Kindly accept terms and policy")
             return
         }
-        vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
+        let number = "\(countryCode)\(phoneNumber)"
+        AppStorageManager.retainPhoneNumber(number: number)
+        if let country = getCountryByDialCode(dialCode: countryCode) {
+            AppStorageManager.retainActiveCountry(country: country)
+        }
+        vm.makeActivationCodeRequest()
     }
     func validatePhoneNumberInput(number: String) -> Bool {
         var result = false
@@ -235,6 +241,9 @@ extension PhoneNumberValidationView {
             Observer<BundleObject>().getEntities().forEach { data in
                 realmManager.delete(data: data)
             }
+            realmManager.save(data: data.cardDetails)
+            let payers: [MerchantPayer] = data.merchantPayers.map {$0.convertToPayer()}
+            realmManager.save(data: payers)
             realmManager.save(data: data.bundleData.map {$0.convert()})
             defaultNetworkServiceId = data.defaultNetworkServiceID ?? ""
             navigation.navigationStack = [.home]

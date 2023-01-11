@@ -7,7 +7,6 @@
 
 import Contacts
 import Foundation
-
 public class ContactManager: ObservableObject {
     
     let store = CNContactStore()

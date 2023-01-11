@@ -28,7 +28,6 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
     @Persisted public var validationServiceID: String? = ""
     @Persisted public var cardType: String? = ""
     @Persisted public var countryDialCode: String? = ""
-    @Persisted public var merchantPayer: MerchantPayer? = nil
     //Tingg Virtual Card
     public static let TYPE_VIRTUAL = "VIRTUAL"
     // Normal credit cards
@@ -45,7 +44,7 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
         case activeStatus = "ACTIVE_STATUS"
         case validationServiceID
         case cardType = "CARD_TYPE"
-        case countryDialCode, merchantPayer
+        case countryDialCode
     }
     func isInActive() -> Bool {
         return self.activeStatus == Card.STATUS_INACTIVE

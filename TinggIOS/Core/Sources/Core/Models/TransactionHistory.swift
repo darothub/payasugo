@@ -19,13 +19,13 @@ public class TransactionHistory: Object, DBObject, ObjectKeyIdentifiable, Codabl
     @Persisted public var serviceCode: String
     @Persisted public var paymentDate: String
     @Persisted public var clientCode: String
-    @Persisted public var dateCreated: String
+    @Persisted public var dateCreated: String?
     @Persisted public var amount: String
     @Persisted public var requestOrigin: String
-    @Persisted public var accountNumber: String
+    @Persisted public var accountNumber: String?
     @Persisted public var serviceID: String
-    @Persisted public var currencyCode: String
-    @Persisted public var payerClientID: String
+    @Persisted public var currencyCode: String?
+    @Persisted public var payerClientID: String?
     @Persisted public var serviceName: String?
     @Persisted public var shortDescription: String
     @Persisted public var msisdn: String

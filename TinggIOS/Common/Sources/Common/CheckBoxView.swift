@@ -26,6 +26,8 @@ public struct CheckBoxView: View {
     func foregroundColors() -> Color {
         if checkboxChecked {
             return .green
+        } else if !checkboxChecked {
+            return .red
         }
         else {
             if colorScheme == .dark {

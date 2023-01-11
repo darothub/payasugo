@@ -31,7 +31,7 @@ struct ProfileImageAndHelpIconView: View {
             Spacer()
             Text(title)
                 .foregroundColor(titleColor)
-                .hiddenConditionally(isHidden: $hideTitle)
+                .hideIf(isHidden: $hideTitle)
             Spacer()
             PrimaryTheme.getImage(image: .tinggAssistImage)
                 .resizable()

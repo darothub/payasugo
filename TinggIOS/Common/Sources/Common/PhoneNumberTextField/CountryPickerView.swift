@@ -61,7 +61,8 @@ public struct CountryPickerView: View {
             )
         }
         .onAppear {
-            getCountryCode()
+            countryFlag = getCountryFlag()
+            countryCode = getCountryCode()
         }
     }
     fileprivate func tap() -> Void {
@@ -70,15 +71,14 @@ public struct CountryPickerView: View {
     fileprivate func change(value: String) -> Void {
         checkLength(value)
     }
-    
-    fileprivate func getCountryCode () {
-        let sortedCountries = countries.sorted(by: <)
-        if let flag = sortedCountries.first?.key {
-            countryFlag = flag
+    fileprivate func getCountryFlag() -> String {
+        countries.sorted(by: <).first?.key ?? ""
+    }
+    fileprivate func getCountryCode () -> String {
+        if let code = countries.sorted(by: <).first?.value {
+            return code
         }
-        if let code = sortedCountries.first?.value {
-            countryCode = code
-        }
+        return "+267"
     }
 }
 
