@@ -4,25 +4,31 @@
 //
 //  Created by Abdulrasaq on 07/10/2022.
 //
-import Core
 import SwiftUI
 
-struct SuggestedAmountListView: View {
-    @Binding var sam: SuggestedAmountModel
+public struct SuggestedAmountListView: View {
+    @Binding var accountNumberHistory: [String]
+    @Binding var amountSelected: String
     @State var selectedIndex = -1
-    var body: some View {
+    public init(accountNumberHistory: Binding<[String]>, amountSelected: Binding<String>, selectedIndex: Int = 1) {
+        self._accountNumberHistory = accountNumberHistory
+        self._amountSelected = amountSelected
+        self.selectedIndex = selectedIndex
+    }
+    public var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(sam.historyByAccountNumber, id: \.self) { amount in
-                    let index = sam.historyByAccountNumber.firstIndex(of: amount)
+                ForEach(accountNumberHistory, id: \.self) { amount in
+                    let index = accountNumberHistory.firstIndex(of: amount)
                     let intAmount = convertStringToInt(value: amount )
                     let strAmount = "\(String(describing: intAmount))"
                     BoxedTextView(text: .constant(strAmount))
+                        .background(index == selectedIndex ? .red : .white)
                         .onTapGesture {
                             if let tIndex = index {
                                 selectedIndex = tIndex
                             }
-                            sam.amount = amount
+                            amountSelected = amount
                         }
                 }
             }
@@ -42,14 +48,17 @@ struct BoxedTextView: View {
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(lineWidth: 0.1)
             ).foregroundColor(.black)
-//            .background(index == selectedIndex ? .red : .white)
             
     }
 }
 struct SuggestedAmountListView_Previews: PreviewProvider {
     struct SuggestedAmountListViewHolder: View {
+        @State var number = "200"
+        @State var accountNumber: String = ""
+        @State var serviceName = "Safaricom"
+        @State var amount = "Safaricom"
         var body: some View {
-            SuggestedAmountListView(sam: .constant(.init()))
+            SuggestedAmountListView(accountNumberHistory: .constant([String]()), amountSelected: $amount)
         }
     }
     static var previews: some View {
@@ -57,4 +66,8 @@ struct SuggestedAmountListView_Previews: PreviewProvider {
     }
 }
 
-
+func convertStringToInt(value: String) -> Int {
+    let floatValue = Float(value)
+    let intAmount = Int(floatValue ?? 0.0)
+    return intAmount
+}

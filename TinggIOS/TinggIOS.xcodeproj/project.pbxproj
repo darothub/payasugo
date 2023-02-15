@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		710F9D2F2979B2FF0034E193 /* Pin in Frameworks */ = {isa = PBXBuildFile; productRef = 710F9D2E2979B2FF0034E193 /* Pin */; };
 		71463F3628BE4CA800A54384 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3528BE4CA800A54384 /* HomeUITests.swift */; };
 		71463F3828BE4CA800A54384 /* HomeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3728BE4CA800A54384 /* HomeUITestsLaunchTests.swift */; };
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
+		7151502529743F3A00B0D161 /* Checkout in Frameworks */ = {isa = PBXBuildFile; productRef = 7151502429743F3A00B0D161 /* Checkout */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
 		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
@@ -19,6 +21,8 @@
 		71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */; };
 		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
+		71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */ = {isa = PBXBuildFile; productRef = 71F7D7A62981B1A00086AE84 /* CreditCard */; };
+		71F7D7AA29859ABE0086AE84 /* NavigationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F7D7A929859ABE0086AE84 /* NavigationModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,12 +57,14 @@
 
 /* Begin PBXFileReference section */
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		710F9D2D2979B2E50034E193 /* Pin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Pin; sourceTree = "<group>"; };
 		71463F3328BE4CA800A54384 /* HomeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71463F3528BE4CA800A54384 /* HomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
 		71463F3728BE4CA800A54384 /* HomeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		714B15A72899D5C6005338EB /* OnboardingUITest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnboardingUITest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		714B15A92899D5C6005338EB /* OnboardingUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITest.swift; sourceTree = "<group>"; };
 		714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITestLaunchTests.swift; sourceTree = "<group>"; };
+		7151502329743AF600B0D161 /* Checkout */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Checkout; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		71682415290B035200A80C26 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
@@ -75,6 +81,8 @@
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
+		71F7D7A52981B1700086AE84 /* CreditCard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CreditCard; sourceTree = "<group>"; };
+		71F7D7A929859ABE0086AE84 /* NavigationModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +106,9 @@
 			files = (
 				71D019DF28A8537D00312864 /* Home in Frameworks */,
 				71D019E128A8538400312864 /* Onboarding in Frameworks */,
+				710F9D2F2979B2FF0034E193 /* Pin in Frameworks */,
+				7151502529743F3A00B0D161 /* Checkout in Frameworks */,
+				71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +168,7 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
+				71F7D7A829859AA70086AE84 /* Navigation */,
 				71BA90B428FE738B007B85F2 /* SplashScreen */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
@@ -185,6 +197,9 @@
 				71E2BE26289BE97A0025ED12 /* Core */,
 				71929B6128A6F97600D84B98 /* Common */,
 				71707E5028FFBDD700CD9BB6 /* Permissions */,
+				7151502329743AF600B0D161 /* Checkout */,
+				710F9D2D2979B2E50034E193 /* Pin */,
+				71F7D7A52981B1700086AE84 /* CreditCard */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -195,6 +210,14 @@
 				71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */,
 			);
 			path = SplashScreen;
+			sourceTree = "<group>";
+		};
+		71F7D7A829859AA70086AE84 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				71F7D7A929859ABE0086AE84 /* NavigationModifier.swift */,
+			);
+			path = Navigation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +277,9 @@
 			packageProductDependencies = (
 				71D019DE28A8537D00312864 /* Home */,
 				71D019E028A8538400312864 /* Onboarding */,
+				7151502429743F3A00B0D161 /* Checkout */,
+				710F9D2E2979B2FF0034E193 /* Pin */,
+				71F7D7A62981B1A00086AE84 /* CreditCard */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -376,6 +402,7 @@
 			files = (
 				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
+				71F7D7AA29859ABE0086AE84 /* NavigationModifier.swift in Sources */,
 				71682416290B035200A80C26 /* Documentation.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -585,7 +612,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -628,7 +655,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -705,6 +732,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		710F9D2E2979B2FF0034E193 /* Pin */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Pin;
+		};
+		7151502429743F3A00B0D161 /* Checkout */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Checkout;
+		};
 		71D019DE28A8537D00312864 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
@@ -712,6 +747,10 @@
 		71D019E028A8538400312864 /* Onboarding */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Onboarding;
+		};
+		71F7D7A62981B1A00086AE84 /* CreditCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CreditCard;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -6,7 +6,7 @@
 //
 import Foundation
 /// Base DTO struct for Tingg API services
-public struct BaseDTO: BaseDTOprotocol, Codable {
+public struct BaseDTO: BaseDTOprotocol {
     public var statusCode: Int
     public var statusMessage: String
     public init(statusCode: Int, statusMessage: String) {

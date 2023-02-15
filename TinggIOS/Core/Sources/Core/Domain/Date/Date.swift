@@ -17,6 +17,15 @@ extension Date {
     public static func - (lhs: Date, rhs: Date) -> TimeInterval {
         return lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
     }
+    /// An operator to compute date greaterthan
+    /// - Parameters:
+    ///   - lhs: an instance of the latest date
+    ///   - rhs: an instance of the old date
+    /// - Returns: the difference in Time interval
+    
+    public static func > (lhs: Date, rhs: Date) -> Bool {
+        return lhs.timeIntervalSinceReferenceDate > rhs.timeIntervalSinceReferenceDate
+    }
     /// For formatting a date
     /// ```swift
     ///let date = Date()

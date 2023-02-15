@@ -5,57 +5,63 @@
 //  Created by Abdulrasaq on 15/12/2022.
 //
 import Combine
+import Common
 import Core
 import Foundation
 
-class BuyAirtimeViewModel: ObservableObject {
+@MainActor
+public class BuyAirtimeViewModel: ViewModel {
     @Published public var suggestedAmountModel: SuggestedAmountModel = .init()
     @Published public var favouriteEnrollmentListModel: FavouriteEnrollmentModel = .init()
     @Published public var providersListModel: ProvidersListModel = .init()
     @Published public var servicesDialogModel: ServicesDialogModel = .init()
-    @Published public var dcm: DebitCardModel = .init()
-    @Published public var dcddm: DebitCardDropDownModel = .init()
-    @Published public var showCardOptions: Bool = false
-    public init() {
-        //
+    @Published public var service: MerchantService = sampleServices[0]
+    @Published var defaultNetworkUIModel = UIModel.nothing
+    @Published public var subscriptions = Set<AnyCancellable>()
+    private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
+    public init(updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase) {
+        self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
+    }
+    
+    func updateDefaultNetworkId(request: TinggRequest) {
+        defaultNetworkUIModel = UIModel.loading
+        Task {
+            do {
+                let result = try await updateDefaultNetworkIdUsecase(request: request)
+                handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
+                AppStorageManager.setDefaultNetwork(service: service)
+            } catch {
+                handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+
+    }
+    
+    /// Handle result
+    nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
+        switch result {
+        case .failure(let apiError):
+            model = UIModel.error((apiError as! ApiError).localizedString)
+            return
+        case .success(let data):
+            var content: UIModel.Content
+            if let d = data as? BaseDTOprotocol {
+                content = UIModel.Content(data: data, statusMessage: d.statusMessage)
+            } else {
+                content = UIModel.Content(data: data)
+            }
+            model = UIModel.content(content)
+            return
+        }
+    }
+    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
+        model.sink { [unowned self] uiModel in
+            uiModelCases(uiModel: uiModel, action: action, onError: onError)
+        }.store(in: &subscriptions)
     }
 }
 
 
-struct SuggestedAmountModel: Hashable, Equatable {
-    var amount: String = ""
-    var historyByAccountNumber: [String] = .init()
-    var currency: String = ""
-}
 
-struct FavouriteEnrollmentModel: Hashable, Equatable {
-    var enrollments = [Enrollment]()
-    var accountNumber: String = ""
-    var selectedNetwork: String = ""
-}
 
-struct ProvidersListModel: Hashable, Equatable {
-    var selectedProvider: String = ""
-    var details: [ProviderDetails] = .init()
-    var selectPaymentTitle = "Select network provider"
-    var canOthersPay: Bool = false
-    var orientation = ListOrientation.horizontal
-}
 
-struct ServicesDialogModel: Hashable, Equatable {
-    var phoneNumber: String = "080"
-    var airtimeServices = [MerchantService]()
-    var selectedButton: String = ""
-}
-
-struct DebitCardModel: Hashable, Equatable {
-    var cardDetails: CardDetailDTO = sampleCardDTO
-    var cardType: String = ""
-    var imageUrl: String = ""
-}
-
-struct DebitCardDropDownModel: Hashable, Equatable {
-    var selectedCardDetails: CardDetailDTO = sampleCardDTO
-    var cardDetails: [CardDetailDTO] = [sampleCardDTO, sampleCardDTO2, sampleCardDTO3]
-    var showDropDown = false
-}

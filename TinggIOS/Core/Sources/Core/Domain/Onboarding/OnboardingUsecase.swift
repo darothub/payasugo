@@ -47,7 +47,7 @@ public class OnboardingUseCase {
     /// Request for activation code
     /// - Parameter tinggRequest: MAK request
     /// - Returns: Result with ``BaseDTO`` or ``ApiError``
-    public func makeActivationCodeRequest(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError> {
+    public func makeActivationCodeRequest(tinggRequest: RequestMap) async throws -> Result<BaseDTO, ApiError> {
         return try await activationRepository.requestForActivationCode(tinggRequest: tinggRequest)
     }
     /// Request to confirm activation code
@@ -55,10 +55,10 @@ public class OnboardingUseCase {
     ///   - tinggRequest: VAK request
     ///   - code: OTP
     /// - Returns: Result with ``BaseDTO`` or ``ApiError``
-    public func confirmActivationCodeRequest(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError> {
+    public func confirmActivationCodeRequest(tinggRequest: RequestMap, code: String) async throws -> Result<BaseDTO, ApiError> {
         return try await activationRepository.confirmActivationCode(tinggRequest: tinggRequest, code: code)
     }
-    public func makePARRequest(tinggRequest: TinggRequest ) async throws -> Result<PARAndFSUDTO, ApiError> {
+    public func makePARRequest(tinggRequest: RequestMap ) async throws -> Result<PARAndFSUDTO, ApiError> {
         return try await parAndFsuRepository.makeParAndFsuRequest(tinggRequest: tinggRequest)
     }
 }

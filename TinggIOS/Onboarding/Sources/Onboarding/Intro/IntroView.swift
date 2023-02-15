@@ -10,7 +10,7 @@ import SwiftUI
 import Theme
 /// Introduces the onboarding screens to the user
 public struct IntroView: View {
-    @State var active = false
+    @State private var active = false
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @EnvironmentObject var navigation: NavigationUtils
     public init() {

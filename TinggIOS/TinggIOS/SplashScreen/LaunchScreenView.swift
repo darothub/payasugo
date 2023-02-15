@@ -4,11 +4,13 @@
 //
 //  Created by Abdulrasaq on 18/10/2022.
 //
-
+import CreditCard
 import Core
-import Permissions
+import Checkout
 import Home
 import Onboarding
+import Permissions
+import Pin
 import SwiftUI
 import Theme
 /// This view display the splash screen on launch.
@@ -16,10 +18,6 @@ import Theme
 /// This is the first screen  of ``TinggIOSApp``.
 public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationUtils
-    @EnvironmentObject var ovm: OnboardingViewModel
-    @EnvironmentObject var  hvm: HomeViewModel
-    @EnvironmentObject var checkout: CheckoutViewModel
-    @EnvironmentObject var contactViewModel: ContactViewModel
     @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
@@ -37,46 +35,9 @@ public struct LaunchScreenView: View {
                 }
             }
             .edgesIgnoringSafeArea(.all)
-            .navigationDestination(for: Screens.self) { screen in
-                switch screen {
-                case .home:
-                    HomeBottomNavView()
-                        .environmentObject(checkout)
-                case .intro:
-                    IntroView()
-                        .navigationBarHidden(true)
-                        .environmentObject(navigation)
-                        .environmentObject(ovm)
-                case .buyAirtime:
-                    BuyAirtimeView()
-                        .environmentObject(checkout)
-                        .environmentObject(contactViewModel)
-                case let .billers(billers):
-                    BillersView(billers: billers)
-                        .environmentObject(hvm)
-                        .onAppear {
-                            colorTint = .blue
-                        }
-                case .categoriesAndServices(let items):
-                    CategoriesAndServicesView(categoryNameAndServices: items)
+            .navigation()
             
-                case .billFormView(let billDetails):
-                    BillFormView(billDetails: .constant(billDetails))
-                        
-                case let .nominationDetails(invoice, nomination):
-                    NominationDetailView(invoice: invoice, nomination:  nomination)
-                        .onAppear {
-                            colorTint = .white
-                        }
-                case let .billDetailsView(invoice, service):
-                    BillDetailsView(
-                        fetchBill: invoice,
-                        service: service
-                    )
-                }
-            }
-            
-        }.changeTint($colorTint)
+        }
     }
 }
 /// Struct responsible for preview of changes in Xcode
@@ -86,6 +47,7 @@ struct LaunchScreenView_Previews: PreviewProvider {
             .environmentObject(NavigationUtils())
             .environmentObject(OnboardingDI.createOnboardingViewModel())
             .environmentObject(HomeDI.createHomeViewModel())
+            .environmentObject(CreditCardDI.createCheckoutViewModel())
     }
 }
 

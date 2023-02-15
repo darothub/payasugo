@@ -13,15 +13,17 @@ import Theme
 ///  Displays OTP text field for confirmation.
 ///  Upon successful OTP confirmation user returns to Phone number verification view.
 public struct OtpConfirmationView: View {
-    @State var otpSize = 4
-    @State var otp = ""
-    @State var timeLeft = 60
-    @State var timeAdvice = ""
+    @State private var otpSize = 4
+    @State private var otp = ""
+    @State private var timeLeft = 60
+    @State private var timeAdvice = ""
     @Binding var otpConfirmed: Bool
-    @StateObject var otpViewOVM = OnboardingDI.createOnboardingViewModel()
-    @Environment(\.colorScheme) var colorScheme
-    @Environment(\.dismiss) var dismiss
-    @State var onSubmit = false
+    @StateObject private var otpViewOVM = OnboardingDI.createOnboardingViewModel()
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dismiss) private var dismiss
+    @State private var showErrorAlert = false
+    @State private var showSuccessAlert = false
+    @State private var onSubmit = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     public var body: some View {
@@ -43,7 +45,7 @@ public struct OtpConfirmationView: View {
             ) {
                 otpViewOVM.confirmActivationCodeRequest(code: otp)
                
-            }.handleViewStates(uiModel: $otpViewOVM.onConfirmActivationUIModel, showAlert: $otpViewOVM.showAlert)
+            }.handleViewStates(uiModel: $otpViewOVM.onConfirmActivationUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
             
         }
         .padding(20)
@@ -53,7 +55,7 @@ public struct OtpConfirmationView: View {
         .onAppear {
             observingUIModel()
         }
-        .handleViewStates(uiModel: $otpViewOVM.onActivationRequestUIModel, showAlert: $otpViewOVM.showAlert)
+        
     }
     /// Reset the count down timer for OTP receipt
     fileprivate func resetTimer() {
@@ -77,10 +79,11 @@ public struct OtpConfirmationView: View {
     }
     /// Observes the UI state
     fileprivate func observingUIModel() {
-        otpViewOVM.observeUIModel(model: otpViewOVM.$onConfirmActivationUIModel) { content in
+        otpViewOVM.observeUIModel(model: otpViewOVM.$onConfirmActivationUIModel, subscriptions: &otpViewOVM.subscriptions) { content in
             dismiss()
             otpConfirmed = true
         } onError: { err in
+            showErrorAlert = true
             print("OTPView \(err)")
         }
     }

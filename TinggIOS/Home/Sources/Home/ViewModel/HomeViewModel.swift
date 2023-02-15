@@ -9,8 +9,8 @@ import Permissions
 import SwiftUI
 
 @MainActor
-public class HomeViewModel: ObservableObject {
-    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
+public class HomeViewModel: ViewModel {
+    @Published var defaultNetworkServiceId: String = AppStorageManager.getDefaultNetworkId()
     @Published public var nominationInfo = Observer<Enrollment>()
     @Published public var airTimeServices = sampleServices
     @Published public var servicesByCategory = [[Categorys]]()
@@ -38,7 +38,8 @@ public class HomeViewModel: ObservableObject {
     @Published var buyAirtime = false
     @Published var selectedDefaultNetworkName = ""
     @Published var showNetworkList = false
-    @Published var showAlert = false
+    @Published public var showAlert = false
+    @Published public var showCheckOutView = false
     @Published var permission = ContactManager()
     @Published var country = AppStorageManager.getCountry()
     @Published public var subscriptions = Set<AnyCancellable>()
@@ -49,16 +50,17 @@ public class HomeViewModel: ObservableObject {
         getProfile()
         getQuickTopups()
         displayedRechargeAndBill()
-        fetchDueBills()
+//        fetchDueBills()
         getServicesByCategory()
         allRecharge()
     }
     
-    public func getProfile() {
-        guard let profile = homeUsecase.getProfile() else {
-            return
+    public func getProfile() -> Profile? {
+        if let profile = homeUsecase.getProfile() {
+            self.profile = profile
+            return profile
         }
-        self.profile = profile
+        return nil
     }
     
     public func getServicesByCategory() {
@@ -87,13 +89,22 @@ public class HomeViewModel: ObservableObject {
         return
     }
     
+    public func getAirtimeServices() -> [MerchantService] {
+        var services = [MerchantService]()
+        do {
+            services = try homeUsecase.getQuickTopups()
+        } catch {
+           print("Airtime service error")
+        }
+        return services
+    }
+    
     public func mapHistoryIntoChartData() -> [ChartData] {
         return homeUsecase.getBarChartMappedData().map { (key, value) in
             return ChartData(xName: ChartMonth.allCases[key-1], point: value)
         }.sorted { cd1, cd2 in
             ChartMonth.allCases.firstIndex(of: cd1.xName)! <  ChartMonth.allCases.firstIndex(of: cd2.xName)!
         }
-        
     }
     public func mapHistoryIntoChartData(transactionHistory: [TransactionHistory]) -> [ChartData] {
         return mapTransactionHistoryIntoDictionary(transactionHistory: transactionHistory).map { (key, value) in
@@ -156,7 +167,7 @@ public class HomeViewModel: ObservableObject {
         Task {
             do {
                 dueBill = try await homeUsecase.getDueBills()
-                handleResultState(model: &fetchBillUIModel, Result.success(dueBill))
+                handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
             } catch {
                 handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
@@ -172,7 +183,7 @@ public class HomeViewModel: ObservableObject {
          
             do {
                 let singleBillInvoice = try await homeUsecase.getSingleDueBills(tinggRequest: tinggRequest)
-                handleResultState(model: &uiModel, Result.success(singleBillInvoice))
+                handleResultState(model: &uiModel, (Result.success(singleBillInvoice) as Result<Any, Error>))
             }catch {
                 handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
@@ -195,7 +206,7 @@ public class HomeViewModel: ObservableObject {
                 case .UPDATE, .DELETE:
                     response = try await homeUsecase.handleMCPDeleteAndUpdateRequest(tinggRequest: request)
                 }
-                handleResultState(model: &serviceBillUIModel, Result.success(response))
+                handleResultState(model: &serviceBillUIModel, (Result.success(response) as Result<Any, Error>))
             } catch {
                 handleResultState(model: &serviceBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
@@ -205,21 +216,23 @@ public class HomeViewModel: ObservableObject {
     func updateDefaultNetworkId(serviceName: String) {
         showAlert = true
         if !serviceName.isEmpty {
-            let service = airTimeServices.first { serv in
+            let service = getAirtimeServices().first { serv in
                 serv.serviceName == serviceName
             }
             var request = TinggRequest()
-            request.defaultNetworkServiceId = service!.hubServiceID
-            request.service = "UPN"
-            defaultNetworkUIModel = UIModel.loading
-
-            Task {
-                do {
-                    let result = try await homeUsecase.updateDefaultNetwork(request: request)
-                    handleResultState(model: &defaultNetworkUIModel, Result.success(result))
-                    defaultNetworkServiceId = service?.hubServiceID ?? ""
-                } catch {
-                    handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            if let s = service {
+                request.defaultNetworkServiceId = s.hubServiceID
+                request.service = "UPN"
+                defaultNetworkUIModel = UIModel.loading
+                Task {
+                    do {
+                        let result = try await homeUsecase.updateDefaultNetwork(request: request)
+                        handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
+                        defaultNetworkServiceId = service?.hubServiceID ?? ""
+                        AppStorageManager.setDefaultNetwork(service: service!)
+                    } catch {
+                        handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                    }
                 }
             }
         } else {
@@ -255,11 +268,10 @@ public class HomeViewModel: ObservableObject {
     }
 
     /// Handle result
-    fileprivate func handleResultState<T: Any>(model: inout UIModel, _ result: Result<T, ApiError>) {
+    nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
-            model = UIModel.error(apiError.localizedString)
-            showAlert = true
+            model = UIModel.error((apiError as! ApiError).localizedString)
             return
         case .success(let data):
             var content: UIModel.Content
@@ -269,29 +281,13 @@ public class HomeViewModel: ObservableObject {
                 content = UIModel.Content(data: data)
             }
             model = UIModel.content(content)
-            showAlert = true
             return
         }
     }
-    func observeUIModel(model: Published<UIModel>.Publisher, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
+    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
         model.sink { [unowned self] uiModel in
             uiModelCases(uiModel: uiModel, action: action, onError: onError)
         }.store(in: &subscriptions)
-    }
-    func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in }) {
-        switch uiModel {
-        case .content(let data):
-            action(data)
-            print("State: content")
-        case .loading:
-            print("State: loading..")
-        case .error(let err):
-            onError(err)
-            print("State error \(err)")
-            
-        case .nothing:
-            print("State: nothing")
-        }
     }
 
 }

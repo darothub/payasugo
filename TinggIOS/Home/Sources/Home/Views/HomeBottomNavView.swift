@@ -12,8 +12,7 @@ import Theme
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View {
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
-    @EnvironmentObject var checkout: CheckoutViewModel
-    @State var showBottomSheet = true
+    @State private var showBottomSheet = true
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
 
     public init() {
@@ -53,7 +52,6 @@ public struct HomeBottomNavView: View {
         VStack{
             HomeView()
                 .environmentObject(hvm)
-                .environmentObject(checkout)
             Spacer()
         }
     }
@@ -61,7 +59,6 @@ public struct HomeBottomNavView: View {
     func billView() -> some View {
         BillView()
             .environmentObject(hvm)
-            .environmentObject(checkout)
     }
 }
 

@@ -11,9 +11,8 @@ import Core
 public struct BillDetailsView: View {
     @State var fetchBill: Invoice = sampleInvoice
     @State var service: MerchantService = sampleServices[0]
-    @State var textFieldText = ""
-    @State var amount = ""
-    @State var dueDate = ""
+    @State private var amount = ""
+    @State private var dueDate = ""
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var navUtils: NavigationUtils
     var dueDateComputed: String {
@@ -94,7 +93,7 @@ public struct BillDetailsView: View {
         }.onAppear {
             amount = amountComputed
             dueDate = dueDateComputed
-            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel) { content in
+            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel, subscriptions: &homeViewModel.subscriptions) { content in
                 if let bill = content.data as? Bill {
                     let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
                     homeViewModel.nominationInfo.$objects.append(enrol)

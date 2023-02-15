@@ -88,7 +88,7 @@ public protocol Flexible: Decodable {
 }
 
 public struct Flex<Value: Decodable, AltValue: Flexible>: Decodable {
-    let value: Value
+    public let value: Value
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(Value.self) {
@@ -111,6 +111,17 @@ extension Int: Flexible {
         }
     }
 }
+extension Int?: Flexible {
+    public func convert<Output: Decodable>(to output: Output.Type) -> Output {
+        switch output {
+        case is String.Type:
+            return String(self ?? 0) as! Output
+        default:
+            fatalError()
+        }
+    }
+}
+
 extension String: Flexible {
     public func convert<Output: Decodable>(to output: Output.Type) -> Output {
         switch output {
@@ -121,7 +132,6 @@ extension String: Flexible {
         }
     }
 }
-
 
 public struct DynamicInvoiceType: Decodable   {
      public var billDescription: String = ""

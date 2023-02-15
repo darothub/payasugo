@@ -25,7 +25,6 @@ public struct PARAndFSUDTO: Decodable, BaseDTOprotocol {
     public var transactionSummaryInfo: [TransactionHistory]
     public var inviteMessage: String
     public var invitesVisibility: Int
-    public var defaultNetworkServiceID: String?
     public var manualBillsSetup: ManualBillsSetup
     public var manualBillAccounts: [ManualBill]
     public var bundleData: [BundleDataStruct]
@@ -53,6 +52,7 @@ public struct PARAndFSUDTO: Decodable, BaseDTOprotocol {
     public var profileImageUploadAPI, britamAPIBaseEndpoint: String
     public var britamAPIUser, britamAPIPass, britamAdMessage: String
     public var britamShowAdCount: Int
+    public var defaultNetworkServiceID: Int? = 0
 
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
@@ -73,7 +73,7 @@ public struct PARAndFSUDTO: Decodable, BaseDTOprotocol {
         case transactionSummaryInfo = "TRANSACTION_SUMMARY_INFO"
         case inviteMessage = "INVITE_MESSAGE"
         case invitesVisibility = "INVITES_VISIBILITY"
-//        case defaultNetworkServiceID = "DEFAULT_NETWORK_SERVICE_ID"
+        case defaultNetworkServiceID = "DEFAULT_NETWORK_SERVICE_ID"
         case manualBillsSetup = "MANUAL_BILLS_SETUP"
         case manualBillAccounts = "MANUAL_BILL_ACCOUNTS"
         case bundleData = "BUNDLE_DATA"

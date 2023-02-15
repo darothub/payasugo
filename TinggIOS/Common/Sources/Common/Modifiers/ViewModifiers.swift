@@ -6,6 +6,9 @@
 //
 import SwiftUI
 public extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        ModifiedContent(content: self, modifier: CornerRadiusStyle(radius: radius, corners: corners))
+    }
     @ViewBuilder
     func someShadow(showShadow: Binding<Bool>) -> some View {
         shadow(color: showShadow.wrappedValue ? .green : .red, radius: 1)
@@ -34,9 +37,12 @@ public extension View {
     }
     func handleViewStates(
         uiModel: Binding<UIModel>,
-        showAlert: Binding<Bool>
+        showAlert: Binding<Bool>  = .constant(false),
+        showSuccessAlert: Binding<Bool> = .constant(false),
+        onSuccessAction: @escaping () -> Void = {},
+        onErrorAction: @escaping () -> Void = {}
     ) -> some View {
-      self.modifier(ViewStates(uiModel: uiModel, showAlert: showAlert))
+      self.modifier(ViewStates(uiModel: uiModel, showAlert: showAlert, showSuccessAlert: showSuccessAlert, onSuccessAction: onSuccessAction, onErrorAction: onErrorAction))
     }
     func setPageIndicatorAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .red
@@ -52,6 +58,10 @@ public extension View {
     @ViewBuilder
     func showIf(_ value: Binding<Bool>) -> some View {
         value.wrappedValue ? self : self.hidden() as? Self
+    }
+    @ViewBuilder
+    func showIfNot(_ value: Binding<Bool>) -> some View {
+        !value.wrappedValue ? self : self.hidden() as? Self
     }
     
     @ViewBuilder

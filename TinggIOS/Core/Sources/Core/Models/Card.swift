@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 // MARK: - Card
 public class Card: Object,  ObjectKeyIdentifiable, Codable {
-    @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var firstName: String? = ""
     @Persisted public var middleName: String? = ""
     @Persisted public var idPassport: String? = ""
@@ -20,7 +19,7 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
     @Persisted public var currencyCode: String? = ""
     @Persisted public var customerCity: String? = ""
     @Persisted public var countryCode: String? = ""
-    @Persisted public var cardAlias: String? = ""
+    @Persisted(primaryKey: true) public var cardAlias: String? = ""
     @Persisted public var nameType: String? = ""
     @Persisted public var payerClientID: String? = ""
     @Persisted public var suffix: String? = ""
@@ -49,4 +48,9 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
     func isInActive() -> Bool {
         return self.activeStatus == Card.STATUS_INACTIVE
     }
+}
+
+
+public enum CardType: String {
+    case visa, mastercard, amex, DINERS, discover, jcb, CarteBlanche, EnRoute, none
 }

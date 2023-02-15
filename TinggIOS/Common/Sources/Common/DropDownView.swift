@@ -11,7 +11,7 @@ import SwiftUI
 public struct DropDownView: View {
     @Binding var selectedText: String
     @Binding var dropDownList:[String]
-    @State var showDropDown = false
+    @Binding var showDropDown: Bool
     @State var rowColor: Color
     @State var outlineColor: Color
     @State var selectedTextColor: Color
@@ -19,11 +19,12 @@ public struct DropDownView: View {
     @State var placeHolder: String
     @State var showLabel = false
     @State var disableEdit = false
-    public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "",
+    public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, showDropDown: Binding<Bool> = .constant(false), rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "",
         lockTyping: Bool = false
     ) {
         self._selectedText = selectedText
         self._dropDownList = dropDownList
+        self._showDropDown = showDropDown
         self._rowColor = State(initialValue: rowColor)
         self._outlineColor = State(initialValue: outlineColor)
         self._selectedTextColor = State(initialValue: selectedTextColor)
@@ -41,7 +42,7 @@ public struct DropDownView: View {
                 HStack {
                     TextField(placeHolder, text: $selectedText)
                         .disabled(disableEdit)
-                        .padding([.horizontal, .vertical], 15)
+                        .padding([.horizontal, .vertical], 17)
                         .font(.caption)
                         .foregroundColor(selectedTextColor)
                         .onTapGesture {
