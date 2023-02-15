@@ -12,15 +12,15 @@ public class ActivationRepositoryImpl:  ActivationRepository {
     public init (baseRequest: BaseRequest) {
         self.baseRequest = baseRequest
     }
-    public func requestForActivationCode(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>{
+    public func requestForActivationCode(tinggRequest: RequestMap) async throws -> Result<BaseDTO, ApiError>{
         return try await baseRequest.result(tinggRequest: tinggRequest)
     }
-    public func confirmActivationCode(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>{
+    public func confirmActivationCode(tinggRequest: RequestMap, code: String) async throws -> Result<BaseDTO, ApiError>{
         return try await baseRequest.result(tinggRequest: tinggRequest)
     }
 }
 
 public protocol ActivationRepository {
-    func requestForActivationCode(tinggRequest: TinggRequest) async throws -> Result<BaseDTO, ApiError>
-    func confirmActivationCode(tinggRequest: TinggRequest, code: String) async throws -> Result<BaseDTO, ApiError>
+    func requestForActivationCode(tinggRequest: RequestMap) async throws -> Result<BaseDTO, ApiError>
+    func confirmActivationCode(tinggRequest: RequestMap, code: String) async throws -> Result<BaseDTO, ApiError>
 }

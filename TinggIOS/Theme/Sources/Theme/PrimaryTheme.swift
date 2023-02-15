@@ -20,7 +20,7 @@ public struct PrimaryTheme {
     public static var largePadding: CGFloat = 25.0
     public enum Images: String {
         case bill, tinggSplashScreenIcon, tinggAssistImage, tinggIcon,
-        addBillImage, moneyImage, home, explore, group, myBills
+        addBillImage, moneyImage, home, explore, group, myBills, mastercardIcon, cardTempIcon, visa
         public var image: Image {
             return Images.getImage(self.rawValue)
         }

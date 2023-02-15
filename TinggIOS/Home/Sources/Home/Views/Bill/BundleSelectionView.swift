@@ -21,14 +21,20 @@ struct BundleSelectionView: View {
     @State var accountList: [String] = []
     @State var bundleInfo: [BundleData] = .init()
     @State var plans:[String] = []
-   
+    @State var dropDownShows = false
+    @State var bundleDropDownShows = false
+    @State var accountDropDownShows = false
     var body: some View {
         ZStack(alignment: .top) {
             VStack {
                 Text(service.serviceName)
-                DropDownView(selectedText: $selectedDataPlan, dropDownList: $plans, placeHoder: "Plans", lockTyping: true)
-                DropDownView(selectedText: $selectedBundle, dropDownList: $bundleList, placeHoder: "Select Bundles", lockTyping: true)
-                DropDownView(selectedText: $selectedAccount, dropDownList: $accountList, placeHoder: "Select account", lockTyping: true)
+                DropDownView(selectedText: $selectedDataPlan, dropDownList: $plans,  showDropDown: $dropDownShows, placeHoder: "Plans", lockTyping: true)
+                DropDownView(selectedText: $selectedBundle, dropDownList: $bundleList, showDropDown: $bundleDropDownShows, placeHoder: "Select Bundles", lockTyping: true)
+                    .showIfNot($dropDownShows)
+                DropDownView(selectedText: $selectedAccount, dropDownList: $accountList, showDropDown: $accountDropDownShows, placeHoder: "Select account", lockTyping: true)
+                    .showIfNot($dropDownShows)
+                    .showIfNot($bundleDropDownShows)
+                   
                 TextField("placeHolder", text: $mobileNumber)
                     .padding([.horizontal, .vertical], 15)
                     .font(.caption)
@@ -36,6 +42,9 @@ struct BundleSelectionView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
                     )
+                    .showIfNot($dropDownShows)
+                    .showIfNot($bundleDropDownShows)
+                    .showIfNot($accountDropDownShows)
                 Spacer()
                 
                 button(

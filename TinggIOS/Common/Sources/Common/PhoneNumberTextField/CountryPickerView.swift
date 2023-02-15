@@ -38,7 +38,7 @@ public struct CountryPickerView: View {
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text(countryCode.isEmpty ? "🇧🇼 +267" : "\(getFlag(country: countryFlag)) +\(countryCode)")
+                Text(countryCode.isEmpty ? "error" : "\(getFlag(country: countryFlag)) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .background(Color.clear)
                     .cornerRadius(10)
@@ -78,7 +78,7 @@ public struct CountryPickerView: View {
         if let code = countries.sorted(by: <).first?.value {
             return code
         }
-        return "+267"
+        return ""
     }
 }
 

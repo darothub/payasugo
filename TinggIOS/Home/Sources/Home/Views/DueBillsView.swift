@@ -13,6 +13,8 @@ struct DueBillsView: View {
     @State var fetchedBill = [Invoice]()
     @Binding var showDueBills:Bool
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var showErrorAlert = false
+    @State var showSuccessAlert = false
     @State var updatedTimeString: String = ""
     var body: some View {
         VStack(alignment: .leading) {
@@ -40,7 +42,8 @@ struct DueBillsView: View {
           
         }.padding()
         .onAppear {
-            homeViewModel.observeUIModel(model: homeViewModel.$fetchBillUIModel) { content in
+            homeViewModel.fetchDueBills()
+            homeViewModel.observeUIModel(model: homeViewModel.$fetchBillUIModel, subscriptions: &homeViewModel.subscriptions) { content in
                 fetchedBill = content.data as! [Invoice]
                 withAnimation {
                     showDueBills = !fetchedBill.isEmpty
@@ -48,11 +51,13 @@ struct DueBillsView: View {
             } onError: { err in
                 withAnimation {
                     showDueBills = err.isEmpty
+                    showErrorAlert = true
+                    showSuccessAlert = true
                     print("State error \(err)")
                 }
             }
             
-        }.handleViewStates(uiModel: $homeViewModel.fetchBillUIModel, showAlert: $homeViewModel.showAlert)
+        }.handleViewStates(uiModel: $homeViewModel.fetchBillUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
            
     }
     @ViewBuilder
@@ -187,29 +192,3 @@ struct RightHandSideView: View {
 }
 
 
-struct CornerRadiusStyle: ViewModifier {
-    var radius: CGFloat
-    var corners: UIRectCorner
-    
-    struct CornerRadiusShape: Shape {
-
-        var radius = CGFloat.infinity
-        var corners = UIRectCorner.allCorners
-
-        func path(in rect: CGRect) -> Path {
-            let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-            return Path(path.cgPath)
-        }
-    }
-
-    func body(content: Content) -> some View {
-        content
-            .clipShape(CornerRadiusShape(radius: radius, corners: corners))
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        ModifiedContent(content: self, modifier: CornerRadiusStyle(radius: radius, corners: corners))
-    }
-}

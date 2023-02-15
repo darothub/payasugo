@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - SecurityQuestion
 public class SecurityQuestion: Object,  ObjectKeyIdentifiable,  Codable {
-    @Persisted public var questionID: String = ""
+    @Persisted(primaryKey: true) public var questionID: String = ""
     @Persisted public var question: String = ""
 
     enum CodingKeys: String, CodingKey {

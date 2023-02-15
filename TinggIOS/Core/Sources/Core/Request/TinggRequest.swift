@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@available(swift, deprecated: 5.0 , message: "This has been deprecated in build 9.0 v0.1.0 use Request instead")
 /// A type for parameterized for tingg request
 public struct TinggRequest: Encodable {
     public var service: String?
@@ -18,7 +19,7 @@ public struct TinggRequest: Encodable {
     public var osVersion: String = deviceOSVersion()
     public var deviceName: String = modelIdentifier()
     public var osType: String = "iOS"
-    public var appVersion: String = "1.0"
+    public var appVersion: String = "4.0.23"
     public var origin: String = "MULA_APP"
     public var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
     public var merchantDetails: String? = ""
@@ -29,7 +30,7 @@ public struct TinggRequest: Encodable {
     public var billAccounts: [BillAccount]?
     public var serviceId: String? = ""
     public var action: String = ""
-    public var defaultNetworkServiceId = ""
+    public var defaultNetworkServiceId = AppStorageManager.getDefaultNetworkId()
     public var isNomination = ""
     public static var shared = TinggRequest()
     public init() {
@@ -82,12 +83,86 @@ func modelIdentifier() -> String {
                   encoding: .ascii)!.trimmingCharacters(in: .controlCharacters)
 }
 
-func deviceOSVersion() -> String {
+public func deviceOSVersion() -> String {
     return UIDevice.current.systemVersion
 }
-var uuidForVendor: String {
+public var uuidForVendor: String {
     if let uuid = UIDevice.current.identifierForVendor?.uuidString {
         return uuid
     }
     return ""
 }
+
+public struct RequestMap  {
+    public var dict: [String: Any]
+    private init(dict: [String: Any]) {
+        self.dict = dict
+    }
+    public class Builder {
+        fileprivate var dict: [String: Any] = [:]
+        private var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
+        public init() {
+            self.dict.updateValue(AppStorageManager.getPhoneNumber(), forKey: RequestKey.MSISDN.str)
+            if let clientId = AppStorageManager.getCountry()?.mulaClientID, let countryName = AppStorageManager.getCountry()?.name {
+                self.dict.updateValue(clientId, forKey: RequestKey.CLIENT_ID.str)
+                self.dict.updateValue(countryName, forKey: RequestKey.DATA_SOURCE.str)
+            }
+            self.dict.updateValue(uuidForVendor, forKey: RequestKey.UUID.str)
+            self.dict.updateValue(deviceOSVersion(), forKey: RequestKey.OS_VERSION.str)
+            self.dict.updateValue(modelIdentifier(), forKey: RequestKey.DEVICE_NAME.str)
+            self.dict.updateValue(15, forKey: RequestKey.API_LEVEL.str)
+            self.dict.updateValue( "iOS", forKey: RequestKey.OS_TYPE.str)
+            self.dict.updateValue("1.0", forKey: RequestKey.APP_VERSION.str)
+            self.dict.updateValue("MULA_APP", forKey: RequestKey.ORIGIN.str)
+            self.dict.updateValue(parseInstallationId, forKey: RequestKey.PARSE_INSTALLATION_ID.str)
+            self.dict.updateValue("1", forKey: RequestKey.IS_EXPLICIT.str)
+        }
+        public func clear() -> Builder {
+            dict.removeAll()
+            return self
+        }
+        public func add<T>(value: T, for key: RequestKey) -> Builder where T: Encodable {
+            dict.updateValue(value, forKey: key.str)
+            return self
+        }
+        public func add<T>(value: T, for key: String) -> Builder where T: Encodable {
+            dict.updateValue(value, forKey: key)
+            return self
+        }
+        public func build() -> RequestMap {
+            RequestMap(dict: dict)
+        }
+    }
+    public enum RequestKey: String {
+        case MSISDN
+        case CLIENT_ID
+        case SERVICE
+        case ACCOUNT_NUMBER
+        case UUID
+        case OS_VERSION
+        case DEVICE_NAME
+        case OS_TYPE
+        case APP_VERSION
+        case ORIGIN
+        case PARSE_INSTALLATION_ID
+        case MERCHANT_DETAILS
+        case PROFILE_INFO
+        case API_LEVEL
+        case IS_EXPLICIT
+        case ACTIVATION_CODE
+        case DATA_SOURCE
+        case SERVICE_ID
+        case BILL_ACCOUNTS
+        case ACTION
+        case DEFAULT_NETWORK_SERVICE_ID
+        case IS_NOMINATION
+        case QUESTION_ID
+        case SECURITY_ANSWER
+        case CARD_ALIAS
+        case AMOUNT
+        var str: String {
+            return self.rawValue
+        }
+    }
+}
+

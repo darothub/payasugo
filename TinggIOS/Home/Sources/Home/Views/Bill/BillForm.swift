@@ -10,12 +10,12 @@ import Common
 import Theme
 import Core
 public struct BillFormView: View {
-    @State var accountNumber: String = ""
+    @EnvironmentObject var navUtils: NavigationUtils
     @Binding var billDetails: BillDetails
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
-    @EnvironmentObject var navUtils: NavigationUtils
-    @State var invoice: Invoice = .init()
-    @State var navigateBillDetailsView = false
+    @State private var accountNumber: String = ""
+    @State private var invoice: Invoice = .init()
+    @State private var navigateBillDetailsView = false
     var accountNumberList: [String] {
         billDetails.info.map { info in
             info.accountNumber!
@@ -59,7 +59,7 @@ public struct BillFormView: View {
                 }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: $homeViewModel.showAlert)
             }
         }.onAppear {
-            homeViewModel.observeUIModel(model: homeViewModel.$uiModel) { content in
+            homeViewModel.observeUIModel(model: homeViewModel.$uiModel, subscriptions: &homeViewModel.subscriptions) { content in
                 let invoice = content.data as! Invoice
                 self.invoice = invoice
                 navUtils.navigationStack = [

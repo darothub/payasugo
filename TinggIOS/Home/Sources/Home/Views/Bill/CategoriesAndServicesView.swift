@@ -10,14 +10,14 @@ import Theme
 import Common
 
 public struct CategoriesAndServicesView: View {
-    @State var searchText = ""
-    @State var searching = false
-    @State var categoryNameAndServices: [TitleAndListItem] = [TitleAndListItem]()
-    @State var searchResult : [TitleAndListItem] = [TitleAndListItem]()
-    @State var navigateToBillForm = false
-    @State var bills: BillDetails = BillDetails(service: .init(), info: .init())
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
+    @State private var searchText = ""
+    @State private var searching = false
+    @State private var searchResult : [TitleAndListItem] = [TitleAndListItem]()
+    @State private var navigateToBillForm = false
+    @State private var bills: BillDetails = BillDetails(service: .init(), info: .init())
+    @State var categoryNameAndServices: [TitleAndListItem] = [TitleAndListItem]()
     public init(categoryNameAndServices: [TitleAndListItem]) {
         self._categoryNameAndServices = State(initialValue: categoryNameAndServices)
         

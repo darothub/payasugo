@@ -20,16 +20,17 @@ public struct PhoneNumberValidationView: View {
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
     @Environment(\.realmManager) var realmManager
-    @State var showOTPView = false
-    @State var isOTPConfirmed = false
-    @State var phoneNumber = ""
-    @State var countryCode = ""
-    @State var countryFlag = ""
-    @State var isValidPhoneNumber = false
-    @State var warning = ""
-    @State var hasCheckedTermsAndPolicy = false
-    @State var showSupportTeamContact = false
-    @State var showAlert = false
+    @State private var showOTPView = false
+    @State private var isOTPConfirmed = false
+    @State private var phoneNumber = ""
+    @State private var countryCode = ""
+    @State private var countryFlag = ""
+    @State private var isValidPhoneNumber = false
+    @State private var warning = ""
+    @State private var hasCheckedTermsAndPolicy = false
+    @State private var showSupportTeamContact = false
+    @State private var showErrorAlert = false
+    @State private var showSuccessAlert = false
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -60,7 +61,7 @@ public struct PhoneNumberValidationView: View {
                     prepareActivationRequest()
                 }.keyboardShortcut(.return)
                   .accessibility(identifier: "continuebtn")
-                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $vm.showAlert)
+                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
 
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -78,8 +79,8 @@ public struct PhoneNumberValidationView: View {
                     otpConfirmed: $isOTPConfirmed
                 )
             })
-            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $vm.showAlert)
-            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showAlert)
+            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $showErrorAlert)
+            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
             .background(PrimaryTheme.getColor(.tinggwhite))
             .onAppear {
                 observeUIModel()
@@ -152,15 +153,17 @@ extension PhoneNumberValidationView {
         openURL(url)
     }
     fileprivate func observeUIModel() {
-        vm.observeUIModel(model: vm.$onActivationRequestUIModel) { content in
+        vm.observeUIModel(model: vm.$onActivationRequestUIModel, subscriptions: &vm.subscriptions) { content in
             showOTPView = true
         } onError: { err in
+            showErrorAlert = true
             print("PhoneNumberValidationView \(err)")
         }
-        vm.observeUIModel(model: vm.$onParRequestUIModel) { content in
+        vm.observeUIModel(model: vm.$onParRequestUIModel, subscriptions: &vm.subscriptions) { content in
             let dto = content.data as! PARAndFSUDTO
             saveDataIntoDBAndNavigateToHome(data: dto)
         } onError: { err in
+            showErrorAlert = true
             print("PhoneNumberValidationView \(err)")
         }
     }
@@ -171,17 +174,17 @@ extension PhoneNumberValidationView {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
         
         if !isPhoneNumberNotEmpty {
-            showAlert = true
+            showErrorAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
             return
         }
         if !isValidPhoneNumber {
-            showAlert = true
+            showErrorAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
             return
         }
         if !hasCheckedTermsAndPolicy {
-            showAlert = true
+            showErrorAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Kindly accept terms and policy")
             return
         }
@@ -243,9 +246,15 @@ extension PhoneNumberValidationView {
             }
             realmManager.save(data: data.cardDetails)
             let payers: [MerchantPayer] = data.merchantPayers.map {$0.convertToPayer()}
+            realmManager.save(data: data.securityQuestions)
             realmManager.save(data: payers)
             realmManager.save(data: data.bundleData.map {$0.convert()})
-            defaultNetworkServiceId = data.defaultNetworkServiceID ?? ""
+            
+            if let defaultNetworkId = data.defaultNetworkServiceID {
+                print("DefaultNetwork \(String(defaultNetworkId))")
+                AppStorageManager.setDefaultNetworkId(id: String(defaultNetworkId))
+            }
+          
             navigation.navigationStack = [.home]
         }
     }

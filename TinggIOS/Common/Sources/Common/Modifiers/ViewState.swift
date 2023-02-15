@@ -66,16 +66,23 @@ public struct ViewState: ViewModifier {
 public struct ViewStates: ViewModifier {
     @Binding var uiModel: UIModel
     @Binding var showAlert: Bool
-    @State var error = ""
-    @State var errorFlag = false
-    public init(uiModel: Binding<UIModel>, showAlert: Binding<Bool>) {
+    @Binding var showSuccessAlert: Bool
+    @State var disableContent = false
+    @State var show = false
+    var onSuccessAction: () -> Void = {}
+    var onErrorAction: () -> Void = {}
+    public init(uiModel: Binding<UIModel>, showAlert: Binding<Bool>, showSuccessAlert: Binding<Bool> = .constant(false), onSuccessAction: @escaping () -> Void = {}, onErrorAction: @escaping () -> Void = {}) {
         _uiModel = uiModel
         _showAlert = showAlert
+        _showSuccessAlert = showSuccessAlert
+        self.onSuccessAction = onSuccessAction
+        self.onErrorAction = onErrorAction
     }
-    fileprivate func buttonEvent() -> some View {
+    fileprivate func buttonEvent(action:  @escaping () -> Void ) -> some View {
        
         return Button("OK") {
             // Intentionally unimplemented...no action needed
+            action()
           
         }
     }
@@ -85,31 +92,33 @@ public struct ViewStates: ViewModifier {
             content
             switch uiModel {
             case .loading:
-                ProgressView()
+                ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                     .scaleEffect(2)
+                    .font(.caption)
             case .content(let data):
-                if !data.statusMessage.isEmpty {
-                    handleMessage(data.statusMessage)
-                }
+                handleMessage(data.statusMessage, action: onSuccessAction)
             case .error(let err):
-                handleMessage(err)
-//                content
-//                    .showIf($showAlert)
+                handleMessage(err, action:  onErrorAction)
             case .nothing:
                 content
             }
         }
     }
-    fileprivate func handleMessage(_ message: String) -> some View {
+    fileprivate func handleMessage(_ message: String, action:  @escaping () -> Void ) -> some View {
         print("AlertMessage \(message)")
         return VStack {
-            // Intentionally unimplemented...placeholder view
+            // ....
         }
         .edgesIgnoringSafeArea(.all)
         .opacity(0.6)
-        .alert(message, isPresented: $showAlert) {
-            buttonEvent()
+        .alert(message, isPresented: $showSuccessAlert) {
+            buttonEvent(action: action)
         }
+        .alert(message, isPresented: $showAlert) {
+            buttonEvent(action: action)
+        }
+
     }
 }
+

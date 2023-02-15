@@ -11,18 +11,18 @@ import SwiftUI
 import RealmSwift
 
 public struct BillersView: View {
-    @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
-    @State var enrolments = [Enrollment]()
-    @State var imageUrl = ""
-    @State var serviceCategoryId = ""
-    @State var showBundles = false
-    @State var selectedBundle = ""
-    @State var selectedAccount = ""
-    @State var mobileNumber = ""
-    @State var bundleService: [BundleData] = .init()
-    @State var selectedMerchantService = sampleServices[0]
     @StateObject var hvm = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationUtils
+    @State private var enrolments = [Enrollment]()
+    @State private var imageUrl = ""
+    @State private var serviceCategoryId = ""
+    @State private var showBundles = false
+    @State private var selectedBundle = ""
+    @State private var selectedAccount = ""
+    @State private var mobileNumber = ""
+    @State private var bundleService: [BundleData] = .init()
+    @State private var selectedMerchantService = sampleServices[0]
+    @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
     public init(billers: TitleAndListItem) {
         _billers = State(initialValue: billers)
     }
@@ -33,7 +33,6 @@ public struct BillersView: View {
                     .showIf(.constant(!enrolments.isEmpty))
                 billersList()
                     .showIf(.constant(enrolments.isEmpty))
-                
             }
             Image(systemName: "plus")
                 .padding(20)
@@ -139,7 +138,7 @@ public struct BillersView: View {
             if let off = offSet.first {
                 enrolments.remove(at: off)
             }
-            hvm.observeUIModel(model: hvm.$serviceBillUIModel) { content in
+            hvm.observeUIModel(model: hvm.$serviceBillUIModel, subscriptions: &hvm.subscriptions) { content in
                 if !nom.isInvalidated {
                     hvm.nominationInfo.$objects.remove( nom)
                 }
@@ -188,7 +187,7 @@ struct SingleNominationView: View {
         .onTapGesture {
             if let accountNumber = nomination.accountNumber {
                 hvm.getSingleDueBill(accountNumber: accountNumber, serviceId: String(nomination.hubServiceID))
-                hvm.observeUIModel(model: hvm.$uiModel) { content in
+                hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
                     let invoice = content.data as! Invoice
                     onClick(nomination, invoice)
                 }

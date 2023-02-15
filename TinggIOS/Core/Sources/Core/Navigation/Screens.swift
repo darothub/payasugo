@@ -14,11 +14,13 @@ public enum Screens: Hashable {
          categoriesAndServices([TitleAndListItem]),
          billFormView(BillDetails),
          billDetailsView(Invoice, MerchantService),
-         nominationDetails(Invoice, Enrollment)
+         nominationDetails(Invoice, Enrollment),
+         pinCreationView,
+         securityQuestionView,
+         cardDetailsView,
+         cardWebView(String)
 }
-public enum Home: Hashable {
-    case categoriesAndServices, billFormView, home
-}
+
 
 
 

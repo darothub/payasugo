@@ -12,9 +12,11 @@ import Contacts
 import Permissions
 
 
-public struct BuyAirtimeCheckoutView: View {
-    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
-    @StateObject var bavm = BuyAirtimeViewModel()
+public struct CheckoutView: View {
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
+    @EnvironmentObject var contactViewModel: ContactViewModel
+    @EnvironmentObject var navigation: NavigationUtils
+    @Environment(\.dismiss) var dismiss
     @State var selectedButton: String = "Diamond Trust Bank"
     @State var accountNumber = ""
     @State var title: String = "Buy Airtime"
@@ -23,16 +25,22 @@ public struct BuyAirtimeCheckoutView: View {
     @State var selectPaymentTitle = "Select payment method"
     @State var someoneElseIsPaying = false
     @State var history: [TransactionHistory] = sampleTransactions
-    @EnvironmentObject var checkoutVm: CheckoutViewModel
-    @EnvironmentObject var contactViewModel: ContactViewModel
     @State var providerDetails: [ProviderDetails] = .init()
     @State var networkId = "1"
     @State var historyByAccountNumber: [String] = .init()
+    @State var showCardPinView = false
+    @State var pin: String = ""
+    @State var confirmPin: String = ""
+    @State var createdPin = false
+    @State var pinIsCreated: Bool = false
+    @State var showSecurityQuestionView = false
+    @State var questions:[String] = .init()
+    @State var selectedQuestion:String = ""
     public init () {
         //
     }
     public var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             Section {
                 HStack {
                     Text(title)
@@ -41,24 +49,24 @@ public struct BuyAirtimeCheckoutView: View {
                         .bold()
                     Spacer()
                     IconImageCardView(
-                        imageUrl: checkoutVm.cm.service.serviceLogo,
+                        imageUrl: checkoutVm.service.serviceLogo,
                         radius: 50,
                         scaleEffect: 0.7
                     )
                 }
                 AmountAndCurrencyTextField(
-                    amount: $bavm.suggestedAmountModel.amount,
-                    currency: $checkoutVm.cm.currency
-                ).disabled(checkoutVm.cm.service.canEditAmount == "0" ? true : false)
-
-                SuggestedAmountListView(
-                    sam: $bavm.suggestedAmountModel
-                ).padding(.top)
+                    amount: $checkoutVm.suggestedAmountModel.amount,
+                    currency: $checkoutVm.suggestedAmountModel.currency
+                ).disabled(checkoutVm.service.canEditAmount == "0" ? true : false)
                 
+                SuggestedAmountListView(
+                    accountNumberHistory: $checkoutVm.suggestedAmountModel.historyByAccountNumber,
+                    amountSelected: $checkoutVm.suggestedAmountModel.amount
+                ).padding(.top)
                 MerchantPayerListView(
-                    plm: $bavm.providersListModel
+                    plm: $checkoutVm.providersListModel
                 ) {
-                    bavm.favouriteEnrollmentListModel.accountNumber = ""
+                    checkoutVm.favouriteEnrollmentListModel.accountNumber = ""
                 }
             }.padding(.horizontal)
             Section {
@@ -71,34 +79,42 @@ public struct BuyAirtimeCheckoutView: View {
                            
                     )
                 TextFieldAndRightIcon(
-                    number: $checkoutVm.cm.accountNumber
+                    number: $checkoutVm.favouriteEnrollmentListModel.accountNumber
                 ) {
                     Task {
                         await contactViewModel.fetchPhoneContacts { err in
-                            hvm.uiModel = UIModel.error(err.localizedDescription)
+                            checkoutVm.uiModel = UIModel.error(err.localizedDescription)
                         }
                     }
-                }.disabled(checkoutVm.cm.isSomeoneElsePaying ? false : true)
+                }.disabled(checkoutVm.isSomeoneElsePaying ? false : true)
                 .showIf($someoneElseIsPaying)
             }.padding(.horizontal)
-                .showIf($checkoutVm.cm.isSomeoneElsePaying)
-            DebitCardDropDownView(dcddm: $bavm.dcddm)
+                .showIf($checkoutVm.isSomeoneElsePaying)
+            DebitCardDropDownView(dcddm: $checkoutVm.dcddm)
                 .padding()
-                .showIf($bavm.showCardOptions)
+                .showIf($checkoutVm.showCardOptions)
+                .showIf(.constant(checkoutVm.dcddm.cardDetails.isNotEmpty()))
+            AddNewDebitOrCreditCardButton() {
+                dismiss()
+                checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
+                navigation.navigationStack.append(.pinCreationView)
+            }
+            .showIf($checkoutVm.addNewCard)
+            .padding(30)
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-                let isValidated = checkoutVm.validatePhoneNumberByCountry(hvm.country, phoneNumber: checkoutVm.cm.accountNumber)
+                let isValidated: Bool = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: checkoutVm.favouriteEnrollmentListModel.accountNumber)
                 if !isValidated {
-                    hvm.showAlert = true
-                    hvm.uiModel = UIModel.error("Invalid phone number")
+                    checkoutVm.showAlert = true
+                    checkoutVm.uiModel = UIModel.error("Invalid phone number")
                 }
-                let response = checkoutVm.validateAmountByService(selectedService: checkoutVm.cm.service, amount: checkoutVm.cm.amount)
+                let response = validateAmountByService(selectedService: checkoutVm.service, amount: checkoutVm.suggestedAmountModel.amount)
                 if !response.isEmpty {
-                    hvm.showAlert = true
-                    hvm.uiModel = UIModel.error(response)
+                    checkoutVm.showAlert = true
+                    checkoutVm.uiModel = UIModel.error(response)
                 }
             }
         }
@@ -106,38 +122,36 @@ public struct BuyAirtimeCheckoutView: View {
             showContactView(contactViewModel: contactViewModel)
         }
         .onAppear {
-            print("Canedit \(checkoutVm.cm.service.canEditAmount )")
-            bavm.providersListModel.details = Observer<MerchantPayer>().getEntities()
+            checkoutVm.providersListModel.details = Observer<MerchantPayer>().getEntities()
                 .filter{$0.activeStatus != "0"}.map {
                     ProviderDetails(payer: $0, othersCanPay: $0.canPayForOther  != "0" ? true : false)
             }
-            let amount = hvm.transactionHistory.getEntities().filter {
-                ($0.accountNumber == checkoutVm.cm.accountNumber && $0.serviceName == checkoutVm.cm.service.serviceName)
-            }.map {$0.amount}
-            let uniqueAmount = Set(amount).sorted(by: <)
-            contactViewModel.selectedContact = checkoutVm.cm.accountNumber
-            bavm.suggestedAmountModel.historyByAccountNumber = uniqueAmount
-            bavm.suggestedAmountModel.amount = String(checkoutVm.cm.amount)
-            bavm.suggestedAmountModel.currency = checkoutVm.cm.currency
+            questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
+            checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
         }
-        .onChange(of: bavm.providersListModel) { model in
+        .onChange(of: checkoutVm.providersListModel) { model in
             someoneElseIsPaying = false
-            checkoutVm.cm.isSomeoneElsePaying = model.canOthersPay
+            checkoutVm.isSomeoneElsePaying = model.canOthersPay
            
             if model.selectedProvider == "Card" {
                 let selectedDetails = model.details.first {$0.payer.clientName == model.selectedProvider}
                 let listOfCards = getListOfCards(imageUrl: selectedDetails?.payer.logo ?? "")
-                bavm.dcddm.selectedCardDetails = listOfCards[0]
-                bavm.dcddm.cardDetails = listOfCards
-                bavm.showCardOptions = true
+                if listOfCards.isNotEmpty() {
+                    checkoutVm.dcddm.selectedCardDetails = listOfCards[0]
+                    checkoutVm.dcddm.cardDetails = listOfCards
+                    checkoutVm.showCardOptions = true
+                }
+                checkoutVm.addNewCard = true
+              
             } else {
-                bavm.showCardOptions = false
+                checkoutVm.showCardOptions = false
+                checkoutVm.addNewCard = false
             }
         }
         .onChange(of: contactViewModel.selectedContact) { newValue in
-            checkoutVm.cm.accountNumber = newValue
+            checkoutVm.favouriteEnrollmentListModel.accountNumber = newValue
         }
-        .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
+        .handleViewStates(uiModel: $checkoutVm.uiModel, showAlert: .constant(true))
     }
     func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
         return Observer<Card>().getEntities().map { c in
@@ -148,8 +162,11 @@ public struct BuyAirtimeCheckoutView: View {
 
 struct BuyAirtimeCheckoutView_Previews: PreviewProvider {
     static var previews: some View {
-        BuyAirtimeCheckoutView()
-            .environmentObject(CheckoutViewModel())
+        CheckoutView()
+            .environmentObject(CheckoutDI.createCheckoutViewModel())
             .environmentObject(ContactViewModel())
+            .environmentObject(NavigationUtils())
     }
 }
+
+

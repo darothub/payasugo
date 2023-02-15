@@ -9,17 +9,18 @@ import Common
 import SwiftUI
 
 public struct NominationDetailView: View {
+    @EnvironmentObject var hvm: HomeViewModel
+    @Environment(\.editMode) private var editMode
     @State var invoice: Invoice = sampleInvoice
     @State var nomination: Enrollment = .init()
-    @EnvironmentObject var hvm: HomeViewModel
-    @State var disableTextField: Bool = true
-    @Environment(\.editMode) private var editMode
-    var transactionHistory: [TransactionHistory] {
+    @State private var disableTextField: Bool = true
+    
+    private var transactionHistory: [TransactionHistory] {
         hvm.transactionHistory.getEntities().filter { transaction in
             transaction.serviceID == invoice.serviceID && transaction.accountNumber == invoice.billReference
         }
     }
-    var chartData: [ChartData] {
+    private var chartData: [ChartData] {
         hvm.mapHistoryIntoChartData(transactionHistory: transactionHistory)
     }
     public init(invoice: Invoice, nomination: Enrollment) {

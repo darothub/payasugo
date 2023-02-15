@@ -33,8 +33,8 @@ public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var creditLimit: String? = ""
     @Persisted public var hasActivatedAssist: String? = ""
     @Persisted public var hasOptedOut: String? = ""
-    @Persisted public var currentUsage: Int = 0
-    @Persisted public var loanBalance: Int = 0
+    @Persisted public var currentUsage: String = "0"
+    @Persisted public var loanBalance: String = "0"
     @Persisted public var hasActivatedWallet: String? = ""
     @Persisted public var walletAccountID: String? = ""
     @Persisted public var walletAccountNumber: String? = ""

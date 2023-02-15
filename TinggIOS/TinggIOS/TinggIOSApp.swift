@@ -4,24 +4,27 @@
 //
 //  Created by Abdulrasaq on 25/05/2022.
 //
-
+import CreditCard
 import Core
+import Checkout
 import Permissions
 import Home
 import Onboarding
 import SwiftUI
 import Theme
+
 @main
 /// This is entry point into the application.
 /// The first screen displayed to the user is the ``LaunchScreenView``.
-/// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodels
+/// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodel
 struct TinggIOSApp: App {
     @StateObject var navigation = NavigationUtils()
     @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
     @StateObject var  hvm = HomeDI.createHomeViewModel()
-    @StateObject var checkout: CheckoutViewModel = .init()
+    @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
-
+    @StateObject var bavm = AirtimeDI.createAirtimeViewModel()
+    @StateObject var ccvm = CreditCardDI.createCheckoutViewModel()
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -30,26 +33,41 @@ struct TinggIOSApp: App {
                 .environmentObject(navigation)
                 .environmentObject(ovm)
                 .environmentObject(hvm)
-                .environmentObject(checkout)
+                .environmentObject(checkoutVm)
                 .environmentObject(contactViewModel)
-                .sheet(isPresented: $checkout.cm.showCheckOutView) {
-                    BuyAirtimeCheckoutView()
-                        .environmentObject(checkout)
-                        .environmentObject(contactViewModel)
-                        .presentationDetents([.fraction(0.9)])
-                      
+                .environmentObject(bavm)
+                .environmentObject(ccvm)
+                .sheet(isPresented: $hvm.showCheckOutView) {
+                    checkoutView {
+                
+                        DispatchQueue.main.async {
+                            checkoutVm.suggestedAmountModel = bavm.suggestedAmountModel
+                            checkoutVm.favouriteEnrollmentListModel = bavm.favouriteEnrollmentListModel
+                            checkoutVm.service = bavm.service
+                            checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
+                        }
+                    }
                 }
                 .onAppear {
+                    Log.d(message: "Hello file")
                     print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
                 }
         }
 
     }
+    func checkoutView(action: ()->Void = {}) -> some View {
+        action()
+        return  CheckoutView()
+            .environmentObject(checkoutVm)
+            .environmentObject(contactViewModel)
+            .environmentObject(navigation)
+            .presentationDetents([.large])
+          
+    }
     
     func showContactView() -> some View {
         return ContactRowView(listOfContactRow: contactViewModel.listOfContact.sorted(by: <)){contact in
             contactViewModel.selectedContact = contact.phoneNumber
-           
         }
     }
 }

@@ -11,7 +11,7 @@ public struct ContactRowView: View {
     @State var listOfContactRow = [ContactRow]()
     var onContactSelected: (ContactRow) -> Void
     @Environment(\.dismiss) var dismiss
-    public init(listOfContactRow: [ContactRow] = [ContactRow](), onContactSelected: @escaping (ContactRow) -> Void) {
+    public init(listOfContactRow: [ContactRow] = [ContactRow](), onContactSelected: @escaping (ContactRow) -> Void = {_ in}) {
         self._listOfContactRow = State(initialValue: listOfContactRow)
         self.onContactSelected = onContactSelected
     }
@@ -31,7 +31,7 @@ public struct ContactRowView: View {
 
 struct ContactRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ContactRowView() {$0}
+        ContactRowView()
     }
 }
 
