@@ -24,11 +24,18 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
             }
         }
     }
+    public func billRequest<T: BaseDTOprotocol>(tinggRequest: RequestMap) async throws ->  T {
+        try await baseRequest.result(tinggRequest: tinggRequest)
+    }
     public func getDueBills(tinggRequest: TinggRequest) async throws -> [Invoice] {
         let dto: FetchBillDTO = try await billRequest(tinggRequest: tinggRequest)
         if dto.statusCode > 200 {
             throw ApiError.networkError(dto.statusMessage)
         }
+        return dto.fetchedBills.map { $0.convertToInvoice() }
+    }
+    public func fetchDueBills(tinggRequest: RequestMap) async throws -> [Invoice] {
+        let dto: FetchBillDTO = try await billRequest(tinggRequest: tinggRequest)
         return dto.fetchedBills.map { $0.convertToInvoice() }
     }
     

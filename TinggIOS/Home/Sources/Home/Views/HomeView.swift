@@ -22,9 +22,7 @@ struct HomeView: View {
     var airtimeServices: [MerchantService] {
         hvm.airTimeServices
     }
-    var fetchedBill: [Invoice] {
-        hvm.dueBill
-    }
+    @State var fetchedBill = [Invoice]()
     var rechargeAndBill: [MerchantService] {
         hvm.rechargeAndBill
     }
@@ -57,7 +55,7 @@ struct HomeView: View {
             QuickTopupView(airtimeServices: airtimeServices)
                 .shadowBackground()
                 .handleViewStates(uiModel: $hvm.quickTopUIModel, showAlert: $hvm.showAlert)
-            DueBillsView(fetchedBill: fetchedBill, showDueBills: $showDueBills)
+            DueBillsView(fetchedBill: fetchedBill)
                 .shadowBackground()
                 .showIf($showDueBills)
             
@@ -69,6 +67,11 @@ struct HomeView: View {
                 .frame(height: geo.size.height * 0.35)
                 .shadowBackground()
             AddNewBillCardView()
+        }.onAppear {
+            fetchedBill = Observer<Invoice>().objects.filter { $0.amount.convertStringToInt() > 0 && "\(String(describing: $0.enrollment?.hubServiceID) )" != "187"}
+            withAnimation {
+                showDueBills = !fetchedBill.isEmpty
+            }
         }
     }
 }

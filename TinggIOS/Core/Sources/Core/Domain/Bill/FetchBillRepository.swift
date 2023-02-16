@@ -13,4 +13,5 @@ public protocol FetchBillRepository {
     func deleteBill(tinggRequest: TinggRequest) async throws -> BaseDTO
     func updateBill(tinggRequest: TinggRequest) async throws -> BaseDTO
     func insertInvoiceInDb(invoice: Invoice)
+    func fetchDueBills(tinggRequest: RequestMap) async throws -> [Invoice]
 }

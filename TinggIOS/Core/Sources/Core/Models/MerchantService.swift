@@ -54,7 +54,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var isDislayableOnLifestream:String = ""
     @Persisted public var favoritesDisplayMode: String = ""
     @Persisted public var isRefresh: String = ""
-//    @Persisted public var applicableCharges: [JSONAny]
+    //    @Persisted public var applicableCharges: [JSONAny]
     @Persisted public var validateBillAmount:String = ""
     @Persisted public var charges:String = ""
     @Persisted public var title:String = ""
@@ -87,7 +87,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case inputType = "INPUT_TYPE"
         case colorCode = "COLOR_CODE"
         case formType = "FORM_TYPE"
-//        case formParameters = "FORM_PARAMETERS"
+        //        case formParameters = "FORM_PARAMETERS"
         case abbreviation = "ABBREVIATION"
         case paymentLabel = "PAYMENT_LABEL"
         case orderID = "ORDER_ID"
@@ -95,7 +95,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case isBundleService = "IS_BUNDLE_SERVICE"
         case ignoreSaveEnrollment = "IGNORE_SAVE_ENROLLMENT"
         case hasBillAmount = "HAS_BILL_AMOUNT"
-//        case serviceParameters = "SERVICE_PARAMETERS"
+        //        case serviceParameters = "SERVICE_PARAMETERS"
         case bundleLabel = "BUNDLE_LABEL"
         case bundleCategoryLabel = "BUNDLE_CATEGORY_LABEL"
         case displayNoPendingBillDialog = "DISPLAY_NO_PENDING_BILL_DIALOG"
@@ -104,11 +104,14 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case isDislayableOnLifestream = "IS_DISLAYABLE_ON_LIFESTREAM"
         case favoritesDisplayMode = "FAVORITES_DISPLAY_MODE"
         case isRefresh = "IS_REFRESH"
-//        case applicableCharges = "APPLICABLE_CHARGES"
+        //        case applicableCharges = "APPLICABLE_CHARGES"
         case validateBillAmount = "VALIDATE_BILL_AMOUNT"
         case charges = "CHARGES"
         case title = "TITLE"
         case message = "MESSAGE"
+    }
+    public var isAirtimeService: Bool {
+        return self.categoryID == "2"
     }
 }
 

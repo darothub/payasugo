@@ -11,7 +11,7 @@ import Core
 import Common
 struct DueBillsView: View {
     @State var fetchedBill = [Invoice]()
-    @Binding var showDueBills:Bool
+//    @Binding var showDueBills:Bool
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
     @State var showErrorAlert = false
     @State var showSuccessAlert = false
@@ -41,23 +41,7 @@ struct DueBillsView: View {
             }
           
         }.padding()
-        .onAppear {
-            homeViewModel.fetchDueBills()
-            homeViewModel.observeUIModel(model: homeViewModel.$fetchBillUIModel, subscriptions: &homeViewModel.subscriptions) { content in
-                fetchedBill = content.data as! [Invoice]
-                withAnimation {
-                    showDueBills = !fetchedBill.isEmpty
-                }
-            } onError: { err in
-                withAnimation {
-                    showDueBills = err.isEmpty
-                    showErrorAlert = true
-                    showSuccessAlert = true
-                    print("State error \(err)")
-                }
-            }
-            
-        }.handleViewStates(uiModel: $homeViewModel.fetchBillUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
+    
            
     }
     @ViewBuilder
@@ -89,7 +73,7 @@ struct DueBillsView: View {
 
 struct DueBillsView_Previews: PreviewProvider {
     static var previews: some View {
-        DueBillsView(fetchedBill: sampleInvoices, showDueBills: .constant(true))
+        DueBillsView(fetchedBill: sampleInvoices)
     }
 }
 

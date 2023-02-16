@@ -26,4 +26,16 @@ public class DueBillsUsecase {
         }
         return dueBills
     }
+    public func callAsFunction(tinggRequest: RequestMap) async throws -> [Invoice] {
+        var dueBills = try await fetchBillRepository.fetchDueBills(tinggRequest: tinggRequest)
+        dueBills = dueBills.filter { bill in
+            Log.d(message: "\(bill.dueDate)")
+            let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - Date()).day
+            Log.d(message: "\(daysDiff)")
+            let yearsDiff = (makeDateFromString(validDateString: bill.dueDate) - Date()).year
+            Log.d(message: "\(yearsDiff)")
+            return daysDiff <= -1 && yearsDiff <= 5
+        }
+        return dueBills
+    }
 }
