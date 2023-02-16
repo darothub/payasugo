@@ -61,7 +61,11 @@ public struct BillFormView: View {
         }.onAppear {
             homeViewModel.observeUIModel(model: homeViewModel.$uiModel, subscriptions: &homeViewModel.subscriptions) { content in
                 let invoice = content.data as! Invoice
+                invoice.enrollment = billDetails.info.first(where: { e in
+                    e.accountNumber == self.accountNumber
+                })
                 self.invoice = invoice
+                Observer<Invoice>().saveEntity(obj: invoice)
                 navUtils.navigationStack = [
                     .billFormView(billDetails),
                     .billDetailsView(invoice, billDetails.service)

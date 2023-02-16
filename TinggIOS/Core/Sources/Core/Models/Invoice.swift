@@ -153,7 +153,7 @@ public struct DynamicInvoiceType: Decodable   {
      public var dateEstimated: String = ""
      public var estimateExpiryDate: String = ""
      public var lastFetchDate: String = ""
-     public var enrollment: Enrollment? = nil
+     public var enrollment: Int? = 0
 //    public var statusCode: Int = 0
     enum CodingKeys: String, CodingKey {
         case billDescription = "BILL_DESCRIPTION"

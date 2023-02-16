@@ -28,7 +28,7 @@ public class BillAccountUsecase {
     public func callAsFunction() -> [BillAccount] {
         let enrollments =  merchantServiceRepository.getServices().flatMap { service in
             enrollmentRepository.getNominationInfo().filter { enrollment  in
-                (String(enrollment.hubServiceID) == service.hubServiceID)  && service.presentmentType == "hasPresentment"
+                (String(enrollment.hubServiceID) == service.hubServiceID)  && (service.presentmentType == "hasPresentment") && (service.categoryID != "2")
             }
         }
         let billAccounts = enrollments.map { nominationInfo -> BillAccount in
@@ -36,7 +36,7 @@ public class BillAccountUsecase {
         }
         let setOfBillAccounts = Set(billAccounts)
         
-//        print("BillAccount \(setOfBillAccounts)")
+        print("BillAccount \(setOfBillAccounts)")
         return setOfBillAccounts.map {$0}
     }
 }

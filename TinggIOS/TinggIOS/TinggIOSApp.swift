@@ -39,7 +39,6 @@ struct TinggIOSApp: App {
                 .environmentObject(ccvm)
                 .sheet(isPresented: $hvm.showCheckOutView) {
                     checkoutView {
-                
                         DispatchQueue.main.async {
                             checkoutVm.suggestedAmountModel = bavm.suggestedAmountModel
                             checkoutVm.favouriteEnrollmentListModel = bavm.favouriteEnrollmentListModel

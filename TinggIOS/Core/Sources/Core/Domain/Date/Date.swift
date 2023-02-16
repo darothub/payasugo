@@ -88,4 +88,8 @@ extension TimeInterval {
     public var day: Int {
         return Int(self/(24*60*60))
     }
+    
+    public var year: Int {
+        return Int(self/(24*60*60*365))
+    }
 }

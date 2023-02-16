@@ -36,6 +36,10 @@ public struct CheckoutView: View {
     @State var showSecurityQuestionView = false
     @State var questions:[String] = .init()
     @State var selectedQuestion:String = ""
+    @State private var showingDropDown = false
+    @State var selectedAccount:String = ""
+    @State var accountList = [String]()
+    @State var isQuickTopUpOrAirtime = false
     public init () {
         //
     }
@@ -54,20 +58,25 @@ public struct CheckoutView: View {
                         scaleEffect: 0.7
                     )
                 }
-                AmountAndCurrencyTextField(
-                    amount: $checkoutVm.suggestedAmountModel.amount,
-                    currency: $checkoutVm.suggestedAmountModel.currency
-                ).disabled(checkoutVm.service.canEditAmount == "0" ? true : false)
-                
-                SuggestedAmountListView(
-                    accountNumberHistory: $checkoutVm.suggestedAmountModel.historyByAccountNumber,
-                    amountSelected: $checkoutVm.suggestedAmountModel.amount
-                ).padding(.top)
-                MerchantPayerListView(
-                    plm: $checkoutVm.providersListModel
-                ) {
-                    checkoutVm.favouriteEnrollmentListModel.accountNumber = ""
-                }
+                DropDownView(selectedText: $selectedAccount, dropDownList: $accountList, showDropDown: $showingDropDown
+                ).showIf($isQuickTopUpOrAirtime)
+                Group {
+                    AmountAndCurrencyTextField(
+                        amount: $checkoutVm.suggestedAmountModel.amount,
+                        currency: $checkoutVm.suggestedAmountModel.currency
+                    ).disabled(checkoutVm.service.canEditAmount == "0" ? true : false)
+                    
+                    SuggestedAmountListView(
+                        accountNumberHistory: $checkoutVm.suggestedAmountModel.historyByAccountNumber,
+                        amountSelected: $checkoutVm.suggestedAmountModel.amount
+                    ).padding(.top)
+                    MerchantPayerListView(
+                        plm: $checkoutVm.providersListModel
+                    ) {
+                        checkoutVm.favouriteEnrollmentListModel.accountNumber = ""
+                    }
+                }.showIfNot($showingDropDown)
+            
             }.padding(.horizontal)
             Section {
                 Toggle("Ask someone else to pay", isOn:  $someoneElseIsPaying)
@@ -89,18 +98,22 @@ public struct CheckoutView: View {
                 }.disabled(checkoutVm.isSomeoneElsePaying ? false : true)
                 .showIf($someoneElseIsPaying)
             }.padding(.horizontal)
-                .showIf($checkoutVm.isSomeoneElsePaying)
-            DebitCardDropDownView(dcddm: $checkoutVm.dcddm)
-                .padding()
-                .showIf($checkoutVm.showCardOptions)
-                .showIf(.constant(checkoutVm.dcddm.cardDetails.isNotEmpty()))
-            AddNewDebitOrCreditCardButton() {
-                dismiss()
-                checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
-                navigation.navigationStack.append(.pinCreationView)
-            }
-            .showIf($checkoutVm.addNewCard)
-            .padding(30)
+            .showIf($checkoutVm.isSomeoneElsePaying)
+            .showIfNot($showingDropDown)
+            Group {
+                DebitCardDropDownView(dcddm: $checkoutVm.dcddm)
+                    .padding()
+                    .showIf($checkoutVm.showCardOptions)
+                    .showIf(.constant(checkoutVm.dcddm.cardDetails.isNotEmpty()))
+                AddNewDebitOrCreditCardButton() {
+                    dismiss()
+                    checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
+                    navigation.navigationStack.append(.pinCreationView)
+                }
+                .showIf($checkoutVm.addNewCard)
+                .padding(30)
+            }.showIfNot($showingDropDown)
+            
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
@@ -128,6 +141,9 @@ public struct CheckoutView: View {
             }
             questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
             checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
+            accountList = checkoutVm.favouriteEnrollmentListModel.enrollments.compactMap {$0.accountNumber}
+            isQuickTopUpOrAirtime = checkoutVm.service.isAirtimeService
+            log(message: "\(checkoutVm.service)")
         }
         .onChange(of: checkoutVm.providersListModel) { model in
             someoneElseIsPaying = false
@@ -157,6 +173,13 @@ public struct CheckoutView: View {
         return Observer<Card>().getEntities().map { c in
              CardDetailDTO(cardAlias: c.cardAlias ?? "", payerClientID: c.payerClientID ?? "", cardType: c.cardType ?? "", activeStatus: c.activeStatus ?? "", logoUrl: imageUrl)
         }
+    }
+    func getAvailableInvoice() -> Invoice? {
+       return Observer<Invoice>().getEntities().first(where: { invoice in
+            checkoutVm.favouriteEnrollmentListModel.enrollments.first { e in
+                e.clientProfileAccountID == invoice.enrollment?.clientProfileAccountID
+            }?.accountNumber == checkoutVm.favouriteEnrollmentListModel.accountNumber
+        })
     }
 }
 

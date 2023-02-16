@@ -99,7 +99,12 @@ public class HomeUsecase {
         tinggRequest.billAccounts = billAccountUsecase()
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
-    
+    public func fetchDueBills(request: RequestMap) async throws -> [Invoice] {
+        return try await dueBillsUsecase(tinggRequest: request)
+    }
+    public func getBillAccounts() -> [BillAccount] {
+        billAccountUsecase()
+    }
     public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> Bill {
         let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
         return  bill
