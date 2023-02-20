@@ -99,23 +99,6 @@ extension DataRequest {
             print("ResponseJson \(response.result)")
            
         }
-        
-//        responseDecodable(of: T.self) { response in
-//            switch response.result {
-//            case .success(let data):
-//                let dto = data as? BaseDTO
-//                if let statusCode = dto?.statusCode {
-//                    if statusCode > 201 {
-//                        onCompletion(.failure(.networkError(data.statusMessage)))
-//                        break
-//                    }
-//                }
-//                onCompletion(.success(data))
-//            case .failure(let error):
-//                print("Error \(error)")
-//                onCompletion(.failure(.networkError(error.localizedDescription)))
-//            }
-//        }
     }
 }
 

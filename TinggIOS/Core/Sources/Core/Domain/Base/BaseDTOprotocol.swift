@@ -11,8 +11,8 @@ public protocol BaseDTOprotocol: Any, Decodable {
     var statusMessage: String {get}
 }
 
-extension BaseDTOprotocol {
-    public func log(message: String) {
-        print("\(Self.self)->\n\(message)")
-    }
-}
+//extension BaseDTOprotocol {
+//    public func log(message: String) {
+//        print("\(Self.self)->\n\(message)")
+//    }
+//}

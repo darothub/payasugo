@@ -42,7 +42,10 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var title: String? = ""
     @Persisted public var message: String? = ""
     @Persisted public var paymentActivationDesc: String? = ""
-    
+    public static let CHECKOUT_IN_APP = "IN_APP"
+    public static let CHECKOUT_USSD_PUSH = "USSD_PUSH"
+    public static let CHECKOUT_CARD = "CARD"
+    public static let CHECKOUT_BANK_VIA_CARD = "CARD_CHECKOUT"
     enum CodingKeys: String, CodingKey {
         case hubClientID = "HUB_CLIENT_ID"
         case clientName = "CLIENT_NAME"

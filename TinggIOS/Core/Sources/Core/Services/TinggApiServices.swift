@@ -52,7 +52,7 @@ extension TinggApiServices {
             }
     }
     
-    func result<T: BaseDTOprotocol>(tinggRequest: RequestMap) async throws -> T {
+    public func result<T: BaseDTOprotocol>(tinggRequest: RequestMap) async throws -> T {
         print("TinggRequestApi \(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in

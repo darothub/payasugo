@@ -6,8 +6,17 @@
 //
 
 import Core
-@MainActor
-public class CheckoutUsecase {
 
-    
+public class CheckoutUsecase {
+    let checkoutRepository: CheckoutRepository
+    /// ``CheckoutUsecase`` initialiser
+    /// - Parameter checkoutRepository: ``CheckoutRepositoryImpl``
+    public init (checkoutRepository: CheckoutRepository) {
+        self.checkoutRepository = checkoutRepository
+    }
+    public func callAsFunction(request: RequestMap) async throws -> RINVResponse {
+       try await checkoutRepository.raiseInvoiceRequest(request: request)
+    }
+
 }
+
