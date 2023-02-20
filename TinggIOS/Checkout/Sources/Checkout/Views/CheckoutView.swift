@@ -40,6 +40,7 @@ public struct CheckoutView: View {
     @State var selectedAccount:String = ""
     @State var accountList = [String]()
     @State var isQuickTopUpOrAirtime = false
+    @State var selectedPayer: MerchantPayer = .init()
     public init () {
         //
     }
@@ -117,17 +118,32 @@ public struct CheckoutView: View {
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Buy airtime"
+                buttonLabel: "Pay \(checkoutVm.suggestedAmountModel.amount)"
             ) {
                 let isValidated: Bool = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: checkoutVm.favouriteEnrollmentListModel.accountNumber)
                 if !isValidated {
                     checkoutVm.showAlert = true
                     checkoutVm.uiModel = UIModel.error("Invalid phone number")
+                    return
                 }
                 let response = validateAmountByService(selectedService: checkoutVm.service, amount: checkoutVm.suggestedAmountModel.amount)
                 if !response.isEmpty {
                     checkoutVm.showAlert = true
                     checkoutVm.uiModel = UIModel.error(response)
+                    return
+                }
+                if let selectedPayer = checkoutVm.providersListModel.details.first(where: { p in
+                    p.payer.clientName == checkoutVm.providersListModel.selectedProvider
+                }){
+                    self.selectedPayer = selectedPayer.payer
+                }
+                switch selectedPayer.checkoutType {
+                case MerchantPayer.CHECKOUT_USSD_PUSH:
+                    raiseInvoice()
+                case .none:
+                    print("None")
+                case .some(_):
+                    print("Some")
                 }
             }
         }
@@ -144,8 +160,7 @@ public struct CheckoutView: View {
             accountList = checkoutVm.favouriteEnrollmentListModel.enrollments.compactMap {$0.accountNumber}
             isQuickTopUpOrAirtime = checkoutVm.service.isAirtimeService
             log(message: "\(checkoutVm.service)")
-        }
-        .onChange(of: checkoutVm.providersListModel) { model in
+        }.onChange(of: checkoutVm.providersListModel) { model in
             someoneElseIsPaying = false
             checkoutVm.isSomeoneElsePaying = model.canOthersPay
            
@@ -180,6 +195,57 @@ public struct CheckoutView: View {
                 e.clientProfileAccountID == invoice.enrollment?.clientProfileAccountID
             }?.accountNumber == checkoutVm.favouriteEnrollmentListModel.accountNumber
         })
+    }
+    func raiseInvoice() {
+        let m = Observer<ManualBill>().getEntities()
+        let profile = Observer<Profile>().getEntities().first
+        let request = RequestMap.Builder()
+            .add(value: "RINV", for: .SERVICE)
+            .add(value: getPayingMSISDN(), for: .MSISDN)
+            .add(value: checkoutVm.isSomeoneElsePaying, for: "IS_THIRD_PARTY_PAYMENT")
+            .add(value: AppStorageManager.getPhoneNumber(), for: "ORIGINATOR_MSISDN")
+            .add(value: checkoutVm.suggestedAmountModel.amount, for: .AMOUNT)
+            .add(value: checkoutVm.service.hubServiceID, for: .SERVICE_ID)
+            .add(value: "", for: .ACCOUNT_NUMBER)
+            .add(value: getAvailableInvoice()?.invoiceNumber, for: "INVOICE_NUMBER")
+            .add(value: checkoutVm.suggestedAmountModel.amount, for: "BILL_AMOUNT")
+            .add(value: AppStorageManager.getCountry()?.currency, for: "CURRENCY")
+            .add(value: "", for: "REWARD")
+            .add(value: "ADD", for: .ACTION)
+            .add(value: getAvailableInvoice()?.dueDate, for: "DUE_DATE")
+            .add(value: "", for: "NARRATION")
+            .add(value: getAvailableInvoice()?.estimateExpiryDate, for: "EXPIRY_DATE")
+            .add(value: "", for: "PAYER_TRANSACTION_ID")
+            .add(value: checkoutVm.service.serviceName, for: "SERVICE_NAME")
+            .add(value: checkoutVm.service.serviceCode, for: "SERVICE_CODE")
+            .add(value: selectedPayer.hubClientID, for: "PAYER_CLIENT_ID")
+            .add(value: "", for: "PRODUCT_CODE")
+            .add(value: "", for: "BEEP_TRANSACTION_ID")
+            .add(value: "", for: "WALLET_DATA")
+            .add(value: checkoutVm.service.hubClientID, for: "HUB_CLIENT_ID")
+            .add(value: "", for: "PAYBILL")
+            .add(value: getAvailableInvoice()?.callbackData, for: "CALLBACK_DATA")
+            .add(value: getAvailableInvoice()?.billReference, for: "REFERENCE_NUMBER")
+            .add(value: "1", for: "NOMINATE")
+            .add(value: profile?.profileID, for: "PROFILE_ID")
+            .add(value: "", for: "PIN")
+            .add(value: selectedPayer.checkoutType, for: "CHECKOUT_TYPE")
+            .add(value: "", for: "ACCOUNT_ID")
+            .add(value: "", for: "ACCOUNT_ALIAS")
+            .add(value: "1", for: "IS_APP_INVOICE")
+            .add(value: "0", for: "CHECK_MODE")
+            .add(value: "", for: "MERCHANT_TIER_CODE")
+            .add(value: "", for: "BUNDLE_ID")
+            .add(value: "", for: "PIN_CODE")
+            .add(value: "", for: "MULA_PIN")
+            .add(value: "", for: "EXTRA_DATA")
+            .build()
+        
+        checkoutVm.raiseInvoiceRequest(request: request)
+    }
+    
+    func getPayingMSISDN() -> String {
+        checkoutVm.isSomeoneElsePaying ? checkoutVm.favouriteEnrollmentListModel.accountNumber : AppStorageManager.getPhoneNumber()
     }
 }
 

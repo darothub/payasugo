@@ -39,7 +39,17 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
     public init(usecase: CheckoutUsecase) {
         self.usecase = usecase
     }
-    
+    public func raiseInvoiceRequest(request: RequestMap)  {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let result = try await usecase(request: request)
+                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+    }
     /// Handle result
     public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
