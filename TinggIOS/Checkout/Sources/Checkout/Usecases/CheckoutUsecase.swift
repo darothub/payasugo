@@ -17,6 +17,10 @@ public class CheckoutUsecase {
     public func callAsFunction(request: RequestMap) async throws -> RINVResponse {
        try await checkoutRepository.raiseInvoiceRequest(request: request)
     }
+    
+    public func callAsFunction(request: RequestMap) async throws -> DTBAccountsResponse {
+       try await checkoutRepository.makeFWCRequest(request: request)
+    }
 
 }
 

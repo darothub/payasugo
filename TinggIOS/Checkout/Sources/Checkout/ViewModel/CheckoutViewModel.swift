@@ -43,7 +43,18 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
         uiModel = UIModel.loading
         Task {
             do {
-                let result = try await usecase(request: request)
+                let result:RINVResponse = try await usecase(request: request)
+                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+    }
+    public func makeFWCRequest(request: RequestMap)  {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let result:DTBAccountsResponse = try await usecase(request: request)
                 handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
             } catch {
                 handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)

@@ -41,6 +41,7 @@ public struct CheckoutView: View {
     @State var accountList = [String]()
     @State var isQuickTopUpOrAirtime = false
     @State var selectedPayer: MerchantPayer = .init()
+    @State var buttonText = "Pay"
     public init () {
         //
     }
@@ -118,7 +119,7 @@ public struct CheckoutView: View {
             Spacer()
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Pay \(checkoutVm.suggestedAmountModel.amount)"
+                buttonLabel: buttonText
             ) {
                 let isValidated: Bool = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: checkoutVm.favouriteEnrollmentListModel.accountNumber)
                 if !isValidated {
@@ -140,10 +141,10 @@ public struct CheckoutView: View {
                 switch selectedPayer.checkoutType {
                 case MerchantPayer.CHECKOUT_USSD_PUSH:
                     raiseInvoice()
-                case .none:
-                    print("None")
-                case .some(_):
-                    print("Some")
+                case MerchantPayer.CHECKOUT_IN_APP:
+                    fetchCustomerDtbAccounts()
+                default:
+                    print("Default")
                 }
             }
         }
@@ -182,6 +183,13 @@ public struct CheckoutView: View {
         .onChange(of: contactViewModel.selectedContact) { newValue in
             checkoutVm.favouriteEnrollmentListModel.accountNumber = newValue
         }
+        .onChange(of: checkoutVm.suggestedAmountModel.amount, perform: { newValue in
+            if checkoutVm.service.isAirtimeService {
+                buttonText = "Buy \(checkoutVm.service.serviceName)"
+            } else {
+                buttonText = "Pay \(newValue)"
+            }
+        })
         .handleViewStates(uiModel: $checkoutVm.uiModel, showAlert: .constant(true))
     }
     func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
@@ -197,7 +205,7 @@ public struct CheckoutView: View {
         })
     }
     func raiseInvoice() {
-        let m = Observer<ManualBill>().getEntities()
+        let _ = Observer<ManualBill>().getEntities()
         let profile = Observer<Profile>().getEntities().first
         let request = RequestMap.Builder()
             .add(value: "RINV", for: .SERVICE)
@@ -243,9 +251,16 @@ public struct CheckoutView: View {
         
         checkoutVm.raiseInvoiceRequest(request: request)
     }
-    
-    func getPayingMSISDN() -> String {
+    private func getPayingMSISDN() -> String {
         checkoutVm.isSomeoneElsePaying ? checkoutVm.favouriteEnrollmentListModel.accountNumber : AppStorageManager.getPhoneNumber()
+    }
+    
+    private func fetchCustomerDtbAccounts() {
+        let request = RequestMap.Builder()
+            .add(value: selectedPayer.hubClientID, for: "PAYER_CLIENT_ID")
+            .add(value: "FWC", for: .SERVICE)
+            .build()
+        checkoutVm.makeFWCRequest(request: request)
     }
 }
 
