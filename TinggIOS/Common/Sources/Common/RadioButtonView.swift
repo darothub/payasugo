@@ -30,6 +30,24 @@ public struct RadioButtonView: View {
     }
 }
 
+public struct RadioButtonWithTextView: View {
+    private var id: String = ""
+    @Binding var selected: String
+    @State var label: String = ""
+    public init(id: String, selected: Binding<String>, label: String) {
+        self.id = id
+        self._selected = selected
+        self._label = State(initialValue: label)
+    }
+    public var body: some View {
+        HStack {
+            RadioButtonView(selected: $selected, id: id)
+            Text(label)
+            Spacer()
+        }
+    }
+}
+
 struct RadioButtonView_Previews: PreviewProvider {
     struct RadioButtonViewHolder: View {
         @State var checked = false

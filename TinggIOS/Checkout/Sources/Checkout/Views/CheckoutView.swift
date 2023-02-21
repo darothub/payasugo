@@ -17,31 +17,41 @@ public struct CheckoutView: View {
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var navigation: NavigationUtils
     @Environment(\.dismiss) var dismiss
-    @State var selectedButton: String = "Diamond Trust Bank"
-    @State var accountNumber = ""
-    @State var title: String = "Buy Airtime"
-    @State var amount: String = "Amount"
-    @State var amountTextFieldPlaceHolder = "Enter amount"
-    @State var selectPaymentTitle = "Select payment method"
-    @State var someoneElseIsPaying = false
-    @State var history: [TransactionHistory] = sampleTransactions
-    @State var providerDetails: [ProviderDetails] = .init()
-    @State var networkId = "1"
-    @State var historyByAccountNumber: [String] = .init()
-    @State var showCardPinView = false
-    @State var pin: String = ""
-    @State var confirmPin: String = ""
-    @State var createdPin = false
-    @State var pinIsCreated: Bool = false
-    @State var showSecurityQuestionView = false
-    @State var questions:[String] = .init()
-    @State var selectedQuestion:String = ""
+    @State private var selectedButton: String = "Diamond Trust Bank"
+    @State private var accountNumber = ""
+    @State private var title: String = "Buy Airtime"
+    @State private var amount: String = "Amount"
+    @State private var amountTextFieldPlaceHolder = "Enter amount"
+    @State private var selectPaymentTitle = "Select payment method"
+    @State private var someoneElseIsPaying = false
+    @State private var history: [TransactionHistory] = sampleTransactions
+    @State private var providerDetails: [ProviderDetails] = .init()
+    @State private var networkId = "1"
+    @State private var historyByAccountNumber: [String] = .init()
+    @State private var showCardPinView = false
+    @State private var pin: String = ""
+    @State private var confirmPin: String = ""
+    @State private var createdPin = false
+    @State private var pinIsCreated: Bool = false
+    @State private var showSecurityQuestionView = false
+    @State private var questions:[String] = .init()
+    @State private var selectedQuestion:String = ""
     @State private var showingDropDown = false
+<<<<<<< HEAD
+    @State private var selectedAccount:String = ""
+    @State private var accountList = [String]()
+    @State private var isQuickTopUpOrAirtime = false
+    @State private var selectedPayer: MerchantPayer = .init()
+    @State private var buttonText = "Pay"
+    @State private var showDTBPINDialog = false
+    @State private var dtbAccounts = [DTBAccount]()
+=======
     @State var selectedAccount:String = ""
     @State var accountList = [String]()
     @State var isQuickTopUpOrAirtime = false
     @State var selectedPayer: MerchantPayer = .init()
     @State var buttonText = "Pay"
+>>>>>>> master
     public init () {
         //
     }
@@ -160,7 +170,21 @@ public struct CheckoutView: View {
             checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
             accountList = checkoutVm.favouriteEnrollmentListModel.enrollments.compactMap {$0.accountNumber}
             isQuickTopUpOrAirtime = checkoutVm.service.isAirtimeService
-            log(message: "\(checkoutVm.service)")
+            //Observe FWC request
+            checkoutVm.observeUIModel(model: checkoutVm.$fwcUIModel, subscriptions: &checkoutVm.subscriptions) { content in
+                let response = content.data as! DTBAccountsResponse
+                dtbAccounts = response.accounts ?? []
+                showDTBPINDialog = true
+            } onError: { err in
+                log(message: err)
+            }
+            //Observe RINV Request
+            checkoutVm.observeUIModel(model: checkoutVm.$raiseInvoiceUIModel, subscriptions: &checkoutVm.subscriptions) { content in
+                let response = content.data as! RINVResponse
+            } onError: { err in
+                log(message: err)
+            }
+        
         }.onChange(of: checkoutVm.providersListModel) { model in
             someoneElseIsPaying = false
             checkoutVm.isSomeoneElsePaying = model.canOthersPay
@@ -190,7 +214,18 @@ public struct CheckoutView: View {
                 buttonText = "Pay \(newValue)"
             }
         })
+<<<<<<< HEAD
+        .customDialog(isPresented: $showDTBPINDialog) {
+            DTBCheckoutDialogView(imageUrl: selectedPayer.logo!, dtbAccounts: dtbAccounts) {
+                pin in
+                PayerChargeCalculator.checkCharges(merchantPayer: selectedPayer, merchantService: checkoutVm.service, amount: Double(checkoutVm.suggestedAmountModel.amount) ?? 0.0)
+            }
+        }
+        .handleViewStates(uiModel: $checkoutVm.raiseInvoiceUIModel, showAlert: .constant(true))
+        .handleViewStates(uiModel: $checkoutVm.fwcUIModel, showAlert: .constant(true))
+=======
         .handleViewStates(uiModel: $checkoutVm.uiModel, showAlert: .constant(true))
+>>>>>>> master
     }
     func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
         return Observer<Card>().getEntities().map { c in
