@@ -158,6 +158,9 @@ extension String {
         let intAmount = Int(floatValue ?? 0.0)
         return intAmount
     }
+    public var isNotEmpty: Bool {
+        return !self.isEmpty
+    }
 }
 
 

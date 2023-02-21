@@ -22,7 +22,9 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
     @Published public var isSomeoneElsePaying: Bool = false
     @Published public var selectedMerchantPayerName: String = ""
     @Published public var addNewCard = false
-    @Published var uiModel = UIModel.nothing
+    @Published public var uiModel = UIModel.nothing
+    @Published public var raiseInvoiceUIModel = UIModel.nothing
+    @Published public var fwcUIModel = UIModel.nothing
     @Published public var showAlert = false
     @Published public var pinPermission: String = ""
     @Published public var pin: String = ""
@@ -40,24 +42,24 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
         self.usecase = usecase
     }
     public func raiseInvoiceRequest(request: RequestMap)  {
-        uiModel = UIModel.loading
+        raiseInvoiceUIModel = UIModel.loading
         Task {
             do {
                 let result:RINVResponse = try await usecase(request: request)
-                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &raiseInvoiceUIModel, (Result.success(result) as Result<Any, Error>))
             } catch {
-                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &raiseInvoiceUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }
     public func makeFWCRequest(request: RequestMap)  {
-        uiModel = UIModel.loading
+        fwcUIModel = UIModel.loading
         Task {
             do {
                 let result:DTBAccountsResponse = try await usecase(request: request)
-                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &fwcUIModel, (Result.success(result) as Result<Any, Error>))
             } catch {
-                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &fwcUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }

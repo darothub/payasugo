@@ -21,12 +21,4 @@ public class PayerChargeCalculator {
             
         }
     }
-    
-//    private func calculateTierCharge(
-//        merchantService: MerchantService,
-//        merchantPayer: MerchantPayer,
-//        amount: Double
-//    ) -> Double {
-//        merchantPayer
-//    }
 }

@@ -54,4 +54,7 @@ public struct DTBAccount: Decodable {
         case accountNumber = "ACCOUNT_NUMBER"
         case currencyCode = "CURRENCY_CODE"
     }
+    
+    public static var sample1 = DTBAccount(currency: "KES", profileId: "28", accountId: "01", alias: "San", currencyNumber: "1", accountNumber: "000001", currencyCode: "KE")
+    public static var sample2 = DTBAccount(currency: "KES", profileId: "285", accountId: "02", alias: "Sunoo", currencyNumber: "1", accountNumber: "000002", currencyCode: "KE")
 }

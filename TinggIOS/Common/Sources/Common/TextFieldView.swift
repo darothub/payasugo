@@ -14,6 +14,7 @@ public struct TextFieldView: View {
     @State var label: String
     @State var placeHolder: String
     @Binding var success: Bool
+    @State var onError: Bool = false
     var keyBoardType: UIKeyboardType = .default
     public init (fieldText: Binding<String>, label: String, placeHolder: String, type: UIKeyboardType = .default, success: Binding<Bool> = .constant(true)) {
         self._fieldText = fieldText
@@ -21,6 +22,7 @@ public struct TextFieldView: View {
         _placeHolder = State(initialValue: placeHolder)
         keyBoardType = type
         _success = success
+        _onError = State(initialValue: !success.wrappedValue)
     }
     public var body: some View {
         VStack(alignment: .leading) {
@@ -33,7 +35,7 @@ public struct TextFieldView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
-                    ).foregroundColor(success ? .black : .red)
+                    ).foregroundColor(success ? .green : onError ? .red : .black)
             }
         }
     }

@@ -67,8 +67,8 @@ struct NavigationModifier: ViewModifier {
                 case .cardDetailsView:
                     EnterCardDetailsView(cardDetails: $checkout.cardDetails)
                         .environmentObject(navigation)
-                case .cardWebView(let htmlString):
-                    CardWebView(htmlString: htmlString)
+                default:
+                    EmptyView()
                 }
             }
     }
