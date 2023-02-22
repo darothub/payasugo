@@ -207,7 +207,9 @@ public struct CardDetails {
     public var encryptedSuffix: String = ""
     public var encryptedPrefix: String = ""
     public var amount: String = ""
- 
+    public var suffix: String  = ""
+    public var prefix: String = ""
+    public var checkout = false
     
     public init(cardNumber: String = "", holderName: String = "", expDate: String = "", cvv: String = "",  email: String = "",address: String = "", amount: String = "") {
         self.cardNumber = cardNumber
@@ -217,6 +219,8 @@ public struct CardDetails {
         self.email = email
         self.address = address
         self.amount = amount
+        self.suffix = cardNumber.suffix(4).description
+        self.prefix = cardNumber.prefix(4).description
     }
     
     public mutating func encryptdata() -> Self {

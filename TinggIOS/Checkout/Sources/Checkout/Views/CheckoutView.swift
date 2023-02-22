@@ -47,7 +47,6 @@ public struct CheckoutView: View, OnPINCompleteListener {
     @State private var dtbAccounts = [DTBAccount]()
     @State private var encryptePIN = ""
     @State private var showPinView = true
-
     public init () {
         //
     }
@@ -191,6 +190,16 @@ public struct CheckoutView: View, OnPINCompleteListener {
             } onError: { err in
                 log(message: err)
             }
+            
+            //Observe create checkout channel
+            checkoutVm.observeUIModel(model: checkoutVm.$uiModel, subscriptions: &checkoutVm.subscriptions) { content in
+                let response = content.data as! CreateCardChannelResponse
+                checkoutVm.cardDetails.checkout = true
+                navigation.navigationStack.append(.cardDetailsView)
+                log(message: "\(response)")
+            } onError: { err in
+                log(message: err)
+            }
         
         }.onChange(of: checkoutVm.providersListModel) { model in
             someoneElseIsPaying = false
@@ -318,6 +327,27 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: CreditCardUtil.encrypt(data: pin), for: "MULA_PIN")
             .build()
         checkoutVm.validatePin(request: request)
+    }
+    private func makeCreateCardChannelRequest() {
+        let country = AppStorageManager.getCountry()
+        let request = RequestMap.Builder()
+            .add(value: "CREATE_CHANNEL_REQUEST", for: .ACTION)
+            .add(value: "ECP", for: .SERVICE)
+            .add(value: "0", for: "PAYER_CLIENT_ID")
+            .add(value: checkoutVm.service.serviceName, for: "SERVICE_NAME")
+            .add(value: checkoutVm.service.serviceCode, for: "SERVICE_CODE")
+            .add(value: checkoutVm.service.hubServiceID, for: .SERVICE_ID)
+            .add(value: checkoutVm.favouriteEnrollmentListModel.accountNumber, for: .ACCOUNT_NUMBER)
+            .add(value: checkoutVm.suggestedAmountModel.amount, for: .AMOUNT)
+            .add(value: "001", for: "card_type")
+            .add(value: country?.currency, for: "currency")
+            .add(value: getAvailableInvoice()?.invoiceNumber, for: "INVOICE_NUMBER")
+            .add(value: "0", for: "CHECK_MODE")
+            .add(value: CreditCardUtil.encrypt(data: pin), for: "MULA_PIN")
+            .add(value: CreditCardUtil.encrypt(data: checkoutVm.cardDetails.suffix), for: "CARD_ALIAS")
+            .add(value: "", for: "BUNDLE_ID")
+            .build()
+        checkoutVm.createCreditCardChannel(tinggRequest: request)
     }
 }
 

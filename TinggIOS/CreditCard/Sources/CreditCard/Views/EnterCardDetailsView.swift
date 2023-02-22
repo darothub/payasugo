@@ -263,7 +263,7 @@ public struct EnterCardDetailsView: View {
 
     }
     
-    func makeCreateCardChannelRequest() {
+    private func makeCreateCardChannelRequest() {
         if isHolderNameValid && expDateIsValid && isCVVLengthValid {
             cardDetails = cardDetails.encryptdata()
             let request = RequestMap.Builder()
@@ -283,7 +283,7 @@ public struct EnterCardDetailsView: View {
         }
     }
     
-    func handleWebViewFinishEvent(url: String) {
+    private func handleWebViewFinishEvent(url: String) {
         if url.contains(successUrl) || url.contains(EnterCardDetailsView.CARD_CHARGE_SUCCESS) {
              //intercept the GET params.
              //cuts to the parameters.
@@ -312,7 +312,7 @@ public struct EnterCardDetailsView: View {
         }
     }
     
-    func updateButton() {
+    private func updateButton() {
         if cardIsValid && isHolderNameValid && expDateIsValid && isCVVLengthValid {
             buttonBgColor = .green
             disableButton = false
