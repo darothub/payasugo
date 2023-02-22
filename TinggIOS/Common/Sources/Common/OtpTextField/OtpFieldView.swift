@@ -9,20 +9,24 @@ import SwiftUI
 
 /// Custom OTF field view
 public struct OtpFieldView: View {
-    @Binding public var fieldSize: Int
-    @Binding public var otpValue: String
+    public var fieldSize: Int
     public var focusColor: Color
+    @Binding public var otpValue: String
     @State fileprivate var fields = Array(repeating: "", count: 4)
     @FocusState fileprivate var cursor: Int?
+    @State var toHaveBorder = false
+    var onCompleteListener: OnPINCompleteListener?
     /// ``OtpFieldView`` initialiser
     /// - Parameters:
     ///   - fieldSize: number of OTP field
     ///   - otpValue: Binded OTP value
     ///   - focusColor: Color of focused OTP field
-    public init(fieldSize: Binding<Int>, otpValue: Binding<String>, focusColor: Color) {
-        self._fieldSize = fieldSize
+    public init(fieldSize: Int = 4, otpValue: Binding<String>, focusColor: Color, toHaveBorder: Bool = false, onCompleteListener: OnPINCompleteListener? = nil) {
+        self.fieldSize = fieldSize
         self._otpValue = otpValue
         self.focusColor = focusColor
+        self._toHaveBorder = State(initialValue: toHaveBorder)
+        self.onCompleteListener = onCompleteListener
         fields = Array(repeating: "", count: self.fieldSize)
     }
     public var body: some View {
@@ -36,16 +40,29 @@ public struct OtpFieldView: View {
                 .multilineTextAlignment(.center)
                 .focused($cursor, equals: index)
                 .textContentType(.oneTimeCode)
+                .padding(5)
+               
             Rectangle()
                 .fill(cursor == index ? focusColor : .gray.opacity(3))
                 .frame(height: 3)
-        }
+        }.background(
+            toHaveBorder ?
+            RoundedRectangle(cornerRadius: 2)
+                .stroke()
+            : RoundedRectangle(cornerRadius: 0)
+                .stroke(lineWidth: 0.0)
+                
+        )
     }
     fileprivate func eachField(_ index: Int) -> some View {
         return otpfields(index)
             .onChange(of: fields[index]) { newValue in
                 cursorMovement(value: newValue, index: index)
                 otpValue = fields.joined()
+                print("NewValue \(index)")
+                if onCompleteListener != nil  && index == fieldSize-1 {
+                    onCompleteListener?.submit()
+                }
             }
             .frame(width: 40)
     }
@@ -80,10 +97,14 @@ struct OtpFieldView_Previews: PreviewProvider {
         @State var otp = ""
         var focusColor: Color = .green
         var body: some View {
-            OtpFieldView(fieldSize: $fieldSize, otpValue: $otp, focusColor: focusColor)
+            OtpFieldView(fieldSize: fieldSize, otpValue: $otp, focusColor: focusColor)
         }
     }
     static var previews: some View {
         OtpFieldViewHolder()
     }
+}
+
+public protocol OnPINCompleteListener {
+    func submit() -> Void
 }

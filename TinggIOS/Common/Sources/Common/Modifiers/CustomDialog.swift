@@ -28,7 +28,7 @@ public struct CustomDialog<DialogContent: View>: ViewModifier {
     ZStack {
       content
       if isPresented {
-        Rectangle().foregroundColor(Color.black.opacity(0.6))
+        Rectangle().foregroundColor(Color.black.opacity(0.2))
               .onTapGesture {
                   if cancelOnTouchOutside {
                       isPresented.toggle()

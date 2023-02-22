@@ -24,6 +24,7 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
     @Published public var addNewCard = false
     @Published public var uiModel = UIModel.nothing
     @Published public var raiseInvoiceUIModel = UIModel.nothing
+    @Published public var validatePinUImodel = UIModel.nothing
     @Published public var fwcUIModel = UIModel.nothing
     @Published public var showAlert = false
     @Published public var pinPermission: String = ""
@@ -40,6 +41,17 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
     private var usecase: CheckoutUsecase
     public init(usecase: CheckoutUsecase) {
         self.usecase = usecase
+    }
+    public func validatePin(request: RequestMap) {
+        validatePinUImodel = UIModel.loading
+        Task {
+            do {
+                let result:BaseDTO = try await usecase(request: request)
+                handleResultState(model: &validatePinUImodel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &validatePinUImodel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
     }
     public func raiseInvoiceRequest(request: RequestMap)  {
         raiseInvoiceUIModel = UIModel.loading

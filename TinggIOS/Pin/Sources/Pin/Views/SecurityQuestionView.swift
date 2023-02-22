@@ -40,7 +40,7 @@ public struct SecurityQuestionView: View {
                         .add(value: "CREATE", for: .ACTION)
                         .add(value: "MPM", for: .SERVICE)
                         .add(value: id, for: .QUESTION_ID)
-                        .add(value: AES.encrypt(data: answer), for: .SECURITY_ANSWER)
+                        .add(value: CreditCardUtil.encrypt(data: answer), for: .SECURITY_ANSWER)
                         .build()
                     pinVm.createCardPin(tinggRequest: request)
                     pinVm.observeUIModel(model: pinVm.$uiModel, subscriptions: &pinVm.subscriptions) { content in
