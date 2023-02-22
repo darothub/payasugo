@@ -195,7 +195,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             checkoutVm.observeUIModel(model: checkoutVm.$uiModel, subscriptions: &checkoutVm.subscriptions) { content in
                 let response = content.data as! CreateCardChannelResponse
                 checkoutVm.cardDetails.checkout = true
-                navigation.navigationStack.append(.cardDetailsView)
+                navigation.navigationStack.append(.cardDetailsView(response))
                 log(message: "\(response)")
             } onError: { err in
                 log(message: err)

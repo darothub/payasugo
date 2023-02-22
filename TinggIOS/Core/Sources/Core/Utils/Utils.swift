@@ -194,6 +194,11 @@ public protocol CheckoutProtocol {
     var isSomeoneElsePaying: Bool { get set }
     var service: MerchantService { get set }
     var cardDetails: CardDetails { get set }
+   
+}
+
+extension CheckoutProtocol {
+    var isCheckout: Bool { get {return false} set{} }
 }
 
 public struct CardDetails {

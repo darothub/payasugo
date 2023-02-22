@@ -6,11 +6,11 @@
 //
 
 import Foundation
-public struct CreateCardChannelResponse: BaseDTOprotocol {
+public struct CreateCardChannelResponse: BaseDTOprotocol, Hashable {
     public var statusCode: Int
     public var statusMessage: String
     public var beepTransactionId: String
-    //    public var paymentToken: String
+    public var paymentToken: String? = ""
     public var requestLogId: String
     public var amount: Double = 0.0
     public var webUrl: String
@@ -19,11 +19,11 @@ public struct CreateCardChannelResponse: BaseDTOprotocol {
     public var serviceCode: String
     public var successUrl: String
     
-    public init(statusCode: Int = 0, statusMessage: String = "", beepTransactionId: String = "", requestLogId: String="", amount: Double=0.0, webUrl: String = "", serviceId: String="", serviceName: String="", serviceCode: String="", successUrl: String="") {
+    public init(statusCode: Int = 0, statusMessage: String = "", beepTransactionId: String = "", paymentToken: String? = "", requestLogId: String="", amount: Double=0.0, webUrl: String = "", serviceId: String="", serviceName: String="", serviceCode: String="", successUrl: String="") {
         self.statusCode = statusCode
         self.statusMessage = statusMessage
         self.beepTransactionId = beepTransactionId
-//        self.paymentToken = paymentToken
+        self.paymentToken = paymentToken
         self.requestLogId = requestLogId
         self.amount = amount
         self.webUrl = webUrl
@@ -37,7 +37,7 @@ public struct CreateCardChannelResponse: BaseDTOprotocol {
         case statusCode = "STATUS_CODE"
         case statusMessage = "STATUS_MESSAGE"
         case beepTransactionId = "BEEP_TRANSACTION_ID"
-//        case paymentToken = "PAYMENT_TOKEN"
+        case paymentToken = "PAYMENT_TOKEN"
         case requestLogId = "REQUEST_LOG_ID"
         case amount = "AMOUNT"
         case webUrl = "WEB_URL"
