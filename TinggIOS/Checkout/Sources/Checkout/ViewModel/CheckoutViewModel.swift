@@ -38,6 +38,7 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
     @Published public var selectedQuestion:String = ""
     @Published public var answer:String = ""
     @Published public var subscriptions = Set<AnyCancellable>()
+    public var isCheckout: Bool = false
     private var usecase: CheckoutUsecase
     public init(usecase: CheckoutUsecase) {
         self.usecase = usecase

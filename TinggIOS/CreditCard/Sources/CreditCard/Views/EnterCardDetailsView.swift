@@ -36,10 +36,11 @@ public struct EnterCardDetailsView: View {
     @State private var urlRequest: URLRequest? = nil
     @State var successCallbackUrl = DEFAULT_SUCCESS_CALLBACK_URL
     @State var isCardActivated = false
-    @State var createChannelResponse = CreateCardChannelResponse()
+    @State var createChannelResponse: CreateCardChannelResponse?
     @Binding var cardDetails: CardDetails
-    public init(cardDetails: Binding<CardDetails> ) {
+    public init(cardDetails: Binding<CardDetails>, createChannelResponse: CreateCardChannelResponse?=nil ) {
         self._cardDetails = cardDetails
+        self.createChannelResponse = createChannelResponse
     }
     public var body: some View {
         ZStack {
@@ -91,7 +92,6 @@ public struct EnterCardDetailsView: View {
                makeCreateCardChannelRequest()
             })
             .showIf($showWebView)
-            
            
         }
         .onChange(of: cardDetails.cardNumber) { newValue in
@@ -131,12 +131,18 @@ public struct EnterCardDetailsView: View {
             updateButton()
         })
         .onAppear {
+           
             updateButton()
+            if cardDetails.checkout {
+                let cvaKeyValueInRequest = createKeyValueAsRequest(createCardChannelResponse: createChannelResponse!)
+                htmlString = createPostStringFromRequest(request: cvaKeyValueInRequest)
+                showWebView = cardDetails.checkout
+            }
             creditCardVm.observeUIModel(model: creditCardVm.$uiModel, subscriptions: &creditCardVm.subscriptions) { content in
-                createChannelResponse = content.data as! CreateCardChannelResponse
-                successUrl = createChannelResponse.successUrl
-                checkoutUrl = createChannelResponse.webUrl.isEmpty ? EnterCardDetailsView.DEFAULT_CHECK_OUT_URL : createChannelResponse.webUrl
-                let cvaKeyValueInRequest = createCVAKeyValueAsRequest(createCardChannelResponse: createChannelResponse)
+                createChannelResponse = (content.data as! CreateCardChannelResponse)
+                successUrl = createChannelResponse!.successUrl
+                checkoutUrl = createChannelResponse!.webUrl.isEmpty ? EnterCardDetailsView.DEFAULT_CHECK_OUT_URL : createChannelResponse!.webUrl
+                let cvaKeyValueInRequest = createKeyValueAsRequest(createCardChannelResponse: createChannelResponse!)
                 htmlString = createPostStringFromRequest(request: cvaKeyValueInRequest)
                 showWebView = !htmlString.isEmpty
             } onError: { err in
@@ -199,7 +205,19 @@ public struct EnterCardDetailsView: View {
         return list.map {String($0)}.joined(separator: "&")
     }
     
-    func createCVAKeyValueAsRequest(createCardChannelResponse: CreateCardChannelResponse) -> RequestMap {
+    private func createKeyValueAsRequest(createCardChannelResponse: CreateCardChannelResponse) -> RequestMap {
+        getBaseRequestBuilderForPostCreateChannel(createCardChannelResponse: createCardChannelResponse)
+            .add(value: "CARD_VALIDATION", for: "action")
+            .build()
+    }
+    private func createECPKeyValueAsRequest(createCardChannelResponse: CreateCardChannelResponse) -> RequestMap {
+        getBaseRequestBuilderForPostCreateChannel(createCardChannelResponse: createCardChannelResponse)
+            .add(value: "CARD_PAYMENT", for: "action")
+            .add(value: createCardChannelResponse.paymentToken, for: "paymentToken")
+            .build()
+
+    }
+    func getBaseRequestBuilderForPostCreateChannel(createCardChannelResponse: CreateCardChannelResponse) -> RequestMap.Builder {
         guard let country = AppStorageManager.getCountry() else {
             fatalError("Unable to get country details")
         }
@@ -245,7 +263,6 @@ public struct EnterCardDetailsView: View {
             .add(value: customerEmail, for: "customerEmail")
             .add(value: userName, for: "customerFirstName")
             .add(value: cardDetails.encryptedExpDate, for: "expiry")
-            .add(value: "CARD_VALIDATION", for: "action")
             .add(value: encyrptedHolderName, for: "cardName")
             .add(value: encryptedCVV, for: "cvn")
             .add(value: cardDetails.address, for: "postalAddress")
@@ -259,8 +276,6 @@ public struct EnterCardDetailsView: View {
             .add(value: webUrl, for: "webUrl")
             .add(value: createCardChannelResponse.beepTransactionId, for: "channelRequestID")
             .add(value: successCallbackUrl, for: "callBackUrl")
-            .build()
-
     }
     
     private func makeCreateCardChannelRequest() {
@@ -305,7 +320,7 @@ public struct EnterCardDetailsView: View {
                     card.middleName = cardDetails.holderName.split(separator: " ")[2].description
                     card.nameType = getCreditCardNameUsingCardNumber(creditCardNumber: cardDetails.cardNumber).rawValue
                     card.suffix = ""
-                    card.validationServiceID = createChannelResponse.serviceId
+                    card.validationServiceID = createChannelResponse?.serviceId
                     Observer<Card>().saveEntity(obj: card)
                 }
             }
