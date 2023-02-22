@@ -12,7 +12,8 @@ import Contacts
 import Permissions
 
 
-public struct CheckoutView: View {
+public struct CheckoutView: View, OnPINCompleteListener {
+    
     @EnvironmentObject var checkoutVm: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var navigation: NavigationUtils
@@ -44,6 +45,9 @@ public struct CheckoutView: View {
     @State private var buttonText = "Pay"
     @State private var showDTBPINDialog = false
     @State private var dtbAccounts = [DTBAccount]()
+    @State private var encryptePIN = ""
+    @State private var showPinView = true
+
     public init () {
         //
     }
@@ -145,6 +149,8 @@ public struct CheckoutView: View {
                     raiseInvoice()
                 case MerchantPayer.CHECKOUT_IN_APP:
                     fetchCustomerDtbAccounts()
+                case MerchantPayer.CHECKOUT_CARD:
+                    showPinView = true
                 default:
                     print("Default")
                 }
@@ -173,6 +179,15 @@ public struct CheckoutView: View {
             //Observe RINV Request
             checkoutVm.observeUIModel(model: checkoutVm.$raiseInvoiceUIModel, subscriptions: &checkoutVm.subscriptions) { content in
                 let response = content.data as! RINVResponse
+                log(message: "\(response)")
+            } onError: { err in
+                log(message: err)
+            }
+            //Observe Pin validation Request
+            checkoutVm.observeUIModel(model: checkoutVm.$validatePinUImodel, subscriptions: &checkoutVm.subscriptions) { content in
+                let response = content.data as! BaseDTO
+                log(message: "\(response)")
+                showPinView = false
             } onError: { err in
                 log(message: err)
             }
@@ -210,24 +225,35 @@ public struct CheckoutView: View {
             DTBCheckoutDialogView(imageUrl: selectedPayer.logo!, dtbAccounts: dtbAccounts) {
                 pin in
                 PayerChargeCalculator.checkCharges(merchantPayer: selectedPayer, merchantService: checkoutVm.service, amount: Double(checkoutVm.suggestedAmountModel.amount) ?? 0.0)
+                encryptePIN = pin
+                raiseInvoice()
             }
         }
+        .customDialog(isPresented: $showPinView, dialogContent: {
+            VStack {
+                OtpFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)
+                Text("Forgot PIN?")
+                    .font(.caption)
+                    .padding(.vertical)
+            }.padding(40)
+        })
         .handleViewStates(uiModel: $checkoutVm.raiseInvoiceUIModel, showAlert: .constant(true))
         .handleViewStates(uiModel: $checkoutVm.fwcUIModel, showAlert: .constant(true))
+        .handleViewStates(uiModel: $checkoutVm.validatePinUImodel, showAlert: .constant(true))
     }
-    func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
+   private func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
         return Observer<Card>().getEntities().map { c in
              CardDetailDTO(cardAlias: c.cardAlias ?? "", payerClientID: c.payerClientID ?? "", cardType: c.cardType ?? "", activeStatus: c.activeStatus ?? "", logoUrl: imageUrl)
         }
     }
-    func getAvailableInvoice() -> Invoice? {
+   private func getAvailableInvoice() -> Invoice? {
        return Observer<Invoice>().getEntities().first(where: { invoice in
             checkoutVm.favouriteEnrollmentListModel.enrollments.first { e in
                 e.clientProfileAccountID == invoice.enrollment?.clientProfileAccountID
             }?.accountNumber == checkoutVm.favouriteEnrollmentListModel.accountNumber
         })
     }
-    func raiseInvoice() {
+    private func raiseInvoice() {
         let _ = Observer<ManualBill>().getEntities()
         let profile = Observer<Profile>().getEntities().first
         let request = RequestMap.Builder()
@@ -259,7 +285,7 @@ public struct CheckoutView: View {
             .add(value: getAvailableInvoice()?.billReference, for: "REFERENCE_NUMBER")
             .add(value: "1", for: "NOMINATE")
             .add(value: profile?.profileID, for: "PROFILE_ID")
-            .add(value: "", for: "PIN")
+            .add(value: encryptePIN, for: "PIN")
             .add(value: selectedPayer.checkoutType, for: "CHECKOUT_TYPE")
             .add(value: "", for: "ACCOUNT_ID")
             .add(value: "", for: "ACCOUNT_ALIAS")
@@ -284,6 +310,14 @@ public struct CheckoutView: View {
             .add(value: "FWC", for: .SERVICE)
             .build()
         checkoutVm.makeFWCRequest(request: request)
+    }
+    public func submit() {
+        let request = RequestMap.Builder()
+            .add(value: "VALIDATE", for: .ACTION)
+            .add(value: "MPM", for: .SERVICE)
+            .add(value: CreditCardUtil.encrypt(data: pin), for: "MULA_PIN")
+            .build()
+        checkoutVm.validatePin(request: request)
     }
 }
 

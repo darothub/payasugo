@@ -13,7 +13,10 @@ public struct CheckoutDI {
     }
     
     public static func createCheckoutUsecase() -> CheckoutUsecase {
-        CheckoutUsecase(checkoutRepository: CheckoutRepositoryImpl(baseRequest: BaseRequest()))
+        CheckoutUsecase(checkoutRepository: CheckoutRepositoryImpl(baseRequest: BaseRequest()), validatePinUseCase: createValidatePinUsecase())
+    }
+    public static func createValidatePinUsecase() -> ValidatePinUsecase {
+        ValidatePinUsecase(cardRepository: CardRepositoryImpl(baseRequest: BaseRequest()))
     }
     public static func createCheckoutViewModel() -> CheckoutViewModel {
         CheckoutViewModel(usecase: createCheckoutUsecase())

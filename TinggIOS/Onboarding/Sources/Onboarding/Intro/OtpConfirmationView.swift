@@ -13,6 +13,8 @@ import Theme
 ///  Displays OTP text field for confirmation.
 ///  Upon successful OTP confirmation user returns to Phone number verification view.
 public struct OtpConfirmationView: View {
+    
+    
     @State private var otpSize = 4
     @State private var otp = ""
     @State private var timeLeft = 60
@@ -34,7 +36,7 @@ public struct OtpConfirmationView: View {
             Text("Enter the code received via SMS\nto confirm request")
                 .smallTextViewStyle(SmallTextStyle())
                 .foregroundColor(PrimaryTheme.getColor(.tinggblack))
-            OtpFieldView(fieldSize: $otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
+            OtpFieldView(fieldSize: otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
                 .padding(.vertical, 20)
             Text(timeAdvice)
                 .smallTextViewStyle(SmallTextStyle())
