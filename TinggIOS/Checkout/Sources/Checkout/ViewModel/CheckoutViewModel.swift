@@ -75,6 +75,18 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
             }
         }
     }
+    public func createCreditCardChannel(tinggRequest: RequestMap) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let success: CreateCardChannelResponse = try await usecase(request: tinggRequest)
+                handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>)
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
+            }
+        }
+
+    }
     /// Handle result
     public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
