@@ -37,7 +37,6 @@ public struct CheckoutView: View {
     @State private var questions:[String] = .init()
     @State private var selectedQuestion:String = ""
     @State private var showingDropDown = false
-<<<<<<< HEAD
     @State private var selectedAccount:String = ""
     @State private var accountList = [String]()
     @State private var isQuickTopUpOrAirtime = false
@@ -45,13 +44,6 @@ public struct CheckoutView: View {
     @State private var buttonText = "Pay"
     @State private var showDTBPINDialog = false
     @State private var dtbAccounts = [DTBAccount]()
-=======
-    @State var selectedAccount:String = ""
-    @State var accountList = [String]()
-    @State var isQuickTopUpOrAirtime = false
-    @State var selectedPayer: MerchantPayer = .init()
-    @State var buttonText = "Pay"
->>>>>>> master
     public init () {
         //
     }
@@ -214,7 +206,6 @@ public struct CheckoutView: View {
                 buttonText = "Pay \(newValue)"
             }
         })
-<<<<<<< HEAD
         .customDialog(isPresented: $showDTBPINDialog) {
             DTBCheckoutDialogView(imageUrl: selectedPayer.logo!, dtbAccounts: dtbAccounts) {
                 pin in
@@ -223,9 +214,6 @@ public struct CheckoutView: View {
         }
         .handleViewStates(uiModel: $checkoutVm.raiseInvoiceUIModel, showAlert: .constant(true))
         .handleViewStates(uiModel: $checkoutVm.fwcUIModel, showAlert: .constant(true))
-=======
-        .handleViewStates(uiModel: $checkoutVm.uiModel, showAlert: .constant(true))
->>>>>>> master
     }
     func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
         return Observer<Card>().getEntities().map { c in
