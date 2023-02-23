@@ -80,11 +80,13 @@ public struct EnterCardDetailsView: View {
                     TextFieldView(fieldText: $cardDetails.address, label:"", placeHolder: "Address")
                 }
                 Spacer()
+                //Button
                 button(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
                     makeCreateCardChannelRequest()
                 }.disabled(disableButton)
             }
             .padding()
+            //WebView
             HTMLView(url: htmlString, webViewUIModel:creditCardVm.uiModel, didFinish: { url in
                 log(message: url)
                 handleWebViewFinishEvent(url: url)
@@ -309,7 +311,8 @@ public struct EnterCardDetailsView: View {
                 log(message: "\(String(describing: match))")
                 let successValue = match.last!
                 log(message: "\(String(describing: successValue))")
-                if successValue == "1" || successValue == "2" {
+                let isSuccessful = successValue == "1" || successValue == "2"
+                if isSuccessful {
                     isCardActivated = successValue == "2"
                     let card = Card()
                     card.cardAlias = ""
@@ -322,6 +325,9 @@ public struct EnterCardDetailsView: View {
                     card.suffix = ""
                     card.validationServiceID = createChannelResponse?.serviceId
                     Observer<Card>().saveEntity(obj: card)
+                }
+                else if cardDetails.checkout && isSuccessful {
+                    let _ = createChannelResponse
                 }
             }
         }
