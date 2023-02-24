@@ -8,7 +8,7 @@ import Combine
 import Common
 import Core
 import SwiftUI
-
+@MainActor
 public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol {
     @Published public var suggestedAmountModel: SuggestedAmountModel = .init()
     @Published public var favouriteEnrollmentListModel: FavouriteEnrollmentModel = .init()
@@ -89,7 +89,7 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
 
     }
     /// Handle result
-    public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
+    nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
@@ -97,7 +97,7 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
         case .success(let data):
             var content: UIModel.Content
             if data is BaseDTOprotocol {
-                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTO).statusMessage)
+                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTOprotocol).statusMessage)
             } else {
                 content = UIModel.Content(data: data)
             }

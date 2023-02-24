@@ -46,7 +46,8 @@ public struct CheckoutView: View, OnPINCompleteListener {
     @State private var showDTBPINDialog = false
     @State private var dtbAccounts = [DTBAccount]()
     @State private var encryptePIN = ""
-    @State private var showPinView = true
+    @State private var showPinView = false
+    @State private var showAlert = false
     public init () {
         //
     }
@@ -122,6 +123,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             }.showIfNot($showingDropDown)
             
             Spacer()
+            //MARK: Button
             button(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: buttonText
@@ -167,31 +169,36 @@ public struct CheckoutView: View, OnPINCompleteListener {
             checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
             accountList = checkoutVm.favouriteEnrollmentListModel.enrollments.compactMap {$0.accountNumber}
             isQuickTopUpOrAirtime = checkoutVm.service.isAirtimeService
-            //Observe FWC request
+            //MARK: Observe FWC request
             checkoutVm.observeUIModel(model: checkoutVm.$fwcUIModel, subscriptions: &checkoutVm.subscriptions) { content in
                 let response = content.data as! DTBAccountsResponse
                 dtbAccounts = response.accounts ?? []
                 showDTBPINDialog = true
             } onError: { err in
+                showAlert = true
                 log(message: err)
             }
-            //Observe RINV Request
+            //MARK: Observe RINV Request
             checkoutVm.observeUIModel(model: checkoutVm.$raiseInvoiceUIModel, subscriptions: &checkoutVm.subscriptions) { content in
                 let response = content.data as! RINVResponse
+                showAlert = true
                 log(message: "\(response)")
             } onError: { err in
+                showAlert = true
                 log(message: err)
             }
-            //Observe Pin validation Request
+            //MARK: Observe Pin validation Request
             checkoutVm.observeUIModel(model: checkoutVm.$validatePinUImodel, subscriptions: &checkoutVm.subscriptions) { content in
                 let response = content.data as! BaseDTO
                 log(message: "\(response)")
+                showAlert = true
                 showPinView = false
             } onError: { err in
+                showAlert = true
                 log(message: err)
             }
             
-            //Observe create checkout channel
+            //MARK: Observe create checkout channel
             checkoutVm.observeUIModel(model: checkoutVm.$uiModel, subscriptions: &checkoutVm.subscriptions) { content in
                 let response = content.data as! CreateCardChannelResponse
                 checkoutVm.cardDetails.checkout = true
@@ -238,7 +245,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 raiseInvoice()
             }
         }
-        .customDialog(isPresented: $showPinView, dialogContent: {
+        .customDialog(isPresented: $showPinView, cancelOnTouchOutside: .constant(true), dialogContent: {
             VStack {
                 OtpFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)
                 Text("Forgot PIN?")
@@ -246,9 +253,9 @@ public struct CheckoutView: View, OnPINCompleteListener {
                     .padding(.vertical)
             }.padding(40)
         })
-        .handleViewStates(uiModel: $checkoutVm.raiseInvoiceUIModel, showAlert: .constant(true))
-        .handleViewStates(uiModel: $checkoutVm.fwcUIModel, showAlert: .constant(true))
-        .handleViewStates(uiModel: $checkoutVm.validatePinUImodel, showAlert: .constant(true))
+        .handleViewStates(uiModel: $checkoutVm.raiseInvoiceUIModel, showAlert:  $showAlert, showSuccessAlert: $showAlert)
+        .handleViewStates(uiModel: $checkoutVm.fwcUIModel, showAlert:  $showAlert)
+        .handleViewStates(uiModel: $checkoutVm.validatePinUImodel, showAlert: $showAlert, showSuccessAlert: $showAlert, onSuccessAction: makeCardCheckoutRequest)
     }
    private func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
         return Observer<Card>().getEntities().map { c in
@@ -265,6 +272,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
     private func raiseInvoice() {
         let _ = Observer<ManualBill>().getEntities()
         let profile = Observer<Profile>().getEntities().first
+        let accountNumber = selectedAccount.isEmpty ? checkoutVm.favouriteEnrollmentListModel.accountNumber : selectedAccount
         let request = RequestMap.Builder()
             .add(value: "RINV", for: .SERVICE)
             .add(value: getPayingMSISDN(), for: .MSISDN)
@@ -272,7 +280,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: AppStorageManager.getPhoneNumber(), for: "ORIGINATOR_MSISDN")
             .add(value: checkoutVm.suggestedAmountModel.amount, for: .AMOUNT)
             .add(value: checkoutVm.service.hubServiceID, for: .SERVICE_ID)
-            .add(value: "", for: .ACCOUNT_NUMBER)
+            .add(value: accountNumber, for: .ACCOUNT_NUMBER)
             .add(value: getAvailableInvoice()?.invoiceNumber, for: "INVOICE_NUMBER")
             .add(value: checkoutVm.suggestedAmountModel.amount, for: "BILL_AMOUNT")
             .add(value: AppStorageManager.getCountry()?.currency, for: "CURRENCY")
@@ -297,7 +305,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: encryptePIN, for: "PIN")
             .add(value: selectedPayer.checkoutType, for: "CHECKOUT_TYPE")
             .add(value: "", for: "ACCOUNT_ID")
-            .add(value: "", for: "ACCOUNT_ALIAS")
+            .add(value: profile?.accountAlias, for: "ACCOUNT_ALIAS")
             .add(value: "1", for: "IS_APP_INVOICE")
             .add(value: "0", for: "CHECK_MODE")
             .add(value: "", for: "MERCHANT_TIER_CODE")
@@ -328,7 +336,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .build()
         checkoutVm.validatePin(request: request)
     }
-    private func makeCreateCardChannelRequest() {
+    private func makeCardCheckoutRequest() {
         let country = AppStorageManager.getCountry()
         let request = RequestMap.Builder()
             .add(value: "CREATE_CHANNEL_REQUEST", for: .ACTION)
