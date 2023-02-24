@@ -60,7 +60,7 @@ public struct OtpFieldView: View {
                 cursorMovement(value: newValue, index: index)
                 otpValue = fields.joined()
                 print("NewValue \(index)")
-                if onCompleteListener != nil  && index == fieldSize-1 {
+                if onCompleteListener != nil  && index == fieldSize-1 && !newValue.isEmpty{
                     onCompleteListener?.submit()
                 }
             }
