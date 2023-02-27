@@ -17,7 +17,7 @@ public enum Screens: Hashable {
          nominationDetails(Invoice, Enrollment),
          pinCreationView,
          securityQuestionView,
-         cardDetailsView(CreateCardChannelResponse?),
+         cardDetailsView(CreateCardChannelResponse?, Invoice?),
          cardWebView(String)
 }
 
