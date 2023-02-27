@@ -64,8 +64,8 @@ struct NavigationModifier: ViewModifier {
                     CreditCardPinView(pinPermission: $checkout.pinPermission, pin: $checkout.pin, confirmPin: $checkout.confirmPin, pinIsCreated: $checkout.pinIsCreated)
                 case .securityQuestionView:
                     SecurityQuestionView(selectedQuestion: $checkout.selectedQuestion, answer: $checkout.answer)
-                case .cardDetailsView(let response):
-                    EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response)
+                case let .cardDetailsView(response, invoice):
+                    EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response, invoice: invoice)
                         .environmentObject(navigation)
                 default:
                     EmptyView()

@@ -37,10 +37,12 @@ public struct EnterCardDetailsView: View {
     @State var successCallbackUrl = DEFAULT_SUCCESS_CALLBACK_URL
     @State var isCardActivated = false
     @State var createChannelResponse: CreateCardChannelResponse?
+    var invoice: Invoice?
     @Binding var cardDetails: CardDetails
-    public init(cardDetails: Binding<CardDetails>, createChannelResponse: CreateCardChannelResponse?=nil ) {
+    public init(cardDetails: Binding<CardDetails>, createChannelResponse: CreateCardChannelResponse?=nil, invoice: Invoice? = nil ) {
         self._cardDetails = cardDetails
         self.createChannelResponse = createChannelResponse
+        self.invoice = invoice
     }
     public var body: some View {
         ZStack {
@@ -327,7 +329,33 @@ public struct EnterCardDetailsView: View {
                     Observer<Card>().saveEntity(obj: card)
                 }
                 else if cardDetails.checkout && isSuccessful {
+                    creditCardVm.uiModel = UIModel.loading
                     let _ = createChannelResponse
+                    var invoice = self.invoice
+                    if let amount = createChannelResponse?.amount {
+                        invoice?.amount = String(amount)
+                        invoice?.hasPaymentInProgress = true
+                        var totalPaid = invoice!.partialPaidAmount + amount
+                        switch true {
+                        case totalPaid > amount:
+                            invoice?.partialPaidAmount = 0.0
+                            invoice?.fullyPaid = true
+                            invoice?.overPaid = true
+                        case totalPaid < amount:
+                            invoice?.partialPaidAmount = totalPaid
+                            invoice?.fullyPaid = false
+                            invoice?.overPaid = false
+                        case totalPaid == amount:
+                            invoice?.partialPaidAmount = 0.0
+                            invoice?.fullyPaid = true
+                            invoice?.overPaid = false
+                        default:
+                            log(message: "Default")
+                        }
+                        Observer<Invoice>().saveEntity(obj: invoice!)
+                        let content =  UIModel.Content(statusMessage: "Updated invoice")
+                        creditCardVm.uiModel = UIModel.content(content)
+                    }
                 }
             }
         }
