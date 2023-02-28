@@ -76,7 +76,7 @@ public struct SecurityQuestionView: View {
         return ""
     }
     func navigateToCardDetailsView() {
-        navigation.navigationStack.append(.cardDetailsView(nil))
+        navigation.navigationStack.append(.cardDetailsView(nil, nil))
     }
 }
 
