@@ -60,7 +60,7 @@ public struct TabItemView: View {
             .frame(maxWidth: .infinity, maxHeight: tabHeight)
             .background(
                 Rectangle()
-                    .foregroundColor(selected == tabTitle ? color : .white)
+                    .foregroundColor(color)
                     .tag(tabTitle)
             )
             .foregroundColor(selected == tabTitle ? .white : .black)
