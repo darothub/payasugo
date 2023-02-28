@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  ContactRowView.swift
 //  
 //
 //  Created by Abdulrasaq on 14/12/2022.

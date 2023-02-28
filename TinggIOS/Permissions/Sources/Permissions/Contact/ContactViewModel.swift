@@ -43,7 +43,7 @@ public class ContactViewModel: ObservableObject {
              case .failure(let error):
                  onError(error)
              case .success(let c):
-                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [unowned self] in
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [unowned self] in
                      listOfContact.insert(handleContacts(contacts: c))
                      showContact = true
                  }
@@ -51,5 +51,15 @@ public class ContactViewModel: ObservableObject {
          }
         
     }
-    
+    public func fetchPhoneContactsWIthoutUI(onSuccess: @escaping (ContactRow) -> Void,  onError: @escaping (Error) -> Void) async {
+        await permission.fetchContacts { [unowned self] result in
+             switch result {
+             case .failure(let error):
+                 onError(error)
+             case .success(let c):
+                 onSuccess(handleContacts(contacts: c))
+             }
+         }
+        
+    }
 }

@@ -6,12 +6,14 @@
 //
 import Core
 import Common
+import Permissions
 import SwiftUI
 import Theme
 public struct EnterCardDetailsView: View {
     //MARK: Variables
     @EnvironmentObject var creditCardVm: CreditCardViewModel
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var contactVm: ContactViewModel
     @State private var isFilling = false
     @State private var cardNumberHolderText = "Card number"
     @State private var buttonBgColor: Color = .gray.opacity(0.5)
@@ -331,31 +333,69 @@ public struct EnterCardDetailsView: View {
                 else if cardDetails.checkout && isSuccessful {
                     creditCardVm.uiModel = UIModel.loading
                     let _ = createChannelResponse
-                    var invoice = self.invoice
+                    let raisedInvoice = self.invoice
                     if let amount = createChannelResponse?.amount {
-                        invoice?.amount = String(amount)
-                        invoice?.hasPaymentInProgress = true
-                        var totalPaid = invoice!.partialPaidAmount + amount
+                        raisedInvoice?.amount = String(amount)
+                        raisedInvoice?.hasPaymentInProgress = true
+                        let totalPaid = raisedInvoice!.partialPaidAmount + amount
                         switch true {
                         case totalPaid > amount:
-                            invoice?.partialPaidAmount = 0.0
-                            invoice?.fullyPaid = true
-                            invoice?.overPaid = true
+                            raisedInvoice?.partialPaidAmount = 0.0
+                            raisedInvoice?.fullyPaid = true
+                            raisedInvoice?.overPaid = true
                         case totalPaid < amount:
-                            invoice?.partialPaidAmount = totalPaid
-                            invoice?.fullyPaid = false
-                            invoice?.overPaid = false
+                            raisedInvoice?.partialPaidAmount = totalPaid
+                            raisedInvoice?.fullyPaid = false
+                            raisedInvoice?.overPaid = false
                         case totalPaid == amount:
-                            invoice?.partialPaidAmount = 0.0
-                            invoice?.fullyPaid = true
-                            invoice?.overPaid = false
+                            raisedInvoice?.partialPaidAmount = 0.0
+                            raisedInvoice?.fullyPaid = true
+                            raisedInvoice?.overPaid = false
                         default:
                             log(message: "Default")
                         }
                         Observer<Invoice>().saveEntity(obj: invoice!)
+                        let userMSISDN = Observer<Profile>().getEntities()[0].msisdn
+                        var customerName = ""
+                        let accountNumber = creditCardVm.favouriteEnrollmentListModel.accountNumber
+                        if creditCardVm.service.isAirtimeService && ((userMSISDN?.elementsEqual(accountNumber)) != nil) {
+                            customerName = "Me"
+                        } else if creditCardVm.service.isAirtimeService {
+                            Task {
+                                await contactVm.fetchPhoneContactsWIthoutUI { cr in
+                                    if cr.phoneNumber.elementsEqual(accountNumber) {
+                                        customerName = cr.phoneNumber
+                                    } else {
+                                        customerName = ""
+                                    }
+                                } onError: { error in
+                                    log(message: error.localizedDescription)
+                                }
+                            }
+
+                        }
+                        let providerDetails = creditCardVm.providersListModel.details.first { payer in
+                            payer.payer.clientName == creditCardVm.selectedMerchantPayerName
+                        }
+                        let transactionHistory = TransactionHistory()
+                        let beepTransactionId = (raisedInvoice?.beepTransactionID.isNotEmpty)! ? raisedInvoice?.beepTransactionID : createChannelResponse?.beepTransactionId
+                        transactionHistory.beepTransactionID = beepTransactionId ?? ""
+                        transactionHistory.amount = String(amount)
+                        transactionHistory.billAmount = amount
+                        transactionHistory.status = TransactionHistory.STATUS_EXPIRED
+                        transactionHistory.transactionTitle = customerName
+                        transactionHistory.currencyCode = AppStorageManager.getCountry()?.currency
+                        transactionHistory.accountNumber = accountNumber
+                        transactionHistory.serviceID = creditCardVm.service.hubServiceID
+                        transactionHistory.msisdn = getPayingMSISDN()
+                        transactionHistory.shortDescription = ">Transaction is in progress. Tingg Ref Number is \(raisedInvoice?.beepTransactionID ?? "")"
+                        transactionHistory.merchantPayer = providerDetails?.payer
+                        transactionHistory.merchantService = creditCardVm.service
+                        Observer<TransactionHistory>().saveEntity(obj: transactionHistory)
                         let content =  UIModel.Content(statusMessage: "Updated invoice")
                         creditCardVm.uiModel = UIModel.content(content)
                     }
+
                 }
             }
         }
@@ -369,6 +409,9 @@ public struct EnterCardDetailsView: View {
             buttonBgColor =  .gray.opacity(0.5)
             disableButton = true
         }
+    }
+    private func getPayingMSISDN() -> String {
+        creditCardVm.isSomeoneElsePaying ? creditCardVm.favouriteEnrollmentListModel.accountNumber : AppStorageManager.getPhoneNumber()
     }
 }
 
