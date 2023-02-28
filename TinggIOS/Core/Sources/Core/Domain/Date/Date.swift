@@ -38,6 +38,11 @@ extension Date {
            dateFormatter.dateFormat = formatString
            return dateFormatter.string(from: self)
     }
+    public static let mmddyyFormat: DateFormatter = {
+          let formatter = DateFormatter()
+          formatter.dateStyle = .long
+          return formatter
+    }()
 }
 
 /// Converts a date string to a date object

@@ -35,8 +35,7 @@ public class TransactionHistory: Object, DBObject, ObjectKeyIdentifiable, Codabl
     @Persisted public var transactionTitle: String? = "title"
     @Persisted public var merchantPayer: MerchantPayer? = nil
     @Persisted public var merchantService: MerchantService? = nil
-    //    @Persisted public var token: String
-    //    @Persisted public var units: String
+
     public static let STATUS_PENDING = "Pending"
     public static let STATUS_SUCCESS = "Success"
     public static let STATUS_FAILED = "Failed"

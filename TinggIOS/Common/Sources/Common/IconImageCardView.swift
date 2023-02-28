@@ -10,10 +10,16 @@ public struct IconImageCardView: View {
     @State var imageUrl: String = ""
     @State var radius: CGFloat = 10
     @State var scaleEffect: CGFloat = 1
-    public init(imageUrl: String, radius: CGFloat = 10, scaleEffect: CGFloat = 1) {
+    @State var x: CGFloat = 0
+    @State var y: CGFloat = 3
+    @State var shadowRadius: CGFloat = 3
+    public init(imageUrl: String, radius: CGFloat = 10, scaleEffect: CGFloat = 1, x: CGFloat = 0, y:CGFloat = 3, shadowRadius: CGFloat = 0) {
         self._imageUrl = State(initialValue: imageUrl)
         self._radius = State(initialValue: radius)
         self._scaleEffect = State(initialValue: scaleEffect)
+        self._x = State(initialValue: x)
+        self._y = State(initialValue: y)
+        self._shadowRadius = State(initialValue: shadowRadius)
     }
     public var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { image in
@@ -29,7 +35,7 @@ public struct IconImageCardView: View {
         }.background(
             RoundedRectangle(cornerRadius: radius)
                 .foregroundColor(.white)
-                .shadow(radius: 3, x: 0, y: 3)
+                .shadow(radius: shadowRadius, x: x, y: y)
         ).scaleEffect(scaleEffect)
     }
 }
