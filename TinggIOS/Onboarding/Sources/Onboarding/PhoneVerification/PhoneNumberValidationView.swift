@@ -29,8 +29,7 @@ public struct PhoneNumberValidationView: View {
     @State private var warning = ""
     @State private var hasCheckedTermsAndPolicy = false
     @State private var showSupportTeamContact = false
-    @State private var showErrorAlert = false
-    @State private var showSuccessAlert = false
+    @State private var showAlert = false
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -61,7 +60,7 @@ public struct PhoneNumberValidationView: View {
                     prepareActivationRequest()
                 }.keyboardShortcut(.return)
                   .accessibility(identifier: "continuebtn")
-                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
+                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showAlert, showSuccessAlert: $showAlert)
 
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -79,8 +78,8 @@ public struct PhoneNumberValidationView: View {
                     otpConfirmed: $isOTPConfirmed
                 )
             })
-            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $showErrorAlert)
-            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
+            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $showAlert)
+            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showAlert, showSuccessAlert: $showAlert)
             .background(PrimaryTheme.getColor(.tinggwhite))
             .onAppear {
                 observeUIModel()
@@ -156,15 +155,21 @@ extension PhoneNumberValidationView {
         vm.observeUIModel(model: vm.$onActivationRequestUIModel, subscriptions: &vm.subscriptions) { content in
             showOTPView = true
         } onError: { err in
-            showErrorAlert = true
-            print("PhoneNumberValidationView \(err)")
+            showAlert = true
+            log(message: err)
         }
         vm.observeUIModel(model: vm.$onParRequestUIModel, subscriptions: &vm.subscriptions) { content in
             let dto = content.data as! PARAndFSUDTO
             saveDataIntoDBAndNavigateToHome(data: dto)
         } onError: { err in
-            showErrorAlert = true
-            print("PhoneNumberValidationView \(err)")
+            showAlert = true
+            log(message: err)
+        }
+        vm.observeUIModel(model: vm.$phoneNumberFieldUIModel, subscriptions: &vm.subscriptions) { content in
+            log(message: content.statusMessage)
+        } onError: { err in
+            showAlert = true
+            log(message: err)
         }
     }
     fileprivate func onPhoneNumberInput(number: String) -> Void {
@@ -174,17 +179,17 @@ extension PhoneNumberValidationView {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
         
         if !isPhoneNumberNotEmpty {
-            showErrorAlert = true
+            showAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
             return
         }
         if !isValidPhoneNumber {
-            showErrorAlert = true
+            showAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
             return
         }
         if !hasCheckedTermsAndPolicy {
-            showErrorAlert = true
+            showAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Kindly accept terms and policy")
             return
         }
@@ -251,7 +256,7 @@ extension PhoneNumberValidationView {
             realmManager.save(data: data.bundleData.map {$0.convert()})
             
             if let defaultNetworkId = data.defaultNetworkServiceID {
-                print("DefaultNetwork \(String(defaultNetworkId))")
+                log(message: "\(defaultNetworkId)")
                 AppStorageManager.setDefaultNetworkId(id: String(defaultNetworkId))
             }
           

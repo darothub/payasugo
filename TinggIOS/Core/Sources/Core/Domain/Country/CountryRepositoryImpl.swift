@@ -20,7 +20,7 @@ public class CountryRepositoryImpl: CountryRepository {
         self.dbObserver =  dbObserver
     }
     private func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
-        baseRequest.makeRequest(urlPath: "countries.php/") {(result: Result<CountryDTO, ApiError>) in
+        baseRequest.makeRequest(urlPath: "countriesNew.php/", tinggRequest: .Builder().build()) {(result: Result<CountryDTO, ApiError>) in
             switch result {
             case .failure(let error):
                 onCompletion(.failure(.networkError(error.localizedDescription)))

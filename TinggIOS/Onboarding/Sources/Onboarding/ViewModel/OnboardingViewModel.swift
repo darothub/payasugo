@@ -103,7 +103,7 @@ public class OnboardingViewModel: ViewModel {
                 countryDictionary = try await onboardingUseCase.getCountryDictionary()
                 phoneNumberFieldUIModel = UIModel.nothing
             } catch {
-                handleResultState(model: &phoneNumberFieldUIModel, Result.failure(ApiError.networkError("Error: check your network connection")) as Result<BaseDTO, ApiError>)
+                handleResultState(model: &phoneNumberFieldUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
             }
         }
     }

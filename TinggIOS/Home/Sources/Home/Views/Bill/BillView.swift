@@ -14,49 +14,50 @@ public struct BillView: View {
     @State var color: Color = .green
     @State var items = [
         TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
-        TabLayoutItem(title: "RECEIPTS", view: AnyView(TransactionListView()))
     ]
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
+    @State var isFullScreen = false
     public init() {
         // Intentionally unimplemented...
     }
     public var body: some View {
         VStack(spacing: 0) {
-            ProfileImageAndHelpIconView(imageUrl: profileImageUrl, title: "My Bills")
+            ProfileImageAndHelpIconView(imageUrl: (Observer<Profile>().getEntities().first?.photoURL!)!, title: "My Bills")
                 .background(secondaryColor)
-            CustomTabView(items: items, tabColor: $color)
+            CustomTabView(items: $items, tabColor: $color)
         }.onAppear {
+            profileImageUrl = Observer<Profile>().getEntities().first?.photoURL ?? ""
             color = secondaryColor
             let transactions = Observer<TransactionHistory>().getEntities()
+            log(message: "\(transactions)")
             let transactionListModels = transactions.map { t in
-                if let service = t.service, let payer = t.payer {
-                    let serviceLogo = t.serviceLogo ?? ""
-                    let accountNumber = t.accountNumber ?? "0"
-                    let dateCreated = makeDateFromString(validDateString: t.dateCreated ?? "")
-                    let amount = Double(t.amount.convertStringToInt())
-                    let currency = AppStorageManager.getCountry()?.currency ?? "KE"
-                    let model = TransactionItemModel(
-                        imageurl: serviceLogo,
-                        accountNumber: accountNumber,
-                        date: dateCreated,
-                        amount: amount,
-                        currency: currency,
-                        payer: payer,
-                        service: service,
-                        status: TransactionStatus(rawValue:  t.status)!
-                    )
-                    return model
-                }
-                return TransactionItemModel()
+                let serviceLogo = t.serviceLogo ?? ""
+                let accountNumber = t.accountNumber ?? "0"
+                let dateCreated = makeDateFromString(validDateString: t.dateCreated ?? "")
+                let amount = Double(t.amount.convertStringToInt())
+                let currency = AppStorageManager.getCountry()?.currency ?? "KE"
+                let model = TransactionItemModel(
+                    id: t.beepTransactionID,
+                    imageurl: serviceLogo,
+                    accountNumber: accountNumber,
+                    date: dateCreated,
+                    amount: amount,
+                    currency: currency,
+                    payer: t.merchantPayer ?? .init(),
+                    service: t.merchantService ?? .init(),
+                    status: TransactionStatus(rawValue:  t.status)!
+                )
+                return model
             }
-            
-           
-            let dict = Dictionary(grouping: transactionListModels) {$0.date}
+            log(message: "\(transactionListModels)")
+            let dict = Dictionary(grouping: transactionListModels) {$0.date.formatted(with: "EEEE, dd MMMM yyyy")}
+            log(message: "\(dict)")
             let sections = dict.map { (k, v) in
                 TransactionSectionModel(list: v)
-            }
+            }.sorted()
+            
             let view = AnyView(TransactionListView(listOfModel: sections))
             let tabItem = TabLayoutItem(title: "RECEIPTS", view: AnyView(view))
             items.append(tabItem)

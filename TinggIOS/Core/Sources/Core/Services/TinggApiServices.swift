@@ -21,13 +21,17 @@ extension TinggApiServices {
         return AF.request(Utils.baseUrlStaging, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
     }
-    public func request(tinggRequest: [String:Any]) -> DataRequest {
+    public func request(tinggRequest: RequestMap) -> DataRequest {
         return AF.request(Utils.baseUrlStaging, method: .post,
-                          parameters: tinggRequest, encoding: JSONEncoding.prettyPrinted)
+                          parameters: tinggRequest.dict, encoding: JSONEncoding.prettyPrinted)
     }
     public func request(urlPath: String, tinggRequest: TinggRequest) -> DataRequest {
         return AF.request(Utils.baseUrlStaging+urlPath, method: .post,
                           parameters: tinggRequest, encoder: JSONParameterEncoder.default)
+    }
+    public func request(urlPath: String, tinggRequest: RequestMap) -> DataRequest {
+        return AF.request(Utils.baseUrlStaging+urlPath, method: .post,
+                          parameters: tinggRequest.dict, encoding: JSONEncoding.prettyPrinted)
     }
     public func request(urlPath: String) -> DataRequest {
         return AF.request(Utils.baseUrlStaging+urlPath, method: .get)
@@ -45,7 +49,7 @@ extension TinggApiServices {
         tinggRequest: RequestMap,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
-        request(tinggRequest: tinggRequest.dict)
+        request(tinggRequest: tinggRequest)
             .validate(statusCode: 200..<300)
             .execute { (result:Result<T, ApiError>) in
                 onCompletion(result)

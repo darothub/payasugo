@@ -54,7 +54,7 @@ struct MyBillView_Previews: PreviewProvider {
         @State var tabColor: Color = .green
         @State var items = sampleItem
         var body: some View {
-            CustomTabView(items: items, tabColor: $tabColor)
+            CustomTabView(items: $items, tabColor: $tabColor)
         }
     }
     static var previews: some View {

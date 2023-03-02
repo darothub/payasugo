@@ -23,7 +23,7 @@ extension Date {
     ///   - rhs: an instance of the old date
     /// - Returns: the difference in Time interval
     
-    public static func > (lhs: Date, rhs: Date) -> Bool {
+    public static func gt (lhs: Date, rhs: Date) -> Bool {
         return lhs.timeIntervalSinceReferenceDate > rhs.timeIntervalSinceReferenceDate
     }
     /// For formatting a date

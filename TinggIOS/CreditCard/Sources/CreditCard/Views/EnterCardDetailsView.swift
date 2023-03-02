@@ -424,7 +424,7 @@ struct CardDetailsView_Previews: PreviewProvider {
     }
     static var previews: some View {
         CardDetailsViewPreviewHolder()
-            .environmentObject(CreditCardDI.createCheckoutViewModel())
+            .environmentObject(CreditCardDI.createCreditCardViewModel())
     }
 }
 

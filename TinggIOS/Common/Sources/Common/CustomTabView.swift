@@ -12,14 +12,14 @@ import SwiftUI
 public struct CustomTabView: View {
     @Binding var tabColor: Color
     @State private var selectedTab = ""
-    @State var items: [TabLayoutItem]
+    @Binding var items: [TabLayoutItem]
     /// ``CustomTabView`` initialiser
     /// - Parameters:
     ///   - items: List of tab layouts
     ///   - tabColor: tab color
-    public init(items: [TabLayoutItem], tabColor: Binding<Color>) {
+    public init(items: Binding<[TabLayoutItem]>, tabColor: Binding<Color>) {
         self._tabColor = tabColor
-        self._items = State(initialValue: items)
+        self._items = items
     }
     public var body: some View {
         VStack {
