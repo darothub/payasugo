@@ -24,7 +24,7 @@ struct TinggIOSApp: App {
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var bavm = AirtimeDI.createAirtimeViewModel()
-    @StateObject var ccvm = CreditCardDI.createCheckoutViewModel()
+    @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -48,8 +48,7 @@ struct TinggIOSApp: App {
                     }
                 }
                 .onAppear {
-                    Log.d(message: "Hello file")
-                    print(FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
+                    Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
                 }
         }
 

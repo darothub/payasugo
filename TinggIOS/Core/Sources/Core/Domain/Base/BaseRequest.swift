@@ -26,7 +26,7 @@ public class BaseRequest: TinggApiServices {
         tinggRequest: RequestMap,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
-        request(tinggRequest: tinggRequest.dict)
+        request(tinggRequest: tinggRequest)
             .validate(statusCode: 200..<300)
             .execute { (result:Result<T, ApiError>) in
                 onCompletion(result)
@@ -42,9 +42,26 @@ public class BaseRequest: TinggApiServices {
                  onCompletion(result)
              }
     }
-    
+    public func makeRequest<T: BaseDTOprotocol>(
+        urlPath: String,
+        tinggRequest: RequestMap,
+        onCompletion: @escaping(Result<T, ApiError>) -> Void
+    ) {
+        request(urlPath: urlPath, tinggRequest: tinggRequest)
+            .validate(statusCode: 200..<400)
+             .execute { (result:Result<T, ApiError>) in
+                 onCompletion(result)
+             }
+    }
+    func result<T: BaseDTOprotocol>(urlPath: String, tinggRequest: RequestMap) async throws -> Result<T, ApiError> {
+        return try await withCheckedThrowingContinuation { continuation in
+            makeRequest(urlPath: urlPath, tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
+                continuation.resume(returning: result)
+            }
+        }
+    }
     func result<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws -> Result<T, ApiError> {
-        print("TinggRequest \(tinggRequest)")
+        Log.d(message: "\(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
                 continuation.resume(returning: result)
@@ -52,7 +69,7 @@ public class BaseRequest: TinggApiServices {
         }
     }
     func result<T: BaseDTOprotocol>(tinggRequest: RequestMap) async throws -> Result<T, ApiError> {
-        print("TinggRequest \(tinggRequest)")
+        Log.d(message: "\(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
                 continuation.resume(returning: result)
@@ -65,6 +82,7 @@ public class BaseRequest: TinggApiServices {
 extension DataRequest {
     func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
         responseString { response in
+            Log.d(message: "\(response.result)")
             let decoder = JSONDecoder()
             switch response.result {
                 
@@ -96,7 +114,9 @@ extension DataRequest {
             }
         }
         responseJSON { response in
-            print("ResponseJson \(response.result)")
+            Log.d(message: "\(response.request)")
+            Log.d(message: "\(response.result)")
+      
            
         }
     }

@@ -22,7 +22,7 @@ public struct CreditCardDI {
     public static func createCardRepository() ->  CardRepository{
         CardRepositoryImpl(baseRequest: .init())
     }
-    public static func createCheckoutViewModel() -> CreditCardViewModel {
+    public static func createCreditCardViewModel() -> CreditCardViewModel {
         CreditCardViewModel(creditCardUsecases: createCreditCardUsecases())
     }
 }
