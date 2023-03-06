@@ -37,15 +37,8 @@ struct TinggIOSApp: App {
                 .environmentObject(contactViewModel)
                 .environmentObject(bavm)
                 .environmentObject(ccvm)
-                .sheet(isPresented: $hvm.showCheckOutView) {
-                    checkoutView {
-                        DispatchQueue.main.async {
-                            checkoutVm.suggestedAmountModel = bavm.suggestedAmountModel
-                            checkoutVm.favouriteEnrollmentListModel = bavm.favouriteEnrollmentListModel
-                            checkoutVm.service = bavm.service
-                            checkoutVm.cardDetails.amount = checkoutVm.suggestedAmountModel.amount
-                        }
-                    }
+                .sheet(isPresented: $checkoutVm.showView) {
+                    checkoutView()
                 }
                 .onAppear {
                     Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
@@ -53,8 +46,7 @@ struct TinggIOSApp: App {
         }
 
     }
-    func checkoutView(action: ()->Void = {}) -> some View {
-        action()
+    func checkoutView() -> some View {
         return  CheckoutView()
             .environmentObject(checkoutVm)
             .environmentObject(contactViewModel)

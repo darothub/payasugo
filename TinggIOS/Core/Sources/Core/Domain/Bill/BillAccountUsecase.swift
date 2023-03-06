@@ -32,7 +32,7 @@ public class BillAccountUsecase {
             }
         }
         let billAccounts = enrollments.map { nominationInfo -> BillAccount in
-           return BillAccount(serviceId:String( nominationInfo.hubServiceID), accountNumber: String(nominationInfo.accountNumber!))
+            return BillAccount(serviceId:String( nominationInfo.hubServiceID), accountNumber: String(nominationInfo.accountNumber))
         }
         let setOfBillAccounts = Set(billAccounts)
         

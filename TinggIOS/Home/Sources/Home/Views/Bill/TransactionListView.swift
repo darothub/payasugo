@@ -11,14 +11,12 @@ import SwiftUI
 struct TransactionListView: View {
     @State var listOfModel = [TransactionSectionModel.sample, TransactionSectionModel.sample2]
     var onMenuClick:(Int) -> Void = {_ in }
-    @State private var isFullScreen = false
+    
     var body: some View {
         List(listOfModel, id: \.id) { model in
             Section(model.header) {
                 ForEach(model.list) { item in
-                    TransactionItemView(model: item) {_ in
-                        isFullScreen.toggle()
-                    }
+                    TransactionItemView(model: item)
                 }
             }
         }

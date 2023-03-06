@@ -388,9 +388,8 @@ public struct EnterCardDetailsView: View {
                         transactionHistory.accountNumber = accountNumber
                         transactionHistory.serviceID = creditCardVm.service.hubServiceID
                         transactionHistory.msisdn = getPayingMSISDN()
+                        transactionHistory.payerClientID = providerDetails?.payer.hubClientID
                         transactionHistory.shortDescription = ">Transaction is in progress. Tingg Ref Number is \(raisedInvoice?.beepTransactionID ?? "")"
-                        transactionHistory.merchantPayer = providerDetails?.payer
-                        transactionHistory.merchantService = creditCardVm.service
                         Observer<TransactionHistory>().saveEntity(obj: transactionHistory)
                         let content =  UIModel.Content(statusMessage: "Updated invoice")
                         creditCardVm.uiModel = UIModel.content(content)

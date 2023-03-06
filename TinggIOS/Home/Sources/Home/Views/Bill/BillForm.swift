@@ -18,7 +18,7 @@ public struct BillFormView: View {
     @State private var navigateBillDetailsView = false
     var accountNumberList: [String] {
         billDetails.info.map { info in
-            info.accountNumber!
+            info.accountNumber
         }.filter { !$0.isEmpty }
     }
     public init(billDetails: Binding<BillDetails> ) {

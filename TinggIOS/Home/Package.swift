@@ -18,7 +18,8 @@ let package = Package(
         .package(path: "../Theme"),
         .package(path: "../Common"),
         .package(path: "../Core"),
-        .package(path: "../Permissions")
+        .package(path: "../Permissions"),
+        .package(path: "../Checkout")
         
     ],
     targets: [
@@ -26,7 +27,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Home",
-            dependencies: ["Core", "Theme", "Common", "Permissions"]),
+            dependencies: ["Core", "Theme", "Common", "Permissions", "Checkout"]),
         .testTarget(
             name: "HomeTests",
             dependencies: ["Home"]),
