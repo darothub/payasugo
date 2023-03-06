@@ -4,15 +4,13 @@
 //
 //  Created by Abdulrasaq on 27/02/2023.
 //
+import Checkout
 import Core
 import Common
 import SwiftUI
 
 struct TransactionItemView: View {
-    @State var model: TransactionItemModel = TransactionItemModel.sample
-    var onMenuClick:(TransactionItemModel) -> Void = {_ in}
-  
-    @State private var isFullScreen = false
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
     @State private var view = AnyView(EmptyView())
     private var color: Color {
         switch model.status {
@@ -24,9 +22,12 @@ struct TransactionItemView: View {
             return .orange
         }
     }
+    @State var model: TransactionItemModel = TransactionItemModel.sample
+    
+    @State private var isFullScreen = false
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(alignment: .top) {
+            HStack {
                 IconImageCardView(imageUrl: model.imageurl, radius: 0, y: 0, shadowRadius: 0)
                 VStack(alignment: .leading) {
                     Text(model.service.serviceName)
@@ -34,20 +35,19 @@ struct TransactionItemView: View {
                     Text("\(model.date, formatter: Date.mmddyyFormat)")
                 }.font(.caption)
                 Spacer()
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text(model.amount, format: .currency(code: "\(model.currency)"))
-                        Text("Paid via \(model.payer.clientName!)")
-                        Text(model.status.rawValue)
-                            .foregroundColor(color)
-                    }.font(.caption)
-                }
+                VStack(alignment: .leading) {
+                    Text(model.amount, format: .currency(code: "\(model.currency)"))
+                    Text("Paid via \(model.payer.clientName!)")
+                    Text(model.status.rawValue)
+                        .foregroundColor(color)
+                }.font(.caption)
                 Spacer()
-                Image(systemName: "info.circle")
-                    .onTapGesture {
-                        isFullScreen.toggle()
-                        onMenuClick(model)
-                    }
+                Menu {
+                    Button("View receipt", action: viewReceipt)
+                    Button("Buy again", action: gotoCheckout)
+                } label: {
+                    Image(systemName: "info.circle")
+                }
             }
         }
         .fullScreenCover(isPresented: $isFullScreen, onDismiss: {
@@ -57,8 +57,24 @@ struct TransactionItemView: View {
            handleFullScreen()
         }
     }
+    private func viewReceipt() -> Void {
+        isFullScreen.toggle()
+    }
     
-    func handleFullScreen() -> some View {
+    private func gotoCheckout() -> Void {
+        let enrollments = filterNomination(by: model.service)
+        let selectedNetwork = model.service.serviceName
+        let fem = FavouriteEnrollmentModel(enrollments: enrollments, accountNumber: model.accountNumber, selectedNetwork: selectedNetwork)
+        let sam = SuggestedAmountModel(amount: "\(model.amount)", currency: model.currency)
+        
+        checkoutVm.fem = fem
+        checkoutVm.sam = sam
+        checkoutVm.service = model.service
+        log(message: "\(model.service)")
+        checkoutVm.showView = true
+    }
+    
+    private func handleFullScreen() -> some View {
         DispatchQueue.main.async {
             view = AnyView(SingleReceiptView(color: color, model: model))
         }

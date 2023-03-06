@@ -33,8 +33,6 @@ public class TransactionHistory: Object, DBObject, ObjectKeyIdentifiable, Codabl
     @Persisted public var billAmount: Double = 0.0
     @Persisted public var serviceLogo: String?
     @Persisted public var transactionTitle: String? = "title"
-    @Persisted public var merchantPayer: MerchantPayer? = nil
-    @Persisted public var merchantService: MerchantService? = nil
 
     public static let STATUS_PENDING = "Pending"
     public static let STATUS_SUCCESS = "Success"

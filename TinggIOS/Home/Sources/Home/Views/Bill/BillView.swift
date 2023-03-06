@@ -12,9 +12,7 @@ import Theme
 public struct BillView: View {
     @State var profileImageUrl: String = ""
     @State var color: Color = .green
-    @State var items = [
-        TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
-    ]
+    @State var items:[TabLayoutItem] = [TabLayoutItem(title: "MY BILLS", view: AnyView(EmptyView()))]
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
@@ -33,6 +31,14 @@ public struct BillView: View {
             let transactions = Observer<TransactionHistory>().getEntities()
             log(message: "\(transactions)")
             let transactionListModels = transactions.map { t in
+                let service = Observer<MerchantService>().getEntities().first { s in
+                    s.hubServiceID == t.serviceID
+                }
+                log(message: "\(String(describing: service))")
+                let payer = Observer<MerchantPayer>().getEntities().first { p in
+                    p.hubClientID == t.payerClientID
+                }
+                log(message: "\(String(describing: payer))")
                 let serviceLogo = t.serviceLogo ?? ""
                 let accountNumber = t.accountNumber ?? "0"
                 let dateCreated = makeDateFromString(validDateString: t.dateCreated ?? "")
@@ -45,8 +51,8 @@ public struct BillView: View {
                     date: dateCreated,
                     amount: amount,
                     currency: currency,
-                    payer: t.merchantPayer ?? .init(),
-                    service: t.merchantService ?? .init(),
+                    payer: payer ?? .init(),
+                    service: service ?? .init(),
                     status: TransactionStatus(rawValue:  t.status)!
                 )
                 return model
@@ -60,7 +66,12 @@ public struct BillView: View {
             
             let view = AnyView(TransactionListView(listOfModel: sections))
             let tabItem = TabLayoutItem(title: "RECEIPTS", view: AnyView(view))
-            items.append(tabItem)
+            withAnimation {
+                items = [
+                    TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
+                    tabItem
+                ]
+            }
         }
     }
 }

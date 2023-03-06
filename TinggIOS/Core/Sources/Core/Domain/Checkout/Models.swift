@@ -11,7 +11,7 @@ public struct SuggestedAmountModel: Hashable, Equatable {
     public var amount: String = ""
     public var historyByAccountNumber: [String] = .init()
     public var currency: String = ""
-    public init(amount: String = "", historyByAccountNumber: [String]=[], currency: String="") {
+    public init(amount: String = "", historyByAccountNumber: [String] = .init(), currency: String="") {
         self.amount = amount
         self.historyByAccountNumber = historyByAccountNumber
         self.currency = currency
@@ -20,10 +20,12 @@ public struct SuggestedAmountModel: Hashable, Equatable {
 
 public struct FavouriteEnrollmentModel: Hashable, Equatable {
     public var enrollments = [Enrollment]()
+    public var enrollment: Enrollment = .init()
     public var accountNumber: String = ""
     public var selectedNetwork: String = ""
-    public init(enrollments: [Enrollment] = [Enrollment](), accountNumber: String="", selectedNetwork: String="") {
+    public init(enrollments: [Enrollment] = [Enrollment](), enrollment: Enrollment = .init(), accountNumber: String="", selectedNetwork: String="") {
         self.enrollments = enrollments
+        self.enrollment = enrollment
         self.accountNumber = accountNumber
         self.selectedNetwork = selectedNetwork
     }
@@ -48,7 +50,7 @@ public struct ServicesDialogModel: Hashable, Equatable {
     public var phoneNumber: String = "080"
     public var airtimeServices = [MerchantService]()
     public var selectedButton: String = ""
-    public init(phoneNumber: String="", airtimeServices: [MerchantService] = [MerchantService](), selectedButton: String="") {
+    public init(phoneNumber: String="", airtimeServices: [MerchantService] = [MerchantService](), selectedButton: String = "") {
         self.phoneNumber = phoneNumber
         self.airtimeServices = airtimeServices
         self.selectedButton = selectedButton

@@ -12,17 +12,17 @@ public struct CheckoutDI {
         //public init
     }
     
-    public static func createCheckoutUsecase() -> CheckoutUsecase {
+    private static func createCheckoutUsecase() -> CheckoutUsecase {
         CheckoutUsecase(
             checkoutRepository: CheckoutRepositoryImpl(baseRequest: BaseRequest()),
             validatePinUseCase: createValidatePinUsecase(),
             createCheckoutChannelUsecase: createCheckoutChannelUsecase()
         )
     }
-    public static func createValidatePinUsecase() -> ValidatePinUsecase {
+    private static func createValidatePinUsecase() -> ValidatePinUsecase {
         ValidatePinUsecase(cardRepository: CardRepositoryImpl(baseRequest: BaseRequest()))
     }
-    public static func createCheckoutChannelUsecase() -> CreateCardChannelUsecase {
+    private static func createCheckoutChannelUsecase() -> CreateCardChannelUsecase {
         CreateCardChannelUsecase(cardRepository: CardRepositoryImpl(baseRequest: BaseRequest()))
     }
     public static func createCheckoutViewModel() -> CheckoutViewModel {

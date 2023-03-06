@@ -4,13 +4,14 @@
 //
 //  Created by Abdulrasaq on 07/10/2022.
 //
+
 import SwiftUI
 
 public struct SuggestedAmountListView: View {
     @Binding var accountNumberHistory: [String]
     @Binding var amountSelected: String
     @State var selectedIndex = -1
-    public init(accountNumberHistory: Binding<[String]>, amountSelected: Binding<String>, selectedIndex: Int = 1) {
+    public init(accountNumberHistory: Binding<[String]>, amountSelected: Binding<String>, selectedIndex: Int = -1) {
         self._accountNumberHistory = accountNumberHistory
         self._amountSelected = amountSelected
         self.selectedIndex = selectedIndex

@@ -30,7 +30,7 @@ public struct CustomTabView: View {
                 iTerateTabViews()
             }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }.onAppear{
-            selectedTab = items.first!.title
+            selectedTab = items.first?.title ?? ""
         }
         
     }

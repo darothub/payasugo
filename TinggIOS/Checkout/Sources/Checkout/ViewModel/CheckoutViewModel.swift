@@ -9,10 +9,10 @@ import Common
 import Core
 import SwiftUI
 @MainActor
-public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol {
-    @Published public var suggestedAmountModel: SuggestedAmountModel = .init()
-    @Published public var favouriteEnrollmentListModel: FavouriteEnrollmentModel = .init()
-    @Published public var providersListModel: ProvidersListModel = .init()
+public class CheckoutViewModel: ViewModel  {
+    @Published public var sam: SuggestedAmountModel = .init()
+    @Published public var fem: FavouriteEnrollmentModel = .init()
+    @Published public var plm: ProvidersListModel = .init()
     @Published public var dcm: DebitCardModel = .init()
     @Published public var dcddm: DebitCardDropDownModel = .init()
     @Published public var cardDetails: CardDetails = .init()
@@ -38,6 +38,11 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
     @Published public var selectedQuestion:String = ""
     @Published public var answer:String = ""
     @Published public var subscriptions = Set<AnyCancellable>()
+    @Published public var showView = false
+    @Published public var enrollment: Enrollment = .init()
+    @Published public var amount: String = ""
+    @Published public var accountNumber: String = ""
+    let c = CurrentValueSubject<UIModel, Never>(.nothing)
     public var isCheckout: Bool = false
     private var usecase: CheckoutUsecase
     public init(usecase: CheckoutUsecase) {
@@ -106,8 +111,23 @@ public class CheckoutViewModel: ViewModel, CheckoutProtocol, BuyAirtimeProtocol 
         }
     }
     nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action, onError: onError)
-        }.store(in: &subscriptions)
+        model
+            .sink { [unowned self] observabeleModel in
+            uiModelCases(uiModel: observabeleModel, action: action, onError: onError)
+        }
+        .onCancel {
+            Log.d(message: "Publisher cancelled")
+        }
+        .store(in: &subscriptions)
     }
 }
+public extension Cancellable {
+    func onCancel(_ block: @escaping () -> Void) -> AnyCancellable {
+        AnyCancellable {
+            self.cancel()
+            block()
+        }
+    }
+}
+
+

@@ -111,8 +111,9 @@ public struct NominationDetailView: View {
                 let service = hvm.services.getEntities().first { service in
                     service.categoryID == nomination.serviceCategoryID
                 }
-                if let s = service, let accountNumber = nomination.accountNumber {
-                    let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
+                
+                if let s = service {
+                    let profileInfo = computeProfileInfo(service: s, accountNumber: nomination.accountNumber )
                     hvm.handleMCPRequests(action: .UPDATE, profileInfoComputed: profileInfo)
                 }
             }

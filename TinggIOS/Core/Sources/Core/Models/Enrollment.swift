@@ -16,7 +16,7 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var serviceName: String?
     @Persisted public var hubServiceID: Int = 0
     @Persisted public var serviceCode: String?
-    @Persisted public var accountNumber: String?
+    @Persisted public var accountNumber: String = ""
     @Persisted public var accountName: String?
     @Persisted public var accountAlias: String?
     @Persisted public var accountID: String?
@@ -106,3 +106,9 @@ public var sampleNominations: [Enrollment] {
 }
 
 
+public func filterNomination(by service: MerchantService) -> [Enrollment] {
+    let nomination =  Observer<Enrollment>().getEntities().filter { e in
+        service.hubServiceID == String(e.hubServiceID)
+    }
+    return nomination.map {$0}
+}

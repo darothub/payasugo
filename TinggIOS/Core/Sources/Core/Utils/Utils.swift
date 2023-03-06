@@ -240,9 +240,9 @@ public struct CardDetails {
 }
 
 public protocol BuyAirtimeProtocol {
-    var suggestedAmountModel: SuggestedAmountModel { get set }
-    var favouriteEnrollmentListModel: FavouriteEnrollmentModel { get set }
-    var providersListModel: ProvidersListModel { get set }
+    var sam: SuggestedAmountModel { get set }
+    var fem: FavouriteEnrollmentModel { get set }
+    var plm: ProvidersListModel { get set }
     var service: MerchantService { get set }
 }
 

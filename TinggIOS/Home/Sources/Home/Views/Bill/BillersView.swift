@@ -132,8 +132,8 @@ public struct BillersView: View {
         let service = billers.services.first { service in
             service.categoryID == nom.serviceCategoryID
         }
-        if let s = service, let accountNumber = nom.accountNumber {
-            let profileInfo = computeProfileInfo(service: s, accountNumber: accountNumber)
+        if let s = service {
+            let profileInfo = computeProfileInfo(service: s, accountNumber: nom.accountNumber )
             hvm.handleMCPRequests(action: .DELETE, profileInfoComputed: profileInfo, nom: nom)
             if let off = offSet.first {
                 enrolments.remove(at: off)
@@ -177,7 +177,7 @@ struct SingleNominationView: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
-                Text("A/C No. \(nomination.accountNumber ?? "N/A")")
+                Text("A/C No. \(nomination.accountNumber )")
                     .font(.caption)
                     .bold()
             }
@@ -185,12 +185,10 @@ struct SingleNominationView: View {
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: .constant(true))
         .padding()
         .onTapGesture {
-            if let accountNumber = nomination.accountNumber {
-                hvm.getSingleDueBill(accountNumber: accountNumber, serviceId: String(nomination.hubServiceID))
-                hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
-                    let invoice = content.data as! Invoice
-                    onClick(nomination, invoice)
-                }
+            hvm.getSingleDueBill(accountNumber: nomination.accountNumber, serviceId: String(nomination.hubServiceID))
+            hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
+                let invoice = content.data as! Invoice
+                onClick(nomination, invoice)
             }
         }
     }
