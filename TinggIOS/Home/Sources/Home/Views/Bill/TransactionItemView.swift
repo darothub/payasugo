@@ -66,7 +66,6 @@ struct TransactionItemView: View {
         let selectedNetwork = model.service.serviceName
         let fem = FavouriteEnrollmentModel(enrollments: enrollments, accountNumber: model.accountNumber, selectedNetwork: selectedNetwork)
         let sam = SuggestedAmountModel(amount: "\(model.amount)", currency: model.currency)
-        
         checkoutVm.fem = fem
         checkoutVm.sam = sam
         checkoutVm.service = model.service

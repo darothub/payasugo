@@ -12,7 +12,8 @@ import Theme
 public struct BillView: View {
     @State var profileImageUrl: String = ""
     @State var color: Color = .green
-    @State var items:[TabLayoutItem] = [TabLayoutItem(title: "MY BILLS", view: AnyView(EmptyView()))]
+    @State var items:[TabLayoutItem] = []
+
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
