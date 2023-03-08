@@ -8,18 +8,54 @@ import Common
 import Core
 import SwiftUI
 
+
+
 struct TransactionListView: View {
-    @State var listOfModel = [TransactionSectionModel.sample, TransactionSectionModel.sample2]
-    var onMenuClick:(Int) -> Void = {_ in }
-    
+    @Binding var listOfModel: [TransactionSectionModel]
+    @State var onDelete: Bool = false
+    var deleteClosure:(String, Int) -> Void = {_, _ in }    
     var body: some View {
-        List(listOfModel, id: \.id) { model in
-            Section(model.header) {
-                ForEach(model.list) { item in
-                    TransactionItemView(model: item)
+        List {
+            ForEach(listOfModel) { model in
+                Section(model.header) {
+                    var transactionItemModelList = model.list
+                    ForEach(transactionItemModelList) { item in
+                        TransactionItemView(model: item) { delete in
+                            if delete {
+                                removeItem(item: item, from: &transactionItemModelList)
+                                removeTransactionFromDB(item: item)
+                                if transactionItemModelList.isEmpty {
+                                    removeTheSection(section: model)
+                                }
+                            }
+                        }
+                    
+                    }
                 }
             }
+    
         }
+    }
+
+    fileprivate func removeTransactionFromDB(item: TransactionItemModel) {
+        let db = Observer<TransactionHistory>()
+        let transactionsHistoryEntities = db.getEntities()
+        let thisTransaction = transactionsHistoryEntities.first(where: { t in
+            t.beepTransactionID == item.id
+        })
+        if let unWrappedTransaction = thisTransaction {
+            db.$objects.remove(unWrappedTransaction)
+        }
+    }
+    
+    fileprivate func removeItem(item: TransactionItemModel, from list: inout [TransactionItemModel]) {
+        let itemIndexInSectionList = list.firstIndex(of: item)
+        list.remove(at: itemIndexInSectionList!)
+    }
+    
+    fileprivate func removeTheSection(section: TransactionSectionModel) {
+        let modelIndex = listOfModel.firstIndex(of: section)
+        listOfModel.remove(at: modelIndex!)
     }
 }
 
@@ -27,6 +63,6 @@ struct TransactionListView: View {
 
 struct TransactionListView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionListView()
+        TransactionListView(listOfModel: .constant([]))
     }
 }

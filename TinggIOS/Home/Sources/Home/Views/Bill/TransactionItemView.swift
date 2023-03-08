@@ -8,9 +8,12 @@ import Checkout
 import Core
 import Common
 import SwiftUI
+typealias OnClickHandler = (Bool) -> Void
 
 struct TransactionItemView: View {
+
     @EnvironmentObject var checkoutVm: CheckoutViewModel
+
     @State private var view = AnyView(EmptyView())
     private var color: Color {
         switch model.status {
@@ -22,13 +25,16 @@ struct TransactionItemView: View {
             return .orange
         }
     }
+
     @State var model: TransactionItemModel = TransactionItemModel.sample
-    
+    @State var onDeleteFlag: Bool = false
+    var onDeleteClosure: OnClickHandler = { _ in }
     @State private var isFullScreen = false
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 IconImageCardView(imageUrl: model.imageurl, radius: 0, y: 0, shadowRadius: 0)
+                 
                 VStack(alignment: .leading) {
                     Text(model.service.serviceName)
                     Text(model.accountNumber)
@@ -42,14 +48,20 @@ struct TransactionItemView: View {
                         .foregroundColor(color)
                 }.font(.caption)
                 Spacer()
+
                 Menu {
                     Button("View receipt", action: viewReceipt)
                     Button("Buy again", action: gotoCheckout)
+                    Button("Delete", action: {
+                        onDeleteFlag = true
+                        onDeleteClosure(onDeleteFlag)
+                    })
                 } label: {
                     Image(systemName: "info.circle")
                 }
             }
         }
+        .showIfNot($onDeleteFlag)
         .fullScreenCover(isPresented: $isFullScreen, onDismiss: {
             //Dismiss
             log(message: "Receipt dismissed")
@@ -60,7 +72,7 @@ struct TransactionItemView: View {
     private func viewReceipt() -> Void {
         isFullScreen.toggle()
     }
-    
+
     private func gotoCheckout() -> Void {
         let enrollments = filterNomination(by: model.service)
         let selectedNetwork = model.service.serviceName
@@ -77,6 +89,7 @@ struct TransactionItemView: View {
         DispatchQueue.main.async {
             view = AnyView(SingleReceiptView(color: color, model: model))
         }
+
         return FullScreen(isFullScreen: $isFullScreen, view: view, color: color)
     }
 
@@ -104,14 +117,20 @@ struct TransactionItemModel: Identifiable, Comparable, Hashable {
 
 struct TransactionSectionModel: Identifiable, Comparable {
     static func < (lhs: TransactionSectionModel, rhs: TransactionSectionModel) -> Bool {
-        lhs.list[0].date > rhs.list[0].date
+        if lhs.list.isNotEmpty() && rhs.list.isNotEmpty() {
+            return lhs.list[0].date > rhs.list[0].date
+        } else { return false }
     }
     
     var id = UUID().description
-    var header: String {
-        list[0].date.formatted(with: "EEEE, dd MMMM yyyy")
-    }
     var list = [TransactionItemModel.sample, TransactionItemModel.sample2]
+    var header: String {
+        let h = ""
+        if list.isNotEmpty() {
+           return list[0].date.formatted(with: "EEEE, dd MMMM yyyy")
+        }
+        return h
+    }
     static var sample = TransactionSectionModel()
     static var sample2 = TransactionSectionModel()
 }
@@ -121,3 +140,4 @@ struct TransactionItemView_Previews: PreviewProvider {
         TransactionItemView(model: .init())
     }
 }
+

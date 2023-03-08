@@ -29,18 +29,17 @@ public struct CustomTabView: View {
             TabView(selection: $selectedTab) {
                 iTerateTabViews()
             }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            
         }.onAppear{
             selectedTab = items.first?.title ?? ""
         }
         
     }
-    @ViewBuilder
     private func iTerateTabHeader() -> some View {
         ForEach(items, id: \.title) { tab in
             TabItemView(tabTitle: .constant(tab.title), selected: $selectedTab, color: $tabColor)
         }
     }
-    @ViewBuilder
     private func iTerateTabViews() -> some View {
         ForEach(items, id: \.title) { tabId in
             tabId.view
