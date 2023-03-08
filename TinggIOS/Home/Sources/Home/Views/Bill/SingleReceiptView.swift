@@ -41,7 +41,7 @@ struct SingleReceiptView: View {
     var model: TransactionItemModel = .sample
     let imageSize = CGFloat(100)
     let borderSize = CGFloat(108)
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -54,6 +54,7 @@ struct SingleReceiptView: View {
             }
             .padding()
             .foregroundColor(.white)
+
             ZStack {
                 VStack {
                     VStack {
@@ -197,6 +198,7 @@ struct SingleReceiptView: View {
                 .frame(height: 1)
             Rectangle()
                 .cornerRadius(20, corners: [.topLeft, .bottomLeft])
+
                 .frame(width: 40, height: 25)
         }
         .padding(.top, 120)
@@ -205,7 +207,9 @@ struct SingleReceiptView: View {
     
     fileprivate func serviceInfoSection() -> some View {
         return HStack {
+
             IconImageCardView(imageUrl: model.imageurl, x: 0, y: 0, shadowRadius: 0)
+
                 .scaleEffect(0.7)
             VStack(alignment: .leading) {
                 Text(model.payer.clientName ?? "None")
@@ -220,6 +224,7 @@ struct SingleReceiptView: View {
         )
         .padding(10)
     }
+
     @MainActor fileprivate func render(view: some View) -> URL {
         // 1: Render Hello World with some modifiers
         let renderer = ImageRenderer(content:

@@ -42,7 +42,10 @@ public class HomeViewModel: ViewModel {
     @Published public var showCheckOutView = false
     @Published var permission = ContactManager()
     @Published var country = AppStorageManager.getCountry()
+    @Published var sections: [TransactionSectionModel] = [.sample, .sample2]
+    @Published var items:[TabLayoutItem] = [TabLayoutItem(title: "MY BILLS", view: AnyView(EmptyView()))]
     @Published public var subscriptions = Set<AnyCancellable>()
+    @Published var profileImageUrl: String = ""
 
     public var homeUsecase: HomeUsecase
     public init(homeUsecase: HomeUsecase) {

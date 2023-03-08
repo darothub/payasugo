@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Utils.swift
 //  
 //
 //  Created by Abdulrasaq on 01/07/2022.
@@ -256,6 +256,9 @@ extension View {
         return fatalError("\(Self.self) -> \(message)")
     }
     public func log(message: String) {
+        print("\(Self.self) -> \(message)")
+    }
+    public func log(message: Any) {
         print("\(Self.self) -> \(message)")
     }
 }

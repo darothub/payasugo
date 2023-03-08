@@ -9,7 +9,7 @@ import SwiftUI
 import Core
 import Theme
 struct ProfileImageAndHelpIconView: View {
-    @State var imageUrl: String = ""
+    @Binding var imageUrl: String
     var helpIconString =  "camera.fill"
     @State var title: String = ""
     var titleColor: Color = .white
@@ -46,6 +46,6 @@ struct ProfileImageAndHelpIconView: View {
 
 struct ProfileImageAndHelpIconView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileImageAndHelpIconView()
+        ProfileImageAndHelpIconView(imageUrl: .constant(""))
     }
 }
