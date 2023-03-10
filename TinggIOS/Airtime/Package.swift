@@ -1,16 +1,16 @@
 // swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
-// swiftlint:disable all
+
 import PackageDescription
 
 let package = Package(
-    name: "Home",
+    name: "Airtime",
     platforms: [.iOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "Home",
-            targets: ["Home"]),
+            name: "Airtime",
+            targets: ["Airtime"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -18,16 +18,15 @@ let package = Package(
         .package(path: "../Theme"),
         .package(path: "../Common"),
         .package(path: "../Checkout")
-        
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "Home",
-            dependencies: ["Theme", "Common", "Checkout"]),
+            name: "Airtime",
+            dependencies: [ "Theme", "Common", "Checkout"]),
         .testTarget(
-            name: "HomeTests",
-            dependencies: ["Home"]),
+            name: "AirtimeTests",
+            dependencies: ["Airtime"]),
     ]
 )

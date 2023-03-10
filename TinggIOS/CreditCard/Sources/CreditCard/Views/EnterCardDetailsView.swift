@@ -85,7 +85,7 @@ public struct EnterCardDetailsView: View {
                 }
                 Spacer()
                 //Button
-                button(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
+                TinggButton(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
                     makeCreateCardChannelRequest()
                 }.disabled(disableButton)
             }
@@ -120,7 +120,7 @@ public struct EnterCardDetailsView: View {
         }
         .onChange(of: cardDetails.expDate) { newValue in
             cardDetails.expDate = checkLength(cardDetails.expDate, length: 5)
-            cardDetails.expDate = cardDetails.expDate.applyCVVPattern()
+            cardDetails.expDate = cardDetails.expDate.applyDatePattern()
             expDateIsValid = isExpiryDateValid(expDate: cardDetails.expDate)
             updateButton()
         }
@@ -295,7 +295,7 @@ public struct EnterCardDetailsView: View {
                 .add(value: cardDetails.address, for: "POSTAL_ADDRESS")
                 .add(value: cardDetails.encryptedExpDate, for: "EX_DATE")
                 .add(value: cardDetails.encryptedSuffix, for: .CARD_ALIAS)
-                .add(value: creditCardVm.suggestedAmountModel.amount, for: .AMOUNT)
+                .add(value: creditCardVm.sam.amount, for: .AMOUNT)
                 .build()
 
             Task {try await creditCardVm.createCreditCardChannel(tinggRequest: request)}
@@ -303,6 +303,7 @@ public struct EnterCardDetailsView: View {
             creditCardVm.uiModel = UIModel.error("Some details are missing")
         }
     }
+    
     
     private func handleWebViewFinishEvent(url: String) {
         if url.contains(successUrl) || url.contains(EnterCardDetailsView.CARD_CHARGE_SUCCESS) {
@@ -357,7 +358,7 @@ public struct EnterCardDetailsView: View {
                         Observer<Invoice>().saveEntity(obj: invoice!)
                         let userMSISDN = Observer<Profile>().getEntities()[0].msisdn
                         var customerName = ""
-                        let accountNumber = creditCardVm.favouriteEnrollmentListModel.accountNumber
+                        let accountNumber = creditCardVm.fem.accountNumber
                         if creditCardVm.service.isAirtimeService && ((userMSISDN?.elementsEqual(accountNumber)) != nil) {
                             customerName = "Me"
                         } else if creditCardVm.service.isAirtimeService {
@@ -374,9 +375,7 @@ public struct EnterCardDetailsView: View {
                             }
 
                         }
-                        let providerDetails = creditCardVm.providersListModel.details.first { payer in
-                            payer.payer.clientName == creditCardVm.selectedMerchantPayerName
-                        }
+                        let payer = creditCardVm.slm.selectedPayer
                         let transactionHistory = TransactionHistory()
                         let beepTransactionId = (raisedInvoice?.beepTransactionID.isNotEmpty)! ? raisedInvoice?.beepTransactionID : createChannelResponse?.beepTransactionId
                         transactionHistory.beepTransactionID = beepTransactionId ?? ""
@@ -388,7 +387,7 @@ public struct EnterCardDetailsView: View {
                         transactionHistory.accountNumber = accountNumber
                         transactionHistory.serviceID = creditCardVm.service.hubServiceID
                         transactionHistory.msisdn = getPayingMSISDN()
-                        transactionHistory.payerClientID = providerDetails?.payer.hubClientID
+                        transactionHistory.payerClientID = payer.hubClientID
                         transactionHistory.shortDescription = ">Transaction is in progress. Tingg Ref Number is \(raisedInvoice?.beepTransactionID ?? "")"
                         Observer<TransactionHistory>().saveEntity(obj: transactionHistory)
                         let content =  UIModel.Content(statusMessage: "Updated invoice")
@@ -410,7 +409,7 @@ public struct EnterCardDetailsView: View {
         }
     }
     private func getPayingMSISDN() -> String {
-        creditCardVm.isSomeoneElsePaying ? creditCardVm.favouriteEnrollmentListModel.accountNumber : AppStorageManager.getPhoneNumber()
+        creditCardVm.isSomeoneElsePaying ? creditCardVm.fem.accountNumber : AppStorageManager.getPhoneNumber()
     }
 }
 

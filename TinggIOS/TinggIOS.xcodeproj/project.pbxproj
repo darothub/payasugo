@@ -13,6 +13,7 @@
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		7151502529743F3A00B0D161 /* Checkout in Frameworks */ = {isa = PBXBuildFile; productRef = 7151502429743F3A00B0D161 /* Checkout */; };
+		7156555829B1024F00307866 /* Airtime in Frameworks */ = {isa = PBXBuildFile; productRef = 7156555729B1024F00307866 /* Airtime */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
 		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
@@ -65,6 +66,7 @@
 		714B15A92899D5C6005338EB /* OnboardingUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITest.swift; sourceTree = "<group>"; };
 		714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITestLaunchTests.swift; sourceTree = "<group>"; };
 		7151502329743AF600B0D161 /* Checkout */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Checkout; sourceTree = "<group>"; };
+		7156555629B1023400307866 /* Airtime */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Airtime; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
 		71682415290B035200A80C26 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7156555829B1024F00307866 /* Airtime in Frameworks */,
 				71D019DF28A8537D00312864 /* Home in Frameworks */,
 				71D019E128A8538400312864 /* Onboarding in Frameworks */,
 				710F9D2F2979B2FF0034E193 /* Pin in Frameworks */,
@@ -200,6 +203,7 @@
 				7151502329743AF600B0D161 /* Checkout */,
 				710F9D2D2979B2E50034E193 /* Pin */,
 				71F7D7A52981B1700086AE84 /* CreditCard */,
+				7156555629B1023400307866 /* Airtime */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -280,6 +284,7 @@
 				7151502429743F3A00B0D161 /* Checkout */,
 				710F9D2E2979B2FF0034E193 /* Pin */,
 				71F7D7A62981B1A00086AE84 /* CreditCard */,
+				7156555729B1024F00307866 /* Airtime */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -737,6 +742,10 @@
 		7151502429743F3A00B0D161 /* Checkout */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Checkout;
+		};
+		7156555729B1024F00307866 /* Airtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Airtime;
 		};
 		71D019DE28A8537D00312864 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;

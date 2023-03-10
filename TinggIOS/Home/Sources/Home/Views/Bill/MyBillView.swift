@@ -36,7 +36,7 @@ public struct MyBillView: View {
                 .padding()
             Text("You do not have any saved bills.\nGet started by adding a bill.")
                 .multilineTextAlignment(.center)
-            button(
+            TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Add bill"
             ) {

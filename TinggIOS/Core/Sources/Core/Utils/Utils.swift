@@ -142,7 +142,7 @@ extension String {
         }
         return pureNumber
     }
-    public func applyCVVPattern(pattern: String = "##/##", replacmentCharacter: Character = "#") -> String {
+    public func applyDatePattern(pattern: String = "##/##", replacmentCharacter: Character = "#") -> String {
         var pureNumber = self.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
         for index in 0 ..< pattern.count {
             guard index < pureNumber.count else { return pureNumber }
@@ -153,6 +153,7 @@ extension String {
         }
         return pureNumber
     }
+
     public func convertStringToInt() -> Int {
         let floatValue = Float(self)
         let intAmount = Int(floatValue ?? 0.0)
@@ -174,7 +175,7 @@ public func validatePhoneNumberByCountry(_ country: Country?, phoneNumber: Strin
 
 public func validateAmountByService(selectedService: MerchantService, amount: String) -> String {
     var result = ""
-    let intAmount = convertStringToInt(value: amount)
+    let intAmount = convertStringToInt(value: amount.removeWhitespace())
     let minAmount = convertStringToInt(value: selectedService.minAmount)
     let maxAmount = convertStringToInt(value: selectedService.maxAmount)
     if amount.isEmpty {
@@ -187,19 +188,19 @@ public func validateAmountByService(selectedService: MerchantService, amount: St
 }
 
 
-public protocol CheckoutProtocol {
-    var showCheckOutView: Bool { get set }
-    var dcddm: DebitCardDropDownModel { get set }
-    var showCardOptions: Bool { get set }
-    var isSomeoneElsePaying: Bool { get set }
-    var service: MerchantService { get set }
-    var cardDetails: CardDetails { get set }
-   
-}
-
-extension CheckoutProtocol {
-    var isCheckout: Bool { get {return false} set{} }
-}
+//public protocol CheckoutProtocol {
+//    var showCheckOutView: Bool { get set }
+//    var dcddm: DebitCardDropDownModel { get set }
+//    var showCardOptions: Bool { get set }
+//    var isSomeoneElsePaying: Bool { get set }
+//    var service: MerchantService { get set }
+//    var cardDetails: CardDetails { get set }
+//   
+//}
+//
+//extension CheckoutProtocol {
+//    var isCheckout: Bool { get {return false} set{} }
+//}
 
 public struct CardDetails {
     public var cardNumber: String = ""
@@ -237,17 +238,6 @@ public struct CardDetails {
         return self
     }
 
-}
-
-public protocol BuyAirtimeProtocol {
-    var sam: SuggestedAmountModel { get set }
-    var fem: FavouriteEnrollmentModel { get set }
-    var plm: ProvidersListModel { get set }
-    var service: MerchantService { get set }
-}
-
-public protocol ServiceDialogProtocol {
-    var servicesDialogModel: ServicesDialogModel { get set }
 }
 
 

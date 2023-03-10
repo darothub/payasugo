@@ -69,6 +69,7 @@ public struct ViewStates: ViewModifier {
     @Binding var showSuccessAlert: Bool
     @State var disableContent = false
     @State var show = false
+    public static var alertButtonText = "alertbutton"
     var onSuccessAction: () -> Void = {}
     var onErrorAction: () -> Void = {}
     public init(uiModel: Binding<UIModel>, showAlert: Binding<Bool>, showSuccessAlert: Binding<Bool> = .constant(false), onSuccessAction: @escaping () -> Void = {}, onErrorAction: @escaping () -> Void = {}) {
@@ -84,7 +85,7 @@ public struct ViewStates: ViewModifier {
             // Intentionally unimplemented...no action needed
             action()
           
-        }
+        }.accessibility(identifier: ViewStates.alertButtonText)
     }
     
     public func body(content: Content) -> some View {

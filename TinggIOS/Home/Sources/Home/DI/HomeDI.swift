@@ -107,17 +107,5 @@ public struct HomeDI {
     }
 }
 
-public struct AirtimeDI {
-    public init() {
-        //public init
-    }
-    @MainActor
-    public static func createAirtimeViewModel() -> BuyAirtimeViewModel {
-        BuyAirtimeViewModel(updateDefaultNetworkIdUsecase: createUpdateDefaultNetworkUsecase())
-    }
-    @MainActor
-    public static func createUpdateDefaultNetworkUsecase() -> UpdateDefaultNetworkUsecase {
-        UpdateDefaultNetworkUsecase(baseRequest: BaseRequest())
-    }
-}
+
 

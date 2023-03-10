@@ -84,9 +84,10 @@ struct IntroTabView: View {
     /// A button with `Get started` text
     /// - Returns: Button
     fileprivate func getStartedButton() -> some View {
-        button(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
+        TinggButton(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
             active.toggle()
         }
+        .padding()
         .accessibility(identifier: "getstarted")
     }
 }

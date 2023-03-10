@@ -12,8 +12,7 @@ import Theme
 public struct BillView: View {
     @State var profileImageUrl: String = ""
     @State var color: Color = .green
-    @State var items:[TabLayoutItem] = []
-
+    @State var items:[TabLayoutItem] = [TabLayoutItem(title: "MY BILLS", view: AnyView(EmptyView()))]
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
@@ -31,35 +30,33 @@ public struct BillView: View {
             profileImageUrl = (Observer<Profile>().$objects.wrappedValue.first?.photoURL)!
             color = secondaryColor
             let transactions = Observer<TransactionHistory>().getEntities()
-            let transactionListModels = transactions.compactMap { t in
-
+            log(message: "\(transactions)")
+            let transactionListModels = transactions.map { t in
                 let service = Observer<MerchantService>().getEntities().first { s in
                     s.hubServiceID == t.serviceID
                 }
+                log(message: "\(String(describing: service))")
                 let payer = Observer<MerchantPayer>().getEntities().first { p in
                     p.hubClientID == t.payerClientID
                 }
-                if service?.serviceName != "Unknown" {
-                    let serviceLogo = t.serviceLogo ?? ""
-                    let accountNumber = t.accountNumber ?? "0"
-                    let dateCreated = makeDateFromString(validDateString: t.dateCreated ?? "")
-                    let amount = Double(t.amount.convertStringToInt())
-                    let currency = AppStorageManager.getCountry()?.currency ?? "KE"
-                    
-                    let model = TransactionItemModel(
-                        id: t.beepTransactionID,
-                        imageurl: serviceLogo,
-                        accountNumber: accountNumber,
-                        date: dateCreated,
-                        amount: amount,
-                        currency: currency,
-                        payer: payer ?? .init(),
-                        service: service ?? .init(),
-                        status: TransactionStatus(rawValue:  t.status)!
-                    )
-                    return model
-                }
-                return nil
+                log(message: "\(String(describing: payer))")
+                let serviceLogo = t.serviceLogo ?? ""
+                let accountNumber = t.accountNumber ?? "0"
+                let dateCreated = makeDateFromString(validDateString: t.dateCreated ?? "")
+                let amount = Double(t.amount.convertStringToInt())
+                let currency = AppStorageManager.getCountry()?.currency ?? "KE"
+                let model = TransactionItemModel(
+                    id: t.beepTransactionID,
+                    imageurl: serviceLogo,
+                    accountNumber: accountNumber,
+                    date: dateCreated,
+                    amount: amount,
+                    currency: currency,
+                    payer: payer ?? .init(),
+                    service: service ?? .init(),
+                    status: TransactionStatus(rawValue:  t.status)!
+                )
+                return model
             }
 
             

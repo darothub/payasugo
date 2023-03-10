@@ -39,7 +39,6 @@ public struct OtpFieldView: View {
                 .textContentType(.oneTimeCode)
                 .multilineTextAlignment(.center)
                 .focused($cursor, equals: index)
-                .textContentType(.oneTimeCode)
                 .padding(5)
                
             Rectangle()

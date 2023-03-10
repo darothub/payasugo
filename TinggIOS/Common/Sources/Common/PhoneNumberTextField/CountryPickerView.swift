@@ -97,24 +97,3 @@ struct SwiftUIView_Previews: PreviewProvider {
         CountryViewHolder()
     }
 }
-public extension CountryPickerView {
-    func countryFieldViewStyle<Style: ViewModifier>(_ style: Style) -> some View {
-        ModifiedContent(content: self, modifier: style)
-    }
-}
-public struct CountryViewDropDownStyle: ViewModifier {
-    @Binding var isValidPhoneNumber: Bool
-    public init(isValidPhoneNumber: Binding<Bool>){
-        self._isValidPhoneNumber = isValidPhoneNumber
-    }
-    public func body(content: Content) -> some View {
-        content
-            .padding(EdgeInsets(top: 3, leading: 10, bottom: 3, trailing: 10))
-            .overlay(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(lineWidth: 0.5)
-                .someForegroundColor(condition: _isValidPhoneNumber)
-            )
-            .padding(.horizontal, 25)
-    }
-}

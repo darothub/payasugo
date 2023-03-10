@@ -12,6 +12,7 @@ public struct TextFieldAndRightIcon: View {
     @State var iconName = "person"
     @State var placeHolder = "Mobile number"
     @State var keyboardType: UIKeyboardType = .numberPad
+    @FocusState var cursor: Bool
     @Binding var success: Bool
     var onImageClick: () -> Void
     public init(number: Binding<String>, iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, success: Binding<Bool> = .constant(true), onImageClick: @escaping () -> Void = {}) {
@@ -26,6 +27,8 @@ public struct TextFieldAndRightIcon: View {
         HStack {
             TextField(placeHolder, text: $number)
                 .keyboardType(keyboardType)
+                .submitLabel(.next)
+                .focused($cursor)
             Image(systemName: iconName)
                 .onTapGesture {
                     onImageClick()
@@ -35,5 +38,6 @@ public struct TextFieldAndRightIcon: View {
             RoundedRectangle(cornerRadius: 5)
                 .stroke(lineWidth: 0.5)
         ).foregroundColor(success ? .black : .red)
+   
     }
 }
