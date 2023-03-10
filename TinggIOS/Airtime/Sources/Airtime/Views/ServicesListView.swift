@@ -1,36 +1,32 @@
 //
-//  SwiftUIView.swift
+//  ServicesListView.swift
 //  
 //
-//  Created by Abdulrasaq on 15/01/2023.
+//  Created by Abdulrasaq on 14/12/2022.
 //
 import Common
 import Core
 import SwiftUI
-
-public struct MerchantPayerListView: View {
+import Checkout
+struct ServicesListView: View {
     @Binding var slm: ServicesListModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 110))
     ]
     var onChangeSelection: () -> Void
-    public init(slm: Binding<ServicesListModel>, onChangeSelection: @escaping () -> Void) {
-        self._slm = slm
-        self.onChangeSelection = onChangeSelection
-    }
-    public var body: some View {
+    var body: some View {
         VStack(alignment: .leading) {
             Text(slm.selectPaymentTitle)
                 .font(.body)
                 .padding(.top, 30)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(slm.payers, id: \.self) { payer in
-                        RectangleImageCardView(imageUrl: payer.logo!, tag: payer.clientName!, selected: $slm.selectedProvider) {
+                    ForEach(slm.services, id: \.hubServiceID) { service in
+                        RectangleImageCardView(imageUrl: service.serviceLogo, tag: service.serviceName, selected: $slm.selectedProvider) {
                             onChangeSelection()
                             }
                             .overlay(alignment: .topTrailing) {
-                                if slm.selectedProvider == payer.clientName {
+                                if slm.selectedProvider == service.serviceName {
                                     NetworkFavouritedMarkedView()
                                 }
                             }
@@ -38,12 +34,12 @@ public struct MerchantPayerListView: View {
                 }
             }.showIf(.constant(slm.orientation == .horizontal))
             LazyVGrid(columns: gridColumn, spacing: 5){
-                ForEach(slm.payers, id: \.self) { payer in
-                    RectangleImageCardView(imageUrl: payer.logo!, tag: payer.clientName!, selected: $slm.selectedProvider) {
+                ForEach(slm.services, id: \.hubServiceID) { service in
+                    RectangleImageCardView(imageUrl: service.serviceLogo, tag: service.serviceName, selected: $slm.selectedProvider) {
                         onChangeSelection()
                         }
                         .overlay(alignment: .topTrailing) {
-                            if slm.selectedProvider == payer.clientName {
+                            if slm.selectedProvider == service.serviceName {
                                 NetworkFavouritedMarkedView()
                             }
                         }
@@ -54,3 +50,19 @@ public struct MerchantPayerListView: View {
         .background(.white)
     }
 }
+
+struct ServicesListView_Previews: PreviewProvider {
+    struct ServicesListViewPreviewHolder: View {
+        var body: some View {
+            ServicesListView(slm: .constant(.init())){}
+        }
+    }
+    static var previews: some View {
+        ServicesListViewPreviewHolder()
+    }
+}
+
+
+
+
+

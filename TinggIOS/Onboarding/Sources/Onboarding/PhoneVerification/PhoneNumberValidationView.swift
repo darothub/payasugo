@@ -26,10 +26,13 @@ public struct PhoneNumberValidationView: View {
     @State private var countryCode = ""
     @State private var countryFlag = ""
     @State private var isValidPhoneNumber = false
+    @State private var isNotValidPhoneNumber = false
     @State private var warning = ""
     @State private var hasCheckedTermsAndPolicy = false
     @State private var showSupportTeamContact = false
     @State private var showAlert = false
+    public static var policyWarning = "Kindly accept terms and policy"
+    public static var phoneNumberEmptyWarning = "Phone number must not be empty"
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -40,9 +43,9 @@ public struct PhoneNumberValidationView: View {
                 topView(geo: geometry)
                 MobileNumberView()
                 CountryPickerView(phoneNumber: $phoneNumber, countryCode: $countryCode, countryFlag: $countryFlag, countries: vm.countryDictionary)
-                    .countryFieldViewStyle(
-                        CountryViewDropDownStyle(
-                            isValidPhoneNumber: $isValidPhoneNumber
+                    .textFiedStyle(
+                        TextFiedValidationStyle(
+                            isValid: $isValidPhoneNumber, notValid: $isNotValidPhoneNumber
                         )
                     )
                     .onChange(
@@ -53,13 +56,16 @@ public struct PhoneNumberValidationView: View {
                 PolicySectionView(hasCheckedTermsAndPolicy: $hasCheckedTermsAndPolicy)
                 Spacer()
                 TinggSupportSectionView(geometry: geometry, showSupportTeamContact: $showSupportTeamContact)
-                button(
+                TinggButton(
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
                     buttonLabel: "Continue"
                 ) {
                     prepareActivationRequest()
-                }.keyboardShortcut(.return)
-                  .accessibility(identifier: "continuebtn")
+                }
+                .accessibility(identifier: "continuebtn")
+                .padding()
+                .keyboardShortcut(.return)
+                
                   .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showAlert, showSuccessAlert: $showAlert)
 
             }
@@ -118,12 +124,6 @@ public struct PhoneNumberValidationView: View {
         .frame(width: geo.size.width, height: abs(geo.size.height * 0.25))
     }
     @ViewBuilder
-    fileprivate func warningButtonAction() -> some View {
-        Button("OK", role: .cancel) {
-            //todo action
-        }.accessibility(identifier: "warningbutton")
-    }
-    @ViewBuilder
     fileprivate func callSupportActions() -> some View {
         Button("Call Ting Support") {
             callSupport()
@@ -174,13 +174,14 @@ extension PhoneNumberValidationView {
     }
     fileprivate func onPhoneNumberInput(number: String) -> Void {
         isValidPhoneNumber = validatePhoneNumberInput(number: "\(countryCode)\(phoneNumber)")
+        isNotValidPhoneNumber = !isValidPhoneNumber
     }
     fileprivate func prepareActivationRequest() {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
         
         if !isPhoneNumberNotEmpty {
             showAlert = true
-            vm.phoneNumberFieldUIModel = UIModel.error("Phone number must not be empty")
+            vm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.phoneNumberEmptyWarning)
             return
         }
         if !isValidPhoneNumber {
@@ -190,7 +191,7 @@ extension PhoneNumberValidationView {
         }
         if !hasCheckedTermsAndPolicy {
             showAlert = true
-            vm.phoneNumberFieldUIModel = UIModel.error("Kindly accept terms and policy")
+            vm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.policyWarning)
             return
         }
         let number = "\(countryCode)\(phoneNumber)"

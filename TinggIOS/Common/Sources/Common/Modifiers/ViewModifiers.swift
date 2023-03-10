@@ -18,8 +18,8 @@ public extension View {
         self.modifier(ShadowBackground(color: color))
     }
     @ViewBuilder
-    func someForegroundColor(condition: Binding<Bool>) -> some View {
-        shadow(color: condition.wrappedValue ? .green : .red, radius: 1)
+    func someForegroundColor(valid: Binding<Bool>, notValid: Binding<Bool>) -> some View {
+        foregroundColor(valid.wrappedValue ? .green : notValid.wrappedValue ? .red : .black)
     }
     func customDialog<DialogContent: View>(
       isPresented: Binding<Bool>,
@@ -67,6 +67,9 @@ public extension View {
     @ViewBuilder
     func changeTint(_ value: Binding<Color>) -> some View {
         self.modifier(ChangeTint(color: value))
+    }
+    func textFiedStyle<Style: ViewModifier>(_ style: Style) -> some View {
+        ModifiedContent(content: self, modifier: style)
     }
 }
 
@@ -123,5 +126,25 @@ public struct EnableEditing: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .disabled(enable)
+    }
+}
+
+
+public struct TextFiedValidationStyle: ViewModifier {
+    @Binding var isValid: Bool
+    @Binding var notValid: Bool
+    public init(isValid: Binding<Bool>, notValid: Binding<Bool>){
+        self._isValid = isValid
+        self._notValid = notValid
+    }
+    public func body(content: Content) -> some View {
+        content
+            .padding(EdgeInsets(top: 3, leading: 10, bottom: 3, trailing: 10))
+            .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(lineWidth: isValid ? 1 : notValid ? 1 : 0.5)
+                .foregroundColor(isValid ? .green : notValid ? .red : .black)
+            )
+            .padding(.horizontal, 25)
     }
 }

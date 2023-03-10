@@ -9,11 +9,12 @@ import Common
 import Core
 import Foundation
 import Alamofire
+import Checkout
 @MainActor
-public class CreditCardViewModel: ViewModel {
-    @Published public var suggestedAmountModel: SuggestedAmountModel = .init()
-    @Published public var favouriteEnrollmentListModel: FavouriteEnrollmentModel = .init()
-    @Published public var providersListModel: ProvidersListModel = .init()
+public class CreditCardViewModel: ViewModel, CheckoutProtocol {
+    @Published public var slm: ServicesListModel = .init()
+    @Published public var sam: SuggestedAmountModel = .init()
+    @Published public var fem: FavouriteEnrollmentModel = .init()
     @Published public var dcm: DebitCardModel = .init()
     @Published public var dcddm: DebitCardDropDownModel = .init()
     @Published public var cardDetails: CardDetails = .init()

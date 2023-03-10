@@ -12,7 +12,7 @@ import SwiftUI
 public class CheckoutViewModel: ViewModel  {
     @Published public var sam: SuggestedAmountModel = .init()
     @Published public var fem: FavouriteEnrollmentModel = .init()
-    @Published public var plm: ProvidersListModel = .init()
+    @Published public var slm: ServicesListModel = .init()
     @Published public var dcm: DebitCardModel = .init()
     @Published public var dcddm: DebitCardDropDownModel = .init()
     @Published public var cardDetails: CardDetails = .init()

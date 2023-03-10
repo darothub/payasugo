@@ -73,7 +73,7 @@ public struct BillDetailsView: View {
                 .padding(.top, 10)
                 Spacer()
                 HStack {
-                    outlinebutton(
+                    TinggOutlineButton(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Save bill"
                     ) {
@@ -82,12 +82,12 @@ public struct BillDetailsView: View {
                     .disabled(isNewAccountNumber ? false: true)
                     .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)
                     
-                    button(
+                    TinggButton(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Pay bill"
                     ) {
                         //Todo
-                    }
+                    }  .padding()
                 }
             }
         }.onAppear {

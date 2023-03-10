@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public func button(
+public func TinggButton(
     backgroundColor: Color = Color.red,
     buttonLabel: String = "Get started",
     padding: CGFloat = 25,
@@ -22,11 +22,10 @@ public func button(
             .foregroundColor(.white)
             .background(backgroundColor)
             .cornerRadius(10)
-            .padding(.horizontal, padding)
-    }
+    }.accessibility(identifier: "btn")
 }
 
-public func outlinebutton(
+public func TinggOutlineButton(
     backgroundColor: Color = Color.red,
     buttonLabel: String = "Get started",
     action: @escaping () -> Void

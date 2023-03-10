@@ -14,15 +14,17 @@ public struct TextFieldView: View {
     @State var label: String
     @State var placeHolder: String
     @Binding var success: Bool
-    @State var onError: Bool = false
+    @Binding var onError: Bool
+    @State private var color: Color = .black
+    @FocusState fileprivate var cursor: Bool
     var keyBoardType: UIKeyboardType = .default
-    public init (fieldText: Binding<String>, label: String, placeHolder: String, type: UIKeyboardType = .default, success: Binding<Bool> = .constant(true)) {
+    public init (fieldText: Binding<String>, label: String, placeHolder: String, type: UIKeyboardType = .default, success: Binding<Bool> = .constant(false), onError: Binding<Bool> = .constant(false)) {
         self._fieldText = fieldText
         _label = State(initialValue: label)
         _placeHolder = State(initialValue: placeHolder)
         keyBoardType = type
         _success = success
-        _onError = State(initialValue: !success.wrappedValue)
+        _onError = onError
     }
     public var body: some View {
         VStack(alignment: .leading) {
@@ -32,10 +34,20 @@ public struct TextFieldView: View {
                 TextField(placeHolder, text: $fieldText)
                     .keyboardType(keyBoardType)
                     .padding(15)
+                    .focused($cursor)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
-                    ).foregroundColor(success ? .green : onError ? .red : .black)
+                    ).foregroundColor(color)
+            }.onChange(of: success) { newValue in
+                color = newValue ? .green : .red
+            }
+            .onChange(of: fieldText) { newValue in
+                if !newValue.isEmpty {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        cursor = false
+                    }
+                }
             }
         }
     }
@@ -45,9 +57,12 @@ public struct SecureTextFieldView: View {
     @Binding var fieldText: String
     @State var label: String
     @State var placeHolder: String
-    public init (fieldText: Binding<String>, label: String, placeHolder: String) {
+    @Binding var valid: Bool
+    @State private var color: Color = .black
+    public init (fieldText: Binding<String>, label: String, placeHolder: String, valid: Binding<Bool> = .constant(false)) {
         self._fieldText = fieldText
         _label = State(initialValue: label)
+        _valid = valid
         _placeHolder = State(initialValue: placeHolder)
     }
     public var body: some View {
@@ -60,8 +75,11 @@ public struct SecureTextFieldView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
-                    ).foregroundColor(.black)
+                    ).foregroundColor(color)
             }
+        }
+        .onChange(of: fieldText) { newValue in
+            color = valid ? .green : .red
         }
     }
 }

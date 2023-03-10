@@ -11,9 +11,7 @@ import SwiftUI
 typealias OnClickHandler = (Bool) -> Void
 
 struct TransactionItemView: View {
-
     @EnvironmentObject var checkoutVm: CheckoutViewModel
-
     @State private var view = AnyView(EmptyView())
     private var color: Color {
         switch model.status {
@@ -71,13 +69,13 @@ struct TransactionItemView: View {
     }
     private func viewReceipt() -> Void {
         isFullScreen.toggle()
-    }
-
+    }    
     private func gotoCheckout() -> Void {
         let enrollments = filterNomination(by: model.service)
         let selectedNetwork = model.service.serviceName
         let fem = FavouriteEnrollmentModel(enrollments: enrollments, accountNumber: model.accountNumber, selectedNetwork: selectedNetwork)
         let sam = SuggestedAmountModel(amount: "\(model.amount)", currency: model.currency)
+        
         checkoutVm.fem = fem
         checkoutVm.sam = sam
         checkoutVm.service = model.service

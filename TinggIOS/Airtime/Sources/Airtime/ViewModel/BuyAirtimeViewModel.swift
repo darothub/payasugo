@@ -6,28 +6,31 @@
 //
 import Combine
 import Common
+import Contacts
 import Core
+import Checkout
 import Foundation
+import Permissions
 
 @MainActor
 public class BuyAirtimeViewModel: ViewModel {
-    @Published public var suggestedAmountModel: SuggestedAmountModel = .init()
-    @Published public var favouriteEnrollmentListModel: FavouriteEnrollmentModel = .init()
-    @Published public var providersListModel: ProvidersListModel = .init()
-    @Published public var servicesDialogModel: ServicesDialogModel = .init()
+    @Published public var sam: SuggestedAmountModel = .init()
+    @Published public var fem: FavouriteEnrollmentModel = .init()
+    @Published var uiModel = UIModel.nothing
+    @Published var permission = ContactManager()
     @Published public var service: MerchantService = sampleServices[0]
     @Published var defaultNetworkUIModel = UIModel.nothing
     @Published public var subscriptions = Set<AnyCancellable>()
-    private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
-    public init(updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase) {
-        self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
+    private var airtimeUsecase: AirtimeUsecase
+    public init(airtimeUsecase: AirtimeUsecase) {
+        self.airtimeUsecase = airtimeUsecase
     }
     
     func updateDefaultNetworkId(request: TinggRequest) {
         defaultNetworkUIModel = UIModel.loading
         Task {
             do {
-                let result = try await updateDefaultNetworkIdUsecase(request: request)
+                let result = try await airtimeUsecase.updateDefaultNetwork(request: request)
                 handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
                 AppStorageManager.setDefaultNetwork(service: service)
             } catch {
@@ -36,7 +39,29 @@ public class BuyAirtimeViewModel: ViewModel {
         }
 
     }
-    
+    func fetchPhoneContacts(action: @escaping (CNContact) -> Void, onError: @escaping (String) -> Void ) async {
+        Task {
+           await self.permission.fetchContacts {[unowned self] result in
+                switch result {
+                case .failure(let error):
+                    onError(error.localizedDescription)
+                    uiModel = UIModel.error(error.localizedDescription)
+                case .success(let contacts):
+                    action(contacts)
+                }
+            }
+        }
+        
+    }
+    public func getAirtimeServices() -> [MerchantService] {
+        var services = [MerchantService]()
+        do {
+            services = try airtimeUsecase.getQuickTopups()
+        } catch {
+           print("Airtime service error")
+        }
+        return services
+    }
     /// Handle result
     nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
         switch result {

@@ -41,7 +41,7 @@ public struct OtpConfirmationView: View {
             Text(timeAdvice)
                 .smallTextViewStyle(SmallTextStyle())
                 .foregroundColor(PrimaryTheme.getColor(.tinggblack))
-            button(
+            TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm"
             ) {

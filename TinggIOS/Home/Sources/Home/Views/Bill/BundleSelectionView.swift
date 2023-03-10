@@ -47,7 +47,7 @@ struct BundleSelectionView: View {
                     .showIfNot($accountDropDownShows)
                 Spacer()
                 
-                button(
+                TinggButton(
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
                     buttonLabel: "Continue",
                     padding: 0

@@ -47,7 +47,7 @@ public struct BillFormView: View {
                     placeHoder: billDetails.service.referenceLabel
                 ).padding()
                 Spacer()
-                button(
+                TinggButton(
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
                     buttonLabel: "Get bill"
                 ) {
@@ -56,7 +56,9 @@ public struct BillFormView: View {
                         serviceId: billDetails.service.hubServiceID
                     )
                  
-                }.handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: $homeViewModel.showAlert)
+                }
+                .padding()
+                .handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: $homeViewModel.showAlert)
             }
         }.onAppear {
             homeViewModel.observeUIModel(model: homeViewModel.$uiModel, subscriptions: &homeViewModel.subscriptions) { content in

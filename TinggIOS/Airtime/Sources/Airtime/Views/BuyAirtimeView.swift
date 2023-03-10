@@ -12,150 +12,110 @@ import Permissions
 import SwiftUI
 import Theme
 
-public struct BuyAirtimeView: View {
-    @EnvironmentObject var hvm: HomeViewModel
-    @EnvironmentObject var bavm: BuyAirtimeViewModel
+public struct BuyAirtimeView: View, CheckoutProtocol {
+    @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var checkoutVm: CheckoutViewModel
-    @State private var selectedButton: String = ""
-    @State private var defaultNetwork: [MerchantService] = [MerchantService]()
-    @State private var showContact = false
+    @State public var fem: FavouriteEnrollmentModel = .init()
+    @State public var slm: ServicesListModel = .init()
+    @State public var sam: SuggestedAmountModel = .init()
     @State private var listOfContact = Set<ContactRow>()
-    @State private var phoneNumber: String = ""
-    @State private var accountNumber = ""
-    @State private var amount = ""
     @State private var whoseNumber = WhoseNumberLabel.other
-    @State private var showNetworkList = false
-    @State private var show = false
     @State private var enrollments : [Enrollment] = sampleNominations
-    @State private var providerDetails: [ProviderDetails] = .init()
     @State private var history: [TransactionHistory] = sampleTransactions
-    @State private var airtimeServices:  [MerchantService] = sampleServices
-    @State private var historyByAccountNumber: [String] = .init()
-    @State private var currency = ""
-    @State private var selectedService: MerchantService = .init()
     @State private var showErrorAlert = false
-    @State private var showSuccessAlert = false
-    @State private var fem: FavouriteEnrollmentModel = .init()
-    @State private var sam: SuggestedAmountModel = .init()
-    @State private var plm: ProvidersListModel = .init()
-    @State private var sdm: ServicesDialogModel = .init()
+    @State private var showNetworkList = false
+    @State var keyboardYOffset: CGFloat = 10
+    @FocusState var focused: String?
     public init() {
         //
     }
     
     public var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading)  {
             FavouriteListView(fem: $fem)
             Text("Mobile number")
                 .padding(.top)
             TextFieldAndRightIcon(
-                number: $contactViewModel.selectedContact 
+                number: $fem.accountNumber
             ) {
                 Task {
                     await contactViewModel.fetchPhoneContacts { err in
-                        hvm.uiModel = UIModel.error(err.localizedDescription)
+                        showErrorAlert = true
+                        bavm.uiModel = UIModel.error(err.localizedDescription)
                     }
                 }
-            }
-            MerchantServiceListView(
-                plm: $plm
-            ) {
+            }.focused($focused, equals: contactViewModel.selectedContact)
+            
+            ServicesListView(slm: $slm, onChangeSelection: {
                 fem.accountNumber = ""
-            }.showIf(.constant(!plm.details.isEmpty))
+            }).showIfNot(.constant(slm.services.isEmpty))
             WhoseNumberOptionView(selected: $whoseNumber)
                 .padding(.vertical)
-            Text("Amount")
-                .padding(.top)
-            AmountAndCurrencyTextField(
-                amount: $sam.amount,
-                currency: $sam.currency
-            )
+            TextFieldView(fieldText: $sam.amount, label: "Amount", placeHolder: "Enter amount", type: .numberPad)
+                .focused($focused, equals: sam.amount)
+            
             SuggestedAmountListView(
                 accountNumberHistory: $sam.historyByAccountNumber,
                 amountSelected: $sam.amount
             ).padding(.top)
+        
             Spacer()
-            button(
+            TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Buy airtime"
             ) {
-                let isValidated = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: fem.accountNumber)
-                log(message: "Phone number \(fem.accountNumber) isvalidate \(isValidated)")
-                if !isValidated {
-                    hvm.showAlert = true
-                    hvm.uiModel = UIModel.error("Invalid phone number")
-                    return
-                }
-                let response = validateAmountByService(selectedService: selectedService, amount: sam.amount)
-                if !response.isEmpty {
-                    hvm.showAlert = true
-                    hvm.uiModel = UIModel.error(response)
-                    return
-                }
-                checkoutVm.fem = fem
-                checkoutVm.sam = sam
-                checkoutVm.plm = plm
-                checkoutVm.enrollment = fem.enrollment
-                checkoutVm.service = selectedService
-                checkoutVm.amount = sam.amount
-                checkoutVm.showView = true
+                onButtonClick()
+            
             }
         }
         .padding()
         .onAppear {
             //Get user profile
-            if let profile = hvm.getProfile(), let msisdn = profile.msisdn {
-                phoneNumber = msisdn
-                accountNumber = msisdn
+            if let profile = Observer<Profile>().getEntities().first, let msisdn = profile.msisdn {
+                ServicesListModel.phoneNumber = msisdn
+//                accountNumber = msisdn
             }
             //Show network dialog if default network is not set
             showNetworkList = AppStorageManager.getDefaultNetworkId().isEmpty
-            
             //If default network is set
             if !showNetworkList {
                 if let defaultNetwork = AppStorageManager.getDefaultNetwork() {
                     fem.enrollments = filterNomination(by: defaultNetwork)
-                    plm.selectedProvider = defaultNetwork.serviceName
+                    slm.selectedService = defaultNetwork
+                    slm.selectedProvider = defaultNetwork.serviceName
                     fem.selectedNetwork = defaultNetwork.serviceName
-                    fem.accountNumber = phoneNumber
+                    fem.accountNumber = ServicesListModel.phoneNumber
                 }
             }
-            //Set dialog data
-            sdm.phoneNumber = phoneNumber
-            sdm.airtimeServices = hvm.getAirtimeServices()
+            //Set services for services list
+            slm.services = bavm.getAirtimeServices()
             
             //Set currency
             sam.currency = AppStorageManager.getCountry()?.currency ?? ""
-            //Get and set nomination
-            enrollments = hvm.nominationInfo.getEntities()
+            
             //Get and set transaction history
-            history = hvm.transactionHistory.getEntities()
-           
-            //Extract and set network providers
-            plm.details = sdm.airtimeServices.map {
-                ProviderDetails(service: $0)
-            }
+            history = Observer<TransactionHistory>().getEntities()
+            
+          
         }
         .customDialog(isPresented: $showNetworkList) {
-            DialogContentView(sdm: $sdm, dismiss: $showNetworkList, onDismiss:  {
-                showNetworkList.toggle()
+            DialogContentView(slm: $slm, show: $showNetworkList, onDismiss:  {
+                withAnimation {
+                    showNetworkList.toggle()
+                    fem.enrollments = filterNomination(by: slm.selectedService)
+                    fem.selectedNetwork = slm.selectedProvider
+                    fem.accountNumber = ServicesListModel.phoneNumber
+                }
             })
             .padding(20)
-            .environmentObject(hvm)
             .environmentObject(bavm)
         }
-        .onChange(of: sdm, perform: { newValue in
-            let service = newValue.airtimeServices.first {
-                $0.serviceName == sdm.selectedButton
-            }
-            fem.enrollments = filterNomination(by: service ?? .init())
-            plm.selectedProvider = newValue.selectedButton
-            fem.selectedNetwork = newValue.selectedButton
-            fem.accountNumber = newValue.phoneNumber
+        .onChange(of: contactViewModel.selectedContact, perform: { newValue in
+            fem.accountNumber = newValue
         })
         .onChange(of: fem, perform: { newValue in
-            if phoneNumber == newValue.enrollment.accountNumber {
+            if ServicesListModel.phoneNumber == newValue.enrollment.accountNumber {
                 whoseNumber = WhoseNumberLabel.my
             } else {
                 whoseNumber = WhoseNumberLabel.other
@@ -165,45 +125,78 @@ public struct BuyAirtimeView: View {
             }.map {$0.amount}
             let uniqueAmount = Set(amount).sorted(by: <)
             sam.historyByAccountNumber = uniqueAmount
-            contactViewModel.selectedContact = newValue.enrollment.accountNumber
             
         })
-        .onChange(of: plm, perform: { newValue in
-            let service = hvm.getAirtimeServices().first {
+        .onChange(of: slm, perform: { newValue in
+            let service = slm.services.first {
                 $0.serviceName == newValue.selectedProvider
             }
             if let s = service {
-                let provider = newValue.details.first {
-                    $0.service.serviceName == s.serviceName
-                }
-                fem.enrollments = filterNomination(by: provider?.service ?? .init())
+                fem.enrollments = filterNomination(by: s)
                 fem.selectedNetwork = newValue.selectedProvider
-                selectedService = s
+                slm.selectedService = s
             }
-         
+            contactViewModel.selectedContact = ""
         })
+        .onChange(of: sam.amount) { newValue in
+            sam.amount = newValue.applyPattern(pattern: "\(sam.currency) ##")
+        }
         .sheet(isPresented: $contactViewModel.showContact) {
             showContactView(contactViewModel: contactViewModel)
         }
-        .handleViewStates(uiModel: $hvm.uiModel, showAlert: $hvm.showAlert)
-    }
-    
-    private func handleContactFetch() async {
-       await hvm.fetchPhoneContacts {
-            listOfContact.insert(handleContacts(contacts: $0))
+        .handleViewStates(uiModel: $bavm.uiModel, showAlert: $showErrorAlert)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                if focused == contactViewModel.selectedContact {
+                    Button("Next") {
+                        focused = sam.amount
+                    }
+                }
+                if focused == sam.amount {
+                    Button("Done") {
+                        focused = nil
+                    }
+                }
+             }
         }
+        
     }
-    
-    private func onSelectDefaultNetwork() {
-        showNetworkList = false
+    fileprivate func onButtonClick() {
+        if slm.selectedService.serviceName == "Unknown" {
+            showErrorAlert = true
+            bavm.uiModel = UIModel.error("You have not selected a service")
+            return
+        }
+        let isValidated = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: fem.accountNumber)
+        if !isValidated {
+            showErrorAlert = true
+            bavm.uiModel = UIModel.error("Invalid phone number")
+            return
+        }
+        
+        let currency = sam.currency
+        let amount = sam.amount.replace(string: currency, replacement: "").removeWhitespace()
+        let response = validateAmountByService(selectedService: slm.selectedService, amount: amount)
+        if !response.isEmpty {
+            showErrorAlert = true
+            bavm.uiModel = UIModel.error(response)
+            return
+        }
+        checkoutVm.fem = fem
+        checkoutVm.sam = sam
+        checkoutVm.slm = slm
+        checkoutVm.enrollment = fem.enrollment
+        checkoutVm.service = slm.selectedService
+        checkoutVm.amount = sam.amount
+        checkoutVm.showView = true
     }
 }
 
 struct DialogContentView: View {
     @EnvironmentObject var bavm: BuyAirtimeViewModel
-    @EnvironmentObject var hvm: HomeViewModel
-    @Binding var sdm: ServicesDialogModel
-    @Binding var dismiss: Bool
+    @Binding var slm: ServicesListModel
+    @Binding var show: Bool
     @State var showAlert = false
     var onSubmit: () -> Void = {}
     var onDismiss: () -> Void = {}
@@ -213,34 +206,35 @@ struct DialogContentView: View {
             Text("Select mobile network")
             Group {
                 Text("Please select the mobile network that")
-                + Text(" \(sdm.phoneNumber)").foregroundColor(.green)
+                + Text(" \(ServicesListModel.phoneNumber)").foregroundColor(.green)
                 + Text(" belongs to")
             }.multilineTextAlignment(.center)
                 .font(.caption)
             Divider()
-            ForEach(sdm.airtimeServices, id: \.serviceName) { service in
+            ForEach(slm.services, id: \.serviceName) { service in
                 NetworkSelectionRowView(
                     imageUrl: service.serviceLogo,
                     networkName: service.serviceName,
-                    selectedButton: $sdm.selectedButton
-                ).showIf(.constant(!service.serviceName.isEmpty))
+                    selectedButton: $slm.selectedProvider
+                ).showIfNot(.constant(service.serviceName.isEmpty))
             }
             Text("No network available")
-                .showIf(.constant(sdm.airtimeServices.isEmpty))
-            button(
+                .showIf(.constant(slm.services.isEmpty))
+            TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Done"
             ) {
-                if sdm.airtimeServices.isEmpty {
+                if slm.services.isEmpty {
                     onDismiss()
                 } else {
-                    let service = hvm.getAirtimeServices().first { serv in
-                        serv.serviceName == sdm.selectedButton
+                    let service = slm.services.first { serv in
+                        serv.serviceName == slm.selectedProvider
                     }
                     var request = TinggRequest()
                     if let s = service {
                         request.defaultNetworkServiceId = s.hubServiceID
                         request.service = "UPN"
+                        slm.selectedService = s
                     }
                     bavm.updateDefaultNetworkId(request: request)
                     //Observe default network update request
@@ -256,11 +250,10 @@ struct DialogContentView: View {
     }
     
     func onSelectDefaultNetwork() {
-        dismiss = false
+        show = false
     }
     
 }
-
 struct NetworkSelectionRowView: View {
     @State var imageUrl: String = ""
     @State var networkName: String = "Airtel"
@@ -284,8 +277,6 @@ struct NetworkSelectionRowView: View {
         }
     }
 }
-
-
 struct WhoseNumberOptionView: View {
     @Binding var selected: WhoseNumberLabel
     var options: [WhoseNumberLabel] {
@@ -301,7 +292,6 @@ struct WhoseNumberOptionView: View {
         }
     }
 }
-
 enum WhoseNumberLabel: String, CaseIterable {
     case my
     case other
@@ -318,7 +308,6 @@ enum WhoseNumberLabel: String, CaseIterable {
     }
 }
 
-
 struct BuyAirtimeView_Previews: PreviewProvider {
     struct BuyAirtimePreviewHolder: View {
         @State var number = "200"
@@ -328,9 +317,7 @@ struct BuyAirtimeView_Previews: PreviewProvider {
     }
     static var previews: some View {
         BuyAirtimePreviewHolder()
-            .environmentObject(AirtimeDI.createAirtimeViewModel())
             .environmentObject(ContactViewModel())
-            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 

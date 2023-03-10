@@ -20,6 +20,8 @@ public struct CreditCardPinView: View {
     @Binding var confirmPin: String
     @Binding var pinIsCreated: Bool
     @State private var buttonBgColor: Color = .gray.opacity(0.5)
+    @State private var isValid = false
+    @State private var isConfirmPinValid = false
     @State var onSubmit: (Bool) -> Void = {_ in }
     
     public init(pinPermission: Binding<String>, pin: Binding<String>, confirmPin: Binding<String>, pinIsCreated: Binding<Bool>, onSubmit: @escaping (Bool) -> Void = {_ in }) {
@@ -32,15 +34,15 @@ public struct CreditCardPinView: View {
     public var body: some View {
         VStack(alignment: .leading) {
             Text(instruction)
-            SecureTextFieldView(fieldText: $pin, label: "", placeHolder: "Enter pin")
-            SecureTextFieldView(fieldText: $confirmPin, label: "", placeHolder: "Confirm pin")
+            SecureTextFieldView(fieldText: $pin, label: "", placeHolder: "Enter pin", valid: $isValid)
+            SecureTextFieldView(fieldText: $confirmPin, label: "", placeHolder: "Confirm pin", valid: $isConfirmPinValid)
             HRadioButtonAndText(selected: $pinPermission, name: pinPermission1)
                 .font(.caption)
                 .padding(.vertical)
             HRadioButtonAndText(selected: $pinPermission, name: pinPermission2)
                 .font(.caption)
             Spacer()
-            button(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
+            TinggButton(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
                 if buttonBgColor == .green {
                     pinIsCreated = true
                     navigation.navigationStack.append(.securityQuestionView)
@@ -50,37 +52,43 @@ public struct CreditCardPinView: View {
         }.padding()
         .onChange(of: confirmPin) { newValue in
             confirmPin = checkLength(newValue, length: 4)
-            if newValue.elementsEqual(pin) && !pinPermission.isEmpty {
-                buttonBgColor = .green
+            if confirmPin.isNotEmpty && confirmPin.elementsEqual(pin){
+                isConfirmPinValid = true
             } else {
-                buttonBgColor = .gray.opacity(0.5)
+                isConfirmPinValid = false
             }
+            updateButtonOnNewvalue(newValue: newValue, other: pin)
         }
         .onChange(of: pin) { newValue in
             pin = checkLength(newValue, length: 4)
-            if newValue.elementsEqual(confirmPin) && !pinPermission.isEmpty {
-                buttonBgColor = .green
+            if newValue.isEmpty {
+                isValid = false
             } else {
-                buttonBgColor = .gray.opacity(0.5)
+                isValid = true
             }
+            updateButtonOnNewvalue(newValue: newValue, other: confirmPin)
         }
         .onChange(of: pinPermission) { newValue in
-            if pin.elementsEqual(confirmPin) && !newValue.isEmpty {
-                buttonBgColor = .green
-            } else {
-                buttonBgColor = .gray.opacity(0.5)
-            }
+            validateAllFields()
         }
         .onAppear {
-            if !pin.isEmpty && pin.elementsEqual(confirmPin) && !pinPermission.isEmpty {
-                buttonBgColor = .green
-            } else {
-                buttonBgColor = .gray.opacity(0.5)
-            }
+            validateAllFields()
         }
     }
-    func isDetailsValidate() {
-        
+    
+    private func validateAllFields() {
+        if isValid && isConfirmPinValid && !pinPermission.isEmpty {
+            buttonBgColor = .green
+        } else {
+            buttonBgColor = .gray.opacity(0.5)
+        }
+    }
+    private func updateButtonOnNewvalue(newValue: String, other: String) {
+        if newValue.elementsEqual(other) && !pinPermission.isEmpty {
+            buttonBgColor = .green
+        } else {
+            buttonBgColor = .gray.opacity(0.5)
+        }
     }
 }
 

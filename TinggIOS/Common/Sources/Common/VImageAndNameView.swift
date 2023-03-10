@@ -1,14 +1,12 @@
 //
-//  ActiveCategoryView.swift
+//  VImageAndNameView.swift
 //  TinggIOS
 //
 //  Created by Abdulrasaq on 17/07/2022.
 //
 
 import SwiftUI
-import Core
-import Theme
-struct VImageAndNameView: View {
+public struct VImageAndNameView: View {
     @State var title: String = ""
     @State var imageUrl: String = ""
     var initials: String {
@@ -18,7 +16,11 @@ struct VImageAndNameView: View {
             return title.prefix(2).uppercased()
         }
     }
-    var body: some View {
+    public init(title: String, imageUrl: String) {
+        self._title = State(initialValue: title)
+        self._imageUrl = State(initialValue: imageUrl)
+    }
+    public var body: some View {
         VStack {
             if imageUrl.isEmpty {
                 Text(initials)
@@ -36,8 +38,8 @@ struct VImageAndNameView: View {
                            height: 65,
                            alignment: .center)
                     .scaleEffect(1)
-                    .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-                    .background(PrimaryTheme.getColor(.cellulantRed).opacity(0.08))
+                    .foregroundColor(.red)
+                    .background(.red.opacity(0.08))
                     .clipShape(Circle())
                     .padding(10)
                     .shadow(radius: 3)
@@ -47,8 +49,8 @@ struct VImageAndNameView: View {
                                height: 65,
                                alignment: .center)
                         .scaleEffect(1)
-                        .foregroundColor(PrimaryTheme.getColor(.cellulantRed))
-                        .background(PrimaryTheme.getColor(.cellulantRed).opacity(0.08))
+                        .foregroundColor(.red)
+                        .background(.red.opacity(0.08))
                         .clipShape(Circle())
                         .padding(10)
                         .shadow(radius: 3)

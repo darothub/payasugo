@@ -33,7 +33,7 @@ public struct SecurityQuestionView: View {
             TextFieldView(fieldText: $answer, label: "", placeHolder: "Answer")
                 .showIfNot($showingDropDown)
             Spacer()
-            button(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
+            TinggButton(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
                 if buttonBgColor == .green {
                     let id = getQuestionId(question: selectedQuestion)
                     let request = RequestMap.Builder()

@@ -37,7 +37,7 @@ struct DTBCheckoutDialogView: View {
                     TextFieldView(fieldText: $pin, label: "", placeHolder: pinFieldInstruction, success: $isValidPin)
                 }.showIf($showPINField)
             }
-            button(
+            TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Pay"
             ) {

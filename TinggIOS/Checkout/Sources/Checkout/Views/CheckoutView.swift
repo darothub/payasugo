@@ -27,7 +27,6 @@ public struct CheckoutView: View, OnPINCompleteListener {
     @State private var selectPaymentTitle = "Select payment method"
     @State private var someoneElseIsPaying = false
     @State private var history: [TransactionHistory] = sampleTransactions
-    @State private var providerDetails: [ProviderDetails] = .init()
     @State private var networkId = "1"
     @State private var historyByAccountNumber: [String] = .init()
     @State private var showCardPinView = false
@@ -54,10 +53,12 @@ public struct CheckoutView: View, OnPINCompleteListener {
     @State private var showAlertForRINV = false
     @State private var showAlertForFWC = false
     @State private var currency = ""
-
+    @State private var selectedService: MerchantService = .init()
+    @FocusState var focused: String?
     public init () {
       //
     }
+    
     public var body: some View {
         VStack(alignment: .center) {
             Section {
@@ -68,7 +69,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                         .bold()
                     Spacer()
                     IconImageCardView(
-                        imageUrl: checkoutVm.service.serviceLogo,
+                        imageUrl: checkoutVm.slm.selectedService.serviceLogo,
                         radius: 50,
                         scaleEffect: 0.7
                     )
@@ -76,15 +77,15 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 DropDownView(selectedText: $selectedAccount, dropDownList: $accountList, showDropDown: $showingDropDown
                 ).showIf($isQuickTopUpOrAirtime)
                 Group {
-                    AmountAndCurrencyTextField(
-                        amount: $checkoutVm.sam.amount,
-                        currency: $checkoutVm.sam.currency
-                    ).disabled(checkoutVm.service.canEditAmount == "0" ? true : false)
+                    TextFieldView(fieldText: $checkoutVm.sam.amount, label: "", placeHolder: "Enter amount")
+                        .disabled(selectedService.canEditAmount == "0" ? false : true)
+                        .onChange(of: checkoutVm.sam.amount) { newValue in
+                            checkoutVm.sam.amount = newValue.applyPattern(pattern: "\(checkoutVm.sam.currency) ##")
+                        }
+                        .focused($focused, equals: checkoutVm.sam.amount)
                     MerchantPayerListView(
-                        plm: $checkoutVm.plm
-                    ) {
-//                        checkoutVm.fem.accountNumber = ""
-                    }
+                        slm: $checkoutVm.slm
+                    ) {  }
                 }.showIfNot($showingDropDown)
             
             }.padding(.horizontal)
@@ -106,6 +107,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                     }
                 }.disabled(checkoutVm.isSomeoneElsePaying ? false : true)
                 .showIf($someoneElseIsPaying)
+                .focused($focused, equals: checkoutVm.fem.accountNumber)
             }.padding(.horizontal)
             .showIf($checkoutVm.isSomeoneElsePaying)
             .showIfNot($showingDropDown)
@@ -125,91 +127,75 @@ public struct CheckoutView: View, OnPINCompleteListener {
             Spacer()
             
             //MARK: Button
-            button(
+            TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: buttonText
             ) {
-                let isValidated: Bool = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: checkoutVm.fem.accountNumber)
-                log(message: "\(checkoutVm.fem)")
-                if !isValidated {
-                    checkoutVm.uiModel = UIModel.error("Invalid phone number")
-                    return
-                }
-                let response = validateAmountByService(selectedService: checkoutVm.service, amount: checkoutVm.sam.amount)
-                if !response.isEmpty {
-                    checkoutVm.uiModel = UIModel.error(response)
-                    return
-                }
-                if let selectedPayer = checkoutVm.plm.details.first(where: { p in
-                    p.payer.clientName == checkoutVm.plm.selectedProvider
-                }){
-                    self.selectedPayer = selectedPayer.payer
-                }
-                switch selectedPayer.checkoutType {
-                case MerchantPayer.CHECKOUT_USSD_PUSH:
-                    raiseInvoice()
-                    //MARK: Observe RINV Request
-                    checkoutVm.observeUIModel(model: checkoutVm.$raiseInvoiceUIModel, subscriptions: &checkoutVm.subscriptions) { content in
-                        let response = content.data as! RINVResponse
-                        showAlertForRINV = true
-                        log(message: "\(response)")
-                    } onError: { err in
-                        showAlertForRINV = true
-                        log(message: err)
-                    }
-                case MerchantPayer.CHECKOUT_IN_APP:
-                    fetchCustomerDtbAccounts()
-                    //MARK: Observe FWC request
-                    checkoutVm.observeUIModel(model: checkoutVm.$fwcUIModel, subscriptions: &checkoutVm.subscriptions) { content in
-                        let response = content.data as! DTBAccountsResponse
-                        dtbAccounts = response.accounts ?? []
-                        showDTBPINDialog = true
-                    } onError: { err in
-                        showAlertForFWC = true
-                        log(message: err)
-                    }
-                case MerchantPayer.CHECKOUT_CARD:
-                    showPinView = true
-                default:
-                    print("Default")
-                }
-            }
+                onButtonClick()
+            }.padding()
         }
         .sheet(isPresented: $contactViewModel.showContact) {
             showContactView(contactViewModel: contactViewModel)
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                if focused == checkoutVm.sam.amount {
+                    Button("Done") {
+                        focused = nil
+                    }
+                }
+                if (focused == checkoutVm.sam.amount) && someoneElseIsPaying {
+                    Button("Next") {
+                        focused = checkoutVm.fem.accountNumber
+                    }
+                }
+                if someoneElseIsPaying && (focused == checkoutVm.fem.accountNumber) {
+                    Button("Done") {
+                        focused = nil
+                    }
+                }
+             }
+        }
+
         .onAppear {
-            buttonText = "Pay \(checkoutVm.sam.amount)"
-            currency = (AppStorageManager.getCountry()?.currency)!
-            checkoutVm.plm.details = Observer<MerchantPayer>().getEntities()
-                .filter{$0.activeStatus != "0"}.map {
-                    ProviderDetails(payer: $0, othersCanPay: $0.canPayForOther  != "0" ? true : false)
-            }
-            questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
-            checkoutVm.cardDetails.amount = checkoutVm.sam.amount
-            accountList = checkoutVm.fem.enrollments.compactMap {$0.accountNumber}
-            isQuickTopUpOrAirtime = checkoutVm.service.isAirtimeService
-        
+            withAnimation {
+                selectedService = checkoutVm.slm.selectedService
+                log(message: "\(selectedService)")
+                buttonText = "Pay \(checkoutVm.sam.amount)"
+                currency = (AppStorageManager.getCountry()?.currency)!
+                checkoutVm.slm.payers = Observer<MerchantPayer>().getEntities()
+                    .filter{$0.activeStatus != "0"}
+                questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
+                checkoutVm.cardDetails.amount = checkoutVm.sam.amount
+                accountList = checkoutVm.fem.enrollments.compactMap {$0.accountNumber}
+                isQuickTopUpOrAirtime = selectedService.isAirtimeService
             
-            //MARK: Observe create checkout channel
-            checkoutVm.observeUIModel(model: checkoutVm.$uiModel, subscriptions: &checkoutVm.subscriptions) { content in
-                let response = content.data as! CreateCardChannelResponse
-                checkoutVm.cardDetails.checkout = true
-                navigation.navigationStack.append(.cardDetailsView(response, nil))
-                log(message: "\(response)")
-            } onError: { err in
-                showAlert = true
-                log(message: err)
+                
+                //MARK: Observe create checkout channel
+                checkoutVm.observeUIModel(model: checkoutVm.$uiModel, subscriptions: &checkoutVm.subscriptions) { content in
+                    let response = content.data as! CreateCardChannelResponse
+                    checkoutVm.cardDetails.checkout = true
+                    navigation.navigationStack.append(.cardDetailsView(response, nil))
+                    log(message: "\(response)")
+                } onError: { err in
+                    showAlert = true
+                    log(message: err)
+                }
+                if checkoutVm.slm.selectedService.isAirtimeService {
+                    buttonText = "Buy \(checkoutVm.service.serviceName)"
+                } else {
+                    buttonText = "Pay \(checkoutVm.sam.amount)"
+                }
             }
             
-        
-        }.onChange(of: checkoutVm.plm) { model in
+        }
+        .onChange(of: checkoutVm.slm) { model in
             someoneElseIsPaying = false
-            checkoutVm.isSomeoneElsePaying = model.canOthersPay
+            checkoutVm.isSomeoneElsePaying = model.selectedPayer.canPayForOther == "0" ? false : true
            
-            if model.selectedProvider == "Card" {
-                let selectedDetails = model.details.first {$0.payer.clientName == model.selectedProvider}
-                let listOfCards = getListOfCards(imageUrl: selectedDetails?.payer.logo ?? "")
+            if model.selectedPayer.checkoutType == MerchantPayer.CHECKOUT_CARD {
+                let listOfCards = createListOfCards(imageUrl: model.selectedPayer.logo ?? "")
                 if listOfCards.isNotEmpty() {
                     checkoutVm.dcddm.selectedCardDetails = listOfCards[0]
                     checkoutVm.dcddm.cardDetails = listOfCards
@@ -221,6 +207,12 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 checkoutVm.showCardOptions = false
                 checkoutVm.addNewCard = false
             }
+            let payer = model.payers.first { p in
+                p.clientName == model.selectedProvider
+            }
+            if let p = payer {
+                checkoutVm.slm.selectedPayer = p
+            }
         }
         .onChange(of: contactViewModel.selectedContact) { newValue in
             checkoutVm.fem.accountNumber = newValue
@@ -229,7 +221,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             checkoutVm.fem.accountNumber = newValue
         })
         .onChange(of: checkoutVm.sam.amount, perform: { newValue in
-            if checkoutVm.service.isAirtimeService {
+            if checkoutVm.slm.selectedService.isAirtimeService {
                 buttonText = "Buy \(checkoutVm.service.serviceName)"
             } else {
                 buttonText = "Pay \(newValue)"
@@ -267,10 +259,56 @@ public struct CheckoutView: View, OnPINCompleteListener {
         .handleViewStates(uiModel: $checkoutVm.raiseInvoiceUIModel, showAlert:  $showAlertForRINV, showSuccessAlert: $showAlertForRINV)
         .handleViewStates(uiModel: $checkoutVm.fwcUIModel, showAlert:  $showAlertForFWC)
         .handleViewStates(uiModel: $checkoutVm.uiModel, showAlert:  $showAlert)
-    
        
     }
-   private func getListOfCards(imageUrl:String) -> [CardDetailDTO] {
+    fileprivate func onButtonClick() {
+        let isValidated: Bool = validatePhoneNumberByCountry(AppStorageManager.getCountry(), phoneNumber: checkoutVm.fem.accountNumber)
+        log(message: "\(checkoutVm.fem)")
+        if !isValidated {
+            checkoutVm.uiModel = UIModel.error("Invalid phone number")
+            return
+        }
+        
+        let currency = checkoutVm.sam.currency
+        let amount = checkoutVm.sam.amount.replace(string: currency, replacement: "")
+        let isValidAmount = validateAmountByService(selectedService: checkoutVm.slm.selectedService, amount: amount)
+        if !isValidAmount.isEmpty {
+            showAlert = true
+            checkoutVm.uiModel = UIModel.error(isValidAmount)
+            return
+        }
+        checkoutVm.isSomeoneElsePaying = someoneElseIsPaying
+        
+        switch checkoutVm.slm.selectedPayer.checkoutType {
+        case MerchantPayer.CHECKOUT_USSD_PUSH:
+            raiseInvoice()
+            //MARK: Observe RINV Request
+            checkoutVm.observeUIModel(model: checkoutVm.$raiseInvoiceUIModel, subscriptions: &checkoutVm.subscriptions) { content in
+                let response = content.data as! RINVResponse
+                showAlertForRINV = true
+                log(message: "\(response)")
+            } onError: { err in
+                showAlertForRINV = true
+                log(message: err)
+            }
+        case MerchantPayer.CHECKOUT_IN_APP:
+            fetchCustomerDtbAccounts()
+            //MARK: Observe FWC request
+            checkoutVm.observeUIModel(model: checkoutVm.$fwcUIModel, subscriptions: &checkoutVm.subscriptions) { content in
+                let response = content.data as! DTBAccountsResponse
+                dtbAccounts = response.accounts ?? []
+                showDTBPINDialog = true
+            } onError: { err in
+                showAlertForFWC = true
+                log(message: err)
+            }
+        case MerchantPayer.CHECKOUT_CARD:
+            showPinView = true
+        default:
+            print("Default")
+        }
+    }
+   private func createListOfCards(imageUrl:String) -> [CardDetailDTO] {
         return Observer<Card>().getEntities().map { c in
              CardDetailDTO(cardAlias: c.cardAlias ?? "", payerClientID: c.payerClientID ?? "", cardType: c.cardType ?? "", activeStatus: c.activeStatus ?? "", logoUrl: imageUrl)
         }
@@ -286,16 +324,18 @@ public struct CheckoutView: View, OnPINCompleteListener {
         let _ = Observer<ManualBill>().getEntities()
         let profile = Observer<Profile>().getEntities().first
         let accountNumber = selectedAccount.isEmpty ? checkoutVm.fem.accountNumber : selectedAccount
+        let currency = checkoutVm.sam.currency
+        let amount = checkoutVm.sam.amount.replace(string: currency, replacement: "")
         let request = RequestMap.Builder()
             .add(value: "RINV", for: .SERVICE)
             .add(value: getPayingMSISDN(), for: .MSISDN)
             .add(value: checkoutVm.isSomeoneElsePaying, for: "IS_THIRD_PARTY_PAYMENT")
             .add(value: AppStorageManager.getPhoneNumber(), for: "ORIGINATOR_MSISDN")
-            .add(value: checkoutVm.sam.amount, for: .AMOUNT)
-            .add(value: checkoutVm.service.hubServiceID, for: .SERVICE_ID)
+            .add(value: amount, for: .AMOUNT)
+            .add(value: checkoutVm.slm.selectedService.hubServiceID, for: .SERVICE_ID)
             .add(value: accountNumber, for: .ACCOUNT_NUMBER)
             .add(value: getAvailableInvoice()?.invoiceNumber, for: "INVOICE_NUMBER")
-            .add(value: checkoutVm.sam.amount, for: "BILL_AMOUNT")
+            .add(value: amount, for: "BILL_AMOUNT")
             .add(value: AppStorageManager.getCountry()?.currency, for: "CURRENCY")
             .add(value: "", for: "REWARD")
             .add(value: "ADD", for: .ACTION)
@@ -305,18 +345,18 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: "", for: "PAYER_TRANSACTION_ID")
             .add(value: checkoutVm.service.serviceName, for: "SERVICE_NAME")
             .add(value: checkoutVm.service.serviceCode, for: "SERVICE_CODE")
-            .add(value: selectedPayer.hubClientID, for: "PAYER_CLIENT_ID")
+            .add(value: checkoutVm.slm.selectedPayer.hubClientID, for: "PAYER_CLIENT_ID")
             .add(value: "", for: "PRODUCT_CODE")
             .add(value: "", for: "BEEP_TRANSACTION_ID")
             .add(value: "", for: "WALLET_DATA")
-            .add(value: checkoutVm.service.hubClientID, for: "HUB_CLIENT_ID")
+            .add(value: checkoutVm.slm.selectedService.hubClientID, for: "HUB_CLIENT_ID")
             .add(value: "", for: "PAYBILL")
             .add(value: getAvailableInvoice()?.callbackData, for: "CALLBACK_DATA")
             .add(value: getAvailableInvoice()?.billReference, for: "REFERENCE_NUMBER")
             .add(value: "1", for: "NOMINATE")
             .add(value: profile?.profileID, for: "PROFILE_ID")
             .add(value: encryptePIN, for: "PIN")
-            .add(value: selectedPayer.checkoutType, for: "CHECKOUT_TYPE")
+            .add(value: checkoutVm.slm.selectedPayer.checkoutType, for: "CHECKOUT_TYPE")
             .add(value: "", for: "ACCOUNT_ID")
             .add(value: profile?.accountAlias, for: "ACCOUNT_ALIAS")
             .add(value: "1", for: "IS_APP_INVOICE")
@@ -331,7 +371,9 @@ public struct CheckoutView: View, OnPINCompleteListener {
         checkoutVm.raiseInvoiceRequest(request: request)
     }
     private func getPayingMSISDN() -> String {
-        checkoutVm.isSomeoneElsePaying ? checkoutVm.fem.accountNumber : AppStorageManager.getPhoneNumber()
+        checkoutVm.isSomeoneElsePaying = someoneElseIsPaying
+        return checkoutVm.isSomeoneElsePaying ? checkoutVm.fem.accountNumber : AppStorageManager.getPhoneNumber()
+        
     }
     
     private func fetchCustomerDtbAccounts() {

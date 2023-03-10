@@ -1,16 +1,16 @@
 //
-//  File.swift
+//  Models.swift
 //  
 //
-//  Created by Abdulrasaq on 14/12/2022.
+//  Created by Abdulrasaq on 02/03/2023.
 //
-
+import Core
 import Foundation
 
 public struct SuggestedAmountModel: Hashable, Equatable {
     public var amount: String = ""
     public var historyByAccountNumber: [String] = .init()
-    public var currency: String = ""
+    public var currency: String = "KES"
     public init(amount: String = "", historyByAccountNumber: [String] = .init(), currency: String="") {
         self.amount = amount
         self.historyByAccountNumber = historyByAccountNumber
@@ -31,29 +31,24 @@ public struct FavouriteEnrollmentModel: Hashable, Equatable {
     }
 }
 
-public struct ProvidersListModel: Hashable, Equatable {
+public struct ServicesListModel: Hashable, Equatable {
     public var selectedProvider: String = ""
-    public var details: [ProviderDetails] = .init()
+    public var services: [MerchantService] = .init()
+    public var payers: [MerchantPayer] =  [MerchantPayer]()
+    public var selectedService: MerchantService = .init()
+    public var selectedPayer: MerchantPayer = .init()
     public var selectPaymentTitle = "Select network provider"
     public var canOthersPay: Bool = false
     public var orientation = ListOrientation.horizontal
-    public init(selectedProvider: String="", details: [ProviderDetails]=[], selectPaymentTitle: String = "Select network provider", canOthersPay: Bool=false, orientation: ListOrientation = ListOrientation.horizontal) {
+    public static var phoneNumber: String = "080"
+    public init(selectedProvider: String  = "", payers: [MerchantPayer] = .init(), selectedService: MerchantService =  .init(), selectedPayer: MerchantPayer =  .init(), selectPaymentTitle: String = "Select network provider", canOthersPay: Bool = false, orientation: ListOrientation = ListOrientation.horizontal) {
         self.selectedProvider = selectedProvider
-        self.details = details
+        self.payers = payers
+        self.selectedService = selectedService
+        self.selectedPayer = selectedPayer
         self.selectPaymentTitle = selectPaymentTitle
         self.canOthersPay = canOthersPay
         self.orientation = orientation
-    }
-}
-
-public struct ServicesDialogModel: Hashable, Equatable {
-    public var phoneNumber: String = "080"
-    public var airtimeServices = [MerchantService]()
-    public var selectedButton: String = ""
-    public init(phoneNumber: String="", airtimeServices: [MerchantService] = [MerchantService](), selectedButton: String = "") {
-        self.phoneNumber = phoneNumber
-        self.airtimeServices = airtimeServices
-        self.selectedButton = selectedButton
     }
 }
 
@@ -90,22 +85,6 @@ public struct DebitCardDropDownModel: Hashable, Equatable {
     
 }
 
-public struct ProviderDetails: Hashable {
-    public var service: MerchantService
-    public var payer: MerchantPayer
-    public var othersCanPay: Bool
-    public var accountNumber: String
-    public var uniqueAmount: [String]
-    
-    public init(service: MerchantService  = sampleServices[0], payer: MerchantPayer = .init(), othersCanPay: Bool = false, accountNumber: String = "", uniqueAmount: [String] = .init()) {
-        self.service = service
-        self.payer = payer
-        self.othersCanPay = othersCanPay
-        self.accountNumber = accountNumber
-        self.uniqueAmount = uniqueAmount
-    }
- 
-}
 public enum ListOrientation : Hashable, Equatable{
     case horizontal
     case grid
