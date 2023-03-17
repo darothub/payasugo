@@ -32,6 +32,7 @@ public class TransactionHistory: Object, DBObject, ObjectKeyIdentifiable, Codabl
     @Persisted public var status: String
     @Persisted public var billAmount: Double = 0.0
     @Persisted public var serviceLogo: String?
+    @Persisted public var transferType: String? = ""
     @Persisted public var transactionTitle: String? = "title"
 
     public static let STATUS_PENDING = "Pending"

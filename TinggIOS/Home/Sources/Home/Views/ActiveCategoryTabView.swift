@@ -11,7 +11,7 @@ import Foundation
 import SwiftUI
 import Photos
 struct ActiveCategoryTabView: View {
-    var categories: [[Categorys]] = [[Categorys]]()
+    var categories: [[CategoryEntity]] = [[CategoryEntity]]()
     @EnvironmentObject var hvm: HomeViewModel
     var body: some View {
         TabView {
@@ -34,7 +34,7 @@ struct ActiveCategoryTabView_Previews: PreviewProvider {
     }
 }
 
-var previewProcessedCategories: [[Categorys]] {
+var previewProcessedCategories: [[CategoryEntity]] {
     let list = [
         previewCategories,
         previewCategories,

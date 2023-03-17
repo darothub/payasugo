@@ -10,10 +10,10 @@ import SwiftUI
 
 @MainActor
 public class HomeViewModel: ViewModel {
-    @Published var defaultNetworkServiceId: String = AppStorageManager.getDefaultNetworkId()
+    @Published var defaultNetworkServiceId: Int? = AppStorageManager.getDefaultNetworkId()
     @Published public var nominationInfo = Observer<Enrollment>()
     @Published public var airTimeServices = sampleServices
-    @Published public var servicesByCategory = [[Categorys]]()
+    @Published public var servicesByCategory = [[CategoryEntity]]()
     @Published public var services = Observer<MerchantService>()
     @Published public var rechargeAndBill = [MerchantService]()
     @Published public var profile = Profile()
@@ -68,7 +68,7 @@ public class HomeViewModel: ViewModel {
     
     public func getServicesByCategory() {
         categoryUIModel = UIModel.loading
-        Future<[[Categorys]], Never> { [unowned self] promise in
+        Future<[[CategoryEntity]], Never> { [unowned self] promise in
             let servicesByCategory = homeUsecase.categorisedCategories()
             promise(.success(servicesByCategory))
             categoryUIModel = UIModel.nothing
@@ -232,32 +232,6 @@ public class HomeViewModel: ViewModel {
         }
     }
     
-    func updateDefaultNetworkId(serviceName: String) {
-        showAlert = true
-        if !serviceName.isEmpty {
-            let service = getAirtimeServices().first { serv in
-                serv.serviceName == serviceName
-            }
-            var request = TinggRequest()
-            if let s = service {
-                request.defaultNetworkServiceId = s.hubServiceID
-                request.service = "UPN"
-                defaultNetworkUIModel = UIModel.loading
-                Task {
-                    do {
-                        let result = try await homeUsecase.updateDefaultNetwork(request: request)
-                        handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
-                        defaultNetworkServiceId = service?.hubServiceID ?? ""
-                        AppStorageManager.setDefaultNetwork(service: service!)
-                    } catch {
-                        handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
-                    }
-                }
-            }
-        } else {
-            defaultNetworkUIModel = UIModel.error("You have not selected a network")
-        }
-    }
     func fetchPhoneContacts(action: @escaping (CNContact) -> Void) async {
         Task {
            await self.permission.fetchContacts { [unowned self] result in

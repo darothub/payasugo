@@ -1,5 +1,5 @@
 //
-//  Category.swift
+//  CategoryEntity.swift
 //  Core
 //
 //  Created by Abdulrasaq on 01/06/2022.
@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 // MARK: - Category
-public class Categorys: Object, DBObject, ObjectKeyIdentifiable, Codable {
+public class CategoryEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted(primaryKey: true) public var categoryID: String? = ""
     @Persisted public var categoryName: String? = ""
     @Persisted public var categoryLogo: String? = ""
@@ -26,7 +26,7 @@ public class Categorys: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var gasID: String? = ""
     @Persisted public var otherID: String? = ""
     @Persisted public var investID: String? = ""
-
+   
     enum CodingKeys: String, CodingKey {
         case categoryID = "CATEGORY_ID"
         case categoryName = "CATEGORY_NAME"
@@ -44,5 +44,13 @@ public class Categorys: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case gasID = "GAS_ID"
         case otherID = "OTHER_ID"
         case investID = "INVEST_ID"
+    }
+    public var isActive: Bool {
+        switch self.activeStatus {
+        case "0" : return false
+        case "1": return true
+        default: return false
+            
+        }
     }
 }

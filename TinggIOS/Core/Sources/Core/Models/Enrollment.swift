@@ -20,16 +20,16 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var accountName: String?
     @Persisted public var accountAlias: String?
     @Persisted public var accountID: String?
-    @Persisted public var isExplicit: String?
+    @Persisted public var isExplicit: Bool = false
     @Persisted public var extraData: String?
     @Persisted public var serviceCategoryID: String?
-    @Persisted public var isReminder: String?
+    @Persisted public var isReminder: Bool = false
     @Persisted public var serviceLogo: String?
-    @Persisted public var isProfiled: String?
-    @Persisted public var isPartialAccount: String
+    @Persisted public var isProfiled: Bool = false
+    @Persisted public var isPartialAccount: Bool = false
     @Persisted public var unknownMerchantID: String?
     @Persisted public var merchantStatus: Int?
-    @Persisted public var isContracted: String?
+    @Persisted public var isContracted: Bool = false
     @Persisted public var accountStatus: Int
     enum CodingKeys: String, CodingKey {
         case merchantName = "MERCHANT_NAME"

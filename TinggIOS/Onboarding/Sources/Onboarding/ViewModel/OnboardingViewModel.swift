@@ -45,54 +45,49 @@ public class OnboardingViewModel: ViewModel {
         getCountryDictionary()
     }
     /// Request for activation code
-//    func makeActivationCodeRequest() {
-//        onActivationRequestUIModel = UIModel.loading
-//        Task {
-//            var tinggRequest: TinggRequest = .init()
-//            tinggRequest.service = "MAK"
-//            let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
-//            handleResultState(model: &onActivationRequestUIModel, result)
-//        }
-//    }
     func makeActivationCodeRequest() {
         onActivationRequestUIModel = UIModel.loading
         Task {
-            var tinggRequest: RequestMap = RequestMap.Builder()
-                .add(value: "MAK", for: .SERVICE)
-                .build()
-//            tinggRequest.service = "MAK"
-            let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
-            handleResultState(model: &onActivationRequestUIModel, result)
+            do {
+                let tinggRequest: RequestMap = RequestMap.Builder()
+                    .add(value: "MAK", for: .SERVICE)
+                    .build()
+                let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
+                handleResultState(model: &onActivationRequestUIModel, result)
+            } catch {
+                handleResultState(model: &onActivationRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+            }
         }
     }
     /// Confirm activation code
     func confirmActivationCodeRequest(code: String) {
         onConfirmActivationUIModel = UIModel.loading
         Task {
-            let tinggRequest: RequestMap =  RequestMap.Builder()
-                .add(value: "VAK", for: .SERVICE)
-                .add(value: code, for: .ACTIVATION_CODE)
-                .build()
-//            tinggRequest.service = "VAK"
-//            tinggRequest.activationCode = code
-//            print("requestVAK \(tinggRequest)")
-            let result = try await onboardingUseCase.confirmActivationCodeRequest(tinggRequest: tinggRequest, code: code)
-        
-            handleResultState(model: &onConfirmActivationUIModel, result)
+            do {
+                let tinggRequest: RequestMap =  RequestMap.Builder()
+                    .add(value: "VAK", for: .SERVICE)
+                    .add(value: code, for: .ACTIVATION_CODE)
+                    .build()
+                let result = try await onboardingUseCase.confirmActivationCodeRequest(tinggRequest: tinggRequest, code: code)
+                handleResultState(model: &onConfirmActivationUIModel, result)
+            } catch {
+                handleResultState(model: &onConfirmActivationUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+            }
         }
     }
     /// Request for PARandFSU
     func makePARRequest() {
         onParRequestUIModel = UIModel.loading
         Task {
-            let tinggRequest: RequestMap =  RequestMap.Builder()
-                .add(value: "PAR", for: .SERVICE)
-                .build()
-//            tinggRequest.service = "PAR"
-//            print("requestPAR \(tinggRequest)")
-            let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest)
-//            print("Result2 \(result)")
-            handleResultState(model: &onParRequestUIModel, result)
+            do {
+                let tinggRequest: RequestMap =  RequestMap.Builder()
+                    .add(value: "PAR", for: .SERVICE)
+                    .build()
+                let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest)
+                handleResultState(model: &onParRequestUIModel, result)
+            } catch {
+                handleResultState(model: &onParRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+            }
         }
     }
     /// Collect a dictionary of country code and dial code

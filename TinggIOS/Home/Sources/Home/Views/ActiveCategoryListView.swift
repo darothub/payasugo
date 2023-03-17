@@ -9,7 +9,7 @@ import Core
 import SwiftUI
 import RealmSwift
 struct ActiveCategoryListView: View {
-    @State var categories = [Categorys]()
+    @State var categories = [CategoryEntity]()
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
@@ -51,8 +51,8 @@ struct ActiveCategoryListView_Previews: PreviewProvider {
     }
 }
 
-var previewCategories: [Categorys] {
-    let catergory = Categorys()
+var previewCategories: [CategoryEntity] {
+    let catergory = CategoryEntity()
     catergory.categoryID = "0"
     catergory.categoryName = "Test"
     let categories = [

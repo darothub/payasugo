@@ -37,7 +37,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var inputType:String = ""
     @Persisted public var colorCode:String = ""
     @Persisted public var formType: String = ""
-    @Persisted public var formParameters:String = ""
+    @Persisted public var formParameters: FORMPARAMETERSClassEntity?
     @Persisted public var abbreviation:String = ""
     @Persisted public var paymentLabel:String = ""
     @Persisted public var orderID: String = ""
@@ -45,7 +45,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var isBundleService:String = ""
     @Persisted public var ignoreSaveEnrollment:String = ""
     @Persisted public var hasBillAmount: String = ""
-    @Persisted public var serviceParameters:String = ""
+    @Persisted public var serviceParameters: ServiceParametersEntity?
     @Persisted public var bundleLabel:String = ""
     @Persisted public var bundleCategoryLabel:String = ""
     @Persisted public var displayNoPendingBillDialog: String = ""
@@ -87,7 +87,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case inputType = "INPUT_TYPE"
         case colorCode = "COLOR_CODE"
         case formType = "FORM_TYPE"
-        //        case formParameters = "FORM_PARAMETERS"
+        case formParameters = "FORM_PARAMETERS"
         case abbreviation = "ABBREVIATION"
         case paymentLabel = "PAYMENT_LABEL"
         case orderID = "ORDER_ID"
@@ -95,7 +95,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case isBundleService = "IS_BUNDLE_SERVICE"
         case ignoreSaveEnrollment = "IGNORE_SAVE_ENROLLMENT"
         case hasBillAmount = "HAS_BILL_AMOUNT"
-        //        case serviceParameters = "SERVICE_PARAMETERS"
+        case serviceParameters = "SERVICE_PARAMETERS"
         case bundleLabel = "BUNDLE_LABEL"
         case bundleCategoryLabel = "BUNDLE_CATEGORY_LABEL"
         case displayNoPendingBillDialog = "DISPLAY_NO_PENDING_BILL_DIALOG"
@@ -122,16 +122,16 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
 }
 
 // MARK: - SERVICEPARAMETERS
-public class ServiceParameters: Object, ObjectKeyIdentifiable, Codable {
-    @Persisted public var servicesData = RealmSwift.List<ServicesDatum>()
+public class ServiceParametersEntity: Object, ObjectKeyIdentifiable, Codable {
+    @Persisted public var servicesData = List<ServicesDatumEntity>()
     
     enum CodingKeys: String, CodingKey {
         case servicesData = "SERVICES_DATA"
     }
 }
 
-//MARK: - ServicesDatum
-public class ServicesDatum: Object, ObjectKeyIdentifiable, Codable {
+//MARK: - ServicesDatumEntity
+public class ServicesDatumEntity: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var serviceID: Int
     @Persisted public var serviceName: String
     
@@ -149,4 +149,51 @@ public var sampleServices:[MerchantService]  {
     service2.serviceLogo = "https://cdn3.vectorstock.com/i/1000x1000/35/52/placeholder-rgb-color-icon-vector-32173552.jpg"
     service2.serviceName = "Service two"
     return [service1, service2]
+}
+
+
+// MARK: - FORMPARAMETERSClass
+public class FORMPARAMETERSClassEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
+    @Persisted public var formParameters = List<FormParameterEntity>()
+    @Persisted public var name: String?
+    @Persisted public var label: String?
+
+    enum CodingKeys: String, CodingKey {
+        case formParameters = "FORM_PARAMETERS"
+        case name = "NAME"
+        case label = "LABEL"
+    }
+}
+
+// MARK: - FormParameter
+public class FormParameterEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
+    @Persisted public var itemName: String?
+    @Persisted public var displayName: String?
+    @Persisted public var itemType : String?
+    @Persisted public var isReferenceField: String?
+    @Persisted public var keyValueData: String?
+    @Persisted public var name: String?
+    @Persisted public var items = List<ItemEntity>()
+
+    enum CodingKeys: String, CodingKey {
+        case itemName = "ITEM_NAME"
+        case displayName = "DISPLAY_NAME"
+        case itemType = "ITEM_TYPE"
+        case isReferenceField = "IS_REFERENCE_FIELD"
+        case keyValueData = "KEY_VALUE_DATA"
+        case name = "NAME"
+        case items = "ITEMS"
+    }
+}
+
+public class ItemEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
+    @Persisted public var itemID: Int
+    @Persisted public var name: String
+    @Persisted public var amount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case itemID = "ITEM_ID"
+        case name = "NAME"
+        case amount = "AMOUNT"
+    }
 }

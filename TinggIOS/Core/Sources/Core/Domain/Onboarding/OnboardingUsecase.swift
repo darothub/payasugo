@@ -58,7 +58,7 @@ public class OnboardingUseCase {
     public func confirmActivationCodeRequest(tinggRequest: RequestMap, code: String) async throws -> Result<BaseDTO, ApiError> {
         return try await activationRepository.confirmActivationCode(tinggRequest: tinggRequest, code: code)
     }
-    public func makePARRequest(tinggRequest: RequestMap ) async throws -> Result<PARAndFSUDTO, ApiError> {
+    public func makePARRequest(tinggRequest: RequestMap ) async throws -> Result<FSUAndPARDTO, ApiError> {
         return try await parAndFsuRepository.makeParAndFsuRequest(tinggRequest: tinggRequest)
     }
 }

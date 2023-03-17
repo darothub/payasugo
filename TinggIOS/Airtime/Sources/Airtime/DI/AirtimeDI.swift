@@ -23,7 +23,7 @@ public struct AirtimeDI {
         ProfileRepositoryImpl(dbObserver: Observer<Profile>())
     }
     private static func createCategoryRepository() -> CategoryRepository {
-        CategoryRepositoryImpl(dbObserver: Observer<Categorys>())
+        CategoryRepositoryImpl(dbObserver: Observer<CategoryEntity>())
     }
     private static func createMerchantServiceRepository() -> MerchantServiceRepository {
         MerchantServiceRepositoryImpl(dbObserver: Observer<MerchantService>())

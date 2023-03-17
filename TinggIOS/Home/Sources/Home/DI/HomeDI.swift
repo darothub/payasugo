@@ -23,7 +23,7 @@ public struct HomeDI {
         return MerchantServiceRepositoryImpl(dbObserver: Observer<MerchantService>())
     }
     public static func createCategoryRepository() -> CategoryRepository {
-        return CategoryRepositoryImpl(dbObserver: Observer<Categorys>())
+        return CategoryRepositoryImpl(dbObserver: Observer<CategoryEntity>())
     }
     public static func createEnrollmentRepository() -> EnrollmentRepository {
         return EnrollmentRepositoryImpl(dbObserver: Observer<Enrollment>())

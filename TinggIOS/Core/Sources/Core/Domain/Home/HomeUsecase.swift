@@ -72,17 +72,12 @@ public class HomeUsecase {
             service
         }
     }
-    public func getQuickTopups()throws -> [MerchantService] {
-        let categories = categoryRepository.getCategories()
-        let airtimes = categories.filter {$0.categoryName == "Airtime"}
-        if !airtimes.isEmpty {
-            let theAirtimeCategory = airtimes[0]
-            return merchantRepository.getServices().filter { $0.categoryID == theAirtimeCategory.categoryID}
-        } else {
-            throw "No Airtime category"
-        }
+    public func getQuickTopups() throws -> [MerchantService] {
+        let services = merchantRepository.getServices().filter { $0.isAirtimeService }
+        Log.d(message: "Services \(services)")
+        return services
     }
-    public func categorisedCategories() -> [[Categorys]]{
+    public func categorisedCategories() -> [[CategoryEntity]]{
         chunkedCategoriesUsecase()
     }
     

@@ -13,7 +13,7 @@ class CategoryRepositoryTest: XCTestCase {
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         Realm.Configuration.defaultConfiguration.inMemoryIdentifier = self.name
-        categoryRepository = FakeCategoryRepository(dbObserver: Observer<Categorys>())
+        categoryRepository = FakeCategoryRepository(dbObserver: Observer<CategoryEntity>())
     }
     
     func testGetCategories() {

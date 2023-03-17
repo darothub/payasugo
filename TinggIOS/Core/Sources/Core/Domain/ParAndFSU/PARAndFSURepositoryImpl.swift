@@ -16,11 +16,11 @@ public class PARAndFSURepositoryImpl: PARAndFSURepository {
     /// PARandFSU request
     /// - Parameter tinggRequest: PARandFSU request
     /// - Returns: - Returns: Result with ``PARAndFSUDTO`` or ``ApiError``
-    public func makeParAndFsuRequest(tinggRequest: RequestMap ) async throws -> Result<PARAndFSUDTO, ApiError>{
+    public func makeParAndFsuRequest(tinggRequest: RequestMap ) async throws -> Result<FSUAndPARDTO, ApiError>{
         return try await baseRequest.result(tinggRequest: tinggRequest)
     }
 }
 
 public protocol PARAndFSURepository {
-    func makeParAndFsuRequest(tinggRequest: RequestMap ) async throws -> Result<PARAndFSUDTO, ApiError>
+    func makeParAndFsuRequest(tinggRequest: RequestMap ) async throws -> Result<FSUAndPARDTO, ApiError>
 }
