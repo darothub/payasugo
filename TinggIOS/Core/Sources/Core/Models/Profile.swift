@@ -26,19 +26,19 @@ public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var mulaAccount: String? = ""
     @Persisted public var currencyNumber: String? = ""
     @Persisted public var pinRequestType: String? = ""
-    @Persisted public var isMulaPinSet: String? = ""
-//    @Persisted public var isMain: RealmProperty<String>? = nil
+    @Persisted public var isMulaPinSet: Bool = false
+    @Persisted public var isMain: Bool = false
     @Persisted public var simSerialNumber: String? = ""
-    @Persisted public var hasValidatedCard: Int? = 0
+    @Persisted public var hasValidatedCard: Bool = false
     @Persisted public var creditLimit: String? = ""
-    @Persisted public var hasActivatedAssist: String? = ""
+    @Persisted public var hasActivatedAssist: Bool = false
     @Persisted public var hasOptedOut: String? = ""
     @Persisted public var currentUsage: String = "0"
     @Persisted public var loanBalance: String = "0"
-    @Persisted public var hasActivatedWallet: String? = ""
+    @Persisted public var hasActivatedWallet: Bool = false
     @Persisted public var walletAccountID: String? = ""
     @Persisted public var walletAccountNumber: String? = ""
-//    @Persisted public var walletBalance: String? = ""
+    @Persisted public var walletBalance: String? = ""
     @Persisted public var freshchatRestorationID: String? = ""
     @Persisted public var loyaltyPoints: String? = ""
     @Persisted public var identity: String? = ""
@@ -62,7 +62,7 @@ public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
         case currency, currencyCode, rewardAmount, mulaAccount, currencyNumber
         case pinRequestType = "PIN_REQUEST_TYPE"
         case isMulaPinSet = "IS_MULA_PIN_SET"
-//        case isMain = "IS_MAIN"
+        case isMain = "IS_MAIN"
         case simSerialNumber = "SIM_SERIAL_NUMBER"
         case hasValidatedCard = "HAS_VALIDATED_CARD"
         case creditLimit = "CREDIT_LIMIT"

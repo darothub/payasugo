@@ -7,19 +7,19 @@
 
 import Foundation
 public class CategoryRepositoryImpl: CategoryRepository {
-    private var dbObserver: Observer<Categorys>
+    private var dbObserver: Observer<CategoryEntity>
     /// Category repository initialiser
     /// - Parameter dbObserver: an instance of ``Observer``
-    public init(dbObserver: Observer<Categorys>) {
+    public init(dbObserver: Observer<CategoryEntity>) {
         self.dbObserver = dbObserver
     }
     
-    public func getCategories() -> [Categorys] {
+    public func getCategories() -> [CategoryEntity] {
         return dbObserver.getEntities()
     }
 
 }
 
 public protocol CategoryRepository {
-    func getCategories() -> [Categorys]
+    func getCategories() -> [CategoryEntity]
 }

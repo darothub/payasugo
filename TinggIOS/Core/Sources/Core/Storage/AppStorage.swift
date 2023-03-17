@@ -10,15 +10,15 @@ import SwiftUI
 public struct AppStorageManager {
     @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: Country? = nil
     @AppStorage(LocalProperties.phoneNumber.rawValue) fileprivate static var phoneNumber: String = ""
-    @AppStorage(LocalProperties.defaultNetworkId.rawValue) fileprivate static var defaultNetworkId: String = ""
+    @AppStorage(LocalProperties.defaultNetworkId.rawValue) fileprivate static var defaultNetworkId: Int? = 0
     @AppStorage(LocalProperties.defaultNetwork.rawValue) fileprivate static var defaultNetwork: MerchantService? = nil
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
-    public static func setDefaultNetworkId(id: String) {
+    public static func setDefaultNetworkId(id: Int) {
         defaultNetworkId = id
     }
-    public static func getDefaultNetworkId() -> String {
+    public static func getDefaultNetworkId() -> Int? {
         return defaultNetworkId
     }
     public static func setDefaultNetwork(service: MerchantService) {

@@ -13,7 +13,7 @@ import Theme
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
     
-    var categories: [[Categorys]] {
+    var categories: [[CategoryEntity]] {
         hvm.servicesByCategory
     }
     var chartData: [ChartData] {

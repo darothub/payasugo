@@ -26,14 +26,14 @@ public struct BillDTO: BaseDTOprotocol, Codable {
 // MARK: - SavedBill
 public class Bill: NSObject, Codable {
     public var statusCode: Int = 0
-    public var manualBillID: String = ""
+    public var manualBillID: DynamicType?
     public var statusMessage: String = ""
     public var clientProfileAccountID: String = ""
     public var merchantAccountNumber: String = ""
     public var merchantAccountName: String = ""
     public var merchantServiceID: String = ""
     public var accountAlias: String = ""
-    public var isExplicit: String = ""
+    public var isExplicit: DynamicType?
     public var active: Int = 0
     public var insertedBy: Int = 0
     public var dateCreated: String = ""
@@ -42,7 +42,7 @@ public class Bill: NSObject, Codable {
 
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
-//        case manualBillID = "MANUAL_BILL_ID"
+        case manualBillID = "MANUAL_BILL_ID"
         case statusMessage = "STATUS_MESSAGE"
         case clientProfileAccountID, merchantAccountNumber, merchantAccountName, merchantServiceID, accountAlias, isExplicit, active, insertedBy, dateCreated, dateModified
     }
@@ -54,7 +54,7 @@ public extension Bill {
         let enrollment = Enrollment()
         enrollment.accountAlias = self.accountAlias
         enrollment.clientProfileAccountID = Int(self.clientProfileAccountID) ?? 0
-        enrollment.isExplicit = self.isExplicit
+        enrollment.isExplicit = self.isExplicit?.toBool ?? false
         enrollment.accountID = self.clientProfileAccountID
         enrollment.accountStatus = self.active
         enrollment.accountNumber = accountNumber

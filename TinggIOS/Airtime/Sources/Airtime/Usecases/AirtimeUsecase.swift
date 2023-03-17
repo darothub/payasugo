@@ -35,14 +35,9 @@ public class AirtimeUsecase {
         profileRepository.getProfile()
     }
     public func getQuickTopups() throws -> [MerchantService] {
-        let categories = categoryRepository.getCategories()
-        let airtimes = categories.filter {$0.categoryName == "Airtime"}
-        if !airtimes.isEmpty {
-            let theAirtimeCategory = airtimes[0]
-            return merchantRepository.getServices().filter { $0.categoryID == theAirtimeCategory.categoryID}
-        } else {
-            throw "No Airtime category"
-        }
+        let services = merchantRepository.getServices().filter { $0.isAirtimeService }
+        Log.d(message: "Services \(services)")
+        return services
     }
     
     public func updateDefaultNetwork(request: TinggRequest) async throws -> BaseDTO {

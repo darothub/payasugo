@@ -30,7 +30,8 @@ public struct PhoneNumberValidationView: View {
     @State private var warning = ""
     @State private var hasCheckedTermsAndPolicy = false
     @State private var showSupportTeamContact = false
-    @State private var showAlert = false
+    @State private var showMAKAlert = false
+    @State private var showPARAlert = false
     public static var policyWarning = "Kindly accept terms and policy"
     public static var phoneNumberEmptyWarning = "Phone number must not be empty"
     public init() {
@@ -66,7 +67,7 @@ public struct PhoneNumberValidationView: View {
                 .padding()
                 .keyboardShortcut(.return)
                 
-                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showAlert, showSuccessAlert: $showAlert)
+                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showMAKAlert, showSuccessAlert: $showMAKAlert)
 
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -84,12 +85,12 @@ public struct PhoneNumberValidationView: View {
                     otpConfirmed: $isOTPConfirmed
                 )
             })
-            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $showAlert)
-            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showAlert, showSuccessAlert: $showAlert)
             .background(PrimaryTheme.getColor(.tinggwhite))
             .onAppear {
                 observeUIModel()
             }
+            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showMAKAlert, showSuccessAlert: $showMAKAlert)
+            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $showPARAlert)
         }
     }
     @ViewBuilder
@@ -155,20 +156,27 @@ extension PhoneNumberValidationView {
         vm.observeUIModel(model: vm.$onActivationRequestUIModel, subscriptions: &vm.subscriptions) { content in
             showOTPView = true
         } onError: { err in
-            showAlert = true
-            log(message: err)
-        }
-        vm.observeUIModel(model: vm.$onParRequestUIModel, subscriptions: &vm.subscriptions) { content in
-            let dto = content.data as! PARAndFSUDTO
-            saveDataIntoDBAndNavigateToHome(data: dto)
-        } onError: { err in
-            showAlert = true
+            showMAKAlert = true
             log(message: err)
         }
         vm.observeUIModel(model: vm.$phoneNumberFieldUIModel, subscriptions: &vm.subscriptions) { content in
             log(message: content.statusMessage)
         } onError: { err in
-            showAlert = true
+            showMAKAlert = true
+            log(message: err)
+        }
+        vm.observeUIModel(model: vm.$onParRequestUIModel, subscriptions: &vm.subscriptions) { content in
+            if let dto = (content.data as? FSUAndPARDTO) {
+                withAnimation {
+                    saveDataIntoDBAndNavigateToHome(data: dto)
+                }
+            } else {
+                navigation.navigationStack = [.home]
+            }
+          
+            
+        } onError: { err in
+            showPARAlert = true
             log(message: err)
         }
     }
@@ -180,17 +188,17 @@ extension PhoneNumberValidationView {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
         
         if !isPhoneNumberNotEmpty {
-            showAlert = true
+            showMAKAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.phoneNumberEmptyWarning)
             return
         }
         if !isValidPhoneNumber {
-            showAlert = true
+            showMAKAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
             return
         }
         if !hasCheckedTermsAndPolicy {
-            showAlert = true
+            showMAKAlert = true
             vm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.policyWarning)
             return
         }
@@ -225,43 +233,68 @@ extension PhoneNumberValidationView {
         }
         return nil
     }
-    func saveDataIntoDBAndNavigateToHome(data: PARAndFSUDTO) {
+    func saveDataIntoDBAndNavigateToHome(data: FSUAndPARDTO) {
+        
+        let categoriesTable = Observer<CategoryEntity>()
+        let servicesTable = Observer<MerchantService>()
+        let enrollmentsTable = Observer<Enrollment>()
+        let cardsTable = Observer<Card>()
+        let profileTable = Observer<Profile>()
+        let securityQuestionTable = Observer<SecurityQuestion>()
+        let merchantPayerTable = Observer<MerchantPayer>()
+        let transactioSummaryTable = Observer<TransactionHistory>()
+        let formParameterClassTable = Observer<FORMPARAMETERSClassEntity>()
+        let formParameterTable = Observer<FormParameterEntity>()
+        let itemTable = Observer<ItemEntity>()
+        let serviceParametersTable = Observer<ServiceParametersEntity>()
+        let servicesDatumTable = Observer<ServicesDatumEntity>()
         Task {
+            vm.onParRequestUIModel = UIModel.loading
             let sortedCategories = data.categories.sorted { category1, category2 in
-                Int(category1.categoryOrderID!)! < Int(category2.categoryOrderID!)!
+                category1.categoryID.convertStringToInt() < category2.categoryID.convertStringToInt()
             }.filter { category in
-                category.activeStatus == "1"
+                category.isActive
+            }.map { c in
+                c.toEntity
             }
-            realmManager.save(data: sortedCategories)
+            categoriesTable.clearAndSaveEntities(objs: sortedCategories)
+            
             let services = data.services.filter { service in
-                service.activeStatus != "0"
+                service.isActive
             }
-            realmManager.save(data: services)
-            realmManager.save(data: data.transactionSummaryInfo)
-            let nominationInfo = data.nominationInfo.filter { enrolment in
-                enrolment.isReminder == "0" && enrolment.accountStatus == 1
+            itemTable.deleteEntries()
+            formParameterTable.deleteEntries()
+            formParameterClassTable.deleteEntries()
+            servicesDatumTable.deleteEntries()
+            serviceParametersTable.deleteEntries()
+            servicesTable.clearAndSaveEntities(objs: services.map {$0.toEntity})
+            transactioSummaryTable.clearAndSaveEntities(objs: data.transactionSummaryInfo.map {$0.toEntity})
+            let eligibleNomination = data.nominationInfo.filter { nom in
+                nom.clientProfileAccountID?.toInt != nil
             }
-            realmManager.save(data: nominationInfo)
+            let validNomination = eligibleNomination.filter { e in
+                return !e.isReminder.toBool && e.isActive
+            }
+            let validEnrollment = validNomination.map {$0.toEntity}
+            enrollmentsTable.clearAndSaveEntities(objs: validEnrollment)
             let profile = data.mulaProfileInfo.mulaProfile[0]
-            realmManager.save(data: profile)
+            profileTable.clearAndSaveEntity(obj: profile.toEntity)
             Observer<BundleData>().getEntities().forEach { data in
                 realmManager.delete(data: data)
             }
             Observer<BundleObject>().getEntities().forEach { data in
                 realmManager.delete(data: data)
             }
-            realmManager.save(data: data.cardDetails)
-            let payers: [MerchantPayer] = data.merchantPayers.map {$0.convertToPayer()}
-            realmManager.save(data: data.securityQuestions)
-            realmManager.save(data: payers)
-            realmManager.save(data: data.bundleData.map {$0.convert()})
-            
-            if let defaultNetworkId = data.defaultNetworkServiceID {
-                log(message: "\(defaultNetworkId)")
-                AppStorageManager.setDefaultNetworkId(id: String(defaultNetworkId))
+            cardsTable.clearAndSaveEntities(objs: data.virtualCards.map {$0.toEntity})
+            let payers: [MerchantPayer] = data.merchantPayers.map {$0.toEntity}
+            securityQuestionTable.clearAndSaveEntities(objs: data.securityQuestions.map {$0.toEntity})
+            merchantPayerTable.clearAndSaveEntities(objs: payers)
+
+            realmManager.save(data: data.bundleData.map {$0.toEntity})
+            if let defaultNetworkServiceId = data.defaultNetworkServiceID {
+                AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
             }
-          
-            navigation.navigationStack = [.home]
+            vm.onParRequestUIModel = UIModel.content(UIModel.Content(statusMessage: "data uploaded"))
         }
     }
 }

@@ -18,7 +18,7 @@ public class ChunkedCategoriesUsecase {
     
     /// A call as function to return a list of nested list of categories
     /// - Returns: ``[[Categorys]]``
-    public func callAsFunction() -> [[Categorys]] {
+    public func callAsFunction() -> [[CategoryEntity]] {
         let categories = categoryRepository.getCategories()
         return categories.chunked(into: 4)
     }

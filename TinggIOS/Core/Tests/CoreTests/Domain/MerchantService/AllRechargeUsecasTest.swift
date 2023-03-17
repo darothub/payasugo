@@ -14,7 +14,7 @@ final class AllRechargeUsecasTest: XCTestCase {
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         serviceRepository = FakeMerchantRepository(dbObserver: Observer<MerchantService>())
-        categoryRepository = FakeCategoryRepository(dbObserver: Observer<Categorys>())
+        categoryRepository = FakeCategoryRepository(dbObserver: Observer<CategoryEntity>())
         usecase = CategoriesAndServicesUsecase(serviceRepository: serviceRepository, categoryRepository: categoryRepository)
     }
     

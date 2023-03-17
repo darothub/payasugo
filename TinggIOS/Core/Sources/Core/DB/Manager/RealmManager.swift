@@ -68,6 +68,11 @@ public final class RealmManager: ObservableObject {
         }
         
     }
+    public func realmWrite<R>(_ block: (() throws -> R)) {
+        try! localDb?.write {
+            try? block()
+        }
+    }
 }
 
 /// Class for observing real time data changes from realm database
@@ -86,14 +91,29 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     public func saveEntity(obj: T){
         realmManager.save(data: obj)
     }
+    public func clearAndSaveEntity(obj: T){
+        deleteEntries()
+        realmManager.save(data: obj)
+    }
     public func delete(obj: T) {
         realmManager.delete(data: obj)
     }
     public func saveEntities(objs: [T]){
         realmManager.save(data: objs)
     }
+    public func clearAndSaveEntities(objs: [T]){
+        deleteEntries()
+        realmManager.save(data: objs)
+    }
     private func returnEntity(obj: T) -> T {
         return obj
+    }
+    public func deleteEntries() {
+        if !objects.isEmpty {
+            objects.forEach { obj in
+                realmManager.delete(data: obj)
+            }
+        }
     }
 }
 

@@ -37,10 +37,10 @@ public struct VImageAndNameView: View {
                     .frame(width: 65,
                            height: 65,
                            alignment: .center)
-                    .scaleEffect(1)
                     .foregroundColor(.red)
                     .background(.red.opacity(0.08))
                     .clipShape(Circle())
+                    
                     .padding(10)
                     .shadow(radius: 3)
                 } placeholder: {

@@ -11,6 +11,7 @@ import Contacts
 import Permissions
 import SwiftUI
 import Theme
+import RealmSwift
 
 public struct BuyAirtimeView: View, CheckoutProtocol {
     @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
@@ -26,6 +27,7 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
     @State private var showErrorAlert = false
     @State private var showNetworkList = false
     @State var keyboardYOffset: CGFloat = 10
+    @Environment(\.realmManager) var realmManager
     @FocusState var focused: String?
     public init() {
         //
@@ -76,12 +78,14 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
                 ServicesListModel.phoneNumber = msisdn
 //                accountNumber = msisdn
             }
+            let networkServiceId = AppStorageManager.getDefaultNetworkId()
             //Show network dialog if default network is not set
-            showNetworkList = AppStorageManager.getDefaultNetworkId().isEmpty
+            showNetworkList = networkServiceId == nil || networkServiceId  == 0
             //If default network is set
             if !showNetworkList {
                 if let defaultNetwork = AppStorageManager.getDefaultNetwork() {
-                    fem.enrollments = filterNomination(by: defaultNetwork)
+                    let enrollment = updateEnrollment(defaultNetwork: defaultNetwork)
+                    fem.enrollments = enrollment
                     slm.selectedService = defaultNetwork
                     slm.selectedProvider = defaultNetwork.serviceName
                     fem.selectedNetwork = defaultNetwork.serviceName
@@ -115,8 +119,10 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
             fem.accountNumber = newValue
         })
         .onChange(of: fem, perform: { newValue in
-            if ServicesListModel.phoneNumber == newValue.enrollment.accountNumber {
+            if ServicesListModel.phoneNumber == newValue.accountNumber {
                 whoseNumber = WhoseNumberLabel.my
+            } else if newValue.accountNumber.isEmpty {
+                whoseNumber = WhoseNumberLabel.none
             } else {
                 whoseNumber = WhoseNumberLabel.other
             }
@@ -132,7 +138,8 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
                 $0.serviceName == newValue.selectedProvider
             }
             if let s = service {
-                fem.enrollments = filterNomination(by: s)
+                let enrollment = updateEnrollment(defaultNetwork: s)
+                fem.enrollments = enrollment
                 fem.selectedNetwork = newValue.selectedProvider
                 slm.selectedService = s
             }
@@ -161,6 +168,17 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
              }
         }
         
+    }
+    fileprivate func updateEnrollment(defaultNetwork: MerchantService) -> [Enrollment] {
+        let enrollments = filterNomination(by: defaultNetwork)
+        return enrollments.map({ e in
+            if (e.accountNumber == ServicesListModel.phoneNumber) && ((e.accountAlias?.isEmpty) != nil) {
+                realmManager.realmWrite {
+                    e.accountAlias = "Me"
+                }
+            }
+            return e
+        })
     }
     fileprivate func onButtonClick() {
         if slm.selectedService.serviceName == "Unknown" {
@@ -232,7 +250,8 @@ struct DialogContentView: View {
                     }
                     var request = TinggRequest()
                     if let s = service {
-                        request.defaultNetworkServiceId = s.hubServiceID
+                        AppStorageManager.setDefaultNetwork(service: s)
+                        request.defaultNetworkServiceId = s.hubServiceID.convertStringToInt()
                         request.service = "UPN"
                         slm.selectedService = s
                     }
@@ -280,7 +299,9 @@ struct NetworkSelectionRowView: View {
 struct WhoseNumberOptionView: View {
     @Binding var selected: WhoseNumberLabel
     var options: [WhoseNumberLabel] {
-        WhoseNumberLabel.allCases
+        WhoseNumberLabel.allCases.filter { opt in
+            opt != WhoseNumberLabel.none
+        }
     }
     var body: some View {
         HStack(spacing: 0) {
@@ -295,7 +316,7 @@ struct WhoseNumberOptionView: View {
 enum WhoseNumberLabel: String, CaseIterable {
     case my
     case other
-    
+    case none
     var label: String {
         get {
             self.rawValue.capitalized + " " + "number"
