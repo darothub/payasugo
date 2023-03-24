@@ -6,7 +6,7 @@
 //
 import Checkout
 import Core
-import Common
+import CoreUI
 import SwiftUI
 typealias OnClickHandler = (Bool) -> Void
 

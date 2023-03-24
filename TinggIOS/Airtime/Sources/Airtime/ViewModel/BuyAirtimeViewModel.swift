@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 15/12/2022.
 //
 import Combine
-import Common
+import CoreUI
 import Contacts
 import Core
 import Checkout
@@ -63,7 +63,7 @@ public class BuyAirtimeViewModel: ViewModel {
         return services
     }
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
+    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)

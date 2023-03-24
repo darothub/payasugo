@@ -2,7 +2,7 @@
 //  TinggIOS
 //  Created by Abdulrasaq on 13/07/2022.
 import Combine
-import Common
+import CoreUI
 import Core
 import Foundation
 import SwiftUI
@@ -36,7 +36,7 @@ public class OnboardingViewModel: ViewModel {
     @Published var uiModel = UIModel.nothing
     @Published public var subscriptions = Set<AnyCancellable>()
     @Published public var countryDictionary = [String: String]()
-   
+    @Published var realmManager: RealmManager = .init()
     var onboardingUseCase: OnboardingUseCase
     var name = "OnboardingViewModel"
     
@@ -84,6 +84,7 @@ public class OnboardingViewModel: ViewModel {
                     .add(value: "PAR", for: .SERVICE)
                     .build()
                 let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest)
+                await saveDataIntoDB(data: try result.get())
                 handleResultState(model: &onParRequestUIModel, result)
             } catch {
                 handleResultState(model: &onParRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
@@ -116,8 +117,67 @@ public class OnboardingViewModel: ViewModel {
         }
         return currentCountry
     }
+    func saveDataIntoDB(data: FSUAndPARDTO) async {
+        let categoriesTable = Observer<CategoryEntity>()
+        let servicesTable = Observer<MerchantService>()
+        let enrollmentsTable = Observer<Enrollment>()
+        let cardsTable = Observer<Card>()
+        let profileTable = Observer<Profile>()
+        let securityQuestionTable = Observer<SecurityQuestion>()
+        let merchantPayerTable = Observer<MerchantPayer>()
+        let transactioSummaryTable = Observer<TransactionHistory>()
+        let formParameterClassTable = Observer<FORMPARAMETERSClassEntity>()
+        let formParameterTable = Observer<FormParameterEntity>()
+        let itemTable = Observer<ItemEntity>()
+        let serviceParametersTable = Observer<ServiceParametersEntity>()
+        let servicesDatumTable = Observer<ServicesDatumEntity>()
+        let sortedCategories = data.categories.sorted { category1, category2 in
+            category1.categoryID.convertStringToInt() < category2.categoryID.convertStringToInt()
+        }.filter { category in
+            category.isActive
+        }.map { c in
+            c.toEntity
+        }
+        categoriesTable.clearAndSaveEntities(objs: sortedCategories)
+        
+        let services = data.services.filter { service in
+            service.isActive
+        }
+        itemTable.deleteEntries()
+        formParameterTable.deleteEntries()
+        formParameterClassTable.deleteEntries()
+        servicesDatumTable.deleteEntries()
+        serviceParametersTable.deleteEntries()
+        servicesTable.clearAndSaveEntities(objs: services.map {$0.toEntity})
+        transactioSummaryTable.clearAndSaveEntities(objs: data.transactionSummaryInfo.map {$0.toEntity})
+        let eligibleNomination = data.nominationInfo.filter { nom in
+            nom.clientProfileAccountID?.toInt != nil
+        }
+        let validNomination = eligibleNomination.filter { e in
+            return !e.isReminder.toBool && e.isActive
+        }
+        let validEnrollment = validNomination.map {$0.toEntity}
+        enrollmentsTable.clearAndSaveEntities(objs: validEnrollment)
+        let profile = data.mulaProfileInfo.mulaProfile[0]
+        profileTable.clearAndSaveEntity(obj: profile.toEntity)
+        Observer<BundleData>().getEntities().forEach { data in
+            realmManager.delete(data: data)
+        }
+        Observer<BundleObject>().getEntities().forEach { data in
+            realmManager.delete(data: data)
+        }
+        cardsTable.clearAndSaveEntities(objs: data.virtualCards.map {$0.toEntity})
+        let payers: [MerchantPayer] = data.merchantPayers.map {$0.toEntity}
+        securityQuestionTable.clearAndSaveEntities(objs: data.securityQuestions.map {$0.toEntity})
+        merchantPayerTable.clearAndSaveEntities(objs: payers)
+
+        realmManager.save(data: data.bundleData.map {$0.toEntity})
+        if let defaultNetworkServiceId = data.defaultNetworkServiceID {
+            AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
+        }
+    }
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
+    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)

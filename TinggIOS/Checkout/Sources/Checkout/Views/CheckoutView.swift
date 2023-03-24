@@ -6,7 +6,7 @@
 //
 import Theme
 import SwiftUI
-import Common
+import CoreUI
 import Core
 import Combine
 import Contacts

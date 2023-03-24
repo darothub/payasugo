@@ -1,11 +1,11 @@
 //
-//  SwiftUIView.swift
+//  CoreUI.swift
 //  
 //
 //  Created by Abdulrasaq on 03/11/2022.
 //
 import Combine
-import Common
+import CoreUI
 import Core
 import SwiftUI
 import RealmSwift

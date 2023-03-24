@@ -4,7 +4,4 @@
    <FileRef
       location = "container:TinggIOS.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:TinggIOS.xcodeproj">
-   </FileRef>
 </Workspace>

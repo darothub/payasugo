@@ -4,10 +4,11 @@
 //
 //  Created by Abdulrasaq on 23/06/2022.
 //
-import Common
+import CoreUI
 import Core
 import SwiftUI
 import Theme
+
 /// Introduces the onboarding screens to the user
 public struct IntroView: View {
     @State private var active = false

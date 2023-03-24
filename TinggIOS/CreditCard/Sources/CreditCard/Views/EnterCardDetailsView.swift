@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 12/01/2023.
 //
 import Core
-import Common
+import CoreUI
 import Permissions
 import SwiftUI
 import Theme

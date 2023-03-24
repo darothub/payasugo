@@ -8,6 +8,7 @@
 import SwiftUI
 import Core
 import Theme
+
 struct ActivateCardView: View {
     var parentSize: GeometryProxy
     var activateAction: () -> Void

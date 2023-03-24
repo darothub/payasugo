@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 25/08/2022.
 //
-import Common
+import CoreUI
 import XCTest
 class PhoneTextFieldUnitTest: XCTestCase {
 

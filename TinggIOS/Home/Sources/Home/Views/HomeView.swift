@@ -4,7 +4,7 @@
 //
 //  Created by Abdulrasaq on 14/07/2022.
 //
-import Common
+import CoreUI
 import Core
 import Combine
 import SwiftUI

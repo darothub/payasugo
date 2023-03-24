@@ -1,6 +1,6 @@
 //  HomeViewModel.swift
 //  Created by Abdulrasaq on 24/07/2022.
-import Common
+import CoreUI
 import Core
 import Combine
 import Contacts
@@ -261,7 +261,7 @@ public class HomeViewModel: ViewModel {
     }
 
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>) where E : Error {
+    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
