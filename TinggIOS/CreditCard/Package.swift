@@ -16,7 +16,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(path: "../Theme"),
-        .package(path: "../Common"),
+        .package(path: "../CoreUI"),
         .package(path: "../Checkout")
     ],
     targets: [
@@ -24,7 +24,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "CreditCard",
-            dependencies: ["Theme", "Common", "Checkout"]),
+            dependencies: ["Theme", "CoreUI", "Checkout"]),
         .testTarget(
             name: "CreditCardTests",
             dependencies: ["CreditCard"]),

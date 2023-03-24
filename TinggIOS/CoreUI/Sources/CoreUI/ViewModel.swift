@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 public protocol ViewModel: ObservableObject {
-    func handleResultState<T, E>(model: inout Common.UIModel, _ result: Result<T, E>)
+    func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>)
     
 }
 

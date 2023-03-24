@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 27/09/2022.
 //
 import Checkout
-import Common
+import CoreUI
 import Core
 import Contacts
 import Permissions

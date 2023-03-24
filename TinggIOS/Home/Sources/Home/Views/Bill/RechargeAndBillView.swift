@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Theme
-import Common
+import CoreUI
 import Core
 struct RechargeAndBillView: View {
     @State var rechargeAndBill = [MerchantService]()

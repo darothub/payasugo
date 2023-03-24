@@ -8,7 +8,7 @@
 import SwiftUI
 import Theme
 import Core
-import Common
+import CoreUI
 struct DueBillsView: View {
     @State var fetchedBill = [Invoice]()
 //    @Binding var showDueBills:Bool

@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 16/08/2022.
 //
 import Charts
-import Common
+import CoreUI
 import SwiftUI
 
 struct ExpensesGraphView: View {

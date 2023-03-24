@@ -11,13 +11,13 @@ public struct MulaProfileInfo: Codable {
     public  let mulaProfile: [MulaProfile]
     public let paymentOptions: [PaymentOption]
     public let wishlist: [Wishlist]
-    public let extProfileData: EXTProfileData
+//    public let extProfileData: EXTProfileData
 
     enum CodingKeys: String, CodingKey {
         case mulaProfile = "MULA_PROFILE"
         case paymentOptions = "PAYMENT_OPTIONS"
         case wishlist = "WISHLIST"
-        case extProfileData = "EXT_PROFILE_DATA"
+//        case extProfileData = "EXT_PROFILE_DATA"
     }
 }
 

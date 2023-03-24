@@ -8,7 +8,7 @@
 import SwiftUI
 import Theme
 import Core
-import Common
+import CoreUI
 struct QuickTopupView: View {
     var airtimeServices = [MerchantService]()
     var body: some View {

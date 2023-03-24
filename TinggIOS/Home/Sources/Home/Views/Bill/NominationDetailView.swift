@@ -5,7 +5,7 @@
 //  Created by Abdulrasaq on 10/11/2022.
 //
 import Core
-import Common
+import CoreUI
 import SwiftUI
 
 public struct NominationDetailView: View {

@@ -7,7 +7,7 @@
 import Core
 import SwiftUI
 import Theme
-import Common
+import CoreUI
 
 public struct CategoriesAndServicesView: View {
     @EnvironmentObject var hvm: HomeViewModel

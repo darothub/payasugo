@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Common
+import CoreUI
 import Theme
 import Core
 public struct BillFormView: View {
