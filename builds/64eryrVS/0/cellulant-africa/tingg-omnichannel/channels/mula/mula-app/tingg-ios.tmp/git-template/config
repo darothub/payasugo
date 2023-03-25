@@ -1,0 +1,6 @@
+[init]
+	defaultBranch = none
+[fetch]
+	recurseSubmodules = false
+[http "https://gitlab.com"]
+	sslCAInfo = /Users/darot/XcodeProject/tinggios/builds/64eryrVS/0/cellulant-africa/tingg-omnichannel/channels/mula/mula-app/tingg-ios.tmp/CI_SERVER_TLS_CA_FILE
