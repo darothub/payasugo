@@ -8,7 +8,7 @@
 import SwiftUI
 
 public func TinggButton(
-    backgroundColor: Color = Color.red,
+    backgroundColor: Color = Color.green,
     buttonLabel: String = "Get started",
     padding: CGFloat = 25,
     action: @escaping () -> Void
