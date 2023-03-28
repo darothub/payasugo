@@ -36,9 +36,12 @@ public struct DropDownView: View {
         VStack(alignment: .leading) {
             Group {
                 Text(label)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundColor(.black)
-                    .hideIf(isHidden: $showLabel)
+                    .showIf($showLabel)
+                    .onAppear {
+                        showLabel = !label.isEmpty
+                    }
                 HStack {
                     TextField(placeHolder, text: $selectedText)
                         .disabled(disableEdit)

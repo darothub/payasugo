@@ -30,9 +30,9 @@ public struct LaunchScreenView: View {
                 image
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.navigationStack = [.intro]
-                }
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                    navigation.navigationStack = [.intro]
+//                }
             }
             .edgesIgnoringSafeArea(.all)
             .navigation()

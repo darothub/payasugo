@@ -31,6 +31,7 @@ public struct TextFieldView: View {
             Group {
                 Text(label)
                     .foregroundColor(.black)
+                    .font(.subheadline)
                 TextField(placeHolder, text: $fieldText)
                     .keyboardType(keyBoardType)
                     .padding(15)
