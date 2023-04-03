@@ -4,16 +4,14 @@
 //
 //  Created by Abdulrasaq on 28/03/2023.
 //
-
-import CoreUI
+import Onboarding
 import SwiftUI
 
 struct NewView: View {
     var body: some View {
-        VStack {
-            Text("Hello")
+        NavigationView {
+            KYCActionView()
         }
-
     }
 }
 
@@ -22,4 +20,3 @@ struct NewView_Previews: PreviewProvider {
         NewView()
     }
 }
-
