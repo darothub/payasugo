@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Selfie Capture View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="Selfie" id="Y6W-OH-hqX" customClass="SelfieCaptureViewController" customModule="SmileIdentity" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Take a selfie" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttK-95-kWm">
+                                <rect key="frame" x="30" y="77" width="125" height="26.333333333333329"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We will use this to match your ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ioe-UV-nQa">
+                                <rect key="frame" x="30" y="111.33333333333333" width="158" height="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Ho6-9e-5cf">
+                                <rect key="frame" x="20" y="657.33333333333337" width="353" height="120"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pTT-1n-DQh">
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="L5u-kv-Ysf"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Continue with this photo">
+                                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                            <color key="baseBackgroundColor" systemColor="systemBlueColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="btnManualCaptureClick:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="fgM-qm-Sbr"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSP-kE-eZk">
+                                        <rect key="frame" x="0.0" y="70" width="353" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="7LB-JW-ZGv"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Retake this photo">
+                                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                            <color key="baseBackgroundColor" systemColor="systemGrayColor"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move face into the frame" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IeD-lV-SUF">
+                                <rect key="frame" x="126" y="621" width="141" height="14.333333333333371"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KgA-8f-PLy" customClass="VideoPreviewView" customModule="Smile_Identity_SDK">
+                                <rect key="frame" x="76" y="178" width="241" height="324"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KgA-8f-PLy" firstAttribute="centerX" secondItem="IeD-lV-SUF" secondAttribute="centerX" id="1tP-bS-aZc"/>
+                            <constraint firstItem="ttK-95-kWm" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="30" id="3j6-WU-VZ9"/>
+                            <constraint firstItem="IeD-lV-SUF" firstAttribute="top" secondItem="KgA-8f-PLy" secondAttribute="bottom" constant="119" id="7wz-sj-pSF"/>
+                            <constraint firstItem="Ho6-9e-5cf" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="Dwh-O5-CgQ"/>
+                            <constraint firstItem="Ho6-9e-5cf" firstAttribute="top" secondItem="IeD-lV-SUF" secondAttribute="bottom" constant="22" id="EPk-jJ-RvL"/>
+                            <constraint firstItem="KgA-8f-PLy" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" constant="178" id="FV5-iS-vYF"/>
+                            <constraint firstItem="Ioe-UV-nQa" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="30" id="G37-cb-ZJF"/>
+                            <constraint firstItem="KgA-8f-PLy" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" constant="-86" id="GCN-UM-vFj"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ttK-95-kWm" secondAttribute="trailing" constant="238" id="GSe-v1-YXt"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ttK-95-kWm" secondAttribute="trailing" constant="238" id="QBL-Dj-SDL"/>
+                            <constraint firstItem="ttK-95-kWm" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="18" id="RN1-ee-IO8"/>
+                            <constraint firstItem="Ioe-UV-nQa" firstAttribute="top" secondItem="ttK-95-kWm" secondAttribute="bottom" constant="8" symbolic="YES" id="T6j-jl-rgL"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Ioe-UV-nQa" secondAttribute="trailing" constant="205" id="TDb-jI-ddk"/>
+                            <constraint firstItem="ttK-95-kWm" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="30" id="YKh-Gk-4Qw"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Ioe-UV-nQa" secondAttribute="trailing" constant="205" id="p8V-D6-H0v"/>
+                            <constraint firstItem="Ioe-UV-nQa" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="30" id="r8C-tz-3DX"/>
+                            <constraint firstItem="KgA-8f-PLy" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="76" id="s9v-01-o2c"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Ho6-9e-5cf" secondAttribute="trailing" constant="20" id="ypi-oL-AjG"/>
+                            <constraint firstItem="KgA-8f-PLy" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="zTh-1f-rgG"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnManualCapture" destination="pTT-1n-DQh" id="Yqi-EV-mzU"/>
+                        <outlet property="preview" destination="KgA-8f-PLy" id="t9r-JR-gdB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-45.038167938931295" y="11.971830985915494"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

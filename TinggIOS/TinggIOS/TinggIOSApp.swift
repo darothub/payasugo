@@ -17,6 +17,7 @@ import Theme
 /// This is entry point into the application.
 /// The first screen displayed to the user is the ``LaunchScreenView``.
 /// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodel
+
 struct TinggIOSApp: App {
     @StateObject var navigation = NavigationUtils()
     @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
