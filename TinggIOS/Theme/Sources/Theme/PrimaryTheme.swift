@@ -72,7 +72,6 @@ extension Bundle {
         for candidate in candidates {
             let bundlePath = candidate?.appendingPathComponent(bundleName + ".bundle")
             if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
-                print("Bundle \(bundle)")
                 return bundle
             }
         }

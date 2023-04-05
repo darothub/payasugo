@@ -4,13 +4,19 @@
 //
 //  Created by Abdulrasaq on 28/03/2023.
 //
-import Onboarding
+
+import SmileIdentity
 import SwiftUI
 
 struct NewView: View {
     var body: some View {
         NavigationView {
-            KYCActionView()
+            GeometryReader { proxy in
+                VStack {
+                    CaptureIDView().edgesIgnoringSafeArea(.all)
+                }
+            }
+            
         }
     }
 }

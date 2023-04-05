@@ -49,7 +49,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		717903752892EBB200451190 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
@@ -686,7 +686,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
-				EXCLUDED_ARCHS = arm64;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
@@ -705,7 +705,7 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				NEW_SETTING = "";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
