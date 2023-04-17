@@ -5,23 +5,23 @@
 //  Created by Abdulrasaq on 28/03/2023.
 //
 import CoreUI
-import Smile_Identity_SDK
+//import Smile_Identity_SDK
 import SwiftUI
 
 
-public struct KYCActionView: View, SIDCaptureManagerDelegate {
-    public func onSuccess(tag: String, selfiePreview: UIImage?, idFrontPreview: UIImage?, idBackPreview: UIImage?) {
-        print("Taken")
-    }
-    
-    public func onError(tag: String, sidError: Smile_Identity_SDK.SIDError) {
-        print("Error")
-    }
+public struct KYCActionView: View {
+//    public func onSuccess(tag: String, selfiePreview: UIImage?, idFrontPreview: UIImage?, idBackPreview: UIImage?) {
+//        print("Taken")
+//    }
+//
+//    public func onError(tag: String, sidError: Smile_Identity_SDK.SIDError) {
+//        print("Error")
+//    }
     
     @State private var selfieDataModel = ActionViewDataModel()
     @State private var idDataModel = ActionViewDataModel(image: "idDoc", title: "ID Card", actionType: .idDoc)
     @State private var test = "Hello"
-    @State private var captureManager: SIDCaptureManager?
+//    @State private var captureManager: SIDCaptureManager?
     @State private var selectedAction: String = ""
     public init() {
         //
@@ -36,10 +36,10 @@ public struct KYCActionView: View, SIDCaptureManagerDelegate {
                 Section {
                     Group {
                         ActionView(dataModel: selfieDataModel, selectedButton: $selectedAction) {
-                            launchActionScreen(for: .SELFIE)
+//                            launchActionScreen(for: .SELFIE)
                         }
                         ActionView(dataModel: idDataModel, selectedButton: $selectedAction) {
-                            launchActionScreen(for: .ID_CAPTURE)
+//                            launchActionScreen(for: .ID_CAPTURE)
                         }
                     }
                     .shadow(radius: 2)
@@ -63,13 +63,13 @@ public struct KYCActionView: View, SIDCaptureManagerDelegate {
         }
     }
     
-    @MainActor fileprivate func launchActionScreen(for captureType: CaptureType) {
-        let sIDSelfieCaptureConfig = SIDSelfieCaptureConfig.Builder()
-            .setManualCapture(manualCapture: true).build()
-        SIDCaptureManager.Builder(delegate: self, captureType: captureType)
-            .setSidSelfieConfig(sidSelfieConfig: sIDSelfieCaptureConfig)
-            .build().start()
-    }
+//    @MainActor fileprivate func launchActionScreen(for captureType: CaptureType) {
+//        let sIDSelfieCaptureConfig = SIDSelfieCaptureConfig.Builder()
+//            .setManualCapture(manualCapture: true).build()
+//        SIDCaptureManager.Builder(delegate: self, captureType: captureType)
+//            .setSidSelfieConfig(sidSelfieConfig: sIDSelfieCaptureConfig)
+//            .build().start()
+//    }
 }
 
 struct ActionView: View {

@@ -37,10 +37,10 @@ public struct HomeBottomNavView: View {
                         title: "Group",
                         image: PrimaryTheme.getImage(image: .group)
                     )
-                Text("Explore")
+                Text("Cards")
                     .tabItemStyle(
-                        title: "Explore",
-                        image: PrimaryTheme.getImage(image: .explore)
+                        title: "Cards",
+                        image: Image(systemName: "creditcard")
                     )
             }
             
@@ -69,6 +69,6 @@ struct HomeBottomNavView_Previews: PreviewProvider {
         }
     }
     static var previews: some View {
-        Text("Hello")
+        HBNPReviewHolder()
     }
 }
