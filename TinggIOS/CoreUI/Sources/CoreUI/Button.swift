@@ -11,6 +11,7 @@ public func TinggButton(
     backgroundColor: Color = Color.green,
     buttonLabel: String = "Get started",
     padding: CGFloat = 25,
+    textPadding: CGFloat = 20,
     action: @escaping () -> Void
 ) -> some View {
     Button {
@@ -18,7 +19,7 @@ public func TinggButton(
     } label: {
         Text(buttonLabel)
             .frame(maxWidth: .infinity)
-            .padding()
+            .padding(textPadding)
             .foregroundColor(.white)
             .background(backgroundColor)
             .cornerRadius(10)
@@ -30,6 +31,7 @@ public func TinggOutlineButton(
     buttonLabel: String = "Get started",
     padding: CGFloat = 25,
     textColor: Color = .green,
+    textHorPadding: CGFloat = 25,
     action: @escaping () -> Void
 ) -> some View {
     Button {
@@ -40,7 +42,7 @@ public func TinggOutlineButton(
             .padding()
             .foregroundColor(textColor)
             .cornerRadius(10)
-            .padding(.horizontal, 25)
+            .padding(.horizontal, textHorPadding)
     } .overlay(
         RoundedRectangle(cornerRadius: 5)
             .stroke(lineWidth: 1)

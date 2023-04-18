@@ -186,21 +186,30 @@ public func validateAmountByService(selectedService: MerchantService, amount: St
     }
     return result
 }
+extension Formatter {
+    static func currencyFormat(currency: String = "KS")-> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = .init(identifier: "en_US_POSIX")
+        formatter.numberStyle = .currencyAccounting
+        formatter.currencySymbol = currency
+        return formatter
+    }
+}
+extension Numeric {
+    var currencyUS: String {
+         Formatter.currencyFormat().string(for: self) ?? ""
+    }
+}
 
-
-//public protocol CheckoutProtocol {
-//    var showCheckOutView: Bool { get set }
-//    var dcddm: DebitCardDropDownModel { get set }
-//    var showCardOptions: Bool { get set }
-//    var isSomeoneElsePaying: Bool { get set }
-//    var service: MerchantService { get set }
-//    var cardDetails: CardDetails { get set }
-//   
-//}
-//
-//extension CheckoutProtocol {
-//    var isCheckout: Bool { get {return false} set{} }
-//}
+public func convertme(string: String, with currency: String) -> String {
+    let string = string.filter("0123456789.".contains)
+    let f = Formatter.currencyFormat(currency: currency)
+    if let integer = Int(string)  {
+        f.maximumFractionDigits = 0
+        return f.string(for: integer) ?? "0"
+    }
+    return Double(string)?.currencyUS ?? "0"
+}
 
 public struct CardDetails {
     public var cardNumber: String = ""

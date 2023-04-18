@@ -4,19 +4,32 @@
 //
 //  Created by Abdulrasaq on 04/04/2023.
 //
-
+import CoreUI
 import Foundation
 import SwiftUI
 
 public struct CardFrontLayoutView: View {
     @State var dataModel: CardFrontDataModel = .init()
-    public init (dataModel: CardFrontDataModel = .init()) {
+    @State var showManageCardLabel = true
+    public init (dataModel: CardFrontDataModel = .init(), showManageCardLabel: Bool = true) {
         _dataModel = State(initialValue: dataModel)
+        _showManageCardLabel = State(initialValue: showManageCardLabel)
     }
     public var body: some View {
         VStack(alignment: .leading) {
-            Text(dataModel.cardHolderName)
-                .padding(.top, 20)
+            HStack {
+                Text(dataModel.cardHolderName)
+                Spacer()
+                Text("Manage card")
+                    .foregroundColor(.white)
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(.green)
+                    )
+                    .showIf($showManageCardLabel)
+            }.padding(.top, 20)
             VStack(alignment: .leading) {
                 Text(dataModel.cardNumber)
                     .foregroundColor(.green)
@@ -46,7 +59,7 @@ public struct CardFrontLayoutView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: 250)
         .foregroundColor(.white)
-        .padding(40)
+        .padding(30)
         .background(CardLayoutBackGroundView())
         .padding()
     }

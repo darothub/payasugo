@@ -93,46 +93,6 @@ struct TransactionItemView: View {
 
 }
 
-struct TransactionItemModel: Identifiable, Comparable, Hashable {
-    static func < (lhs: TransactionItemModel, rhs: TransactionItemModel) -> Bool {
-        lhs.date < rhs.date
-    }
-    
-    var id = UUID().description
-    var imageurl: String = ""
-    var accountNumber: String = "000000"
-    var date: Date = .distantPast
-    var amount: Double = 72.3
-    var currency: String = AppStorageManager.getCountry()?.currency ?? "KES"
-    var payer: MerchantPayer = .init()
-    var service: MerchantService = sampleServices[0]
-    var status: TransactionStatus = .pending
-    
-    static var sample = TransactionItemModel()
-    static var sample2 = TransactionItemModel(date: Date.distantPast)
-    
-}
-
-struct TransactionSectionModel: Identifiable, Comparable {
-    static func < (lhs: TransactionSectionModel, rhs: TransactionSectionModel) -> Bool {
-        if lhs.list.isNotEmpty() && rhs.list.isNotEmpty() {
-            return lhs.list[0].date > rhs.list[0].date
-        } else { return false }
-    }
-    
-    var id = UUID().description
-    var list = [TransactionItemModel.sample, TransactionItemModel.sample2]
-    var header: String {
-        let h = ""
-        if list.isNotEmpty() {
-           return list[0].date.formatted(with: "EEEE, dd MMMM yyyy")
-        }
-        return h
-    }
-    static var sample = TransactionSectionModel()
-    static var sample2 = TransactionSectionModel()
-}
-
 struct TransactionItemView_Previews: PreviewProvider {
     static var previews: some View {
         TransactionItemView(model: .init())
