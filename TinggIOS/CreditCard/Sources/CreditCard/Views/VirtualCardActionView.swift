@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 public struct VirtualCardActionView: View {
-    var name: String = "John"
+    public var name: String = ""
     public init(name: String) {
         self.name = name
     }

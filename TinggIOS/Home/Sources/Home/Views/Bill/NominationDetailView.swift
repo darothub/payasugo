@@ -203,8 +203,8 @@ struct NominationDetailView_Previews: PreviewProvider {
     }
 }
 
-enum TransactionStatus: String, Equatable {
-    case success, failed, pending
-}
+//enum TransactionStatus: String, Equatable {
+//    case success, failed, pending
+//}
 
 
