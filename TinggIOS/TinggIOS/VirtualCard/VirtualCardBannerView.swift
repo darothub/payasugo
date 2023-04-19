@@ -8,8 +8,9 @@
 import SwiftUI
 
 public struct VirtualCardBannerView: View {
-    public init() {
-        //
+    @Binding public var virtualCardState: VirtualCardState
+    public init(virtualCardState: Binding<VirtualCardState>) {
+        _virtualCardState = virtualCardState
     }
     public var body: some View {
         HStack(alignment: .bottom) {
@@ -22,7 +23,7 @@ public struct VirtualCardBannerView: View {
                 }
             VStack(alignment: .leading) {
                 Text("Make seamless\npayment online")
-                Text("Create a virtual card")
+                Text(virtualCardState == .created ? "Create a virtual card" : "Pending verification")
                     .underline()
                     .padding(.top)
                
@@ -38,9 +39,18 @@ public struct VirtualCardBannerView: View {
 }
 
 struct VirtualCardBannerView_Previews: PreviewProvider {
+    struct PreviewHolder: View {
+        @StateObject var cardStateVm = VirtualCardViewModel()
+        var body: some View {
+            VirtualCardBannerView(virtualCardState: $cardStateVm.cardState)
+        }
+    }
     static var previews: some View {
-        VirtualCardBannerView()
+        PreviewHolder()
     }
 }
 
 
+public enum VirtualCardState {
+    case pending, created
+}

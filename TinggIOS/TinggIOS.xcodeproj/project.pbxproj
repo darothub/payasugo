@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		7108CB1A29C4695B0053B113 /* smile_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 7108CB1929C4695B0053B113 /* smile_config.json */; };
+		71091EC829EECEE200843FFA /* pendingstateicon.gif in Resources */ = {isa = PBXBuildFile; fileRef = 71091EC729EECEE200843FFA /* pendingstateicon.gif */; };
+		71091ECA29EED24300843FFA /* VirtualCardBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091EC929EED24300843FFA /* VirtualCardBannerView.swift */; };
+		71091ED129EED7CE00843FFA /* VirtualCardHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091ED029EED7CE00843FFA /* VirtualCardHomeView.swift */; };
+		71091ED229EED7CE00843FFA /* TransactionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091ECF29EED7CE00843FFA /* TransactionListView.swift */; };
+		71091ED329EED7CE00843FFA /* VirtualCardActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091ECE29EED7CD00843FFA /* VirtualCardActionView.swift */; };
+		71091ED529EED86E00843FFA /* CardFrontLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091ED429EED86E00843FFA /* CardFrontLayoutView.swift */; };
+		71091ED729EED95100843FFA /* VerificationPendingStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091ED629EED95000843FFA /* VerificationPendingStateView.swift */; };
+		71091ED929EEF3C800843FFA /* VirtualCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091ED829EEF3C800843FFA /* VirtualCardViewModel.swift */; };
 		710F9D2F2979B2FF0034E193 /* Pin in Frameworks */ = {isa = PBXBuildFile; productRef = 710F9D2E2979B2FF0034E193 /* Pin */; };
 		71463F3628BE4CA800A54384 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3528BE4CA800A54384 /* HomeUITests.swift */; };
 		71463F3828BE4CA800A54384 /* HomeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3728BE4CA800A54384 /* HomeUITestsLaunchTests.swift */; };
@@ -62,6 +70,14 @@
 /* Begin PBXFileReference section */
 		7108CB1929C4695B0053B113 /* smile_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = smile_config.json; sourceTree = "<group>"; };
 		7108CD76285253E00034EA29 /* Permissions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Permissions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71091EC729EECEE200843FFA /* pendingstateicon.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pendingstateicon.gif; sourceTree = "<group>"; };
+		71091EC929EED24300843FFA /* VirtualCardBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCardBannerView.swift; sourceTree = "<group>"; };
+		71091ECE29EED7CD00843FFA /* VirtualCardActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCardActionView.swift; sourceTree = "<group>"; };
+		71091ECF29EED7CE00843FFA /* TransactionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListView.swift; sourceTree = "<group>"; };
+		71091ED029EED7CE00843FFA /* VirtualCardHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCardHomeView.swift; sourceTree = "<group>"; };
+		71091ED429EED86E00843FFA /* CardFrontLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardFrontLayoutView.swift; sourceTree = "<group>"; };
+		71091ED629EED95000843FFA /* VerificationPendingStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPendingStateView.swift; sourceTree = "<group>"; };
+		71091ED829EEF3C800843FFA /* VirtualCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCardViewModel.swift; sourceTree = "<group>"; };
 		710F9D2D2979B2E50034E193 /* Pin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Pin; sourceTree = "<group>"; };
 		71463F3328BE4CA800A54384 /* HomeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71463F3528BE4CA800A54384 /* HomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
@@ -135,6 +151,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		71091ECB29EED46A00843FFA /* VirtualCard */ = {
+			isa = PBXGroup;
+			children = (
+				71091ED429EED86E00843FFA /* CardFrontLayoutView.swift */,
+				71091ECF29EED7CE00843FFA /* TransactionListView.swift */,
+				71091ECE29EED7CD00843FFA /* VirtualCardActionView.swift */,
+				71091ED029EED7CE00843FFA /* VirtualCardHomeView.swift */,
+				71091EC929EED24300843FFA /* VirtualCardBannerView.swift */,
+				71091ED629EED95000843FFA /* VerificationPendingStateView.swift */,
+				71091ED829EEF3C800843FFA /* VirtualCardViewModel.swift */,
+			);
+			path = VirtualCard;
+			sourceTree = "<group>";
+		};
 		71463F3428BE4CA800A54384 /* HomeUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +209,8 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
+				71091ECB29EED46A00843FFA /* VirtualCard */,
+				71091EC729EECEE200843FFA /* pendingstateicon.gif */,
 				71F7D7A829859AA70086AE84 /* Navigation */,
 				71BA90B428FE738B007B85F2 /* SplashScreen */,
 				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
@@ -366,6 +398,7 @@
 				7108CB1A29C4695B0053B113 /* smile_config.json in Resources */,
 				718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */,
 				715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */,
+				71091EC829EECEE200843FFA /* pendingstateicon.gif in Resources */,
 				718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,10 +448,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71091ED529EED86E00843FFA /* CardFrontLayoutView.swift in Sources */,
+				71091ED129EED7CE00843FFA /* VirtualCardHomeView.swift in Sources */,
+				71091ED329EED7CE00843FFA /* VirtualCardActionView.swift in Sources */,
+				71091ED229EED7CE00843FFA /* TransactionListView.swift in Sources */,
 				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71F7D7AA29859ABE0086AE84 /* NavigationModifier.swift in Sources */,
 				718114F729D2C0D200BCDE96 /* NewView.swift in Sources */,
+				71091ED729EED95100843FFA /* VerificationPendingStateView.swift in Sources */,
+				71091ECA29EED24300843FFA /* VirtualCardBannerView.swift in Sources */,
+				71091ED929EEF3C800843FFA /* VirtualCardViewModel.swift in Sources */,
 				71682416290B035200A80C26 /* Documentation.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
