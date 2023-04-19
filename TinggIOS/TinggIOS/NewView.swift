@@ -14,7 +14,7 @@ import SwiftUI
 struct NewView: View {
     var body: some View {
         VStack(alignment: .leading) {
-            VirtualCardHomeView(balance: "2400000", currency: "N", showManageCardLabel: true)
+            VerificationPendingStateView(name: "Georges")
         }
       
     }
