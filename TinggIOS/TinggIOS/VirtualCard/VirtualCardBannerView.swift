@@ -51,6 +51,4 @@ struct VirtualCardBannerView_Previews: PreviewProvider {
 }
 
 
-public enum VirtualCardState {
-    case pending, created
-}
+
