@@ -6,8 +6,10 @@
 //
 
 import CoreUI
+import CoreNavigation
 import Core
 import SwiftUI
+
 
 public struct CreditCardPinView: View {
     @EnvironmentObject var navigation: NavigationUtils
@@ -45,7 +47,9 @@ public struct CreditCardPinView: View {
             TinggButton(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
                 if buttonBgColor == .green {
                     pinIsCreated = true
-                    navigation.navigationStack.append(.securityQuestionView)
+                    navigation.navigationStack.append(
+                        Screens.securityQuestionView
+                    )
                 } 
                
             }

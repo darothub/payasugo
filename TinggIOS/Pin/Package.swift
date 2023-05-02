@@ -18,13 +18,14 @@ let package = Package(
         .package(path: "../Theme"),
         .package(path: "../CoreUI"),
         .package(path: "../Core"),
+        .package(path: "../CoreNavigation")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Pin",
-            dependencies: ["Core", "Theme", "CoreUI"]),
+            dependencies: ["Core", "Theme", "CoreUI", "CoreNavigation"]),
         .testTarget(
             name: "PinTests",
             dependencies: ["Pin"]),

@@ -60,7 +60,7 @@ public class HomeViewModel: ViewModel {
     
     public func getProfile() -> Profile? {
         if let profile = homeUsecase.getProfile() {
-            self.profile = profile
+//            self.profile = profile
             return profile
         }
         return nil

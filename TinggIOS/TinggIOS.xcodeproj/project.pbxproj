@@ -108,6 +108,7 @@
 		71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		71C72F1A29CCACD7004E7F4C /* CoreUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreUI; sourceTree = "<group>"; };
 		71C72F1B29CCB332004E7F4C /* SmileIdentity */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SmileIdentity; sourceTree = "<group>"; };
+		71DD68C429F8417200E8A57D /* CoreNavigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreNavigation; sourceTree = "<group>"; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 		71F7D7A52981B1700086AE84 /* CreditCard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CreditCard; sourceTree = "<group>"; };
 		71F7D7A929859ABE0086AE84 /* NavigationModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModifier.swift; sourceTree = "<group>"; };
@@ -252,6 +253,7 @@
 				7156555629B1023400307866 /* Airtime */,
 				71C72F1A29CCACD7004E7F4C /* CoreUI */,
 				71C72F1B29CCB332004E7F4C /* SmileIdentity */,
+				71DD68C429F8417200E8A57D /* CoreNavigation */,
 			);
 			name = Packages;
 			sourceTree = "<group>";

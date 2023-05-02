@@ -5,14 +5,17 @@
 //  Created by Abdulrasaq on 14/07/2022.
 //
 import CoreUI
+import CoreNavigation
 import Core
 import Combine
 import SwiftUI
 import Theme
 
 struct HomeView: View {
-    @EnvironmentObject var hvm: HomeViewModel
     
+    @EnvironmentObject var hvm: HomeViewModel
+    @State var profileImageUrl: String = ""
+    @EnvironmentObject var navigation: NavigationUtils
     var categories: [[CategoryEntity]] {
         hvm.servicesByCategory
     }
@@ -22,16 +25,22 @@ struct HomeView: View {
     var airtimeServices: [MerchantService] {
         hvm.airTimeServices
     }
-    @State var fetchedBill = [Invoice]()
     var rechargeAndBill: [MerchantService] {
         hvm.rechargeAndBill
     }
-    
+    var profileImageURL : String {
+        hvm.getProfile()?.photoURL ?? ""
+    }
+    @State var fetchedBill = [Invoice]()
+    @Binding var drawerStatus: DrawerStatus
     @State var showDueBills = true
     var body: some View {
         GeometryReader { geo in
             ScrollView {
                 bodyView(geo: geo)
+                    .onTapGesture {
+                        handleNavigationDrawer()
+                    }
             }.ignoresSafeArea()
         }
         .background(PrimaryTheme.getColor(.cellulantLightGray))
@@ -41,9 +50,11 @@ struct HomeView: View {
     @ViewBuilder
     func bodyView(geo: GeometryProxy) -> some View {
         VStack(spacing: 20) {
-            HomeTopViewDesign(parentSize: geo)
+            HomeTopViewDesign(parentSize: geo, onHamburgerIconClick: {
+                drawerStatus = .open
+            })
             ActivateCardView(parentSize: geo) {
-                // Intentionally unimplemented...To Do
+                // TODO
             }
             ActiveCategoryTabView(categories: categories)
                 .background(.white)
@@ -74,12 +85,15 @@ struct HomeView: View {
             }
         }
     }
+    fileprivate func handleNavigationDrawer() {
+        drawerStatus = .close
+    }
 }
 
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(drawerStatus: .constant(.close))
             .environmentObject(HomeDI.createHomeViewModel())
     }
 }

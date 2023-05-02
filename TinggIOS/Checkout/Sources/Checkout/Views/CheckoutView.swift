@@ -7,6 +7,7 @@
 import Theme
 import SwiftUI
 import CoreUI
+import CoreNavigation
 import Core
 import Combine
 import Contacts
@@ -119,7 +120,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 AddNewDebitOrCreditCardButton() {
                     dismiss()
                     checkoutVm.cardDetails.amount = checkoutVm.amount
-                    navigation.navigationStack.append(.pinCreationView)
+                    navigation.navigationStack.append(Screens.pinCreationView)
                 }
                 .showIf($checkoutVm.addNewCard)
                 .padding(30)
@@ -176,7 +177,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 checkoutVm.observeUIModel(model: checkoutVm.$uiModel, subscriptions: &checkoutVm.subscriptions) { content in
                     let response = content.data as! CreateCardChannelResponse
                     checkoutVm.cardDetails.checkout = true
-                    navigation.navigationStack.append(.cardDetailsView(response, nil))
+                    navigation.navigationStack.append(Screens.cardDetailsView(response, nil))
                     log(message: "\(response)")
                 } onError: { err in
                     showAlert = true

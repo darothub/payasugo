@@ -8,6 +8,7 @@
 import SwiftUI
 import Theme
 import CoreUI
+import CoreNavigation
 import Core
 struct RechargeAndBillView: View {
     @State var rechargeAndBill = [MerchantService]()
@@ -57,7 +58,9 @@ struct RechargeAndBillView: View {
             .sorted(by: <)
             .map{TitleAndListItem(title: $0, services: selectedBiller[$0]!)}
         withAnimation {
-            navigation.navigationStack = [.home, .categoriesAndServices(categoryNameAndServices)]
+            navigation.navigationStack.append(
+                Screens.categoriesAndServices(categoryNameAndServices)
+            )
         }
     }
     @ViewBuilder
@@ -65,7 +68,9 @@ struct RechargeAndBillView: View {
         ServicesGridView(services: rechargeAndBill, showTitle: false) { service in
             if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                 withAnimation {
-                    navigation.navigationStack = [.home, .billFormView(bills)]
+                    navigation.navigationStack.append(
+                        Screens.billFormView(bills)
+                    )
                 }
             } else {
                 hvm.rechargeAndBillUIModel = UIModel.error("Service not available")
@@ -85,7 +90,7 @@ struct ServicesGridView: View {
         LazyVGrid(columns: gridColumn, spacing: 0){
             ForEach(services, id: \.id) { service in
                 VStack {
-                    IconImageCardView(imageUrl: service.serviceLogo)
+                    IconImageCardView(imageUrl: service.serviceLogo, bgShape: .rectangular)
                         .padding(.vertical)
                         .onTapGesture {
                             print("Inner service")
