@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 18/10/2022.
 //
 import CreditCard
+import CoreNavigation
 import Core
 import Checkout
 import Home
@@ -31,7 +32,7 @@ public struct LaunchScreenView: View {
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigation.navigationStack = [.intro]
+                    navigation.navigationStack.append(Screens.intro)
                 }
             }
             .edgesIgnoringSafeArea(.all)

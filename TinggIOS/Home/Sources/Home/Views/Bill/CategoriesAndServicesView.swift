@@ -8,6 +8,7 @@ import Core
 import SwiftUI
 import Theme
 import CoreUI
+import CoreNavigation
 
 public struct CategoriesAndServicesView: View {
     @EnvironmentObject var hvm: HomeViewModel
@@ -35,11 +36,9 @@ public struct CategoriesAndServicesView: View {
                 ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, onclick: .constant({ service in
                     if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                         withAnimation {
-                            navigation.navigationStack = [
-                                .home,
-                                .categoriesAndServices(categoryNameAndServices),
-                                .billFormView(bills)
-                            ]
+                            navigation.navigationStack.append(
+                                Screens.billFormView(bills)
+                            )
                         }
                     }
                 }))
@@ -134,7 +133,7 @@ struct Item: View {
     var logo: String = ""
     var body: some View {
         VStack {
-            IconImageCardView(imageUrl: logo)
+            IconImageCardView(imageUrl: logo, bgShape: .rectangular)
                 .padding(.vertical)
             Text(name)
                 .font(.caption)

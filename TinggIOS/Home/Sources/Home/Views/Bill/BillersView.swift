@@ -6,6 +6,7 @@
 //
 import Combine
 import CoreUI
+import CoreNavigation
 import Core
 import SwiftUI
 import RealmSwift
@@ -45,11 +46,8 @@ public struct BillersView: View {
                 .scaleEffect(1)
                 .onTapGesture {
                     withAnimation {
-                        navigation.navigationStack = [
-                            .home,
-                            .billers(billers),
-                            .categoriesAndServices([billers])
-                        ]
+                        navigation.navigationStack.append( Screens.categoriesAndServices([billers])
+                        )
                     }
                 }
         }
@@ -95,11 +93,9 @@ public struct BillersView: View {
                         } else {
                             if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                                 withAnimation {
-                                    navigation.navigationStack = [
-                                        .home,
-                                        .billers(billers),
-                                        .billFormView(bills)
-                                    ]
+                                    navigation.navigationStack.append(
+                                        Screens.billFormView(bills)
+                                    )
                                 }
                             }
                         }
@@ -115,11 +111,9 @@ public struct BillersView: View {
             ForEach(enrolments, id: \.clientProfileAccountID) { enrolment in
                 NavigationLink(value: enrolment) {
                     SingleNominationView(nomination: enrolment.freeze()) { nomination, invoice in
-                        navigation.navigationStack = [
-                            .home,
-                            .billers(billers),
-                            .nominationDetails(invoice, nomination)
-                        ]
+                        navigation.navigationStack.append(
+                            Screens.nominationDetails(invoice, nomination)
+                        )
                     }
                 }
             }.onDelete(perform: removeBill(at:))

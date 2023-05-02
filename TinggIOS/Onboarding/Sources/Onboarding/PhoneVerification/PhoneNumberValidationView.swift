@@ -6,6 +6,7 @@
 //  swiftlint:disable all
 
 import Combine
+import CoreNavigation
 import CoreUI
 import Core
 import SwiftUI
@@ -153,7 +154,7 @@ extension PhoneNumberValidationView {
         openURL(url)
     }
     fileprivate func gotoHomeView() {
-        navigation.navigationStack = [.home]
+        navigation.navigationStack.append(Screens.home)
     }
     
     fileprivate func observeUIModel() {

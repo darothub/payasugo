@@ -31,7 +31,7 @@ struct QuickTopupView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(airtimeServices, id: \.id) { service in
-                    IconImageCardView(imageUrl: service.serviceLogo)
+                    IconImageCardView(imageUrl: service.serviceLogo, bgShape: .rectangular)
                         .padding(.vertical)
                 }
             }

@@ -1,10 +1,11 @@
 //
-//  SwiftUIView.swift
+//  SecurityQuestionView.swift
 //  
 //
 //  Created by Abdulrasaq on 10/01/2023.
 //
 import CoreUI
+import CoreNavigation
 import Core
 import SwiftUI
 
@@ -76,7 +77,9 @@ public struct SecurityQuestionView: View {
         return ""
     }
     func navigateToCardDetailsView() {
-        navigation.navigationStack.append(.cardDetailsView(nil, nil))
+        navigation.navigationStack.append(
+            Screens.cardDetailsView(nil, nil)
+        )
     }
 }
 

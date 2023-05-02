@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreUI
+import CoreNavigation
 import Theme
 import Core
 public struct BillFormView: View {
@@ -68,10 +69,9 @@ public struct BillFormView: View {
                 })
                 self.invoice = invoice
                 Observer<Invoice>().saveEntity(obj: invoice)
-                navUtils.navigationStack = [
-                    .billFormView(billDetails),
-                    .billDetailsView(invoice, billDetails.service)
-                ]
+                navUtils.navigationStack.append(
+                    Screens.billDetailsView(invoice, billDetails.service)
+                )
             } onError: { err in
                 print("BILLFORM: \(err)")
             }

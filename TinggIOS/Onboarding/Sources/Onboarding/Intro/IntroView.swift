@@ -6,6 +6,7 @@
 //
 import CoreUI
 import Core
+import CoreNavigation
 import SwiftUI
 import Theme
 

@@ -7,14 +7,27 @@
 
 import SwiftUI
 import Core
+import CoreUI
+import CoreNavigation
 import Theme
 
 /// View that host the bottom navigation for the home package
-public struct HomeBottomNavView: View {
+public struct HomeBottomNavView: View, NavigationMenuClick {
+    
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
-    @State private var showBottomSheet = true
+    @EnvironmentObject var navigation: NavigationUtils
+    
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
 
+    var profileImageURL : String {
+        hvm.getProfile()?.photoURL ?? ""
+    }
+    var name : String {
+        "\(String(describing: hvm.getProfile()?.firstName ?? "")) \(String(describing: hvm.getProfile()?.lastName ?? ""))"
+    }
+    @State var selectedNavigationScreen = Screens.lost
+    @State var drawerStatus = DrawerStatus.close
+    @State private var showBottomSheet = true
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -22,6 +35,9 @@ public struct HomeBottomNavView: View {
         GeometryReader { _ in
             TabView {
                 homeView()
+                    .onTapGesture {
+                        drawerStatus = .open
+                    }
                     .tabItemStyle(
                         title: "Home",
                         image: Image(systemName: "house.fill")
@@ -43,14 +59,40 @@ public struct HomeBottomNavView: View {
                         image: Image(systemName: "creditcard")
                     )
             }
-            
-        }.navigationBarBackButtonHidden(true)
-      
+        }
+        .navigationDestination(for: HomeScreen.self, destination: { screen in
+            switch screen {
+            case .profile:
+                EditProfileView()
+            }
+        })
+        .overlay {
+            let menus =  [
+                NavigationMenu(screen: .buyAirtime, title: "Payment"),
+                NavigationMenu(screen: .intro, title: "Settings"),
+                NavigationMenu(screen: .home, title: "Support"),
+                NavigationMenu(screen: .securityQuestionView, title: "About")
+            ]
+            NavigationDrawerView(
+                listOfMenu: menus,
+                header: AnyView(
+                    NavigationHeader(
+                        profileImageUrl: profileImageURL,
+                        userName: name,
+                        navigationDrawerProtocol: self
+                    )
+                ),
+                selectedMenuScreen: $selectedNavigationScreen,
+                status: $drawerStatus,
+                navigationDrawerProtocol: self
+            )
+        }
+        .navigationBarBackButtonHidden(true)
     }
     @ViewBuilder
     func homeView() -> some View {
         VStack{
-            HomeView()
+            HomeView(drawerStatus: $drawerStatus)
                 .environmentObject(hvm)
             Spacer()
         }
@@ -59,6 +101,21 @@ public struct HomeBottomNavView: View {
     func billView() -> some View {
         BillView()
             .environmentObject(hvm)
+    }
+    fileprivate func handleNavigationDrawer() {
+        drawerStatus = .close
+    }
+    public func onMenuClick(_ screen: Screens) {
+        drawerStatus = .close
+        navigation.navigationStack.append(screen)
+    }
+    public func onHeaderClick(_ screen: Screens) {
+        drawerStatus = .close
+        navigation.navigationStack.append(screen)
+    }
+    public func onHeaderClick<S>(_ screen: S) where S : Hashable {
+        drawerStatus = .close
+        navigation.navigationStack.append(screen)
     }
 }
 
@@ -72,3 +129,34 @@ struct HomeBottomNavView_Previews: PreviewProvider {
         HBNPReviewHolder()
     }
 }
+
+struct NavigationHeader: View {
+    var profileImageUrl: String = "https://imglarger.com/Images/before-after/ai-image-enlarger-1-after-2.jpg"
+    var userName = "George Mwaura"
+    var navigationDrawerProtocol: NavigationMenuClick
+    var body: some View {
+        HStack {
+            IconImageCardView(imageUrl: profileImageUrl, radius: 0, scaleEffect: 1.8, x: 0, y: 0, bgShape: .circular)
+                .overlay {
+                    Circle().stroke(lineWidth: 2)
+                        .foregroundColor(.green)
+                }.scaleEffect(1.2)
+       
+            VStack(alignment: .leading) {
+                Text(userName)
+                    .textCase(.uppercase)
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
+                    .bold()
+                Text("View profile")
+                    .foregroundColor(.green)
+                    .font(.subheadline)
+                    .onTapGesture {
+                        navigationDrawerProtocol.onHeaderClick(HomeScreen.profile)
+                    }
+            }
+            .padding(20)
+        }
+    }
+}
+

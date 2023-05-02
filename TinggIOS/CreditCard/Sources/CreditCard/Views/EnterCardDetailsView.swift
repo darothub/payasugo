@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 12/01/2023.
 //
 import Core
+import CoreNavigation
 import CoreUI
 import Permissions
 import SwiftUI
@@ -166,7 +167,7 @@ public struct EnterCardDetailsView: View {
                     successUrl = ""
                     showWebView.toggle()
                 } else {
-                   _ = navigation.navigationStack.popLast()
+                    _ = navigation.navigationStack.removeLast()
                 }
             }){
                 Text("Back")

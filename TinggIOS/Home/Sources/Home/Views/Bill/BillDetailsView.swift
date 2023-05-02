@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 06/09/2022.
 //
 import CoreUI
+import CoreNavigation
 import Theme
 import SwiftUI
 import Core
@@ -97,7 +98,7 @@ public struct BillDetailsView: View {
                 if let bill = content.data as? Bill {
                     let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
                     homeViewModel.nominationInfo.$objects.append(enrol)
-                    navUtils.navigationStack = [.home]
+                    navUtils.navigationStack.append(Screens.home)
                 }
                
             }
