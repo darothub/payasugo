@@ -57,6 +57,7 @@ public class HomeViewModel: ViewModel {
         getProfile()
         getQuickTopups()
         displayedRechargeAndBill()
+        getDueBills()
 //        fetchDueBills()
         getServicesByCategory()
         allRecharge()
@@ -171,30 +172,36 @@ public class HomeViewModel: ViewModel {
     }
     public func fetchDueBills()  {
         fetchBillUIModel = UIModel.loading
-        Task {
-            do {
-                dueBill = try await homeUsecase.getDueBills()
-                handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
-            } catch {
-                handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
-            }
-        }
+//        Task {
+//            do {
+//                dueBill = try await homeUsecase.getDueBills()
+//                handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
+//            } catch {
+//                handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+//            }
+//        }
     }
     public func getDueBills()  {
         fetchBillUIModel = UIModel.loading
-        Task {
-            do {
-                let billAccount = homeUsecase.getBillAccounts()
-                let request = RequestMap.Builder()
-                                .add(value: "FBA", for: .SERVICE)
-                                .add(value: billAccount, for: .BILL_ACCOUNTS)
-                                .build()
-                dueBill = try await homeUsecase.fetchDueBills(request: request)
-                handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
-            } catch {
-                handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
-            }
+        let billAccount = homeUsecase.getBillAccounts()
+        let partitionedBillAccount = homeUsecase.getBillAccounts().chunked(into: 5)
+        partitionedBillAccount.forEach { ba in
+            let request = RequestMap.Builder()
+                            .add(value: "FBA", for: .SERVICE)
+                            .add(value: ba, for: .BILL_ACCOUNTS)
+                            .add(value: 1, for: "IS_MULTIPLE")
+                            .build()
+             Task {
+                 do {
+                     dueBill = try await homeUsecase.fetchDueBills(request: request)
+                     handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
+                 } catch {
+                     handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                 }
+                
+             }
         }
+    
     }
     public func getSingleDueBill(accountNumber: String, serviceId: String) {
         uiModel = UIModel.loading

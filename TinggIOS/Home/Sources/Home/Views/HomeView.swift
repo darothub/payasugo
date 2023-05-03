@@ -79,7 +79,14 @@ struct HomeView: View {
                 .shadowBackground()
             AddNewBillCardView()
         }.onAppear {
-            fetchedBill = Observer<Invoice>().objects.filter { $0.amount.convertStringToInt() > 0 && "\(String(describing: $0.enrollment?.hubServiceID) )" != "187"}
+            fetchedBill = Observer<Invoice>().objects.filter {
+                $0.hasPaymentInProgress ||
+                (
+                    ($0.amount.convertStringToInt() > 0) &&
+                    "\(String(describing: $0.enrollment?.hubServiceID))" != MerchantService.MULA_CHAMA_ID
+                )
+                
+            }
             withAnimation {
                 showDueBills = !fetchedBill.isEmpty
             }
