@@ -13,7 +13,6 @@ import Theme
 
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
-    
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationUtils
     
@@ -25,7 +24,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
     var name : String {
         "\(String(describing: hvm.getProfile()?.firstName ?? "")) \(String(describing: hvm.getProfile()?.lastName ?? ""))"
     }
-    @State var selectedNavigationScreen = Screens.lost
+    @State var selectedNavigationScreen = HomeScreen.none
     @State var drawerStatus = DrawerStatus.close
     @State private var showBottomSheet = true
     public init() {
@@ -64,17 +63,21 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
             switch screen {
             case .profile:
                 EditProfileView()
+            case .paymentOptions:
+                PaymentOptionsView()
+            default:
+                HomeView(drawerStatus: $drawerStatus)
             }
         })
         .overlay {
-            let menus =  [
-                NavigationMenu(screen: .buyAirtime, title: "Payment"),
-                NavigationMenu(screen: .intro, title: "Settings"),
-                NavigationMenu(screen: .home, title: "Support"),
-                NavigationMenu(screen: .securityQuestionView, title: "About")
+            let menu =  [
+                NavigationMenu(screen: HomeScreen.paymentOptions, title: "Payment"),
+                NavigationMenu(screen: HomeScreen.setting, title: "Settings"),
+                NavigationMenu(screen: HomeScreen.support, title: "Support"),
+                NavigationMenu(screen: HomeScreen.about, title: "About")
             ]
             NavigationDrawerView(
-                listOfMenu: menus,
+                listOfMenu: menu,
                 header: AnyView(
                     NavigationHeader(
                         profileImageUrl: profileImageURL,
@@ -109,7 +112,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         drawerStatus = .close
         navigation.navigationStack.append(screen)
     }
-    public func onHeaderClick(_ screen: Screens) {
+    public func onMenuClick<S>(_ screen: S) where S : Hashable {
         drawerStatus = .close
         navigation.navigationStack.append(screen)
     }

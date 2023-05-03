@@ -8,15 +8,15 @@
 import Foundation
 import SwiftUI
 
-public struct NavigationDrawerView: View {
-    var navigationDrawerProtocol: NavigationMenuClick
-    private var listOfMenu: [NavigationMenu] = []
+public struct NavigationDrawerView<S>: View where S: Hashable {
     private var width = UIScreen.main.bounds.width
+    var navigationDrawerProtocol: NavigationMenuClick
+    private var listOfMenu = [NavigationMenu<S>]()
     @State private var header: AnyView =  AnyView(Text("Hello"))
-    @Binding private var selectedMenuScreen: Screens
+    @Binding private var selectedMenuScreen: S
     @Binding private var status: DrawerStatus
     @State private var xOffset: CGFloat = 0
-    public init(listOfMenu: [NavigationMenu], header: AnyView, selectedMenuScreen: Binding<Screens>, status: Binding<DrawerStatus>, navigationDrawerProtocol: NavigationMenuClick) {
+    public init(listOfMenu: [NavigationMenu<S>], header: AnyView, selectedMenuScreen: Binding<S>, status: Binding<DrawerStatus>, navigationDrawerProtocol: NavigationMenuClick) {
         self._selectedMenuScreen = selectedMenuScreen
         self._status = status
         self.navigationDrawerProtocol = navigationDrawerProtocol
@@ -43,7 +43,6 @@ public struct NavigationDrawerView: View {
                                 handleNavigationDrawer()
                                 navigationDrawerProtocol.onMenuClick(selectedMenuScreen)
                             }
-                            print(menu.getScreen())
                         }
                         .padding(.horizontal, 20)
                         .background(menu.getScreen() == selectedMenuScreen ? .gray.opacity(0.5) : .white)
@@ -75,10 +74,10 @@ public enum DrawerStatus {
     case open, close
 }
 
-public struct NavigationMenu: View {
-    private let screen: Screens
+public struct NavigationMenu<S>: View where S: Hashable {
+    private let screen: S
     let title: String
-    public init(screen: Screens, title: String) {
+    public init(screen: S, title: String) {
         self.screen = screen
         self.title = title
     }
@@ -86,8 +85,7 @@ public struct NavigationMenu: View {
         Text(title)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
-    public func getScreen() -> Screens {
+    public func getScreen() -> S {
         return screen
     }
 }
@@ -100,6 +98,10 @@ struct NavigationDrawerView_Previews: PreviewProvider {
 
 
 struct NavigationDrawerTestView: View, NavigationMenuClick {
+    func onMenuClick<S>(_ screen: S) where S : Hashable {
+        print("Menu clicked \(screen)")
+    }
+    
     func onHeaderClick<S>(_ screen: S) where S : Hashable {
         print("Header clicked \(screen)")
     }
@@ -112,9 +114,9 @@ struct NavigationDrawerTestView: View, NavigationMenuClick {
     @State var status = DrawerStatus.close
     var body: some View {
         NavigationDrawerView(listOfMenu: [
-            NavigationMenu(screen: .buyAirtime, title: "Payment"),
-            NavigationMenu(screen: .intro, title: "Settings"),
-            NavigationMenu(screen: .home, title: "Support")
+            NavigationMenu(screen: Screens.buyAirtime, title: "Payment"),
+            NavigationMenu(screen: Screens.intro, title: "Settings"),
+            NavigationMenu(screen: Screens.home, title: "Support")
         ], header: AnyView(NavigationHeader(navigationDrawerProtocol: self) ), selectedMenuScreen: $selectedScreen, status: $status, navigationDrawerProtocol: self)
         .onChange(of: selectedScreen) { newValue in
             print("NavigationDrawer \(newValue)")
@@ -151,6 +153,6 @@ struct NavigationHeader: View {
 }
 
 public protocol NavigationMenuClick {
-    func onMenuClick(_ screen: Screens)
+    func onMenuClick<S>(_ screen: S) where S : Hashable
     func onHeaderClick<S>(_ screen: S)  where S : Hashable
 }
