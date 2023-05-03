@@ -100,6 +100,17 @@ struct DueBillCardView: View {
         .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
     }
 }
+struct DueBillItem: Identifiable {
+    var id: String = UUID().uuidString
+    
+    var serviceName: String = ""
+    var serviceImageString = ""
+    var updatedTime = ""
+    var beneficiaryName = ""
+    var accountNumber = ""
+    var amount = "0.0"
+    var dueDate = "today"
+}
 struct LeftHandSideView: View {
     @State var serviceName: String = ""
     @State var serviceImageString = ""

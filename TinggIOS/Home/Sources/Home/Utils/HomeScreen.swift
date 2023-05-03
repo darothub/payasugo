@@ -7,5 +7,5 @@
 
 import Foundation
 enum HomeScreen: Hashable {
-    case profile, paymentOptions, setting, about, support, none
+    case profile, paymentOptions, settings, about, support, none
 }

@@ -33,7 +33,6 @@ public class Invoice: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var partialPaidAmount: Double = 0.0
     @Persisted public var fullyPaid = false
     @Persisted public var overPaid = false
-//    public var statusCode: Int = 0
     enum CodingKeys: String, CodingKey {
         case billDescription = "BILL_DESCRIPTION"
         case billReference = "BILL_REFERENCE"
@@ -54,7 +53,6 @@ public class Invoice: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case dateEstimated = "DATE_ESTIMATED"
         case estimateExpiryDate = "ESTIMATE_EXPIRY_DATE"
         case lastFetchDate = "LAST_FETCH_DATE"
-//        case statusCode = "STATUS_CODE"
     }
 }
 
@@ -144,7 +142,7 @@ public struct DynamicInvoiceType: Decodable   {
      public var serviceID: String = ""
      public var customerName: String = ""
      public var invoiceNumber: String = ""
-     public var amount: Flex<String, Int>
+     public var amount: StringOrIntEnum
      public var currency: String = ""
      public var dueDate: String = ""
      public var beepTransactionID: String = ""
@@ -187,7 +185,7 @@ public struct DynamicInvoiceType: Decodable   {
         invoice.billReference = self.billReference
         invoice.billDescription = self.billDescription
         invoice.beepTransactionID = self.beepTransactionID
-        invoice.amount = self.amount.value
+        invoice.amount = self.amount.toString
         invoice.biller = self.biller
         invoice.serviceID = self.serviceID
         invoice.customerName = self.customerName

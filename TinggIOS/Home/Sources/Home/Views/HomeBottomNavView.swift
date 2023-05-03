@@ -65,6 +65,8 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 EditProfileView()
             case .paymentOptions:
                 PaymentOptionsView()
+            case .settings:
+                SettingsView()
             default:
                 HomeView(drawerStatus: $drawerStatus)
             }
@@ -72,7 +74,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         .overlay {
             let menu =  [
                 NavigationMenu(screen: HomeScreen.paymentOptions, title: "Payment"),
-                NavigationMenu(screen: HomeScreen.setting, title: "Settings"),
+                NavigationMenu(screen: HomeScreen.settings, title: "Settings"),
                 NavigationMenu(screen: HomeScreen.support, title: "Support"),
                 NavigationMenu(screen: HomeScreen.about, title: "About")
             ]

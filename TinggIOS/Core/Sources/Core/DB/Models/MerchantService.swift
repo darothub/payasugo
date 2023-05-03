@@ -59,7 +59,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var charges: String = ""
     @Persisted public var title: String = ""
     @Persisted public var message: String = ""
-    
+    public static var MULA_CHAMA_ID = "187"
     enum CodingKeys: String, CodingKey {
         case serviceName = "SERVICE_NAME"
         case clientName = "CLIENT_NAME"

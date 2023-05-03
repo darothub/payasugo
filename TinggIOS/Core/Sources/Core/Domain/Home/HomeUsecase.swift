@@ -88,10 +88,10 @@ public class HomeUsecase {
         categoriesAndServicesUsecase()
     }
     
-    public func getDueBills() async throws -> [Invoice] {
+    public func getDueBills(billAccounts: [BillAccount]) async throws -> [Invoice] {
         var tinggRequest: TinggRequest = .shared
         tinggRequest.service = "FBA"
-        tinggRequest.billAccounts = billAccountUsecase()
+        tinggRequest.billAccounts = billAccounts
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
     public func fetchDueBills(request: RequestMap) async throws -> [Invoice] {
