@@ -46,6 +46,10 @@ public class HomeViewModel: ViewModel {
     @Published var items:[TabLayoutItem] = [TabLayoutItem(title: "MY BILLS", view: AnyView(EmptyView()))]
     @Published public var subscriptions = Set<AnyCancellable>()
     @Published var profileImageUrl: String = ""
+    @Published var listOfPaymentOptions = [
+        PaymentOptionItem(optionName: "Mpesa", isSelected: false),
+        PaymentOptionItem(optionName: "Viusasa", isSelected: false)
+    ]
 
     public var homeUsecase: HomeUsecase
     public init(homeUsecase: HomeUsecase) {
