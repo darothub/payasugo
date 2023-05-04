@@ -12,6 +12,7 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.phoneNumber.rawValue) fileprivate static var phoneNumber: String = ""
     @AppStorage(LocalProperties.defaultNetworkId.rawValue) fileprivate static var defaultNetworkId: Int? = 0
     @AppStorage(LocalProperties.defaultNetwork.rawValue) fileprivate static var defaultNetwork: MerchantService? = nil
+    @AppStorage(LocalProperties.countriesExtraInfo.rawValue) fileprivate static var countriesExtraInfo: CountriesExtraInfo? = nil
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -34,7 +35,12 @@ public struct AppStorageManager {
     public static func retainActiveCountry(country: Country?) {
         activeCountry = country
     }
-    
+    public static func retainCountriesExtraInfo(countrExtra: CountriesExtraInfo?) {
+        countriesExtraInfo = countrExtra
+    }
+    public static func getCountriesExtraInfo() -> CountriesExtraInfo? {
+        return countriesExtraInfo
+    }
     public static func getCountry() -> Country? {
         activeCountry
     }
@@ -45,5 +51,6 @@ public enum LocalProperties: String {
     case phoneNumber
     case defaultNetworkId
     case defaultNetwork
+    case countriesExtraInfo
 }
 

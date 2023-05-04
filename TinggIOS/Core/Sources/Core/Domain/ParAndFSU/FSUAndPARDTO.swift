@@ -12,24 +12,24 @@ public struct FSUAndPARDTO: Codable, BaseDTOprotocol {
     public let statusMessage, activationKey: String
     public let profileInfo: [ProfileInfoDTO]
     public let services: [ServiceDTO]
-    let smsRegex: [SMSRegex]
+    public let smsRegex: [SMSRegex]
     public let merchantPayers: [MerchantPayerDTO]
     public let categories: [CategoryDTO]
-    let contactInfo: [ContactInfoDTO]
+    public let contactInfo: [ContactInfoDTO]
     public let nominationInfo: [NominationInfoDTO]
-    let updateStatusCode: Int
-    let checksum, dateLastSynched: String
+    public let updateStatusCode: Int
+    public let checksum, dateLastSynched: String
     public let mulaProfileInfo: MulaProfileInfo
-    let showcaseData: [ShowcaseDatum]
+    public let showcaseData: [ShowcaseDatum]
     public let transactionSummaryInfo: [TransactionSummaryInfoDTO]
-    let inviteMessage: String
+    public let inviteMessage: String
     let invitesVisibility: Int
     public let defaultNetworkServiceID: Int?
     let manualBillsSetup: ManualBillsSetup
     let manualBillAccounts: [DynamicType]
     public let bundleData: [BundleDatum] 
     let bundleChecksum, bundleSyncDate: String
-    let countriesExtraInfo: CountriesExtraInfo
+    public let countriesExtraInfo: CountriesExtraInfo
     public let securityQuestions: [SecurityQuestionDTO]
     public let cardDetails: [Card]
     let scanEnabled: Int
@@ -312,7 +312,7 @@ enum Title: String, Codable {
 }
 
 // MARK: - ShowcaseDatum
-struct ShowcaseDatum: Codable {
+public struct ShowcaseDatum: Codable {
     let title, description: String
 
     enum CodingKeys: String, CodingKey {
@@ -322,7 +322,7 @@ struct ShowcaseDatum: Codable {
 }
 
 // MARK: - SMSRegex
-struct SMSRegex: Codable {
+public struct SMSRegex: Codable {
     let serviceID: Int
     let serviceCode, regex, template: String
     let clientID: Int

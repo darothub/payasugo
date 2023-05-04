@@ -67,6 +67,8 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 PaymentOptionsView()
             case .settings:
                 SettingsView()
+            case .support:
+                SupportView()
             default:
                 HomeView(drawerStatus: $drawerStatus)
             }

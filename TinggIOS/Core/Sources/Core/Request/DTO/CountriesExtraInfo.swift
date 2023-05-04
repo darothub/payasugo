@@ -8,29 +8,29 @@
 import Foundation
 
 // MARK: - CountriesExtraInfo
-struct CountriesExtraInfo: Codable {
-    let countryURLNew: DynamicType
-    let hotlineAppKey, hotlineAppID: DynamicType
-    let faqURL: DynamicType
-    let tacURL, privacyPolicyURL: DynamicType
-    let excludedSMSSourceAddresses, countryMobileRegex, genericAccountNumberRegex: DynamicType
-    let extractSMSOnProfiling: DynamicType
-    let countryCurrencyRegex, countrySourceAddresses: DynamicType
-    let confirmedAccountLimits: DynamicType
-    let alphanumericRegexes: DynamicType
-    let isDefault: Bool
-    let freshchatAppKey, freshchatAppID, minimumProfiledAccounts, smsProfilingTimeout: DynamicType
-    let roundUpAmounts: YesOrNoEnum
-    let successCallBackURL: DynamicType
-    let payerClientCode, isSecureCardPayment: DynamicType
-    let failedCallBackURL, webCheckoutURL: DynamicType
-    let countryFlag: DynamicType
-    let maximumCards, clevertapAccountID, clevertapToken: DynamicType
-    let showAssist: DynamicType
-    let mulaAssistInterestType, mulaAssistInterestRate, mulaAssistDurationType, mulaAssistLoanTermDuration: DynamicType
-    let hasWallet, hasGroups, hasFloatingButton, hasDiscover: DynamicType
-    let useSmileSDK, hasReferral: DynamicType
-    let fetchBearerTokenURL, countryURL: String?
+public struct CountriesExtraInfo: Codable {
+    public let countryURLNew: DynamicType
+    public let hotlineAppKey, hotlineAppID: DynamicType
+    public let faqURL: DynamicType
+    public let tacURL, privacyPolicyURL: DynamicType
+    public let excludedSMSSourceAddresses, countryMobileRegex, genericAccountNumberRegex: DynamicType
+    public let extractSMSOnProfiling: DynamicType
+    public let countryCurrencyRegex, countrySourceAddresses: DynamicType
+    public let confirmedAccountLimits: DynamicType
+    public let alphanumericRegexes: DynamicType
+    public let isDefault: Bool
+    public let freshchatAppKey, freshchatAppID, minimumProfiledAccounts, smsProfilingTimeout: DynamicType
+    public let roundUpAmounts: YesOrNoEnum
+    public let successCallBackURL: DynamicType
+    public let payerClientCode, isSecureCardPayment: DynamicType
+    public let failedCallBackURL, webCheckoutURL: DynamicType
+    public let countryFlag: DynamicType
+    public let maximumCards, clevertapAccountID, clevertapToken: DynamicType
+    public let showAssist: DynamicType
+    public let mulaAssistInterestType, mulaAssistInterestRate, mulaAssistDurationType, mulaAssistLoanTermDuration: DynamicType
+    public let hasWallet, hasGroups, hasFloatingButton, hasDiscover: DynamicType
+    public let useSmileSDK, hasReferral: DynamicType
+    public let fetchBearerTokenURL, countryURL: String?
 
     enum CodingKeys: String, CodingKey {
         case countryURLNew = "COUNTRY_URL_NEW"

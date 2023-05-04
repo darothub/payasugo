@@ -29,7 +29,7 @@ public struct ContactInfoDTO: Codable {
     }
     
     public var toEntity: Contact {
-        var entity = Contact()
+        let entity = Contact()
         entity.address = self.address
         entity.phone = self.phone
         entity.contactTitle = self.contactTitle
