@@ -139,7 +139,7 @@ public class OnboardingViewModel: ViewModel {
             c.toEntity
         }
         categoriesTable.clearAndSaveEntities(objs: sortedCategories)
-        
+        realmManager.save(data: data.contactInfo.map {$0.toEntity})
         let services = data.services.filter { service in
             service.isActive
         }
@@ -175,6 +175,7 @@ public class OnboardingViewModel: ViewModel {
         if let defaultNetworkServiceId = data.defaultNetworkServiceID {
             AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
         }
+        AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
     }
     /// Handle result
     nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
