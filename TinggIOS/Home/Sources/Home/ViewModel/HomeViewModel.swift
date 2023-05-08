@@ -63,6 +63,26 @@ public class HomeViewModel: ViewModel {
         allRecharge()
     }
     
+    public func updateProfile(_ requestString: String) {
+        let request = RequestMap.Builder()
+                        .add(value: "", for: .PROFILE_INFO)
+                        .add(value: "UPDATE", for: .ACTION)
+                        .add(value: "2", for: .IS_NOMINATION)
+                        .add(value: "Y", for: .IS_EXPLICIT)
+                        .add(value: "", for: "WISHLIST")
+                        .add(value: requestString, for: "MULA_PROFILE")
+                        .add(value: "MCP", for: .SERVICE)
+                        .build()
+        Task {
+            do {
+                let result = try await homeUsecase.updateProfile(request: request)
+                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+    }
+    
     public func getProfile() -> Profile? {
         if let profile = homeUsecase.getProfile() {
 //            self.profile = profile

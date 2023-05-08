@@ -162,6 +162,11 @@ extension String {
     public var isNotEmpty: Bool {
         return !self.isEmpty
     }
+    
+    public func isValidEmail() -> Bool {
+        let regex = try! NSRegularExpression(pattern: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", options: .caseInsensitive)
+        return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
+    }
 }
 
 

@@ -39,15 +39,16 @@ public struct TextFieldView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
-                    ).foregroundColor(color)
-            }.onChange(of: success) { newValue in
-                color = newValue ? .green : .red
+                            .fill(color)
+//                            .foregroundColor(color)
+                    )
             }
             .onChange(of: fieldText) { newValue in
+                color = success ? . green : .red
                 if !newValue.isEmpty {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        cursor = false
-                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                        cursor = false
+//                    }
                 }
             }
         }
