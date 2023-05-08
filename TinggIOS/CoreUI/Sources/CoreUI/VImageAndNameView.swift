@@ -30,7 +30,6 @@ public struct VImageAndNameView: View {
                     .scaleEffect(1.3)
                     .padding()
                     .shadow(radius: 3)
-                   
             } else {
                 AsyncImage(url: URL(string: imageUrl)) { image in
                     image.resizable()
@@ -42,7 +41,6 @@ public struct VImageAndNameView: View {
                     .clipShape(Circle())
                     
                     .padding(10)
-                    .shadow(radius: 3)
                 } placeholder: {
                     Image(systemName: "person.fill")
                         .frame(width: 65,
@@ -53,7 +51,6 @@ public struct VImageAndNameView: View {
                         .background(.red.opacity(0.08))
                         .clipShape(Circle())
                         .padding(10)
-                        .shadow(radius: 3)
                 }
             }
             Text(title)

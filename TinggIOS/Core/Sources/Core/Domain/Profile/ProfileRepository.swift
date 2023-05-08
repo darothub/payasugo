@@ -8,4 +8,5 @@
 import Foundation
 public protocol ProfileRepository {
     func getProfile() -> Profile?
+    func updateProfile(request: RequestMap) async throws -> BaseDTO
 }

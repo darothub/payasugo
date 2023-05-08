@@ -21,7 +21,7 @@ public struct PrimaryTheme {
     public enum Images: String {
         case bill, tinggSplashScreenIcon, tinggAssistImage, tinggIcon,
         addBillImage, moneyImage, home, explore, group, myBills, mastercardIcon, cardTempIcon, visa,
-        sadFace, tinggByCellulant 
+        sadFace, tinggByCellulant, facebook, twitter
         
         public var image: Image {
             return Images.getImage(self.rawValue)

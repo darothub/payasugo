@@ -17,7 +17,7 @@ public struct HomeDI {
         return FetchBillRepositoryImpl(baseRequest: BaseRequest(), dbObserver: Observer<Invoice>())
     }
     public static func createProfileRepository() -> ProfileRepository {
-        return ProfileRepositoryImpl(dbObserver: Observer<Profile>())
+        return ProfileRepositoryImpl(baseRequest: BaseRequest(), dbObserver: Observer<Profile>())
     }
     public static func createMerchantServiceRepository() -> MerchantServiceRepository {
         return MerchantServiceRepositoryImpl(dbObserver: Observer<MerchantService>())

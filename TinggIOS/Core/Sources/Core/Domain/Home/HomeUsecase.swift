@@ -74,13 +74,15 @@ public class HomeUsecase {
     }
     public func getQuickTopups() throws -> [MerchantService] {
         let services = merchantRepository.getServices().filter { $0.isAirtimeService }
-        Log.d(message: "Services \(services)")
         return services
     }
     public func categorisedCategories() -> [[CategoryEntity]]{
         chunkedCategoriesUsecase()
     }
     
+    public func updateProfile(request: RequestMap) async throws -> BaseDTO {
+        try await profileRepository.updateProfile(request: request)
+    }
     public func getBarChartMappedData() -> [Int: Double] {
         barChartUsecase()
     }

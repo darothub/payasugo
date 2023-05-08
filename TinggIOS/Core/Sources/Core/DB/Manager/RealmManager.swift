@@ -73,6 +73,13 @@ public final class RealmManager: ObservableObject {
             try? block()
         }
     }
+    public func safeWrite(_ block: (() throws -> Void)) throws {
+        if ((localDb?.isInWriteTransaction) != nil) {
+              try block()
+          } else {
+              try localDb?.write(block)
+          }
+    }
 }
 
 /// Class for observing real time data changes from realm database
@@ -85,7 +92,7 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     }
     
     public func getEntities() ->[T] {
-        objects.map(returnEntity(obj:))
+        $objects.wrappedValue.map {$0}
     }
     
     public func saveEntity(obj: T){
