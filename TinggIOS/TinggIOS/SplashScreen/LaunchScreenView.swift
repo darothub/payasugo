@@ -46,7 +46,6 @@ struct LaunchScreenView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreenView()
             .environmentObject(NavigationUtils())
-            .environmentObject(OnboardingDI.createOnboardingViewModel())
             .environmentObject(HomeDI.createHomeViewModel())
             .environmentObject(CreditCardDI.createCreditCardViewModel())
     }

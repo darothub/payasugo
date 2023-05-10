@@ -13,7 +13,6 @@ import Theme
 /// Introduces the onboarding screens to the user
 public struct IntroView: View {
     @State private var active = false
-    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @EnvironmentObject var navigation: NavigationUtils
     public init() {
         // Intentionally unimplemented...modular accessibility
@@ -29,7 +28,6 @@ public struct IntroView: View {
                     .accessibility(identifier: "tingggreenlogo")
                 IntroTabView(geo: geo, active: $active)
                     .environmentObject(navigation)
-                    .environmentObject(onboardingViewModel)
             }
             .background(.white)
             .onAppear {
@@ -43,7 +41,6 @@ struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
             .environmentObject(NavigationUtils())
-            .environmentObject(OnboardingDI.createOnboardingViewModel())
     }
 }
 
@@ -52,7 +49,6 @@ struct IntroTabView: View {
     var geo: GeometryProxy
     @Binding var active: Bool
     @EnvironmentObject var navigation: NavigationUtils
-    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     var body: some View {
         VStack {
             TabView {
@@ -64,7 +60,6 @@ struct IntroTabView: View {
             Spacer()
             NavigationLink(
                 destination: PhoneNumberValidationView()
-                    .environmentObject(onboardingViewModel)
                     .environmentObject(navigation),
                 isActive: $active
             ) {

@@ -259,9 +259,6 @@ extension View {
     public func throwError(message: String) -> Never {
         return fatalError("\(Self.self) -> \(message)")
     }
-    public func log(message: String) {
-        print("\(Self.self) -> \(message)")
-    }
     public func log(message: Any) {
         print("\(Self.self) -> \(message)")
     }

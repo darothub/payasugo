@@ -121,6 +121,8 @@ public class HomeUsecase {
     public func updateDefaultNetwork(request: TinggRequest) async throws -> BaseDTO {
         return try await updateDefaultNetworkIdUsecase(request: request)
     }
-
+    public func updateDefaultNetwork(request: RequestMap) async throws -> BaseDTO {
+        return try await updateDefaultNetworkIdUsecase(request: request)
+    }
 }
 

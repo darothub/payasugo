@@ -17,7 +17,8 @@ import Theme
 /// User is directed to the Home view after OTP confirmation 
 public struct PhoneNumberValidationView: View {
     @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
-    @StateObject var vm = OnboardingDI.createOnboardingViewModel()
+//    @StateObject var vm = OnboardingDI.createOnboardingViewModel()
+    @StateObject var ovm = OnboardingDI.createOnboardingVM()
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
     @Environment(\.realmManager) var realmManager
@@ -31,8 +32,7 @@ public struct PhoneNumberValidationView: View {
     @State private var warning = ""
     @State private var hasCheckedTermsAndPolicy = false
     @State private var showSupportTeamContact = false
-    @State private var showMAKAlert = false
-    @State private var showPARAlert = false
+    @State private var countriesDictionary = [String: String]()
     public static var policyWarning = "Kindly accept terms and policy"
     public static var phoneNumberEmptyWarning = "Phone number must not be empty"
     public init() {
@@ -44,7 +44,7 @@ public struct PhoneNumberValidationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 topView(geo: geometry)
                 MobileNumberView()
-                CountryPickerView(phoneNumber: $phoneNumber, countryCode: $countryCode, countryFlag: $countryFlag, countries: vm.countryDictionary)
+                CountryPickerView(phoneNumber: $phoneNumber, countryCode: $countryCode, countryFlag: $countryFlag, countries: $countriesDictionary)
                     .textFiedStyle(
                         TextFiedValidationStyle(
                             isValid: $isValidPhoneNumber, notValid: $isNotValidPhoneNumber
@@ -67,8 +67,6 @@ public struct PhoneNumberValidationView: View {
                 .accessibility(identifier: "continuebtn")
                 .padding()
                 .keyboardShortcut(.return)
-                
-                  .handleViewStates(uiModel: $vm.onActivationRequestUIModel, showAlert: $showMAKAlert, showSuccessAlert: $showMAKAlert)
 
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -79,7 +77,10 @@ public struct PhoneNumberValidationView: View {
             }
             .sheet(isPresented: $showOTPView, onDismiss: {
                 if isOTPConfirmed {
-                    vm.makePARRequest()
+                    let systemUpdateRequest: RequestMap =  RequestMap.Builder()
+                        .add(value: "PAR", for: .SERVICE)
+                        .build()
+                    ovm.fetchSystemUpdate(request: systemUpdateRequest)
                 }
             }, content: {
                 OtpConfirmationView(
@@ -88,10 +89,20 @@ public struct PhoneNumberValidationView: View {
             })
             .background(PrimaryTheme.getColor(.tinggwhite))
             .onAppear {
-                observeUIModel()
+                ovm.getCountryDictionary()
             }
-            .handleViewStates(uiModel: $vm.phoneNumberFieldUIModel, showAlert: $showMAKAlert, showSuccessAlert: $showMAKAlert)
-            .handleViewStates(uiModel: $vm.onParRequestUIModel, showAlert: $showPARAlert)
+            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
+                countriesDictionary = content.data as! [String: String]
+            }
+            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { content in
+                log(message: content)
+                showOTPView = true
+            }
+            .handleViewStatesMods(uiState: ovm.$uiModel) { content in
+                let systemUpdate = content.data as! SystemUpdateDTO
+                ovm.saveDataIntoDB(data: systemUpdate)
+                gotoHomeView()
+            }
         }
     }
     @ViewBuilder
@@ -154,29 +165,11 @@ extension PhoneNumberValidationView {
         openURL(url)
     }
     fileprivate func gotoHomeView() {
-        navigation.navigationStack.append(Screens.home)
+        withAnimation {
+            navigation.navigationStack.append(Screens.home)
+        }
     }
     
-    fileprivate func observeUIModel() {
-        vm.observeUIModel(model: vm.$onActivationRequestUIModel, subscriptions: &vm.subscriptions) { content in
-            showOTPView = true
-        } onError: { err in
-            showMAKAlert = true
-            log(message: err)
-        }
-        vm.observeUIModel(model: vm.$phoneNumberFieldUIModel, subscriptions: &vm.subscriptions) { content in
-            log(message: content.statusMessage)
-        } onError: { err in
-            showMAKAlert = true
-            log(message: err)
-        }
-        vm.observeUIModel(model: vm.$onParRequestUIModel, subscriptions: &vm.subscriptions) { content in
-            gotoHomeView()
-        } onError: { err in
-            showPARAlert = true
-            log(message: err)
-        }
-    }
     fileprivate func onPhoneNumberInput(number: String) -> Void {
         isValidPhoneNumber = validatePhoneNumberInput(number: "\(countryCode)\(phoneNumber)")
         isNotValidPhoneNumber = !isValidPhoneNumber
@@ -185,18 +178,15 @@ extension PhoneNumberValidationView {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
         
         if !isPhoneNumberNotEmpty {
-            showMAKAlert = true
-            vm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.phoneNumberEmptyWarning)
+            ovm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.phoneNumberEmptyWarning)
             return
         }
         if !isValidPhoneNumber {
-            showMAKAlert = true
-            vm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
+            ovm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
             return
         }
         if !hasCheckedTermsAndPolicy {
-            showMAKAlert = true
-            vm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.policyWarning)
+            ovm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.policyWarning)
             return
         }
         let number = "\(countryCode)\(phoneNumber)"
@@ -204,7 +194,10 @@ extension PhoneNumberValidationView {
         if let country = getCountryByDialCode(dialCode: countryCode) {
             AppStorageManager.retainActiveCountry(country: country)
         }
-        vm.makeActivationCodeRequest()
+        let activationCodeRequest: RequestMap = RequestMap.Builder()
+            .add(value: "MAK", for: .SERVICE)
+            .build()
+        ovm.getActivationCode(request: activationCodeRequest)
     }
     func validatePhoneNumberInput(number: String) -> Bool {
         var result = false
@@ -225,10 +218,7 @@ extension PhoneNumberValidationView {
     }
     
     func getCountryByDialCode(dialCode: String) -> Country? {
-        if let country = vm.getCountryByDialCode(dialCode: dialCode)  {
-            return country
-        }
-        return nil
+        ovm.getCountryByDialCode(dialCode: dialCode)
     }
 }
 

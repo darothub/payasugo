@@ -44,6 +44,7 @@ public extension View {
     ) -> some View {
       self.modifier(ViewStates(uiModel: uiModel, showAlert: showAlert, showSuccessAlert: showSuccessAlert, onSuccessAction: onSuccessAction, onErrorAction: onErrorAction))
     }
+   
     func setPageIndicatorAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .red
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.red.withAlphaComponent(0.2)

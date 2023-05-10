@@ -21,8 +21,7 @@ import Theme
 
 struct TinggIOSApp: App {
     @StateObject var navigation = NavigationUtils()
-    @StateObject var ovm = OnboardingDI.createOnboardingViewModel()
-    @StateObject var  hvm = HomeDI.createHomeViewModel()
+    
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
@@ -32,8 +31,6 @@ struct TinggIOSApp: App {
                 .navigationBarHidden(true)
                 .navigationBarBackButtonHidden(true)
                 .environmentObject(navigation)
-                .environmentObject(ovm)
-                .environmentObject(hvm)
                 .environmentObject(checkoutVm)
                 .environmentObject(contactViewModel)
                 .environmentObject(ccvm)

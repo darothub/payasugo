@@ -31,30 +31,27 @@ class OnboardingUITest: XCTestCase {
         XCTAssert(tingggreenlogo.waitForExistence(timeout: 5))
     }
     func testWhenGetStartedButtonIsClickedItNavigatesToPhoneVerificationScreen() {
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
+    
         let mobileNumberText = app.staticTexts["mobilenumber"]
+        tapGetStartedButton()
         XCTAssert(mobileNumberText.waitForExistence(timeout: 5))
     }
     func testWhenOnPhoneVerificationATextFieldExist(){
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
+        tapGetStartedButton()
         let countrytextfield = app.textFields["countrytextfield"]
         XCTAssert(countrytextfield.waitForExistence(timeout: 5))
+        
     }
     
     func testWhenOnPhoneVerificationScreenCountryAndCodeFieldExist(){
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
+        tapGetStartedButton()
         let countrycodeandflag = app.staticTexts["countrycodeandflag"]
         XCTAssert(countrycodeandflag.waitForExistence(timeout: 5))
     }
     func testOnPhoneVerificationScreenWhenCountryFlagIsClickedASheetShowsUp(){
-        app/*@START_MENU_TOKEN@*/.buttons["getstarted"]/*[[".buttons[\"Get started\"]",".buttons[\"getstarted\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        app.windows.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element/*@START_MENU_TOKEN@*/.children(matching: .staticText).matching(identifier: "countrycodeandflag").element(boundBy: 3)/*[[".children(matching: .staticText).matching(identifier: \"🇧🇼 +267\").element(boundBy: 3)",".children(matching: .staticText).matching(identifier: \"countrycodeandflag\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        
+        tapGetStartedButton()
+        app/*@START_MENU_TOKEN@*/.staticTexts["countrycodeandflag"]/*[[".staticTexts[\"🇧🇼 +267\"]",".staticTexts[\"countrycodeandflag\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         
         let countryflag = app.staticTexts["countryflag"]
         let countryDialCode = app.staticTexts["countrydialcode"]
@@ -63,29 +60,15 @@ class OnboardingUITest: XCTestCase {
                 
     }
     func testWhenACountryIsSelectedCountryAppearsInTheTextField(){
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
-        let element = app.windows.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
+        tapGetStartedButton()
+        tapGetStartedButtonThenPickACountry()
+        let textField = app.staticTexts["🇰🇪 +254"]
 
-        element/*@START_MENU_TOKEN@*/.children(matching: .staticText).matching(identifier: "countrycodeandflag").element(boundBy: 3)/*[[".children(matching: .staticText).matching(identifier: \"🇧🇼 +267\").element(boundBy: 3)",".children(matching: .staticText).matching(identifier: \"countrycodeandflag\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        let countryflag = app.staticTexts["countryflag"]
-        XCTAssert(countryflag.waitForExistence(timeout: 5))
-        app.collectionViews/*@START_MENU_TOKEN@*/.staticTexts["Kenya"]/*[[".cells.staticTexts[\"Kenya\"]",".staticTexts[\"Kenya\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        let selectionField = element.children(matching: .staticText).matching(identifier: "🇰🇪 +254").element(boundBy: 0)
-
-        XCTAssert(selectionField.waitForExistence(timeout: 5))
+        XCTAssert(textField.waitForExistence(timeout: 5))
     }
     func testWarningShowsUpWhenPolicyIsNotChecked(){
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
-      
-        let element = app.windows.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
-
-        element/*@START_MENU_TOKEN@*/.children(matching: .staticText).matching(identifier: "countrycodeandflag").element(boundBy: 3)/*[[".children(matching: .staticText).matching(identifier: \"🇧🇼 +267\").element(boundBy: 3)",".children(matching: .staticText).matching(identifier: \"countrycodeandflag\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        app.collectionViews/*@START_MENU_TOKEN@*/.staticTexts["Kenya"]/*[[".cells.staticTexts[\"Kenya\"]",".staticTexts[\"Kenya\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        element/*@START_MENU_TOKEN@*/.children(matching: .textField).matching(identifier: "countrytextfield").element(boundBy: 3)/*[[".children(matching: .textField).matching(identifier: \"Phone Number\").element(boundBy: 3)",".children(matching: .textField).matching(identifier: \"countrytextfield\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tapGetStartedButton()
+        tapGetStartedButtonThenPickACountry()
         let key7 = app.keys["7"]
         key7.tap()
         let key = app/*@START_MENU_TOKEN@*/.keys["2"]/*[[".keyboards.keys[\"2\"]",".keys[\"2\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
@@ -104,30 +87,22 @@ class OnboardingUITest: XCTestCase {
         key4.tap()
         let key5 = app/*@START_MENU_TOKEN@*/.keys["7"]/*[[".keyboards.keys[\"7\"]",".keys[\"7\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         key5.tap()
-        let element2 = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
-        element2/*@START_MENU_TOKEN@*/.children(matching: .button).matching(identifier: "continuebtn").element(boundBy: 7)/*[[".children(matching: .button).matching(identifier: \"Continue\").element(boundBy: 7)",".children(matching: .button).matching(identifier: \"continuebtn\").element(boundBy: 7)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        let continueBtn = app/*@START_MENU_TOKEN@*/.buttons["continuebtn"]/*[[".buttons[\"Continue\"]",".buttons[\"continuebtn\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        continueBtn.tap()
         let warningAlert = app.alerts["Kindly accept terms and policy"].scrollViews.otherElements.buttons["alertbutton"]
         XCTAssert(warningAlert.waitForExistence(timeout: 5))
     }
     func testWarningShowsUpWhenUserTriesToSubmitAndEmptyPhoneNumber(){
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
-        let element2 = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
-        element2/*@START_MENU_TOKEN@*/.children(matching: .button).matching(identifier: "continuebtn").element(boundBy: 7)/*[[".children(matching: .button).matching(identifier: \"Continue\").element(boundBy: 7)",".children(matching: .button).matching(identifier: \"continuebtn\").element(boundBy: 7)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tapGetStartedButton()
+        let continueBtn = app/*@START_MENU_TOKEN@*/.buttons["continuebtn"]/*[[".buttons[\"Continue\"]",".buttons[\"continuebtn\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        continueBtn.tap()
         let warningAlert = app.alerts["Phone number must not be empty"].scrollViews.otherElements.buttons["alertbutton"]
         XCTAssert(warningAlert.waitForExistence(timeout: 2))
                 
     }
     func testUserInputCorrectPhoneNumberAndCheckedPolicyThenOTPViewShows(){
-        let button = app.buttons["getstarted"]
-        XCTAssert(button.waitForExistence(timeout: 5))
-        button.tap()
-        let element = app.windows.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
-
-        element/*@START_MENU_TOKEN@*/.children(matching: .staticText).matching(identifier: "countrycodeandflag").element(boundBy: 3)/*[[".children(matching: .staticText).matching(identifier: \"🇧🇼 +267\").element(boundBy: 3)",".children(matching: .staticText).matching(identifier: \"countrycodeandflag\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        app.collectionViews/*@START_MENU_TOKEN@*/.staticTexts["Kenya"]/*[[".cells.staticTexts[\"Kenya\"]",".staticTexts[\"Kenya\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        element/*@START_MENU_TOKEN@*/.children(matching: .textField).matching(identifier: "countrytextfield").element(boundBy: 3)/*[[".children(matching: .textField).matching(identifier: \"Phone Number\").element(boundBy: 3)",".children(matching: .textField).matching(identifier: \"countrytextfield\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tapGetStartedButton()
+        tapGetStartedButtonThenPickACountry()
         let key7 = app.keys["7"]
         key7.tap()
         let key = app/*@START_MENU_TOKEN@*/.keys["2"]/*[[".keyboards.keys[\"2\"]",".keys[\"2\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
@@ -146,14 +121,24 @@ class OnboardingUITest: XCTestCase {
         key4.tap()
         let key5 = app/*@START_MENU_TOKEN@*/.keys["7"]/*[[".keyboards.keys[\"7\"]",".keys[\"7\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         key5.tap()
-        
-        let element2 = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
-        element2/*@START_MENU_TOKEN@*/.children(matching: .image).matching(identifier: "policycheckbox").element(boundBy: 3)/*[[".children(matching: .image).matching(identifier: \"Square\").element(boundBy: 3)",".children(matching: .image).matching(identifier: \"policycheckbox\").element(boundBy: 3)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        element2/*@START_MENU_TOKEN@*/.children(matching: .button).matching(identifier: "continuebtn").element(boundBy: 7)/*[[".children(matching: .button).matching(identifier: \"Continue\").element(boundBy: 7)",".children(matching: .button).matching(identifier: \"continuebtn\").element(boundBy: 7)"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        
+        app/*@START_MENU_TOKEN@*/.images["policycheckbox"]/*[[".images[\"Square\"]",".images[\"policycheckbox\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        let continueBtn = app/*@START_MENU_TOKEN@*/.buttons["continuebtn"]/*[[".buttons[\"Continue\"]",".buttons[\"continuebtn\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        continueBtn.tap()
+        app.staticTexts["Confirm OTP"]
         let OTPHeadingtext = app.staticTexts["Confirm OTP"]
         XCTAssert(OTPHeadingtext.waitForExistence(timeout: 5))
                 
+    }
+    
+    func tapGetStartedButton() {
+        let button = app.buttons["getstarted"]
+        XCTAssert(button.waitForExistence(timeout: 5))
+        button.tap()
+    }
+    func tapGetStartedButtonThenPickACountry() {
+        app/*@START_MENU_TOKEN@*/.staticTexts["countrycodeandflag"]/*[[".staticTexts[\"🇧🇼 +267\"]",".staticTexts[\"countrycodeandflag\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.collectionViews/*@START_MENU_TOKEN@*/.staticTexts["Kenya"]/*[[".cells.staticTexts[\"Kenya\"]",".staticTexts[\"Kenya\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app/*@START_MENU_TOKEN@*/.textFields["countrytextfield"]/*[[".textFields[\"Phone Number\"]",".textFields[\"countrytextfield\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
     }
 }
 

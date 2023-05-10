@@ -8,6 +8,14 @@ import Core
 import Foundation
 import RealmSwift
 public class FakeCountryRepositoryImpl: CountryRepository {
+    public func getCountryByDialCode(dialCode: String) async throws -> Core.Country? {
+        //
+        let country = getRemoteCountries().data.first { c in
+            c.countryDialCode == dialCode
+        }
+        return country
+    }
+    
     var dbObserver: Observer<Country>
     public init(dbObserver: Observer<Country>) {
         self.dbObserver = dbObserver

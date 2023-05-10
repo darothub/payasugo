@@ -19,36 +19,20 @@ public struct OnboardingDI {
     public static func createBaseRequest() -> BaseRequest {
         return .init()
     }
-    public static func createCountryRepository() -> CountryRepositoryImpl {
-        return CountryRepositoryImpl(
-            baseRequest: createBaseRequest(),
-            dbObserver: Observer<Country>()
+    public static func createActivationCodeUsecase() -> ActivationCodeUsecase {
+        return ActivationCodeUsecase(sendRequest: CoreDI.createSendRequest(baseRequest: .init()))
+    }
+    public static func createSystemUpdateUsecase() -> SystemUpdateUsecase {
+        return SystemUpdateUsecase(sendRequest: CoreDI.createSendRequest(baseRequest: .init()))
+    }
+    @MainActor public static func createGetCountriesAndDialCodeUseCase() -> GetCountriesAndDialCodeUseCase {
+        return GetCountriesAndDialCodeUseCase(countryRepository: CountryRepositoryImpl(baseRequest: .init(), dbObserver: Observer<Country>()))
+    }
+    @MainActor public static func createOnboardingVM() -> OnboardingVM {
+        OnboardingVM(
+            activationUsecase: createActivationCodeUsecase(),
+            systemUpdateUsecase: createSystemUpdateUsecase(),
+            getCountriesDictionaryUsecase: createGetCountriesAndDialCodeUseCase()
         )
-    }
-    @MainActor
-    public static func createOnboardingViewModel() -> OnboardingViewModel {
-        return OnboardingViewModel(onboardingUseCase: createOnboardingUseCase())
-    }
-    @MainActor  public static func createOnboardingUseCase() -> OnboardingUseCase {
-        return OnboardingUseCase(
-            getCountriesAndDialCodeUsecase: createGetCountriesAndDialCodeUsecase(),
-            getCountryByDialCodeUsecase: createGetCountryByDialCodeUsecase(),
-            activationRepository: createActivationRepository(),
-            parAndFsuRepository: createParAndFsuRepository()
-        )
-    }
-    @MainActor public static func createGetCountriesAndDialCodeUsecase() -> GetCountriesAndDialCodeUseCase {
-        return GetCountriesAndDialCodeUseCase(countryRepository: createCountryRepository())
-    }
-    @MainActor public static func createGetCountryByDialCodeUsecase() -> GetCountryByDialCodeUsecase {
-        return GetCountryByDialCodeUsecase(countryRepository: createCountryRepository())
-    }
-
-    public static func createActivationRepository() -> ActivationRepositoryImpl {
-        return ActivationRepositoryImpl(baseRequest: createBaseRequest())
-    }
-    
-    public static func createParAndFsuRepository() -> PARAndFSURepositoryImpl {
-        return PARAndFSURepositoryImpl(baseRequest: createBaseRequest())
     }
 }

@@ -29,6 +29,8 @@ public class HomeViewModel: ViewModel {
     @Published var rechargeAndBillUIModel = UIModel.nothing
     @Published var serviceBillUIModel = UIModel.nothing
     @Published var uiModel = UIModel.nothing
+    @Published var campaignMessageUIModel = UIModel.nothing
+    @Published var billReminderUIModel = UIModel.nothing
     @Published var defaultNetworkUIModel = UIModel.nothing
     @Published var buyAirtimeUiModel = UIModel.nothing
     @Published var navigateBillDetailsView = false
@@ -89,6 +91,45 @@ public class HomeViewModel: ViewModel {
             return profile
         }
         return nil
+    }
+    func updateDefaultNetworkId(request: RequestMap) {
+        defaultNetworkUIModel = UIModel.loading
+        
+        Task {
+            do {
+                let result = try await homeUsecase.updateDefaultNetwork(request: request)
+                handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+
+    }
+    
+    func updateBillReminder(request: RequestMap) {
+        billReminderUIModel = UIModel.loading
+        Task {
+            do {
+                let result = try await homeUsecase.updateDefaultNetwork(request: request)
+                handleResultState(model: &billReminderUIModel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &billReminderUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+
+    }
+    
+    func updateCampaignMessages(request: RequestMap) {
+        campaignMessageUIModel = UIModel.loading
+        Task {
+            do {
+                let result = try await homeUsecase.updateDefaultNetwork(request: request)
+                handleResultState(model: &campaignMessageUIModel, (Result.success(result) as Result<Any, Error>))
+            } catch {
+                handleResultState(model: &campaignMessageUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+            }
+        }
+
     }
     
     public func getServicesByCategory() {
@@ -300,7 +341,7 @@ public class HomeViewModel: ViewModel {
         case .success(let data):
             var content: UIModel.Content
             if data is BaseDTOprotocol {
-                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTO).statusMessage)
+                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTO).statusMessage, showAlert: true)
             } else {
                 content = UIModel.Content(data: data)
             }
@@ -308,7 +349,7 @@ public class HomeViewModel: ViewModel {
             return
         }
     }
-    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
+    public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
         model.sink { [unowned self] uiModel in
             uiModelCases(uiModel: uiModel, action: action, onError: onError)
         }.store(in: &subscriptions)
