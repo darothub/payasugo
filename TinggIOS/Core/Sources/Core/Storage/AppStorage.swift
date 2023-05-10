@@ -13,6 +13,8 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.defaultNetworkId.rawValue) fileprivate static var defaultNetworkId: Int? = 0
     @AppStorage(LocalProperties.defaultNetwork.rawValue) fileprivate static var defaultNetwork: MerchantService? = nil
     @AppStorage(LocalProperties.countriesExtraInfo.rawValue) fileprivate static var countriesExtraInfo: CountriesExtraInfo? = nil
+    @AppStorage(LocalProperties.billReminder.rawValue) fileprivate static var billReminder: Bool = false
+    @AppStorage(LocalProperties.campaignMessage.rawValue) fileprivate static var campaignMessage: Bool = false
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -44,6 +46,18 @@ public struct AppStorageManager {
     public static func getCountry() -> Country? {
         activeCountry
     }
+    public static func optInForBillReminder() -> Bool {
+        billReminder
+    }
+    public static func setOptForBillReminder(value: Bool) {
+        billReminder = value
+    }
+    public static func optInForCampaignMessages() -> Bool {
+        campaignMessage
+    }
+    public static func setOptForCampaignMessages(value: Bool) {
+        campaignMessage = value
+    }
 }
 
 public enum LocalProperties: String {
@@ -52,5 +66,7 @@ public enum LocalProperties: String {
     case defaultNetworkId
     case defaultNetwork
     case countriesExtraInfo
+    case billReminder
+    case campaignMessage
 }
 

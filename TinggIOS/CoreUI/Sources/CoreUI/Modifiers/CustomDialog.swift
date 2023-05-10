@@ -41,7 +41,6 @@ public struct CustomDialog<DialogContent: View>: ViewModifier {
                 .foregroundColor(backgroundColor)
             )
         }.padding(40)
-             
       }
     }
   }

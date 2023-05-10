@@ -13,7 +13,7 @@ public struct CountryPickerView: View {
     @Binding public var countryCode: String
     @Binding public var countryFlag: String
     public var numberLength = 10
-    var countries: [String: String]
+    @Binding var countries: [String: String]
     @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
     @Environment(\.colorScheme) var colorScheme
@@ -23,11 +23,11 @@ public struct CountryPickerView: View {
     ///   - countryCode: ``Country/code``
     ///   - countryFlag: Flag
     ///   - countries: A dictionary of countries and their code
-    public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: [String: String]){
+    public init(phoneNumber: Binding<String>, countryCode: Binding<String>, countryFlag: Binding<String>, countries: Binding<[String: String]>){
         self._phoneNumber = phoneNumber
         self._countryCode = countryCode
         self._countryFlag = countryFlag
-        self.countries = countries
+        self._countries = countries
     }
     fileprivate func checkLength(_ newValue: String) {
         if newValue.count > 10 {
@@ -60,7 +60,7 @@ public struct CountryPickerView: View {
                 countries: countries
             )
         }
-        .onAppear {
+        .onChange(of: countries) { newValue in
             countryFlag = getCountryFlag()
             countryCode = getCountryCode()
         }
@@ -72,7 +72,8 @@ public struct CountryPickerView: View {
         checkLength(value)
     }
     fileprivate func getCountryFlag() -> String {
-        countries.sorted(by: <).first?.key ?? ""
+      
+        return countries.sorted(by: <).first?.key ?? ""
     }
     fileprivate func getCountryCode () -> String {
         if let code = countries.sorted(by: <).first?.value {
@@ -90,7 +91,7 @@ struct SwiftUIView_Previews: PreviewProvider {
         @State var countries = [String:String]()
 
         var body: some View {
-            CountryPickerView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: countries)
+            CountryPickerView(phoneNumber: $number, countryCode: $code, countryFlag: $flag, countries: $countries)
         }
     }
     static var previews: some View {

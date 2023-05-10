@@ -1,4 +1,4 @@
-//  OnboardingViewModel.swift
+//  OnboardingVM.swift
 //  TinggIOS
 //  Created by Abdulrasaq on 13/07/2022.
 import Combine
@@ -7,117 +7,78 @@ import Core
 import Foundation
 import SwiftUI
 import RealmSwift
-@MainActor
-/// Onboarding view model
-/// It connects the views to the usecases and repositories
-/// It manages the data and UI state of the ``IntroView``
-public class OnboardingViewModel: ViewModel {
-    @Published var phoneNumber = ""
-    @Published var countryCode = ""
-    @Published var countryFlag = ""
-    @Published var showLoader = false
-    @Published var showOTPView = false
-    @Published var showError = false
-    @Published var navigate = false
-    @Published var currentCountry: Country = .init()
-    @Published var isValidPhoneNumber = false
-    @Published var isCheckedTermsAndPolicy = false
-    @Published var showAlert = false
-    @Published var confirmedOTP = false
-    @Published var showSupportTeamContact = false
-    @Published var message = ""
-    @Published var warning = ""
-    @Published var statusCode = 0
-    @Published var phoneNumberFieldUIModel = UIModel.nothing
-    @Published var onSubmitUIModel = UIModel.nothing
-    @Published var onParRequestUIModel = UIModel.nothing
+public class OnboardingVM: ViewModel {
+    let activationUsecase: ActivationCodeUsecase
+    let systemUpdateUsecase: SystemUpdateUsecase
+    let getCountriesDictionaryUsecase: GetCountriesAndDialCodeUseCase
+    @Published var uiModel = UIModel.nothing
+    @Published var phoneNumberFieldUIModel = UIModel.loading
     @Published var onActivationRequestUIModel = UIModel.nothing
     @Published var onConfirmActivationUIModel = UIModel.nothing
-    @Published var uiModel = UIModel.nothing
-    @Published public var subscriptions = Set<AnyCancellable>()
-    @Published public var countryDictionary = [String: String]()
     @Published var realmManager: RealmManager = .init()
-    var onboardingUseCase: OnboardingUseCase
-    var name = "OnboardingViewModel"
-    
-    public init(onboardingUseCase: OnboardingUseCase) {
-        self.onboardingUseCase = onboardingUseCase
-        getCountryDictionary()
-    }
-    /// Request for activation code
-    func makeActivationCodeRequest() {
-        onActivationRequestUIModel = UIModel.loading
-        Task {
-            do {
-                let tinggRequest: RequestMap = RequestMap.Builder()
-                    .add(value: "MAK", for: .SERVICE)
-                    .build()
-                let result = try await onboardingUseCase.makeActivationCodeRequest(tinggRequest: tinggRequest)
-                handleResultState(model: &onActivationRequestUIModel, result)
-            } catch {
-                handleResultState(model: &onActivationRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
-            }
-        }
-    }
-    /// Confirm activation code
-    func confirmActivationCodeRequest(code: String) {
-        onConfirmActivationUIModel = UIModel.loading
-        Task {
-            do {
-                let tinggRequest: RequestMap =  RequestMap.Builder()
-                    .add(value: "VAK", for: .SERVICE)
-                    .add(value: code, for: .ACTIVATION_CODE)
-                    .build()
-                let result = try await onboardingUseCase.confirmActivationCodeRequest(tinggRequest: tinggRequest, code: code)
-                handleResultState(model: &onConfirmActivationUIModel, result)
-            } catch {
-                handleResultState(model: &onConfirmActivationUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
-            }
-        }
-    }
-    /// Request for PARandFSU
-    func makePARRequest() {
-        onParRequestUIModel = UIModel.loading
-        Task {
-            do {
-                let tinggRequest: RequestMap =  RequestMap.Builder()
-                    .add(value: "PAR", for: .SERVICE)
-                    .build()
-                let result = try await onboardingUseCase.makePARRequest(tinggRequest: tinggRequest)
-                await saveDataIntoDB(data: try result.get())
-                handleResultState(model: &onParRequestUIModel, result)
-            } catch {
-                handleResultState(model: &onParRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
-            }
-        }
+    public init(activationUsecase: ActivationCodeUsecase, systemUpdateUsecase: SystemUpdateUsecase, getCountriesDictionaryUsecase: GetCountriesAndDialCodeUseCase) {
+        self.activationUsecase = activationUsecase
+        self.systemUpdateUsecase = systemUpdateUsecase
+        self.getCountriesDictionaryUsecase = getCountriesDictionaryUsecase
+        self.uiModel = uiModel
     }
     /// Collect a dictionary of country code and dial code
     func getCountryDictionary() {
         phoneNumberFieldUIModel = UIModel.loading
         Task {
             do {
-                countryDictionary = try await onboardingUseCase.getCountryDictionary()
-                phoneNumberFieldUIModel = UIModel.nothing
+                let result = try await getCountriesDictionaryUsecase()
+                handleResultState(model: &phoneNumberFieldUIModel, Result.success(result) as Result<[String: String], ApiError>)
             } catch {
-                handleResultState(model: &phoneNumberFieldUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+                handleResultState(model: &uiModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
             }
         }
     }
-    /// Get a  country by code
-    func getCountryByDialCode(dialCode: String) -> Country? {
+    /// Request for activation code
+    func getActivationCode(request: RequestMap) {
+        onActivationRequestUIModel = UIModel.loading
         Task {
             do {
-                guard let country = try await onboardingUseCase.getCountryByDialCode(dialCode: dialCode) else {
-                    throw "Invalid dialcode \(dialCode)"
-                }
-                currentCountry = country
+                let result = try await activationUsecase(request: request)
+                handleResultState(model: &onActivationRequestUIModel, result)
             } catch {
-                uiModel = UIModel.error(error.localizedDescription)
+                handleResultState(model: &onActivationRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
             }
         }
-        return currentCountry
     }
-    func saveDataIntoDB(data: FSUAndPARDTO) async {
+    /// Request for confirmation of  OTP
+    func confirmActivationCode(request: RequestMap) {
+        onConfirmActivationUIModel = UIModel.loading
+        Task {
+            do {
+                let response = try await activationUsecase(request: request)
+                handleResultState(model: &onConfirmActivationUIModel, response)
+            } catch {
+                handleResultState(model: &onConfirmActivationUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+            }
+        }
+    }
+    /// Request for System update FSU
+    func fetchSystemUpdate(request: RequestMap) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let response = try await systemUpdateUsecase(request: request)
+                handleResultState(model: &uiModel, response)
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+            }
+        }
+    }
+    @MainActor
+    func getCountryByDialCode(dialCode: String) -> Country? {
+        if let country = getCountriesDictionaryUsecase(dialCode: dialCode) {
+            return country
+        }
+        return nil
+    }
+    /// Save System  update response in database
+    func saveDataIntoDB(data: SystemUpdateDTO)  {
         let categoriesTable = Observer<CategoryEntity>()
         let servicesTable = Observer<MerchantService>()
         let enrollmentsTable = Observer<Enrollment>()
@@ -143,6 +104,18 @@ public class OnboardingViewModel: ViewModel {
         let services = data.services.filter { service in
             service.isActive
         }
+        if let defaultNetworkServiceId = data.defaultNetworkServiceID {
+            AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
+            let defaultNetwork = services.first { s in
+                Log.d(message: "default \(defaultNetworkServiceId) \(s.hubServiceID.toInt)")
+                return s.hubServiceID.toInt == defaultNetworkServiceId
+            }
+           
+            if let service = defaultNetwork {
+                AppStorageManager.setDefaultNetwork(service: service.toEntity)
+            }
+        }
+        
         itemTable.deleteEntries()
         formParameterTable.deleteEntries()
         formParameterClassTable.deleteEntries()
@@ -172,13 +145,11 @@ public class OnboardingViewModel: ViewModel {
         merchantPayerTable.clearAndSaveEntities(objs: payers)
 
         realmManager.save(data: data.bundleData.map {$0.toEntity})
-        if let defaultNetworkServiceId = data.defaultNetworkServiceID {
-            AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
-        }
+      
         AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
     }
-    /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
+    /// Handle Result
+    public func handleResultState<T, E>(model: inout CoreUI.UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
@@ -196,13 +167,8 @@ public class OnboardingViewModel: ViewModel {
             return
         }
     }
-    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action, onError: onError)
-        }.store(in: &subscriptions)
-    }
+    
 }
-
 
 
 

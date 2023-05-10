@@ -212,7 +212,16 @@ public class DynamicType: Codable {
     public var toInt: Int {
         if value is Int {
             return value as! Int
-        } else {
+        } else if value is String {
+            let v = value as! String
+            do {
+                return try! v.convertStringToInt()
+            } catch {
+                print("Not a valid number")
+                return 0
+            }
+        }
+        else {
             return 0
         }
     }

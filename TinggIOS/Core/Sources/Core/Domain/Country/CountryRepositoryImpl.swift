@@ -9,6 +9,7 @@ import Foundation
 import RealmSwift
 
 public class CountryRepositoryImpl: CountryRepository {
+
     private var baseRequest: BaseRequest
     private var dbObserver: Observer<Country>
     /// ``CountryRepositoryImpl`` initialiser
@@ -47,4 +48,13 @@ public class CountryRepositoryImpl: CountryRepository {
         }
         return dbCountries
     }
+    
+    public func getCountryByDialCode(dialCode: String) -> Country? {
+        let dbCountries =  dbObserver.getEntities()
+        let country = dbCountries.first { country in
+            country.countryDialCode == dialCode
+        }
+        return country
+    }
+    
 }

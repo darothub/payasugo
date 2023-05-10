@@ -17,7 +17,6 @@ import SwiftUI
 import Theme
 struct NavigationModifier: ViewModifier {
     @EnvironmentObject var navigation: NavigationUtils
-    @EnvironmentObject var ovm: OnboardingViewModel
     @EnvironmentObject var  hvm: HomeViewModel
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
@@ -35,7 +34,6 @@ struct NavigationModifier: ViewModifier {
                     IntroView()
                         .navigationBarHidden(true)
                         .environmentObject(navigation)
-                        .environmentObject(ovm)
                 case .buyAirtime:
                     BuyAirtimeView()
                         .environmentObject(checkout)
