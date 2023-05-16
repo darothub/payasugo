@@ -25,12 +25,10 @@ public class CategoriesAndServicesUsecase {
             let contain = idAndName.contains { item in
                 (item.key == service.categoryID) && (service.activeStatus == "1")
             }
-            if contain {
-                if let name = idAndName[service.categoryID] {
-                    var list:[MerchantService] = dict[name!] ?? [MerchantService]()
-                    list.append(service)
-                    dict[name!] = list
-                }
+            if contain, let name = idAndName[service.categoryID]  {
+                var list:[MerchantService] = dict[name!] ?? [MerchantService]()
+                list.append(service)
+                dict[name!] = list
             }
         }
         return dict

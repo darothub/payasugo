@@ -20,7 +20,7 @@ public struct CountriesExtraInfo: Codable {
     public let alphanumericRegexes: DynamicType
     public let isDefault: Bool
     public let freshchatAppKey, freshchatAppID, minimumProfiledAccounts, smsProfilingTimeout: DynamicType
-    public let roundUpAmounts: YesOrNoEnum
+    public let roundUpAmounts: String
     public let successCallBackURL: DynamicType
     public let payerClientCode, isSecureCardPayment: DynamicType
     public let failedCallBackURL, webCheckoutURL: DynamicType

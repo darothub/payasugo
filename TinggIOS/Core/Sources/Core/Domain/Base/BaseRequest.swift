@@ -78,6 +78,23 @@ public class BaseRequest: TinggApiServices {
 
 
 extension DataRequest {
+    fileprivate func handleSuccess<T: BaseDTOprotocol>(_ decoder: JSONDecoder, _ data: String, _ onCompletion: @escaping(Result<T, ApiError>) -> Void) {
+        do {
+            let result = try decoder.decode(BaseDTO.self, from: data.data(using: .utf8)!)
+            if result.statusCode > 202 {
+                print("Result202 above \(result)")
+                onCompletion(.failure(.networkError(result.statusMessage)))
+            } else {
+                let result = try decoder.decode(T.self, from: data.data(using: .utf8)!)
+                print("Result200 \(result)")
+                onCompletion(.success(result))
+            }
+        } catch {
+            print("Error200 \(error)")
+            onCompletion(.failure(.networkError(error.localizedDescription)))
+        }
+    }
+    
     func execute<T: BaseDTOprotocol>(onCompletion: @escaping(Result<T, ApiError>) -> Void) {
         responseString { response in
             Log.d(message: "\(response.result)")
@@ -85,37 +102,13 @@ extension DataRequest {
             switch response.result {
                 
             case .success(let data):
-                if let httpResponse = response.response {
-                    switch httpResponse.statusCode {
-                    case 200..<300:
-                        do {
-                            let result = try decoder.decode(BaseDTO.self, from: data.data(using: .utf8)!)
-                            if result.statusCode > 202 {
-                                print("Result202 above \(result)")
-                                onCompletion(.failure(.networkError(result.statusMessage)))
-                            } else {
-                                let result = try decoder.decode(T.self, from: data.data(using: .utf8)!)
-                                print("Result200 \(result)")
-                                onCompletion(.success(result))
-                            }
-                        } catch {
-                            print("Error200 \(error)")
-                            onCompletion(.failure(.networkError(error.localizedDescription)))
-                        }
-                    default:
-                        print("Response below 300 \(response)")
-                    }
+                if let httpResponse = response.response,  httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 {
+                    self.handleSuccess(decoder, data, onCompletion)
                 }
             case .failure(let error):
                 print("FailureError \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
             }
-        }
-        responseJSON { response in
-            Log.d(message: "\(response.request)")
-            Log.d(message: "\(response.result)")
-      
-           
         }
     }
 }

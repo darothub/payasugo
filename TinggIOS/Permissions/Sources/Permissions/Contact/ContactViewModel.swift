@@ -63,3 +63,9 @@ public class ContactViewModel: ObservableObject {
         
     }
 }
+
+
+public protocol ContactListener {
+    func onContactFetched(_ contacts: Set<ContactRow>)
+    func onError(_ error: String)
+}

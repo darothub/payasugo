@@ -54,11 +54,19 @@ public struct WebView: UIViewRepresentable{
 public struct HTMLView: UIViewRepresentable {
     var url: String
     @State var webViewUIModel: UIModel
-    var didStart: () -> Void = {}
-    var didHaveError: (Error) -> Void = {_ in }
-    var didFinish: (String) -> Void = {_ in }
+    var didStart: () -> Void
+    var didHaveError: (Error) -> Void
+    var didFinish: (String) -> Void
     var onTryAgain: () -> Void
-    public init(url: String, webViewUIModel: UIModel, didStart: @escaping () -> Void = {}, didHaveError: @escaping (Error) -> Void  = {_ in }, didFinish: @escaping (String) -> Void = {_ in }, onTryAgain: @escaping () -> Void = {}) {
+    public init(url: String, webViewUIModel: UIModel, didStart: @escaping () -> Void = {
+        //TODO
+    }, didHaveError: @escaping (Error) -> Void  = {_ in
+        //TODO
+    }, didFinish: @escaping (String) -> Void = {_ in
+        //TODO
+    }, onTryAgain: @escaping () -> Void = {
+        //TODO
+    }) {
         self.url = url
         self._webViewUIModel = State(initialValue: webViewUIModel)
         self.didStart = didStart
@@ -98,7 +106,9 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
     var didHaveError: (Error) -> Void
     var didFinish: (String) -> Void
     var onTryAgain: () -> Void
-    public init(didStart: @escaping () -> Void, didHaveError: @escaping (Error) -> Void, didFinish: @escaping (String) -> Void, onTryAgain: @escaping () -> Void = {}) {
+    public init(didStart: @escaping () -> Void, didHaveError: @escaping (Error) -> Void, didFinish: @escaping (String) -> Void, onTryAgain: @escaping () -> Void = {
+        //TODO
+    }) {
         self.didStart = didStart
         self.didHaveError = didHaveError
         self.didFinish = didFinish
@@ -126,9 +136,6 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
         print("Error \(error)")
         didHaveError(error)
     }
-    public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!)  {
-        print("HTMLViewCOMMIT \( webView.url)")
-    }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!)  {
         DispatchQueue.main.async {
             webView.evaluateJavaScript("document.body.innerHTML") { value, error in
@@ -140,7 +147,9 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
                             webkit.messageHandlers.tryAgain.postMessage("TRY AGAIN CLICKED");
                     })
             """
-            webView.evaluateJavaScript(tryAgainJsString) { _, _ in }
+            webView.evaluateJavaScript(tryAgainJsString) { _, _ in
+                //TODO
+            }
         }
         if let url = webView.url?.absoluteString {
             didFinish(url)

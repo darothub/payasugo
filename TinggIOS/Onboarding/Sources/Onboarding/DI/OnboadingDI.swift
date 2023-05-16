@@ -20,10 +20,10 @@ public struct OnboardingDI {
         return .init()
     }
     public static func createActivationCodeUsecase() -> ActivationCodeUsecase {
-        return ActivationCodeUsecase(sendRequest: CoreDI.createSendRequest(baseRequest: .init()))
+        return ActivationCodeUsecase(sendRequest: CoreDI.createSendRequest())
     }
     public static func createSystemUpdateUsecase() -> SystemUpdateUsecase {
-        return SystemUpdateUsecase(sendRequest: CoreDI.createSendRequest(baseRequest: .init()))
+        return SystemUpdateUsecase(sendRequest: CoreDI.createSendRequest())
     }
     @MainActor public static func createGetCountriesAndDialCodeUseCase() -> GetCountriesAndDialCodeUseCase {
         return GetCountriesAndDialCodeUseCase(countryRepository: CountryRepositoryImpl(baseRequest: .init(), dbObserver: Observer<Country>()))

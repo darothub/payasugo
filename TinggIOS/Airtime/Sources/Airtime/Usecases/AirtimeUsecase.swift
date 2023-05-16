@@ -40,7 +40,7 @@ public class AirtimeUsecase {
         return services
     }
     
-    public func updateDefaultNetwork(request: TinggRequest) async throws -> BaseDTO {
+    public func updateDefaultNetwork(request: RequestMap) async throws -> BaseDTO {
         return try await updateDefaultNetworkIdUsecase(request: request)
     }
 

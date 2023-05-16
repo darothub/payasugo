@@ -34,7 +34,7 @@ public enum FORMPARAMETERSDTO: Codable {
         }
     }
     public var toEntity: FORMPARAMETERSClassEntity {
-        var entity = FORMPARAMETERSClassEntity()
+        let entity = FORMPARAMETERSClassEntity()
         switch self {
         case .formparametersClass(let values):
             let list = values.formParameters.map { $0.toEntity}
@@ -43,7 +43,6 @@ public enum FORMPARAMETERSDTO: Codable {
         case .string(_):
             return entity
         }
-      
     }
 }
 

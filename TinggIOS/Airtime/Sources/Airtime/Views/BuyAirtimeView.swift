@@ -13,7 +13,8 @@ import SwiftUI
 import Theme
 import RealmSwift
 
-public struct BuyAirtimeView: View, CheckoutProtocol {
+public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
+    @Environment(\.realmManager) var realmManager
     @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var checkoutVm: CheckoutViewModel
@@ -27,7 +28,10 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
     @State private var showErrorAlert = false
     @State private var showNetworkList = false
     @State var keyboardYOffset: CGFloat = 10
-    @Environment(\.realmManager) var realmManager
+    @State private var networkList: [NetworkItem] = []
+    @State private var defaultService: MerchantService = .init()
+    @State private var defaultServiceName = ""
+    @State private var phoneNumber: String = ""
     @FocusState var focused: String?
     public init() {
         //
@@ -41,12 +45,7 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
             TextFieldAndRightIcon(
                 number: $fem.accountNumber
             ) {
-                Task {
-                    await contactViewModel.fetchPhoneContacts { err in
-                        showErrorAlert = true
-                        bavm.uiModel = UIModel.error(err.localizedDescription)
-                    }
-                }
+                fetchContacts()
             }.focused($focused, equals: contactViewModel.selectedContact)
             
             ServicesListView(slm: $slm, onChangeSelection: {
@@ -68,7 +67,6 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
                 buttonLabel: "Buy airtime"
             ) {
                 onButtonClick()
-            
             }
         }
         .padding()
@@ -82,15 +80,13 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
             //Show network dialog if default network is not set
             showNetworkList = networkServiceId == nil || networkServiceId  == 0
             //If default network is set
-            if !showNetworkList {
-                if let defaultNetwork = AppStorageManager.getDefaultNetwork() {
-                    let enrollment = updateEnrollment(defaultNetwork: defaultNetwork)
-                    fem.enrollments = enrollment
-                    slm.selectedService = defaultNetwork
-                    slm.selectedProvider = defaultNetwork.serviceName
-                    fem.selectedNetwork = defaultNetwork.serviceName
-                    fem.accountNumber = ServicesListModel.phoneNumber
-                }
+            if !showNetworkList, let defaultNetwork = AppStorageManager.getDefaultNetwork() {
+                let enrollment = updateEnrollment(defaultNetwork: defaultNetwork)
+                fem.enrollments = enrollment
+                slm.selectedService = defaultNetwork
+                slm.selectedProvider = defaultNetwork.serviceName
+                fem.selectedNetwork = defaultNetwork.serviceName
+                fem.accountNumber = ServicesListModel.phoneNumber
             }
             //Set services for services list
             slm.services = bavm.getAirtimeServices()
@@ -101,19 +97,19 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
             //Get and set transaction history
             history = Observer<TransactionHistory>().getEntities()
             
-          
+            phoneNumber = AppStorageManager.getPhoneNumber()
+            defaultService = AppStorageManager.getDefaultNetwork() ?? .init()
+            defaultServiceName = defaultService.serviceName
+            showNetworks()
         }
         .customDialog(isPresented: $showNetworkList) {
-            DialogContentView(slm: $slm, show: $showNetworkList, onDismiss:  {
-                withAnimation {
-                    showNetworkList.toggle()
-                    fem.enrollments = filterNomination(by: slm.selectedService)
-                    fem.selectedNetwork = slm.selectedProvider
-                    fem.accountNumber = ServicesListModel.phoneNumber
+            DialogContentView(networkList: networkList, phoneNumber: phoneNumber, selectedNetwork: defaultServiceName, listner: self)
+                .padding()
+                .handleViewStatesMods(uiState: bavm.$defaultNetworkUIModel) { content in
+                    log(message: content)
+                } action: {
+                    showNetworkList = false
                 }
-            })
-            .padding(20)
-            .environmentObject(bavm)
         }
         .onChange(of: contactViewModel.selectedContact, perform: { newValue in
             fem.accountNumber = newValue
@@ -151,28 +147,70 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
         .sheet(isPresented: $contactViewModel.showContact) {
             showContactView(contactViewModel: contactViewModel)
         }
-        .handleViewStates(uiModel: $bavm.uiModel, showAlert: $showErrorAlert)
+        .handleViewStatesMods(uiState: bavm.$uiModel) { content in
+            log(message: content)
+        }
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
-                if focused == contactViewModel.selectedContact {
-                    Button("Next") {
-                        focused = sam.amount
-                    }
-                }
-                if focused == sam.amount {
-                    Button("Done") {
-                        focused = nil
-                    }
-                }
-             }
+            handleKeyboardDone()
         }
         
     }
+    fileprivate func handleKeyboardDone() -> ToolbarItemGroup<TupleView<(Spacer, Button<Text>?, Button<Text>?)>> {
+        return ToolbarItemGroup(placement: .keyboard) {
+            Spacer()
+            if focused == contactViewModel.selectedContact {
+                Button("Next") {
+                    focused = sam.amount
+                }
+            }
+            if focused == sam.amount {
+                Button("Done") {
+                    focused = nil
+                }
+            }
+        }
+    }
+ 
+    private func fetchContacts() {
+        Task {
+            await contactViewModel.fetchPhoneContacts { err in
+                showErrorAlert = true
+                bavm.uiModel = UIModel.error(err.localizedDescription)
+            }
+        }
+    }
+    private func showNetworks() {
+        let airtimeServices = Observer<MerchantService>().getEntities().filter { $0.isAirtimeService }
+        networkList = airtimeServices.map { service in
+            NetworkItem(
+                imageUrl: service.serviceLogo,
+                networkName: service.serviceName,
+                selectedNetwork: service.serviceName
+            )
+
+        }
+    }
+    public func onSubmit(selected: String) {
+        let service = Observer<MerchantService>().getEntities().first { serv in
+            serv.serviceName == selected
+        }
+        if let s = service {
+            defaultService = s
+            let request = RequestMap.Builder()
+                .add(value: s.hubServiceID.convertStringToInt(), for: "DEFAULT_NETWORK_SERVICE_ID")
+                .add(value: "UPN", for: .SERVICE)
+                .build()
+            bavm.updateDefaultNetworkId(request: request)
+        }
+    }
+    
+    public func onDismiss() {
+        showNetworkList = false
+    }
     fileprivate func updateEnrollment(defaultNetwork: MerchantService) -> [Enrollment] {
-        let enrollments = filterNomination(by: defaultNetwork)
-        return enrollments.map({ e in
-            if (e.accountNumber == ServicesListModel.phoneNumber) && ((e.accountAlias?.isEmpty) != nil) {
+        let nomination = filterNomination(by: defaultNetwork)
+        return nomination.map({ e in
+            if (e.accountNumber == ServicesListModel.phoneNumber) && (e.accountAlias.isEmpty) {
                 realmManager.realmWrite {
                     e.accountAlias = "Me"
                 }
@@ -210,92 +248,6 @@ public struct BuyAirtimeView: View, CheckoutProtocol {
         checkoutVm.showView = true
     }
 }
-
-struct DialogContentView: View {
-    @EnvironmentObject var bavm: BuyAirtimeViewModel
-    @Binding var slm: ServicesListModel
-    @Binding var show: Bool
-    @State var showAlert = false
-    var onSubmit: () -> Void = {}
-    var onDismiss: () -> Void = {}
- 
-    var body: some View {
-        VStack {
-            Text("Select mobile network")
-            Group {
-                Text("Please select the mobile network that")
-                + Text(" \(ServicesListModel.phoneNumber)").foregroundColor(.green)
-                + Text(" belongs to")
-            }.multilineTextAlignment(.center)
-                .font(.caption)
-            Divider()
-            ForEach(slm.services, id: \.serviceName) { service in
-                NetworkSelectionRowView(
-                    imageUrl: service.serviceLogo,
-                    networkName: service.serviceName,
-                    selectedButton: $slm.selectedProvider
-                ).showIfNot(.constant(service.serviceName.isEmpty))
-            }
-            Text("No network available")
-                .showIf(.constant(slm.services.isEmpty))
-            TinggButton(
-                backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Done"
-            ) {
-                if slm.services.isEmpty {
-                    onDismiss()
-                } else {
-                    let service = slm.services.first { serv in
-                        serv.serviceName == slm.selectedProvider
-                    }
-                    var request = TinggRequest()
-                    if let s = service {
-                        AppStorageManager.setDefaultNetwork(service: s)
-                        request.defaultNetworkServiceId = s.hubServiceID.convertStringToInt()
-                        request.service = "UPN"
-                        slm.selectedService = s
-                    }
-                    bavm.updateDefaultNetworkId(request: request)
-                    //Observe default network update request
-                    bavm.observeUIModel(model: bavm.$defaultNetworkUIModel, subscriptions: &bavm.subscriptions) { content in
-                        showAlert = true
-                    } onError: { err in
-                        showAlert = true
-                    }
-                }
-              
-            }
-        }.handleViewStates(uiModel: $bavm.defaultNetworkUIModel, showAlert: $showAlert, showSuccessAlert: $showAlert, onSuccessAction:  onSelectDefaultNetwork)
-    }
-    
-    func onSelectDefaultNetwork() {
-        show = false
-    }
-    
-}
-struct NetworkSelectionRowView: View {
-    @State var imageUrl: String = ""
-    @State var networkName: String = "Airtel"
-    @Binding var selectedButton:String
-    var body: some View {
-        HStack {
-            AsyncImage(url: URL(string: imageUrl)) { image in
-                image.resizable()
-                    .frame(width: 40, height: 40)
-                    .clipShape(Circle())
-                    .padding()
-            } placeholder: {
-                Image(systemName: "camera.fill")
-                    .frame(width: 40, height: 40)
-                    .clipShape(Circle())
-                    .padding()
-            }
-            Text(networkName)
-            Spacer()
-            RadioButtonView(selected: $selectedButton, id: networkName)
-        }
-    }
-}
 struct WhoseNumberOptionView: View {
     @Binding var selected: WhoseNumberLabel
     var options: [WhoseNumberLabel] {
@@ -313,6 +265,7 @@ struct WhoseNumberOptionView: View {
         }
     }
 }
+
 enum WhoseNumberLabel: String, CaseIterable {
     case my
     case other

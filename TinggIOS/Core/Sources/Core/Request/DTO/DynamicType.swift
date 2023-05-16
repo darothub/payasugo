@@ -52,10 +52,8 @@ public class DynamicType: Codable {
         if let value = try? container.decode(String.self) {
             return value
         }
-        if let value = try? container.decodeNil() {
-            if value {
-                return JSONNull()
-            }
+        if let value = try? container.decodeNil(), value {
+            return JSONNull()
         }
         if var container = try? container.nestedUnkeyedContainer() {
             return try decodeArray(from: &container)
@@ -79,10 +77,8 @@ public class DynamicType: Codable {
         if let value = try? container.decode(String.self, forKey: key) {
             return value
         }
-        if let value = try? container.decodeNil(forKey: key) {
-            if value {
-                return JSONNull()
-            }
+        if let value = try? container.decodeNil(forKey: key), value{
+            return JSONNull()
         }
         if var container = try? container.nestedUnkeyedContainer(forKey: key) {
             return try decodeArray(from: &container)
@@ -215,7 +211,10 @@ public class DynamicType: Codable {
         } else if value is String {
             let v = value as! String
             do {
-                return try! v.convertStringToInt()
+                if let newValue = try? v.convertStringToInt() {
+                    return newValue
+                }
+                return 0
             } catch {
                 print("Not a valid number")
                 return 0
@@ -234,4 +233,33 @@ public class DynamicType: Codable {
         return result
     }
     
+}
+
+// MARK: - Encode/decode helpers
+
+class JSONNull: Codable, Hashable {
+
+    public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
+        return true
+    }
+
+    public var hashValue: Int {
+        return 0
+    }
+
+    public init() {
+        //Empty constructor
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if !container.decodeNil() {
+            throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encodeNil()
+    }
 }

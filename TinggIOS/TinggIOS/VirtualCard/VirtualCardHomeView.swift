@@ -13,8 +13,10 @@ public struct VirtualCardHomeView: View {
     public var balance: String = ""
     public var currency = ""
     public var showManageCardLabel = false
-    var action: () -> Void = {}
-    public init(balance: String, currency: String = "KS", showManageCardLabel: Bool = false, action: @escaping () -> Void = {}) {
+    var action: () -> Void
+    public init(balance: String, currency: String = "KS", showManageCardLabel: Bool = false, action: @escaping () -> Void = {
+        //TODO
+    }) {
         self.balance = convertme(string: balance, with: currency)
         self.showManageCardLabel = showManageCardLabel
         self.action = action

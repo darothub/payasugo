@@ -26,7 +26,9 @@ struct TransactionItemView: View {
 
     @State var model: TransactionItemModel = TransactionItemModel.sample
     @State var onDeleteFlag: Bool = false
-    var onDeleteClosure: OnClickHandler = { _ in }
+    var onDeleteClosure: OnClickHandler = { _ in
+        //TODO
+    }
     @State private var isFullScreen = false
     var body: some View {
         VStack(alignment: .leading) {

@@ -44,13 +44,11 @@ public struct SecurityQuestionView: View {
                         .add(value: CreditCardUtil.encrypt(data: answer), for: .SECURITY_ANSWER)
                         .build()
                     pinVm.createCardPin(tinggRequest: request)
-                    pinVm.observeUIModel(model: pinVm.$uiModel, subscriptions: &pinVm.subscriptions) { content in
-                        showSuccessAlert = true
-                    } onError: { err in
-                        showErrorAlert = true
-                    }
                 }
-            } .handleViewStates(uiModel: $pinVm.uiModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert, onSuccessAction: navigateToCardDetailsView)
+            }
+            .handleViewStatesMods(uiState: pinVm.$uiModel) { content in
+                log(message: content)
+            }
         }
         .padding()
         .padding(.top)

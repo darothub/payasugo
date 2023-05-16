@@ -21,21 +21,16 @@ struct DTBCheckoutDialogView: View {
     @State private var listOfAccountIsNotEmpty = false
     @State private var showPINField = false
     @State private var isValidPin = false
-    @State var onDTBPINEntered: (String) -> Void = {_ in }
+    @State var onDTBPINEntered: (String) -> Void = {_ in
+        //TODO
+    }
     var body: some View {
         VStack {
             IconImageCardView(imageUrl: imageUrl)
             VStack(alignment: .leading) {
                 Text("Select account")
-                ForEach(dtbAccounts, id: \.accountId) { account in
-                    if let label = account.alias {
-                        RadioButtonWithTextView(id: label, selected: $selectedAccount, label: label)
-                    }
-                }.showIf($listOfAccountIsNotEmpty)
-                Section {
-                    Text("Enter PIN for account \(selectedAccount)")
-                    TextFieldView(fieldText: $pin, label: "", placeHolder: pinFieldInstruction, success: $isValidPin)
-                }.showIf($showPINField)
+                showDTBAccount()
+                pinSection()
             }
             TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
@@ -59,6 +54,21 @@ struct DTBCheckoutDialogView: View {
         .onAppear {
             listOfAccountIsNotEmpty = dtbAccounts.isNotEmpty()
         }
+    }
+    @ViewBuilder
+    private func pinSection() -> some View {
+        Section {
+            Text("Enter PIN for account \(selectedAccount)")
+            TextFieldView(fieldText: $pin, label: "", placeHolder: pinFieldInstruction, success: $isValidPin)
+        }.showIf($showPINField)
+    }
+    @ViewBuilder
+    private func showDTBAccount() -> some View {
+        ForEach(dtbAccounts, id: \.accountId) { account in
+            if let label = account.alias {
+                RadioButtonWithTextView(id: label, selected: $selectedAccount, label: label)
+            }
+        }.showIf($listOfAccountIsNotEmpty)
     }
     private func handlePINValidation(pin: String) -> String {
         if pin.isNotEmpty {

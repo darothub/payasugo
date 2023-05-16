@@ -69,7 +69,7 @@ public final class RealmManager: ObservableObject {
         
     }
     public func realmWrite<R>(_ block: (() throws -> R)) {
-        try! localDb?.write {
+        try? localDb?.write {
             try? block()
         }
     }
@@ -111,9 +111,6 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     public func clearAndSaveEntities(objs: [T]){
         deleteEntries()
         realmManager.save(data: objs)
-    }
-    private func returnEntity(obj: T) -> T {
-        return obj
     }
     public func deleteEntries() {
         if !objects.isEmpty {

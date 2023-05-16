@@ -17,23 +17,27 @@ struct FavouriteListView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top) {
                     ForEach(fem.enrollments, id: \.accountNumber) { enrollment in
-                        let alias = enrollment.accountAlias
-                        if let name = alias {
-                            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: "")
-                                .shadow(color: .red, radius: fem.accountNumber == enrollment.accountNumber ? 5 : 0, x: 0 , y: fem.accountNumber == enrollment.accountNumber ? 3 : 0)
-                                .onTapGesture {
-                                    withAnimation {
-                                        fem.enrollment = enrollment
-                                        fem.accountNumber = enrollment.accountNumber
-                                    }
-                                }
-                        }
+                        showImageAndName(enrollment)
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity)
         .background(.white)
+    }
+    @ViewBuilder
+    private func showImageAndName(_ enrollment: Enrollment) -> some View {
+        let name = enrollment.accountAlias
+        if name.isNotEmpty {
+            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: "")
+                .shadow(color: .red, radius: fem.accountNumber == enrollment.accountNumber ? 5 : 0, x: 0 , y: fem.accountNumber == enrollment.accountNumber ? 3 : 0)
+                .onTapGesture {
+                    withAnimation {
+                        fem.enrollment = enrollment
+                        fem.accountNumber = enrollment.accountNumber
+                    }
+                }
+        }
     }
 }
 

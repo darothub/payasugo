@@ -34,7 +34,7 @@ public class PinViewModel: ViewModel {
         Task {
             do {
                 let success = try await usecase.createCardPin(tinggRequest: tinggRequest)
-                handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>)
+                handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>, showAlertOnSuccess: true)
             } catch {
                 handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
             }
@@ -42,7 +42,7 @@ public class PinViewModel: ViewModel {
     }
     
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
+    public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
@@ -53,6 +53,23 @@ public class PinViewModel: ViewModel {
                 content = UIModel.Content(data: data, statusMessage: d.statusMessage)
             } else {
                 content = UIModel.Content(data: data)
+            }
+            model = UIModel.content(content)
+            return
+        }
+    }
+    /// Handle result
+    public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {
+        switch result {
+        case .failure(let apiError):
+            model = UIModel.error((apiError as! ApiError).localizedString)
+            return
+        case .success(let data):
+            var content: UIModel.Content
+            if let d = data as? BaseDTOprotocol {
+                content = UIModel.Content(data: data, statusMessage: d.statusMessage, showAlert: showAlertOnSuccess)
+            } else {
+                content = UIModel.Content(data: data, showAlert: showAlertOnSuccess)
             }
             model = UIModel.content(content)
             return

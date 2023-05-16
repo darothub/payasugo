@@ -35,14 +35,18 @@ public func cardCheck(number: String) -> Bool {
 }
 
 public func getMonthFromExpiryDate(expDate: String) -> Int {
-    if expDate.count < 2 { return 0 }
+    if expDate.count < 2 {
+        return 0
+    }
     if let month = Int(expDate.prefix(2)) {
         return month
     }
     return 0
 }
 public func getYearFromExpiryDate(expDate: String) -> Int {
-    if expDate.count < 5 { return 0 }
+    if expDate.count < 5 {
+        return 0
+    }
     if let month = Int(expDate.suffix(2)) {
         return month
     }
@@ -50,7 +54,9 @@ public func getYearFromExpiryDate(expDate: String) -> Int {
 }
 
 public func isExpiryDateValid(expDate: String) -> Bool {
-    if expDate.count < 2 { return false }
+    if expDate.count < 2 {
+        return false
+    }
     let df = DateFormatter()
     df.dateFormat = "MM/yy"
     if let fullExpiryDate = df.date(from: expDate) {

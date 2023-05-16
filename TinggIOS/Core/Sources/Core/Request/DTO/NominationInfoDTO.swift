@@ -62,7 +62,7 @@ public struct NominationInfoDTO: Codable {
         entity.serviceCode = self.serviceCode.toString
         entity.accountNumber = self.accountNumber.toString
         entity.accountName = self.accountName?.toString
-        entity.accountAlias = self.accountAlias?.toString
+        entity.accountAlias = self.accountAlias?.toString ?? "None"
         entity.accountID = self.accountID?.toString
         entity.clientProfileAccountID = self.clientProfileAccountID?.toInt ?? 0
         entity.isExplicit = self.isExplicit.bool

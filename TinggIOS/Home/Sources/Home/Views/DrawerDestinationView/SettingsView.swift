@@ -37,22 +37,22 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
             }
         }.onAppear {
             let allSettings = [
-                SettingsSectionItem(section: "General", items: [
-                    SettingsItem(main: "Cards", actionInformation: "Add or Delete card"),
-                    SettingsItem(main: "Mobile Network", actionInformation: "Choose your main mobile network")
+                SettingsSectionItem(section: SettingsSectionItem.GENERAL, items: [
+                    SettingsItem(main: SettingsItem.CARD, actionInformation: "Add or Delete card"),
+                    SettingsItem(main: SettingsItem.MOBILENETWORK, actionInformation: "Choose your main mobile network")
                 ]),
-                SettingsSectionItem(section: "Tingg PIN setting", items: [
-                    SettingsItem(main: "Set PIN", actionInformation: ""),
-                    SettingsItem(main: "Change PIN", actionInformation: ""),
-                    SettingsItem(main: "Remove PIN", actionInformation: ""),
-                    SettingsItem(main: "Security level", actionInformation: "Ask for PIN everytime I open the app")
+                SettingsSectionItem(section: SettingsSectionItem.TINGPIN , items: [
+                    SettingsItem(main: SettingsItem.SETPIN, actionInformation: ""),
+                    SettingsItem(main: SettingsItem.CHANGEPIN, actionInformation: ""),
+                    SettingsItem(main: SettingsItem.REMOVEPIN, actionInformation: ""),
+                    SettingsItem(main: SettingsItem.SECURITYLEVEL, actionInformation: "Ask for PIN everytime I open the app")
                 ]),
-                SettingsSectionItem(section: "Notification", items: [
-                    SettingsItem(main: "Bill reminder", actionInformation: "\(actionWordForBillReminder) receiving bill reminders", showBoolItem: true, isToggled: optInForBillReminder),
-                    SettingsItem(main: "Campaign messages", actionInformation: "\(actionWordForCampaignMessage) receiving campaign messages", showBoolItem: true, isToggled: optInForCampaignMessage)
+                SettingsSectionItem(section: SettingsSectionItem.NOTIFICATION, items: [
+                    SettingsItem(main: SettingsItem.BILLREMINDER, actionInformation: "\(actionWordForBillReminder) receiving bill reminders", showBoolItem: true, isToggled: optInForBillReminder),
+                    SettingsItem(main: SettingsItem.CAMPAIGNMESSAGE, actionInformation: "\(actionWordForCampaignMessage) receiving campaign messages", showBoolItem: true, isToggled: optInForCampaignMessage)
                 ]),
-                SettingsSectionItem(section: "Account", items: [
-                    SettingsItem(main: "Deactivate account", actionInformation: "")
+                SettingsSectionItem(section: SettingsSectionItem.ACCOUNT, items: [
+                    SettingsItem(main: SettingsItem.DEACTIVATEACCOUNT, actionInformation: "")
                 ])
             ]
             settings.append(contentsOf: allSettings)
@@ -79,7 +79,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
         .handleViewStatesMods(uiState: hvm.$defaultNetworkUIModel) { content in
             log(message: content)
         } action: {
-            showNetworkList = false
+            dismissDialogView()
         }
 
     }
@@ -88,7 +88,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
     }
     func onItemClick(_ item: SettingsItem) {
         switch item.main {
-        case "Mobile Network":
+        case SettingsItem.MOBILENETWORK:
             showNetworks()
         default:
             showNetworkList = false
@@ -145,7 +145,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
     }
     
     func onDismiss() {
-        //
+        dismissDialogView()
     }
     private func updateStorageBillReminderContent(dto: BaseDTO) {
         if dto.statusCode == 200 && dto.statusMessage.contains("opted in"){
@@ -191,9 +191,9 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
 }
 
 struct SettingsSectionItemView: View {
-    var section: SettingsSectionItem = SettingsSectionItem(section: "General", items: [
-        SettingsItem(main: "Cards", actionInformation: "Add or Delete card"),
-        SettingsItem(main: "Mobile Network", actionInformation: "Choose your main mobile network")
+    var section: SettingsSectionItem = SettingsSectionItem(section: SettingsSectionItem.GENERAL, items: [
+        SettingsItem(main: SettingsItem.CARD, actionInformation: "Add or Delete card"),
+        SettingsItem(main: SettingsItem.MOBILENETWORK, actionInformation: "Choose your main mobile network")
     ])
     var delegate: OnSettingClick
     var body: some View {
@@ -244,6 +244,10 @@ struct SettingsSectionItem: Identifiable {
     var id: String {
         section
     }
+    static var GENERAL = "General"
+    static var NOTIFICATION = "Notification"
+    static var TINGPIN = "Ting PIN setting"
+    static var ACCOUNT = "Account"
 }
 struct SettingsItem: Identifiable {
     var main: String = "Main"
@@ -251,7 +255,18 @@ struct SettingsItem: Identifiable {
     var showBoolItem: Bool = false
     var isToggled: Bool = false
     var id: String =  UUID().uuidString
+    
+    static var CARD = "Cards"
+    static var MOBILENETWORK = "Mobile Network"
+    static var SETPIN = "Set PIN"
+    static var CHANGEPIN = "Change PIN"
+    static var REMOVEPIN = "Remove PIN"
+    static var SECURITYLEVEL = "Security level"
+    static var BILLREMINDER = "Bill reminder"
+    static var CAMPAIGNMESSAGE = "Campaign messages"
+    static var DEACTIVATEACCOUNT = "Deactivate account"
 }
+
 protocol OnSettingClick {
     func onItemClick(_ item: SettingsItem)
     func onToggle(_ item: inout SettingsItem)
@@ -261,80 +276,6 @@ struct SettingsView_Previews: PreviewProvider {
         SettingsView()
         
     }
-}
-
-struct DialogContentView: View {
-    @State var networkList: [NetworkItem] = [
-        NetworkItem(imageUrl: "", networkName: "Airtel", selectedNetwork: "Airtel")
-    ]
-    @State var phoneNumber: String = "090000000000"
-    @State var selectedNetwork: String = "MTN"
-    var listner: OnNetweorkSelectionListener
-    var body: some View {
-        VStack {
-            Text("Select mobile network")
-            Group {
-                Text("Please select the mobile network that")
-                + Text(" \(phoneNumber)").foregroundColor(.green)
-                + Text(" belongs to")
-            }.multilineTextAlignment(.center)
-                .font(.caption)
-            Divider()
-            ForEach(networkList) { network  in
-                NetworkSelectionRowView(item: network, selectedNetwork: $selectedNetwork)
-                    .listRowInsets(EdgeInsets())
-                    .showIfNot(.constant(network.networkName.isEmpty))
-            }
-            Text("No network available")
-                .showIf(.constant(networkList.isEmpty))
-            TinggButton(
-                backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Done"
-            ) {
-                listner.onSubmit(selected: selectedNetwork)
-            }
-        }
-    }
-}
-
-struct NetworkSelectionRowView: View {
-    @State var item: NetworkItem = .init()
-    @Binding var selectedNetwork: String
-    var body: some View {
-        VStack {
-            HStack {
-                AsyncImage(url: URL(string: item.imageUrl)) { image in
-                    image.resizable()
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .padding()
-                } placeholder: {
-                    Image(systemName: "camera.fill")
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .padding()
-                }
-                Text(item.networkName)
-                Spacer()
-                RadioButtonView(selected: $selectedNetwork, id: item.id)
-            }
-            Divider()
-        }
-    }
-}
-
-struct NetworkItem: Identifiable {
-    var id: String {
-        networkName
-    }
-    var imageUrl: String = "https://1000logos.net/wp-content/uploads/2018/01/Airtel-Logo.png"
-    var networkName: String = ""
-    var selectedNetwork: String = ""
-}
-
-protocol OnNetweorkSelectionListener {
-    func onSubmit(selected: String)
-    func onDismiss()
 }
 
 

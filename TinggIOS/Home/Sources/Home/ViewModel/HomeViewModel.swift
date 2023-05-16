@@ -78,7 +78,7 @@ public class HomeViewModel: ViewModel {
         Task {
             do {
                 let result = try await homeUsecase.updateProfile(request: request)
-                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &uiModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
             } catch {
                 handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
@@ -98,7 +98,7 @@ public class HomeViewModel: ViewModel {
         Task {
             do {
                 let result = try await homeUsecase.updateDefaultNetwork(request: request)
-                handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
             } catch {
                 handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
@@ -111,9 +111,9 @@ public class HomeViewModel: ViewModel {
         Task {
             do {
                 let result = try await homeUsecase.updateDefaultNetwork(request: request)
-                handleResultState(model: &billReminderUIModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &billReminderUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
             } catch {
-                handleResultState(model: &billReminderUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &billReminderUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
 
@@ -124,9 +124,9 @@ public class HomeViewModel: ViewModel {
         Task {
             do {
                 let result = try await homeUsecase.updateDefaultNetwork(request: request)
-                handleResultState(model: &campaignMessageUIModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &campaignMessageUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
             } catch {
-                handleResultState(model: &campaignMessageUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &campaignMessageUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
 
@@ -331,28 +331,22 @@ public class HomeViewModel: ViewModel {
     func filterNominationInfoByHubServiceId(enrollment: Enrollment, service: MerchantService) -> Bool {
         String(enrollment.hubServiceID) == service.hubServiceID
     }
-
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
+    public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
             return
         case .success(let data):
             var content: UIModel.Content
-            if data is BaseDTOprotocol {
-                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTO).statusMessage, showAlert: true)
+            if let d = data as? BaseDTOprotocol {
+                content = UIModel.Content(data: data, statusMessage: d.statusMessage, showAlert: showAlertOnSuccess)
             } else {
-                content = UIModel.Content(data: data)
+                content = UIModel.Content(data: data, showAlert: showAlertOnSuccess)
             }
             model = UIModel.content(content)
             return
         }
-    }
-    public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action, onError: onError)
-        }.store(in: &subscriptions)
     }
 
 }

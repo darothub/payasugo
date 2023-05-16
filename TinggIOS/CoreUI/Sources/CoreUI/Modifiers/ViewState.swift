@@ -70,9 +70,13 @@ public struct ViewStates: ViewModifier {
     @State var disableContent = false
     @State var show = false
     public static var alertButtonText = "alertbutton"
-    var onSuccessAction: () -> Void = {}
-    var onErrorAction: () -> Void = {}
-    public init(uiModel: Binding<UIModel>, showAlert: Binding<Bool>, showSuccessAlert: Binding<Bool> = .constant(false), onSuccessAction: @escaping () -> Void = {}, onErrorAction: @escaping () -> Void = {}) {
+    var onSuccessAction: () -> Void
+    var onErrorAction: () -> Void
+    public init(uiModel: Binding<UIModel>, showAlert: Binding<Bool>, showSuccessAlert: Binding<Bool> = .constant(false), onSuccessAction: @escaping () -> Void = {
+        //TODO
+    }, onErrorAction: @escaping () -> Void = {
+        //TODO
+    }) {
         _uiModel = uiModel
         _showAlert = showAlert
         _showSuccessAlert = showSuccessAlert
@@ -98,11 +102,9 @@ public struct ViewStates: ViewModifier {
                     .scaleEffect(2)
                     .font(.caption)
             case .content(let data):
-                HandleMessageView(message: data.statusMessage, showAlert: $showAlert, showSuccessAlert: $showSuccessAlert, onSuccessAction: onSuccessAction)
-//                handleMessage(data.statusMessage, action: onSuccessAction)
+                handleMessage(data.statusMessage, action: onSuccessAction)
             case .error(let err):
-                HandleMessageView(message: err, showAlert: $showAlert, showSuccessAlert: $showSuccessAlert, onErrorAction: onErrorAction)
-//                handleMessage(err, action:  onErrorAction)
+                handleMessage(err, action:  onErrorAction)
             case .nothing:
                 EmptyView()
             }
@@ -131,9 +133,11 @@ public struct ViewStatesMod: ViewModifier {
     @State var showProgressBar = false
     @State var showAlert = false
     @State var message = ""
-    var action: () -> Void = {}
+    var action: () -> Void
     var onSuccess: (UIModel.Content) -> Void
-    public init(uiState: Published<UIModel>.Publisher, onSuccess: @escaping (UIModel.Content) -> Void, action: @escaping () -> Void = {}) {
+    public init(uiState: Published<UIModel>.Publisher, onSuccess: @escaping (UIModel.Content) -> Void, action: @escaping () -> Void = {
+        //TODO
+    }) {
         self.uiState = uiState
         self.onSuccess = onSuccess
         self.action = action
@@ -185,7 +189,9 @@ extension View {
     public func handleViewStatesMods(
         uiState: Published<UIModel>.Publisher,
         onSuccess: @escaping (UIModel.Content) -> Void,
-        action: @escaping () -> Void = {}
+        action: @escaping () -> Void = {
+            //TODO
+        }
     ) -> some View {
         self.modifier(ViewStatesMod(uiState: uiState, onSuccess: onSuccess, action: action))
     }
@@ -202,32 +208,4 @@ extension ViewModifier {
     }
 }
 
-struct HandleMessageView: View {
-    @State var message: String
-    @Binding var showAlert: Bool
-    @Binding var showSuccessAlert: Bool
-    var onSuccessAction: () -> Void = {}
-    var onErrorAction: () -> Void = {}
-    var body: some View {
-        VStack {
-            // ....
-        }
-        .edgesIgnoringSafeArea(.all)
-        .opacity(0.6)
-        .alert(message, isPresented: $showSuccessAlert) {
-            return Button("OK") {
-                // Intentionally unimplemented...no action needed
-                onSuccessAction()
-              
-            }.accessibility(identifier: ViewStates.alertButtonText)
-        }
-        .alert(message, isPresented: $showAlert) {
-            return Button("OK") {
-                // Intentionally unimplemented...no action needed
-                onErrorAction()
-              
-            }.accessibility(identifier: ViewStates.alertButtonText)
-        }
-    }
-}
 

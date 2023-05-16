@@ -22,6 +22,7 @@ public struct BillersView: View {
     @State private var selectedAccount = ""
     @State private var mobileNumber = ""
     @State private var bundleService: [BundleData] = .init()
+    @State private var enrollmentToRemove: Enrollment = .init()
     @State private var selectedMerchantService = sampleServices[0]
     @State var billers: TitleAndListItem = .init(title: "Sample", services: sampleServices)
     public init(billers: TitleAndListItem) {
@@ -66,10 +67,13 @@ public struct BillersView: View {
                 enrolments = hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == serviceCategoryId
                 }
             }
-            
-            
         }
-        
+        .handleViewStatesMods(uiState: hvm.$serviceBillUIModel) { content in
+            log(message: content)
+//            if !nom.isInvalidated {
+//                hvm.nominationInfo.$objects.remove( nom)
+//            }
+        }
     }
     fileprivate func filterNominationByServiceCategoryId(id: String) -> [Enrollment] {
         hvm.nominationInfo.getEntities().filter{  $0.serviceCategoryID == id }
@@ -132,20 +136,15 @@ public struct BillersView: View {
             if let off = offSet.first {
                 enrolments.remove(at: off)
             }
-            hvm.observeUIModel(model: hvm.$serviceBillUIModel, subscriptions: &hvm.subscriptions) { content in
-                if !nom.isInvalidated {
-                    hvm.nominationInfo.$objects.remove( nom)
-                }
-            } onError: { err in
-                print("BillersViewError: \(err)")
-            }
         }
     }
 }
 
 struct SingleNominationView: View {
     var nomination: Enrollment
-    @State var onClick: (Enrollment, Invoice) -> Void = {_,_ in}
+    @State var onClick: (Enrollment, Invoice) -> Void = {_,_ in
+        //TODO
+    }
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     var body: some View {
         HStack(alignment: .top) {
@@ -156,7 +155,7 @@ struct SingleNominationView: View {
                     Text(nomination.accountName ?? "None")
                         .font(.caption)
                         .bold()
-                    Text(nomination.accountAlias?.uppercased() ?? "None")
+                    Text(nomination.accountAlias.uppercased())
                         .foregroundColor(.gray)
                         .font(.caption)
                 }
@@ -176,14 +175,19 @@ struct SingleNominationView: View {
                     .bold()
             }
         }
-        .handleViewStates(uiModel: $hvm.uiModel, showAlert: .constant(true))
+        .handleViewStatesMods(uiState: hvm.$uiModel) { content in
+            log(message: content)
+            if let invoice = content.data as? Invoice {
+                onClick(nomination, invoice)
+            }
+        }
         .padding()
         .onTapGesture {
             hvm.getSingleDueBill(accountNumber: nomination.accountNumber, serviceId: String(nomination.hubServiceID))
-            hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
-                let invoice = content.data as! Invoice
-                onClick(nomination, invoice)
-            }
+//            hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
+//                let invoice = content.data as! Invoice
+//                onClick(nomination, invoice)
+//            }
         }
     }
 }
@@ -198,7 +202,6 @@ struct BillersView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             BillersViewHolder()
-                .environmentObject(HomeDI.createHomeViewModel())
         }
     }
 }

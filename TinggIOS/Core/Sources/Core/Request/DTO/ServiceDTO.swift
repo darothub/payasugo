@@ -11,7 +11,7 @@ public struct ServiceDTO: Codable {
     public let serviceName, clientName, hubClientID, serviceCode: DynamicType
     public let hubServiceID, clientCode, minAmount, maxAmount: DynamicType
     public let servicePatternID, serviceAccountKey: DynamicType
-    public let exactPayment: YesOrNoEnum
+    public let exactPayment: String
     public let categoryID: StringOrIntEnum
     public let activeStatus: DynamicType
     public let serviceLogo: DynamicType
@@ -32,9 +32,9 @@ public struct ServiceDTO: Codable {
     public let bundleCategoryLabel: String
     public let displayNoPendingBillDialog, canEditAmount, isCyclicService, isDislayableOnLifestream: DynamicType
     public let favoritesDisplayMode: String
-    public let isRefresh: YesOrNoEnum
+    public let isRefresh: String
     public let applicableCharges: [DynamicType]
-    public let validateBillAmount: YesOrNoEnum
+    public let validateBillAmount: String
     public let charges: DynamicType
     public let title: DynamicType
     public let message: DynamicType
@@ -100,7 +100,7 @@ public struct ServiceDTO: Codable {
         entity.maxAmount = self.maxAmount.toString
         entity.servicePatternID = self.servicePatternID.toString
         entity.serviceAccountKey = self.serviceAccountKey.toString
-        entity.exactPayment = self.exactPayment.rawValue
+        entity.exactPayment = self.exactPayment
         entity.categoryID = self.categoryID.toString
         entity.activeStatus = self.activeStatus.toString
         entity.serviceLogo = self.serviceLogo.toString
@@ -127,10 +127,10 @@ public struct ServiceDTO: Codable {
         entity.bundleCategoryLabel = self.bundleCategoryLabel
         entity.displayNoPendingBillDialog = self.displayNoPendingBillDialog.toString
         entity.favoritesDisplayMode = self.favoritesDisplayMode
-        entity.isRefresh = self.isRefresh.rawValue
+        entity.isRefresh = self.isRefresh
         let applicableChargeList: [String] = self.applicableCharges.map {$0.toString}
         entity.applicableCharges.append(objectsIn: applicableChargeList)
-        entity.validateBillAmount = self.validateBillAmount.rawValue
+        entity.validateBillAmount = self.validateBillAmount
         entity.charges = self.charges.value as? String ?? ""
         entity.title = self.title.value as? String ?? ""
         entity.message = self.message.value as? String ?? ""

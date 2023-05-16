@@ -18,7 +18,7 @@ public class Enrollment: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var serviceCode: String?
     @Persisted public var accountNumber: String = ""
     @Persisted public var accountName: String?
-    @Persisted public var accountAlias: String?
+    @Persisted public var accountAlias: String = ""
     @Persisted public var accountID: String?
     @Persisted public var isExplicit: Bool = false
     @Persisted public var extraData: String?

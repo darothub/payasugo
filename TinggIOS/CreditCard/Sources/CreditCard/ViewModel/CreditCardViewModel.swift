@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 import Checkout
 @MainActor
-public class CreditCardViewModel: ViewModel, CheckoutProtocol {
+public class CreditCardViewModel: ViewModel {
     @Published public var slm: ServicesListModel = .init()
     @Published public var sam: SuggestedAmountModel = .init()
     @Published public var fem: FavouriteEnrollmentModel = .init()
@@ -54,7 +54,7 @@ public class CreditCardViewModel: ViewModel, CheckoutProtocol {
        
     }
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
+    public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
@@ -62,18 +62,12 @@ public class CreditCardViewModel: ViewModel, CheckoutProtocol {
         case .success(let data):
             var content: UIModel.Content
             if let d = data as? BaseDTOprotocol {
-                content = UIModel.Content(data: data, statusMessage: d.statusMessage)
+                content = UIModel.Content(data: data, statusMessage: d.statusMessage, showAlert: showAlertOnSuccess)
             } else {
-                content = UIModel.Content(data: data)
+                content = UIModel.Content(data: data, showAlert: showAlertOnSuccess)
             }
             model = UIModel.content(content)
             return
         }
     }
-    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action, onError: onError)
-        }.store(in: &subscriptions)
-    }
-    
 }

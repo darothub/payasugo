@@ -145,19 +145,16 @@ public struct EnterCardDetailsView: View {
                 htmlString = createPostStringFromRequest(request: cvaKeyValueInRequest)
                 showWebView = cardDetails.checkout
             }
-            creditCardVm.observeUIModel(model: creditCardVm.$uiModel, subscriptions: &creditCardVm.subscriptions) { content in
-                createChannelResponse = (content.data as! CreateCardChannelResponse)
-                successUrl = createChannelResponse!.successUrl
-                checkoutUrl = createChannelResponse!.webUrl.isEmpty ? EnterCardDetailsView.DEFAULT_CHECK_OUT_URL : createChannelResponse!.webUrl
-                let cvaKeyValueInRequest = createKeyValueAsRequest(createCardChannelResponse: createChannelResponse!)
-                htmlString = createPostStringFromRequest(request: cvaKeyValueInRequest)
-                showWebView = !htmlString.isEmpty
-            } onError: { err in
-                showAlert = true
-                print("Error String \(err)")
-            }
         }
-        .handleViewStates(uiModel: $creditCardVm.uiModel, showAlert: $showAlert)
+        .handleViewStatesMods(uiState: creditCardVm.$uiModel) { content in
+            log(message: content)
+            createChannelResponse = (content.data as! CreateCardChannelResponse)
+            successUrl = createChannelResponse!.successUrl
+            checkoutUrl = createChannelResponse!.webUrl.isEmpty ? EnterCardDetailsView.DEFAULT_CHECK_OUT_URL : createChannelResponse!.webUrl
+            let cvaKeyValueInRequest = createKeyValueAsRequest(createCardChannelResponse: createChannelResponse!)
+            htmlString = createPostStringFromRequest(request: cvaKeyValueInRequest)
+            showWebView = !htmlString.isEmpty
+        }
         .navigationTitle("Card")
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
@@ -306,6 +303,8 @@ public struct EnterCardDetailsView: View {
     }
     
     
+
+    
     private func handleWebViewFinishEvent(url: String) {
         if url.contains(successUrl) || url.contains(EnterCardDetailsView.CARD_CHARGE_SUCCESS) {
              //intercept the GET params.
@@ -318,88 +317,105 @@ public struct EnterCardDetailsView: View {
                 let successValue = match.last!
                 log(message: "\(String(describing: successValue))")
                 let isSuccessful = successValue == "1" || successValue == "2"
-                if isSuccessful {
-                    isCardActivated = successValue == "2"
-                    let card = Card()
-                    card.cardAlias = ""
-                    card.customerAddress = cardDetails.address
-                    card.cardType = Card.TYPE_NORMAL
-                    card.activeStatus = isCardActivated ? Card.STATUS_ACTIVE : Card.STATUS_INACTIVE
-                    card.firstName = cardDetails.holderName.split(separator: " ").first?.description
-                    card.middleName = cardDetails.holderName.split(separator: " ")[2].description
-                    card.nameType = getCreditCardNameUsingCardNumber(creditCardNumber: cardDetails.cardNumber).rawValue
-                    card.suffix = ""
-                    card.validationServiceID = createChannelResponse?.serviceId
-                    Observer<Card>().saveEntity(obj: card)
-                }
-                else if cardDetails.checkout && isSuccessful {
-                    creditCardVm.uiModel = UIModel.loading
-                    let _ = createChannelResponse
-                    let raisedInvoice = self.invoice
-                    if let amount = createChannelResponse?.amount {
-                        raisedInvoice?.amount = String(amount)
-                        raisedInvoice?.hasPaymentInProgress = true
-                        let totalPaid = raisedInvoice!.partialPaidAmount + amount
-                        switch true {
-                        case totalPaid > amount:
-                            raisedInvoice?.partialPaidAmount = 0.0
-                            raisedInvoice?.fullyPaid = true
-                            raisedInvoice?.overPaid = true
-                        case totalPaid < amount:
-                            raisedInvoice?.partialPaidAmount = totalPaid
-                            raisedInvoice?.fullyPaid = false
-                            raisedInvoice?.overPaid = false
-                        case totalPaid == amount:
-                            raisedInvoice?.partialPaidAmount = 0.0
-                            raisedInvoice?.fullyPaid = true
-                            raisedInvoice?.overPaid = false
-                        default:
-                            log(message: "Default")
-                        }
-                        Observer<Invoice>().saveEntity(obj: invoice!)
-                        let userMSISDN = Observer<Profile>().getEntities()[0].msisdn
-                        var customerName = ""
-                        let accountNumber = creditCardVm.fem.accountNumber
-                        if creditCardVm.service.isAirtimeService && ((userMSISDN?.elementsEqual(accountNumber)) != nil) {
-                            customerName = "Me"
-                        } else if creditCardVm.service.isAirtimeService {
-                            Task {
-                                await contactVm.fetchPhoneContactsWIthoutUI { cr in
-                                    if cr.phoneNumber.elementsEqual(accountNumber) {
-                                        customerName = cr.phoneNumber
-                                    } else {
-                                        customerName = ""
-                                    }
-                                } onError: { error in
-                                    log(message: error.localizedDescription)
-                                }
-                            }
-
-                        }
-                        let payer = creditCardVm.slm.selectedPayer
-                        let transactionHistory = TransactionHistory()
-                        let beepTransactionId = (raisedInvoice?.beepTransactionID.isNotEmpty)! ? raisedInvoice?.beepTransactionID : createChannelResponse?.beepTransactionId
-                        transactionHistory.beepTransactionID = beepTransactionId ?? ""
-                        transactionHistory.amount = String(amount)
-                        transactionHistory.billAmount = amount
-                        transactionHistory.status = TransactionHistory.STATUS_EXPIRED
-                        transactionHistory.transactionTitle = customerName
-                        transactionHistory.currencyCode = AppStorageManager.getCountry()?.currency
-                        transactionHistory.accountNumber = accountNumber
-                        transactionHistory.serviceID = creditCardVm.service.hubServiceID
-                        transactionHistory.msisdn = getPayingMSISDN()
-                        transactionHistory.payerClientID = payer.hubClientID
-                        transactionHistory.shortDescription = ">Transaction is in progress. Tingg Ref Number is \(raisedInvoice?.beepTransactionID ?? "")"
-                        Observer<TransactionHistory>().saveEntity(obj: transactionHistory)
-                        let content =  UIModel.Content(statusMessage: "Updated invoice")
-                        creditCardVm.uiModel = UIModel.content(content)
-                    }
-
-                }
+                handleResult(isSuccessful, successValue)
             }
         }
     }
+    fileprivate func updateTransactionHistory(_ raisedInvoice: Invoice?, _ amount: Double, _ customerName: String, _ accountNumber: String) {
+        let payer = creditCardVm.slm.selectedPayer
+        let transactionHistory = TransactionHistory()
+        let beepTransactionId = (raisedInvoice?.beepTransactionID.isNotEmpty)! ? raisedInvoice?.beepTransactionID : createChannelResponse?.beepTransactionId
+        transactionHistory.beepTransactionID = beepTransactionId ?? ""
+        transactionHistory.amount = String(amount)
+        transactionHistory.billAmount = amount
+        transactionHistory.status = TransactionHistory.STATUS_EXPIRED
+        transactionHistory.transactionTitle = customerName
+        transactionHistory.currencyCode = AppStorageManager.getCountry()?.currency
+        transactionHistory.accountNumber = accountNumber
+        transactionHistory.serviceID = creditCardVm.service.hubServiceID
+        transactionHistory.msisdn = getPayingMSISDN()
+        transactionHistory.payerClientID = payer.hubClientID
+        transactionHistory.shortDescription = ">Transaction is in progress. Tingg Ref Number is \(raisedInvoice?.beepTransactionID ?? "")"
+        Observer<TransactionHistory>().saveEntity(obj: transactionHistory)
+    }
+    fileprivate func handleResult(_ isSuccessful: Bool, _ successValue: Substring.Element) {
+        if isSuccessful {
+            isCardActivated = successValue == "2"
+            let card = createAndAddCard()
+            Observer<Card>().saveEntity(obj: card)
+        }
+        else if cardDetails.checkout && isSuccessful {
+            creditCardVm.uiModel = UIModel.loading
+            let _ = createChannelResponse
+            let raisedInvoice = self.invoice
+            if let amount = createChannelResponse?.amount {
+                if var rinv = raisedInvoice {
+                    updateInvoice(&rinv, amount: amount)
+                    Observer<Invoice>().saveEntity(obj: rinv)
+                }
+                let userMSISDN = Observer<Profile>().getEntities()[0].msisdn
+                let accountNumber = creditCardVm.fem.accountNumber
+                var customerName = getCustomerName(userMSISDN, accountNumber)
+                updateTransactionHistory(raisedInvoice, amount, customerName, accountNumber)
+                let content =  UIModel.Content(statusMessage: "Updated invoice")
+                creditCardVm.uiModel = UIModel.content(content)
+            }
+        }
+    }
+    fileprivate func getCustomerName(_ userMSISDN: String?, _ accountNumber: String) -> String {
+        var name: String = ""
+        if creditCardVm.service.isAirtimeService && ((userMSISDN?.elementsEqual(accountNumber)) != nil) {
+            name = "Me"
+        } else if creditCardVm.service.isAirtimeService {
+            Task {
+                await contactVm.fetchPhoneContactsWIthoutUI { cr in
+                    if cr.phoneNumber.elementsEqual(accountNumber) {
+                        name = cr.phoneNumber
+                    } else {
+                        name = ""
+                    }
+                } onError: { error in
+                    log(message: error.localizedDescription)
+                }
+            }
+        }
+        return name
+    }
     
+    private func createAndAddCard() -> Card {
+        let card = Card()
+        card.cardAlias = ""
+        card.customerAddress = cardDetails.address
+        card.cardType = Card.TYPE_NORMAL
+        card.activeStatus = isCardActivated ? Card.STATUS_ACTIVE : Card.STATUS_INACTIVE
+        card.firstName = cardDetails.holderName.split(separator: " ").first?.description
+        card.middleName = cardDetails.holderName.split(separator: " ")[2].description
+        card.nameType = getCreditCardNameUsingCardNumber(creditCardNumber: cardDetails.cardNumber).rawValue
+        card.suffix = ""
+        card.validationServiceID = createChannelResponse?.serviceId
+        return card
+    }
+    private func updateInvoice(_ raisedInvoice: inout Invoice, amount: Double ) {
+        raisedInvoice.amount = String(amount)
+        raisedInvoice.hasPaymentInProgress = true
+        let totalPaid = raisedInvoice.partialPaidAmount + amount
+        switch true {
+        case totalPaid > amount:
+            raisedInvoice.partialPaidAmount = 0.0
+            raisedInvoice.fullyPaid = true
+            raisedInvoice.overPaid = true
+        case totalPaid < amount:
+            raisedInvoice.partialPaidAmount = totalPaid
+            raisedInvoice.fullyPaid = false
+            raisedInvoice.overPaid = false
+        case totalPaid == amount:
+            raisedInvoice.partialPaidAmount = 0.0
+            raisedInvoice.fullyPaid = true
+            raisedInvoice.overPaid = false
+        default:
+            log(message: "Default")
+        }
+    }
     private func updateButton() {
         if cardIsValid && isHolderNameValid && expDateIsValid && isCVVLengthValid {
             buttonBgColor = .green
