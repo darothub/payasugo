@@ -36,7 +36,7 @@ public struct PhoneNumberValidationView: View {
     public static var policyWarning = "Kindly accept terms and policy"
     public static var phoneNumberEmptyWarning = "Phone number must not be empty"
     public init() {
-        // Intentionally unimplemented...modular accessibility
+        // Empty constructor
     }
     
     public var body: some View {

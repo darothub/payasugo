@@ -55,7 +55,7 @@ public struct CreditCardUtil {
 
         var numBytesEncrypted :size_t = 0
 
-        let cryptStatus = cryptData.withUnsafeMutableBytes {cryptBytes in
+        let cryptStatus = cryptData.withUnsafeMutableBytes { cryptBytes in
             data.withUnsafeBytes {dataBytes in
                 ivData.withUnsafeBytes {ivBytes in
                     keyData.withUnsafeBytes {keyBytes in

@@ -24,9 +24,13 @@ public struct CreditCardPinView: View {
     @State private var buttonBgColor: Color = .gray.opacity(0.5)
     @State private var isValid = false
     @State private var isConfirmPinValid = false
-    @State var onSubmit: (Bool) -> Void = {_ in }
+    @State var onSubmit: (Bool) -> Void = {_ in
+        //TODO
+    }
     
-    public init(pinPermission: Binding<String>, pin: Binding<String>, confirmPin: Binding<String>, pinIsCreated: Binding<Bool>, onSubmit: @escaping (Bool) -> Void = {_ in }) {
+    public init(pinPermission: Binding<String>, pin: Binding<String>, confirmPin: Binding<String>, pinIsCreated: Binding<Bool>, onSubmit: @escaping (Bool) -> Void = {_ in
+        //TODO
+    }) {
         self._pinPermission = pinPermission
         self._pin = pin
         self._confirmPin = confirmPin

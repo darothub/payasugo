@@ -85,7 +85,9 @@ struct ServicesGridView: View {
     @State var gridColumn = [
         GridItem(.adaptive(minimum: 90))
     ]
-    @State var onclick: (MerchantService) -> Void = {_ in }
+    @State var onclick: (MerchantService) -> Void = {_ in
+        //TODO
+    }
     var body: some View {
         LazyVGrid(columns: gridColumn, spacing: 0){
             ForEach(services, id: \.id) { service in

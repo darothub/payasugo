@@ -12,7 +12,6 @@ import Checkout
 import Foundation
 import Permissions
 
-@MainActor
 public class BuyAirtimeViewModel: ViewModel {
     @Published public var sam: SuggestedAmountModel = .init()
     @Published public var fem: FavouriteEnrollmentModel = .init()
@@ -26,15 +25,15 @@ public class BuyAirtimeViewModel: ViewModel {
         self.airtimeUsecase = airtimeUsecase
     }
     
-    func updateDefaultNetworkId(request: TinggRequest) {
+    func updateDefaultNetworkId(request: RequestMap) {
         defaultNetworkUIModel = UIModel.loading
         Task {
             do {
                 let result = try await airtimeUsecase.updateDefaultNetwork(request: request)
-                handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &defaultNetworkUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
                 AppStorageManager.setDefaultNetwork(service: service)
             } catch {
-                handleResultState(model: &defaultNetworkUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &defaultNetworkUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
 
@@ -63,7 +62,7 @@ public class BuyAirtimeViewModel: ViewModel {
         return services
     }
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
+    public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
@@ -71,18 +70,13 @@ public class BuyAirtimeViewModel: ViewModel {
         case .success(let data):
             var content: UIModel.Content
             if let d = data as? BaseDTOprotocol {
-                content = UIModel.Content(data: data, statusMessage: d.statusMessage)
+                content = UIModel.Content(data: data, statusMessage: d.statusMessage, showAlert: showAlertOnSuccess)
             } else {
-                content = UIModel.Content(data: data)
+                content = UIModel.Content(data: data, showAlert: showAlertOnSuccess)
             }
             model = UIModel.content(content)
             return
         }
-    }
-    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
-        model.sink { [unowned self] uiModel in
-            uiModelCases(uiModel: uiModel, action: action, onError: onError)
-        }.store(in: &subscriptions)
     }
 }
 

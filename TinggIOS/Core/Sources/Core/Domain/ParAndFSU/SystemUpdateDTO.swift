@@ -290,22 +290,6 @@ public enum BundleLabel: String, Codable {
     case package = "Package"
 }
 
-
-
-enum FavoritesDisplayMode: String, Codable {
-    case showAll = "SHOW_ALL"
-}
-
-enum PaymentLabel: String, Codable {
-    case buy = "Buy"
-    case pay = "Pay"
-    case paymentLABELPay = "pay"
-    case paymentLabelPay = "PAY"
-    case topup = "Topup"
-    case transfer = "Transfer"
-}
-
-
 enum Title: String, Codable {
     case alert = "Alert!"
     case inactiveService = "Inactive Service!"
@@ -413,32 +397,7 @@ public enum TransferType: String, Codable {
     case sent = "Sent"
 }
 
-// MARK: - Encode/decode helpers
 
-class JSONNull: Codable, Hashable {
-
-    public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
-        return true
-    }
-
-    public var hashValue: Int {
-        return 0
-    }
-
-    public init() {}
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if !container.decodeNil() {
-            throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encodeNil()
-    }
-}
 
 class JSONCodingKey: CodingKey {
     let key: String

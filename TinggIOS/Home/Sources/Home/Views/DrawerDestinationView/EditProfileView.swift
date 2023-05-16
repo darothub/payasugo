@@ -81,6 +81,15 @@ struct EditProfileView: View {
         .onChange(of: email, perform: { newValue in
             isEmailAddressValid = newValue.isValidEmail()
         })
+        .handleViewStatesMods(uiState: hvm.$uiModel) { content in
+            log(message: content)
+            realmManager.realmWrite {
+                profile?.firstName = firstName
+                profile?.lastName = lastName
+                profile?.emailAddress = email
+            }
+            showSuccessAlert = true
+        }
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
     }
     func updateProfile() {
@@ -97,17 +106,17 @@ struct EditProfileView: View {
     }
     
     func observeUIModel() {
-        hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
-    
-            realmManager.realmWrite {
-                profile?.firstName = firstName
-                profile?.lastName = lastName
-                profile?.emailAddress = email
-            }
-            showSuccessAlert = true
-        } onError: { err in
-            showErrorAlert = true
-        }
+//        hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
+//    
+//            realmManager.realmWrite {
+//                profile?.firstName = firstName
+//                profile?.lastName = lastName
+//                profile?.emailAddress = email
+//            }
+//            showSuccessAlert = true
+//        } onError: { err in
+//            showErrorAlert = true
+//        }
     }
 }
 

@@ -102,10 +102,6 @@ public class HomeUsecase {
     public func getBillAccounts() -> [BillAccount] {
         billAccountUsecase()
     }
-    public func saveBill(tinggRequest: TinggRequest, invoice: Invoice) async throws -> Bill {
-        let bill = try await saveBillUsecase(tinggRequest: tinggRequest)
-        return  bill
-    }
     public func handleMCPDeleteAndUpdateRequest(tinggRequest: TinggRequest) async throws -> BaseDTO {
         return  try await mcpDeleteAndUpdateUsecase(request: tinggRequest)
     }

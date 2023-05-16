@@ -24,22 +24,27 @@ struct DebitCardDropDownView: View {
                 dcddm.showDropDown.toggle()
             }
             List {
-                ForEach(dcddm.cardDetails, id: \.cardAlias) { card in
-                    DebitCardView(model: .constant(card))
-                        .padding()
-                        .onTapGesture {
-                            withAnimation {
-                                dcddm.selectedCardDetails = card
-                                dcddm.showDropDown.toggle()
-                            }
-                        }
-                }.listRowInsets(EdgeInsets())
-                .padding(.vertical)
+                showCards()
+               
             }.listStyle(.plain)
             .showIf($dcddm.showDropDown)
         
         }
   
+    }
+    @ViewBuilder
+    fileprivate func showCards() -> some View {
+        ForEach(dcddm.cardDetails, id: \.cardAlias) { card in
+            DebitCardView(model: .constant(card))
+                .padding()
+                .onTapGesture {
+                    withAnimation {
+                        dcddm.selectedCardDetails = card
+                        dcddm.showDropDown.toggle()
+                    }
+                }
+        }.listRowInsets(EdgeInsets())
+        .padding(.vertical)
     }
 }
 

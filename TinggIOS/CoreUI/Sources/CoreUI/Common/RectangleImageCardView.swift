@@ -12,7 +12,9 @@ public struct RectangleImageCardView: View {
     @State var y: CGFloat = 3
     @Binding var selected: String
     var onResetAccountNumber: () -> Void
-    public init(imageUrl: String = "", tag: String = "", radius: CGFloat = 5, y: CGFloat = 3, selected: Binding<String> = .constant(""), onResetAccountNumber: @escaping () -> Void = {}) {
+    public init(imageUrl: String = "", tag: String = "", radius: CGFloat = 5, y: CGFloat = 3, selected: Binding<String> = .constant(""), onResetAccountNumber: @escaping () -> Void = {
+        //TODO
+    }) {
         self.imageUrl = imageUrl
         self.tag = tag
         self.radius = radius

@@ -10,9 +10,10 @@ import Theme
 import Core
 struct SingleReceiptView: View {
     @Environment(\.dismiss) var dismiss
+    private static let rightTitle = "Right title"
     @State var data = [
-        DetailsVStackRightVStackLeftData(titleRight: "Right title", valueRight: "Right value", titleLeft: "Left title", valueLeft: "Left value"),
-        DetailsVStackRightVStackLeftData(titleRight: "Right title", valueRight: "Right value", titleLeft: "Left title", valueLeft: "Left value")
+        DetailsVStackRightVStackLeftData(),
+        DetailsVStackRightVStackLeftData()
     ]
     var paymentStatusAdvice: String {
         switch color {

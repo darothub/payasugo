@@ -12,9 +12,7 @@ import SwiftUI
 import Theme
 
 struct HomeView: View {
-    
     @EnvironmentObject var hvm: HomeViewModel
-    @State var profileImageUrl: String = ""
     @EnvironmentObject var navigation: NavigationUtils
     var categories: [[CategoryEntity]] {
         hvm.servicesByCategory

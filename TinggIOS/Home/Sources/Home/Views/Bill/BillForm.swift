@@ -59,23 +59,19 @@ public struct BillFormView: View {
                  
                 }
                 .padding()
-                .handleViewStates(uiModel: $homeViewModel.uiModel, showAlert: $homeViewModel.showAlert)
             }
-        }.onAppear {
-            homeViewModel.observeUIModel(model: homeViewModel.$uiModel, subscriptions: &homeViewModel.subscriptions) { content in
-                let invoice = content.data as! Invoice
-                invoice.enrollment = billDetails.info.first(where: { e in
-                    e.accountNumber == self.accountNumber
-                })
-                self.invoice = invoice
-                Observer<Invoice>().saveEntity(obj: invoice)
-                navUtils.navigationStack.append(
-                    Screens.billDetailsView(invoice, billDetails.service)
-                )
-            } onError: { err in
-                print("BILLFORM: \(err)")
-            }
-
+        }
+        .handleViewStatesMods(uiState: homeViewModel.$uiModel) { content in
+            log(message: content)
+            let invoice = content.data as! Invoice
+            invoice.enrollment = billDetails.info.first(where: { e in
+                e.accountNumber == self.accountNumber
+            })
+            self.invoice = invoice
+            Observer<Invoice>().saveEntity(obj: invoice)
+            navUtils.navigationStack.append(
+                Screens.billDetailsView(invoice, billDetails.service)
+            )
         }
     }
 }

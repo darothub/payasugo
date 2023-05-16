@@ -11,7 +11,9 @@ public struct ContactRowView: View {
     @State var listOfContactRow = [ContactRow]()
     var onContactSelected: (ContactRow) -> Void
     @Environment(\.dismiss) var dismiss
-    public init(listOfContactRow: [ContactRow] = [ContactRow](), onContactSelected: @escaping (ContactRow) -> Void = {_ in}) {
+    public init(listOfContactRow: [ContactRow] = [ContactRow](), onContactSelected: @escaping (ContactRow) -> Void = {_ in
+        //TODO
+    }) {
         self._listOfContactRow = State(initialValue: listOfContactRow)
         self.onContactSelected = onContactSelected
     }

@@ -52,8 +52,7 @@ struct BundleSelectionView: View {
                     buttonLabel: "Continue",
                     padding: 0
                 ) {
-                    
-                 
+                    //TODO
                 }
             }
             .padding(30)

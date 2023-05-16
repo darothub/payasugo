@@ -47,6 +47,7 @@ public struct KYCActionView: View {
                 .padding(.top)
                 Spacer()
                 TinggButton(backgroundColor: .green, buttonLabel: "Next") {
+                    //TODO
                 }
             }
             .padding(40)
@@ -75,7 +76,9 @@ public struct KYCActionView: View {
 struct ActionView: View {
     @State var dataModel: ActionViewDataModel = .init()
     @Binding var selectedButton: String
-    var onClick: () -> Void = {}
+    var onClick: () -> Void = {
+        //TODO
+    }
     var body: some View {
         HStack {
             Image(dataModel.image)

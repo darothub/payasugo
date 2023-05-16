@@ -31,25 +31,7 @@ public struct NavigationDrawerView<S>: View where S: Hashable {
                     .padding(.bottom, 30)
                     .padding(.leading, 25)
                 Divider()
-                List(0..<listOfMenu.count, id: \.self) { each in
-                    let menu = listOfMenu[each]
-                    menu
-                        .padding(.vertical, 25)
-                        .listRowInsets(EdgeInsets())
-                        .listRowSeparator(.hidden)
-                        .onTapGesture {
-                            withAnimation {
-                                selectedMenuScreen = menu.getScreen()
-                                handleNavigationDrawer()
-                                navigationDrawerProtocol.onMenuClick(selectedMenuScreen)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .background(menu.getScreen() == selectedMenuScreen ? .gray.opacity(0.5) : .white)
-                        
-                    
-                }.listStyle(PlainListStyle())
-                .padding(.top, 10)
+                getListOfMenu()
             }.frame(maxWidth: width/1.2, alignment: .leading)
                 .background(.white)
             Spacer()
@@ -61,6 +43,26 @@ public struct NavigationDrawerView<S>: View where S: Hashable {
         .onAppear {
             xOffset = -width
         }
+    }
+    @ViewBuilder
+    fileprivate func getListOfMenu() -> some View {
+        List(0..<listOfMenu.count, id: \.self) { each in
+            let menu = listOfMenu[each]
+            menu
+                .padding(.vertical, 25)
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+                .onTapGesture {
+                    withAnimation {
+                        selectedMenuScreen = menu.getScreen()
+                        handleNavigationDrawer()
+                        navigationDrawerProtocol.onMenuClick(selectedMenuScreen)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .background(menu.getScreen() == selectedMenuScreen ? .gray.opacity(0.5) : .white)
+        }.listStyle(PlainListStyle())
+        .padding(.top, 10)
     }
     
     fileprivate func handleNavigationDrawer() {
@@ -82,8 +84,9 @@ public struct NavigationMenu<S>: View where S: Hashable {
         self.title = title
     }
     public var body: some View {
-        Text(title)
-            .frame(maxWidth: .infinity, alignment: .leading)
+        VStack {
+            Text(title)
+        } .frame(maxWidth: .infinity, alignment: .leading)
     }
     public func getScreen() -> S {
         return screen

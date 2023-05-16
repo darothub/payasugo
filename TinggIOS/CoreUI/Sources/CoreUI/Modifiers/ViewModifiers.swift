@@ -39,8 +39,12 @@ public extension View {
         uiModel: Binding<UIModel>,
         showAlert: Binding<Bool>  = .constant(false),
         showSuccessAlert: Binding<Bool> = .constant(false),
-        onSuccessAction: @escaping () -> Void = {},
-        onErrorAction: @escaping () -> Void = {}
+        onSuccessAction: @escaping () -> Void = {
+            //TODO
+        },
+        onErrorAction: @escaping () -> Void = {
+            //TODO
+        }
     ) -> some View {
       self.modifier(ViewStates(uiModel: uiModel, showAlert: showAlert, showSuccessAlert: showSuccessAlert, onSuccessAction: onSuccessAction, onErrorAction: onErrorAction))
     }

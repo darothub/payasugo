@@ -51,8 +51,7 @@ public class FetchBillRepositoryImpl: FetchBillRepository {
     }
     
     public func deleteBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
-        let dto: BaseDTO = try await billRequest(tinggRequest: tinggRequest)
-        return dto
+        return try await updateBill(tinggRequest: tinggRequest)
     }
     
     public func updateBill(tinggRequest: TinggRequest) async throws -> BaseDTO {

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CheckoutViewModel.swift
 //  
 //
 //  Created by Abdulrasaq on 15/01/2023.
@@ -8,7 +8,6 @@ import Combine
 import CoreUI
 import Core
 import SwiftUI
-@MainActor
 public class CheckoutViewModel: ViewModel  {
     @Published public var sam: SuggestedAmountModel = .init()
     @Published public var fem: FavouriteEnrollmentModel = .init()
@@ -53,9 +52,9 @@ public class CheckoutViewModel: ViewModel  {
         Task {
             do {
                 let result:BaseDTO = try await usecase(request: request)
-                handleResultState(model: &validatePinUImodel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &validatePinUImodel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
             } catch {
-                handleResultState(model: &validatePinUImodel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &validatePinUImodel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
     }
@@ -66,7 +65,7 @@ public class CheckoutViewModel: ViewModel  {
                 let result:RINVResponse = try await usecase(request: request)
                 handleResultState(model: &raiseInvoiceUIModel, (Result.success(result) as Result<Any, Error>))
             } catch {
-                handleResultState(model: &raiseInvoiceUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &raiseInvoiceUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
     }
@@ -77,7 +76,7 @@ public class CheckoutViewModel: ViewModel  {
                 let result:DTBAccountsResponse = try await usecase(request: request)
                 handleResultState(model: &fwcUIModel, (Result.success(result) as Result<Any, Error>))
             } catch {
-                handleResultState(model: &fwcUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &fwcUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
     }
@@ -94,40 +93,20 @@ public class CheckoutViewModel: ViewModel  {
 
     }
     /// Handle result
-    nonisolated public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) where E : Error {
+    public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {
         switch result {
         case .failure(let apiError):
             model = UIModel.error((apiError as! ApiError).localizedString)
             return
         case .success(let data):
             var content: UIModel.Content
-            if data is BaseDTOprotocol {
-                content = UIModel.Content(data: data, statusMessage: (data as! BaseDTOprotocol).statusMessage)
+            if let d = data as? BaseDTOprotocol {
+                content = UIModel.Content(data: data, statusMessage: d.statusMessage, showAlert: showAlertOnSuccess)
             } else {
-                content = UIModel.Content(data: data)
+                content = UIModel.Content(data: data, showAlert: showAlertOnSuccess)
             }
             model = UIModel.content(content)
             return
         }
     }
-    nonisolated public func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in}) {
-        model
-            .sink { [unowned self] observabeleModel in
-            uiModelCases(uiModel: observabeleModel, action: action, onError: onError)
-        }
-        .onCancel {
-            Log.d(message: "Publisher cancelled")
-        }
-        .store(in: &subscriptions)
-    }
 }
-public extension Cancellable {
-    func onCancel(_ block: @escaping () -> Void) -> AnyCancellable {
-        AnyCancellable {
-            self.cancel()
-            block()
-        }
-    }
-}
-
-

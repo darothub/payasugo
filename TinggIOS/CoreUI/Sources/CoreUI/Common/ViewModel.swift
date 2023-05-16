@@ -7,12 +7,13 @@
 import Combine
 import Foundation
 public protocol ViewModel: ObservableObject {
-    func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>)
-    
+
 }
 
 extension ViewModel {
-    public func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in }) {
+    public func uiModelCases(uiModel: UIModel, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void = {_ in
+        //TODO
+    }) {
         switch uiModel {
         case .content(let data):
             action(data)
@@ -28,6 +29,12 @@ extension ViewModel {
         }
     }
     func observeUIModel(model: Published<UIModel>.Publisher, subscriptions: inout Set<AnyCancellable>, action: @escaping (UIModel.Content) -> Void, onError: @escaping(String) -> Void) {
-        
+        //TODO
+    }
+    func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>) {
+        //TODO
+    }
+    func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool) {
+        //TODO
     }
 }

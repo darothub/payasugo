@@ -15,7 +15,9 @@ public struct TextFieldAndRightIcon: View {
     @FocusState var cursor: Bool
     @Binding var success: Bool
     var onImageClick: () -> Void
-    public init(number: Binding<String>, iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, success: Binding<Bool> = .constant(true), onImageClick: @escaping () -> Void = {}) {
+    public init(number: Binding<String>, iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, success: Binding<Bool> = .constant(true), onImageClick: @escaping () -> Void = {
+        //TODO
+    }) {
         self._number = number
         self.iconName = iconName
         self.placeHolder = placeHolder

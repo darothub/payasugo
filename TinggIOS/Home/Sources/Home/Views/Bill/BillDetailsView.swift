@@ -94,18 +94,26 @@ public struct BillDetailsView: View {
         }.onAppear {
             amount = amountComputed
             dueDate = dueDateComputed
-            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel, subscriptions: &homeViewModel.subscriptions) { content in
-                if let bill = content.data as? Bill {
-                    let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
-                    homeViewModel.nominationInfo.$objects.append(enrol)
-                    navUtils.navigationStack.append(Screens.home)
-                }
-               
-            }
+//            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel, subscriptions: &homeViewModel.subscriptions) { content in
+//                if let bill = content.data as? Bill {
+//                    let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
+//                    homeViewModel.nominationInfo.$objects.append(enrol)
+//                    navUtils.navigationStack.append(Screens.home)
+//                }
+//
+//            }
             isNewAccountNumber = homeViewModel.nominationInfo.getEntities().first { e in
                 e.accountNumber == fetchBill.billReference
             } == nil
            
+        }
+        .handleViewStatesMods(uiState: homeViewModel.$serviceBillUIModel) { content in
+            log(message: content)
+            if let bill = content.data as? Bill {
+                let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
+                homeViewModel.nominationInfo.$objects.append(enrol)
+                navUtils.navigationStack.append(Screens.home)
+            }
         }
     }
 }

@@ -40,7 +40,6 @@ struct NavigationModifier: ViewModifier {
                         .environmentObject(contactViewModel)
                 case let .billers(billers):
                     BillersView(billers: billers as! TitleAndListItem)
-                        .environmentObject(hvm)
                         .onAppear {
                             colorTint = .blue
                         }

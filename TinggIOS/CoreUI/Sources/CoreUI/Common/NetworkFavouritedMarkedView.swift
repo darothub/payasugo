@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct NetworkFavouritedMarkedView: View {
     public init() {
-        
+        //Empty constructor
     }
     public var body: some View {
         Triangle()

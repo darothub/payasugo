@@ -18,7 +18,9 @@ struct TransactionListView: View {
         colors.randomElement() ?? .green
     }
  
-    var deleteClosure:(String, Int) -> Void = {_, _ in }
+    var deleteClosure:(String, Int) -> Void = {_, _ in
+        //TODO
+    }
     var body: some View {
         List {
             ForEach(listOfModel) { model in

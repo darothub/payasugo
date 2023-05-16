@@ -21,7 +21,6 @@ import Theme
 
 struct TinggIOSApp: App {
     @StateObject var navigation = NavigationUtils()
-    
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()

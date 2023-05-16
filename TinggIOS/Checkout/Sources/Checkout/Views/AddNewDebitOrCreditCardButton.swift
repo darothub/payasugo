@@ -9,7 +9,9 @@ import SwiftUI
 
 struct AddNewDebitOrCreditCardButton: View {
     let addANewCardString = "Add a new card"
-    var onclick: () -> Void = {}
+    var onclick: () -> Void = {
+        //TODO
+    }
     var body: some View {
         HStack {
             Image(systemName: "plus")

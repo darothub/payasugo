@@ -19,7 +19,7 @@ public struct MerchantPayerDTO: Codable {
     public let abbreviation, colorCode, shortName, showLogo: String
     public let checkoutType, canPayForOther, payerReference, chargeSyncMode: String
     public let paymentCount: String
-    public let isChargingPayer: YesOrNoEnum
+    public let isChargingPayer: String
     public let payerCharge, title, message, paymentActivationDesc: String
 
     enum CodingKeys: String, CodingKey {
@@ -87,7 +87,7 @@ public struct MerchantPayerDTO: Codable {
         entity.payerReference = self.payerReference
         entity.chargeSyncMode = self.chargeSyncMode
         entity.paymentCount = self.paymentCount
-        entity.isChargingPayer = self.isChargingPayer.rawValue
+        entity.isChargingPayer = self.isChargingPayer
         entity.payerCharge = self.payerCharge
         entity.title = self.title
         entity.message = self.message

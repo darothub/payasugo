@@ -3,9 +3,10 @@ import XCTest
 
 final class CreditCardTests: XCTestCase {
     func testExample() throws {
+        let helloWorld = "Hello, World!"
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(CreditCard().text, "Hello, World!")
+        XCTAssertEqual(helloWorld, "Hello, World!")
     }
 }

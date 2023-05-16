@@ -164,7 +164,9 @@ extension String {
     }
     
     public func isValidEmail() -> Bool {
-        let regex = try! NSRegularExpression(pattern: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", options: .caseInsensitive)
+        guard let regex = try? NSRegularExpression(pattern: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", options: .caseInsensitive) else {
+            return false
+        }
         return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
     }
 }
@@ -244,11 +246,11 @@ public struct CardDetails {
     }
     
     public mutating func encryptdata() -> Self {
-        let suffix = String(self.cardNumber.suffix(4))
-        let prefix = String(self.cardNumber.prefix(4))
+        let s = String(self.cardNumber.suffix(4))
+        let p = String(self.cardNumber.prefix(4))
         self.encryptedExpDate = CreditCardUtil.encrypt(data: self.expDate)
-        self.encryptedSuffix = CreditCardUtil.encrypt(data: suffix)
-        self.encryptedPrefix = CreditCardUtil.encrypt(data: prefix)
+        self.encryptedSuffix = CreditCardUtil.encrypt(data: s)
+        self.encryptedPrefix = CreditCardUtil.encrypt(data: p)
         return self
     }
 
