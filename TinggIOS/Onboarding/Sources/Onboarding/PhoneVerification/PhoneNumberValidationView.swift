@@ -16,8 +16,6 @@ import Theme
 /// Upon successful input validation user is taken to ``OtpConfirmationView``
 /// User is directed to the Home view after OTP confirmation 
 public struct PhoneNumberValidationView: View {
-    @AppStorage(Utils.defaultNetworkServiceId) var defaultNetworkServiceId: String = ""
-//    @StateObject var vm = OnboardingDI.createOnboardingViewModel()
     @StateObject var ovm = OnboardingDI.createOnboardingVM()
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
@@ -33,8 +31,12 @@ public struct PhoneNumberValidationView: View {
     @State private var hasCheckedTermsAndPolicy = false
     @State private var showSupportTeamContact = false
     @State private var countriesDictionary = [String: String]()
+    @State private var activateButton = false
+    @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
+    @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     public static var policyWarning = "Kindly accept terms and policy"
     public static var phoneNumberEmptyWarning = "Phone number must not be empty"
+    
     public init() {
         // Empty constructor
     }
@@ -55,12 +57,17 @@ public struct PhoneNumberValidationView: View {
                         perform: onPhoneNumberInput(number:)
                     )
                 VerificationCodeAdviceTextView()
-                PolicySectionView(hasCheckedTermsAndPolicy: $hasCheckedTermsAndPolicy)
+                PolicySectionView(
+                    termOfAgreementLink: $termOfAgreementLink,
+                    privacyPolicy: $privacyPolicy,
+                    hasCheckedTermsAndPolicy: $hasCheckedTermsAndPolicy
+                )
                 Spacer()
                 TinggSupportSectionView(geometry: geometry, showSupportTeamContact: $showSupportTeamContact)
                 TinggButton(
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                    buttonLabel: "Continue"
+                    buttonLabel: "Continue",
+                    isActive: $activateButton
                 ) {
                     prepareActivationRequest()
                 }
@@ -91,6 +98,17 @@ public struct PhoneNumberValidationView: View {
             .onAppear {
                 ovm.getCountryDictionary()
             }
+            .onChange(of: countryCode, perform: { newValue in
+                let dbCountries = Observer<Country>().getEntities()
+                let currentCountry = dbCountries.first {
+                    $0.countryDialCode == newValue
+                }
+                if let currentTacUrl = currentCountry?.tacURL, let currentPrivacyPolicyUrl = currentCountry?.privacyPolicyURL {
+                    termOfAgreementLink = "[Terms of Agreement](\(currentTacUrl))"
+                    privacyPolicy = "[Privacy Policy](\(currentPrivacyPolicyUrl))"
+                }
+
+            })
             .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
                 countriesDictionary = content.data as! [String: String]
             }
@@ -102,6 +120,9 @@ public struct PhoneNumberValidationView: View {
                 let systemUpdate = content.data as! SystemUpdateDTO
                 ovm.saveDataIntoDB(data: systemUpdate)
                 gotoHomeView()
+            }
+            .onChange(of: hasCheckedTermsAndPolicy) { newValue in
+                activateButton = newValue && isValidPhoneNumber
             }
         }
     }
@@ -171,8 +192,9 @@ extension PhoneNumberValidationView {
     }
     
     fileprivate func onPhoneNumberInput(number: String) -> Void {
-        isValidPhoneNumber = validatePhoneNumberInput(number: "\(countryCode)\(phoneNumber)")
+        isValidPhoneNumber = validatePhoneNumberInput(number: "\(phoneNumber)")
         isNotValidPhoneNumber = !isValidPhoneNumber
+        activateButton = hasCheckedTermsAndPolicy && isValidPhoneNumber
     }
     fileprivate func prepareActivationRequest() {
         let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)

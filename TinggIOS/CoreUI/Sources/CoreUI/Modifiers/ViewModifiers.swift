@@ -50,8 +50,8 @@ public extension View {
     }
    
     func setPageIndicatorAppearance() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = .red
-        UIPageControl.appearance().pageIndicatorTintColor = UIColor.red.withAlphaComponent(0.2)
+        UIPageControl.appearance().currentPageIndicatorTintColor = .green
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor.gray.withAlphaComponent(0.2)
     }
     func tabItemStyle(title: String, image: Image?) -> some View {
         modifier(TabItemStyle(title: title, image: image))
@@ -153,3 +153,4 @@ public struct TextFiedValidationStyle: ViewModifier {
             .padding(.horizontal, 25)
     }
 }
+

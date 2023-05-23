@@ -13,6 +13,7 @@ import Home
 import Onboarding
 import SwiftUI
 import Theme
+import CoreUI
 
 @main
 /// This is entry point into the application.
@@ -20,10 +21,12 @@ import Theme
 /// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodel
 
 struct TinggIOSApp: App {
+    @Environment(\.colorScheme) var colorScheme
     @StateObject var navigation = NavigationUtils()
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
+
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -37,6 +40,9 @@ struct TinggIOSApp: App {
                     checkoutView()
                 }
                 .onAppear {
+                    UITextField.appearance().keyboardAppearance = .light
+                    UITabBar.appearance().backgroundColor = colorScheme == .dark ? UIColor.white : UIColor.white
+
                     Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
                 }
         }

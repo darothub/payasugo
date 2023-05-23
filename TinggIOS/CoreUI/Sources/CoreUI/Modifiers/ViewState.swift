@@ -130,9 +130,10 @@ public struct ViewStates: ViewModifier {
 public struct ViewStatesMod: ViewModifier {
     let uiState: Published<UIModel>.Publisher
     @State var subscriptions = Set<AnyCancellable>()
-    @State var showProgressBar = false
     @State var showAlert = false
     @State var message = ""
+    @State private var showProgressBar = false
+    @State private var disableContent = false
     var action: () -> Void
     var onSuccess: (UIModel.Content) -> Void
     public init(uiState: Published<UIModel>.Publisher, onSuccess: @escaping (UIModel.Content) -> Void, action: @escaping () -> Void = {
@@ -146,7 +147,8 @@ public struct ViewStatesMod: ViewModifier {
     public func body(content: Content) -> some View {
         ZStack {
             content
-            ProgressView("Loading...")
+                .disabled(disableContent)
+            ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                 .scaleEffect(2)
                 .font(.caption)
@@ -158,6 +160,7 @@ public struct ViewStatesMod: ViewModifier {
                 showAlert = true
                 showProgressBar = false
                 message = err
+                disableContent = false
                 log(message: err)
             case .content(let content):
                 let cont = content
@@ -165,11 +168,14 @@ public struct ViewStatesMod: ViewModifier {
                 showAlert = content.showAlert
                 message = cont.statusMessage
                 onSuccess(cont)
+                disableContent = false
                 log(message: cont)
             case .loading:
+                disableContent = true
                 showProgressBar = true
                 log(message: "loading")
             case .nothing:
+                disableContent = false
                 showProgressBar = false
                 log(message: "nothing")
             }

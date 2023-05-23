@@ -103,7 +103,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
             showNetworks()
         }
         .customDialog(isPresented: $showNetworkList) {
-            DialogContentView(networkList: networkList, phoneNumber: phoneNumber, selectedNetwork: defaultServiceName, listner: self)
+            DialogContentView(networkList: networkList, phoneNumber: "+254722333867", selectedNetwork: defaultServiceName, listner: self)
                 .padding()
                 .handleViewStatesMods(uiState: bavm.$defaultNetworkUIModel) { content in
                     log(message: content)

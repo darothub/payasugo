@@ -7,21 +7,27 @@
 import Core
 import CoreUI
 import SwiftUI
-
+import Theme
 struct SupportView: View, OnSupportItemClick {
     @Environment(\.openURL) var openURL
+    @Environment(\.colorScheme) var colorScheme
     @StateObject var hvm = HomeDI.createHomeViewModel()
     @State var supportItems = [SupportItem]()
     @State var showSheet = false
     @State var supportPhoneNumber = ""
     @State var faq = ""
     var body: some View {
-        List {
-            ForEach(supportItems) { item in
-                SupportItemView(item: item, delegate: self)
-                    .listRowInsets(EdgeInsets())
+        VStack {
+            List {
+                ForEach(supportItems) { item in
+                    SupportItemView(item: item, delegate: self)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(colorScheme == .dark ? Color.white: Color.white)
+                }
             }
-        }.listStyle(GroupedListStyle())
+            .backgroundmode(color: .gray.opacity(0.1))
+            .scrollContentBackground(.hidden)
+        }.backgroundmode(color: .white)
         .onAppear {
             let contact = Observer<Contact>().getEntities()
             if contact.isNotEmpty() {

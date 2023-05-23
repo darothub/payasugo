@@ -13,8 +13,6 @@ import Theme
 ///  Displays OTP text field for confirmation.
 ///  Upon successful OTP confirmation user returns to Phone number verification view.
 public struct OtpConfirmationView: View {
-    
-    
     @State private var otpSize = 4
     @State private var otp = ""
     @State private var timeLeft = 60
@@ -22,11 +20,13 @@ public struct OtpConfirmationView: View {
     @Binding var otpConfirmed: Bool
 //    @StateObject private var otpViewOVM = OnboardingDI.createOnboardingViewModel()
     @StateObject private var otpVM = OnboardingDI.createOnboardingVM()
+    @State var disableButton = false
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     @State private var showErrorAlert = false
     @State private var showSuccessAlert = false
     @State private var onSubmit = false
+    @State private var activateButton = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     public var body: some View {
@@ -44,30 +44,30 @@ public struct OtpConfirmationView: View {
                 .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: "Confirm"
+                buttonLabel: "Confirm",
+                isActive: $activateButton
+                
             ) {
                 let confirmOTPRequest: RequestMap =  RequestMap.Builder()
                     .add(value: "VAK", for: .SERVICE)
                     .add(value: otp, for: .ACTIVATION_CODE)
                     .build()
                 otpVM.confirmActivationCode(request: confirmOTPRequest)
-//                otpViewOVM.confirmActivationCodeRequest(code: otp)
                
             }
+            .padding(20)
             .handleViewStatesMods(uiState: otpVM.$onConfirmActivationUIModel) { content in
-                log(message: content)
                 dismiss()
                 otpConfirmed = true
             }
-//            .handleViewStates(uiModel: $otpViewOVM.onConfirmActivationUIModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
-            
         }
-        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
         .onReceive(timer) { _ in
             handleCountDown()
         }
-        .onAppear {
-//            observingUIModel()
+        .onChange(of: otp) { newValue in
+            activateButton = otp.count == otpSize
         }
         
     }
@@ -110,3 +110,6 @@ struct OtpConfirmationView_Previews: PreviewProvider {
         OtpConfirmationViewHolder()
     }
 }
+
+
+

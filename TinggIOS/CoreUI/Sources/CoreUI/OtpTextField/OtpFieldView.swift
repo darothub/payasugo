@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /// Custom OTF field view
 public struct OtpFieldView: View {
@@ -15,6 +16,7 @@ public struct OtpFieldView: View {
     @State fileprivate var fields = Array(repeating: "", count: 4)
     @FocusState fileprivate var cursor: Int?
     @State var toHaveBorder = false
+    @FocusState var focus: Int?
     var onCompleteListener: OnPINCompleteListener?
     /// ``OtpFieldView`` initialiser
     /// - Parameters:
@@ -34,15 +36,20 @@ public struct OtpFieldView: View {
     }
     fileprivate func otpfields(_ index: Int) -> some View {
         return VStack(spacing: 8) {
-            TextField("", text: $fields[index])
-                .keyboardType(.numberPad)
-                .textContentType(.oneTimeCode)
-                .multilineTextAlignment(.center)
-                .focused($cursor, equals: index)
-                .padding(5)
-               
+            CustomOTPView(placeholder: "", text: $fields[index], isFocusedIndex: _cursor, index: index) { onEmpty in
+                if onEmpty && focus != 0 {
+                    focus = index - 1
+                }
+             }
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .focused($focus, equals: index)
+            .multilineTextAlignment(.center)
+            .padding(5)
+            .onTapGesture {
+                focus = index
+            }
             Rectangle()
-                .fill(cursor == index ? focusColor : .gray.opacity(3))
+                .fill(focus == index ? focusColor : .gray.opacity(3))
                 .frame(height: 3)
         }.background(
             toHaveBorder ?
@@ -52,20 +59,11 @@ public struct OtpFieldView: View {
                 .stroke(lineWidth: 0.0)
                 
         )
+        .onAppear {
+            focus = 0
+        }
+      
     }
-    fileprivate func eachField(_ index: Int) -> some View {
-        return otpfields(index)
-            .onChange(of: fields[index]) { newValue in
-                cursorMovement(value: newValue, index: index)
-                otpValue = fields.joined()
-                print("NewValue \(index)")
-                if onCompleteListener != nil  && index == fieldSize-1 && !newValue.isEmpty{
-                    onCompleteListener?.submit()
-                }
-            }
-            .frame(width: 40)
-    }
-    
     @ViewBuilder
     fileprivate func otpField() -> some View {
         HStack(spacing: 14) {
@@ -74,18 +72,32 @@ public struct OtpFieldView: View {
             }
         }
     }
+    fileprivate func eachField(_ index: Int) -> some View {
+        return otpfields(index)
+            .onChange(of: fields[index]) { newValue in
+                cursorMovement(value: newValue, index: index)
+                otpValue = fields.joined()
+                if onCompleteListener != nil  && index == fieldSize-1 && !newValue.isEmpty {
+                    onCompleteListener?.submit()
+                }
+            }
+            .frame(width: 40)
+    }
     fileprivate func cursorMovement(value: String, index: Int) {
-        if value.count > 1 {
-            fields[index] = String(value.last!)
+        if value.count > 0 {
+            fields[index] = String(value.prefix(1))
+        }
+        if value.count < 1 && index > 0 {
+            focus = index - 1
         }
         if value.isEmpty && index != 0 {
-            cursor = index - 1
+            focus = index - 1
         }
-        if cursor == fields.count - 1 {
-            cursor = nil
+        if !value.isEmpty && index != fields.count - 1 {
+            focus = index + 1
         }
-        if !value.isEmpty && cursor != nil {
-            cursor = index + 1
+        if !value.isEmpty && index == fieldSize-1 {
+            focus = nil
         }
     }
 }
@@ -107,3 +119,4 @@ struct OtpFieldView_Previews: PreviewProvider {
 public protocol OnPINCompleteListener {
     func submit() -> Void
 }
+

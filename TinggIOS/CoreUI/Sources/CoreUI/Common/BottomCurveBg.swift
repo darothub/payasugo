@@ -7,10 +7,9 @@
 
 import SwiftUI
 public func topBackgroundDesign(
-    height: CGFloat, color: Color
+   color: Color
 ) -> some View {
     BottomCurve()
         .fill(color)
-        .frame(height: height)
         .edgesIgnoringSafeArea(.all)
 }

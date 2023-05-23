@@ -11,33 +11,49 @@ import SwiftUI
 struct PaymentOptionsView: View {
     private var headerText = "Tell us which payement options you would like to use on Tingg"
     @StateObject private var hvm = HomeDI.createHomeViewModel()
+    @State var paymentOptions =  [
+        PaymentOptionItem(optionName: "Mpesa", isSelected: false),
+        PaymentOptionItem(optionName: "Viusasa", isSelected: false)
+    ]
+
     var body: some View {
         VStack {
             Text(headerText)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Spacer()
-            List($hvm.listOfPaymentOptions) { option in
+                .foregroundmode(color: .black)
+            List($paymentOptions) { option in
                 PaymentOptionItemView(
                     optionItem: option
                 )
                 .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.white)
+                .padding(.vertical, 30)
+                .padding(.horizontal, 5)
                 .disabled(option.isDefault.wrappedValue)
-            }.listStyle(PlainListStyle())
+            }
+            .scrollIndicators(ScrollIndicatorVisibility.hidden)
+            .listStyle(PlainListStyle())
+            .backgroundmode(color: .white)
+            .scrollContentBackground(.hidden)
             TinggButton(buttonLabel: "Setup now") {
                 //TODO
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .backgroundmode(color: .white)
         .onAppear {
             let activePayers = Observer<MerchantPayer>().getEntities().filter {$0.activeStatus == "1"}
-            hvm.listOfPaymentOptions = activePayers.map { mp in
+            let options = activePayers.map { mp in
                 PaymentOptionItem(
-                    optionName: mp.clientName ?? "",
+                    optionName: mp.clientName ?? "None",
                     isSelected: mp.isSelected?.convertStringToInt() == 1 ? true : false,
                     isDefault:  mp.isDefault == "1" ? true : false
                 )
                
             }
+            paymentOptions.removeAll()
+            paymentOptions.append(contentsOf: options)
         }
     }
 }
@@ -47,6 +63,7 @@ struct PaymentOptionItemView: View {
     var body: some View {
         HStack {
             Text(optionItem.optionName)
+                .foregroundmode(color: .black)
             Spacer()
             CheckBoxView(checkboxChecked: $optionItem.isSelected)
         }

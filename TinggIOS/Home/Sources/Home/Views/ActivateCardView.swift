@@ -10,7 +10,6 @@ import Core
 import Theme
 
 struct ActivateCardView: View {
-    var parentSize: GeometryProxy
     var activateAction: () -> Void
     var body: some View {
         HStack {
@@ -27,7 +26,7 @@ struct ActivateCardView: View {
             } label: {
                 Text("ACTIVATE")
                     .frame(maxWidth: .infinity)
-                    .font(.system(size: PrimaryTheme.mediumTextSize))
+                    .font(.caption)
                     .padding(10)
                     .foregroundColor(.red)
                     .background(
@@ -39,9 +38,7 @@ struct ActivateCardView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .frame(height: parentSize.size.height * 0.13)
                 .foregroundColor(.white)
-                .padding()
                 .shadow(radius: 3, x: 0, y: 3)
         )
     }
@@ -50,7 +47,7 @@ struct ActivateCardView: View {
 struct ActivateCardView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geo in
-            ActivateCardView(parentSize: geo) {
+            ActivateCardView() {
                 // Intentionally unimplemented...
             }
         }

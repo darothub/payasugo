@@ -14,9 +14,7 @@ public struct CountryPickerView: View {
     @Binding public var countryFlag: String
     public var numberLength = 10
     @Binding var countries: [String: String]
-    @ObservedObject var codeTextField = ObservableTextField()
     @State public var showPhoneSheet = false
-    @Environment(\.colorScheme) var colorScheme
     /// ``CountryPickerView`` initialiser
     /// - Parameters:
     ///   - phoneNumber: input phone number string
@@ -40,16 +38,16 @@ public struct CountryPickerView: View {
             HStack (spacing: 0) {
                 Text(countryCode.isEmpty ? "error" : "\(getFlag(country: countryFlag)) +\(countryCode)")
                     .frame(width: 80, height: 50)
+                    .foregroundColor(.black)
                     .background(Color.clear)
                     .cornerRadius(10)
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
                     .onTapGesture(perform: tap)
                     .accessibility(identifier: "countrycodeandflag")
                 
                 TextField("Phone Number", text: $phoneNumber)
                     .padding()
                     .keyboardType(.phonePad)
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .foregroundColor(.black)
                     .onChange(of: phoneNumber, perform: change)
                     .accessibility(identifier: "countrytextfield")
             }

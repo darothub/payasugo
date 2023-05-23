@@ -52,6 +52,7 @@ public struct IconImageCardView: View {
     }
 }
 public struct ResponsiveImageCardView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var imageUrl: String
     @State var radius: CGFloat = 10
     @State var scaleEffect: CGFloat = 1
@@ -81,6 +82,7 @@ public struct ResponsiveImageCardView: View {
                 .clipShape(Circle())
                 .padding()
                 .scaleEffect(scaleEffect)
+                .foregroundColor(colorScheme == .dark ? .black : .black)
         }
         .background(
             bgShape == .rectangular ?

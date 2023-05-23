@@ -9,6 +9,7 @@ import CoreUI
 import SwiftUI
 import Theme
 struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
+    @Environment(\.colorScheme) var colorScheme
     @StateObject private var hvm = HomeDI.createHomeViewModel()
     @State private var settings: [SettingsSectionItem] = []
     @State private var list:[String] = ["Hello", "Hi"]
@@ -33,9 +34,14 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
             List {
                 ForEach(settings) { setting in
                     SettingsSectionItemView(section: setting, delegate: self)
+                        .listRowBackground(colorScheme == .dark ? Color.white : Color.white)
                 }
             }
-        }.onAppear {
+            .backgroundmode(color: .gray.opacity(0.1))
+            .scrollContentBackground(.hidden)
+        }
+        .backgroundmode(color: .white)
+        .onAppear {
             let allSettings = [
                 SettingsSectionItem(section: SettingsSectionItem.GENERAL, items: [
                     SettingsItem(main: SettingsItem.CARD, actionInformation: "Add or Delete card"),
@@ -64,6 +70,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
             DialogContentView(networkList: networkList, phoneNumber: phoneNumber, selectedNetwork: defaultServiceName, listner: self)
                 .padding()
         }
+        
         .handleViewStatesMods(uiState: hvm.$billReminderUIModel) { content in
             let dto = content.data as! BaseDTO
             updateStorageBillReminderContent(dto: dto)
@@ -203,7 +210,7 @@ struct SettingsSectionItemView: View {
                     SettingsItemView(item: item, delegate: delegate)
                         .listRowSeparator(.hidden)
                 }
-            }
+            }.foregroundmode(color: .green)
         }
     }
 }
@@ -217,12 +224,13 @@ struct SettingsItemView : View {
             HStack {
                 Text(item.main)
                     .font(.headline)
+                    .foregroundmode(color: .black)
                 Toggle("", isOn: $item.isToggled)
                     .showIf($item.showBoolItem)
             }
             Text(item.actionInformation)
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundmode(color: .gray)
                 .showIf($showActionInformation)
         }
         .padding(.vertical)

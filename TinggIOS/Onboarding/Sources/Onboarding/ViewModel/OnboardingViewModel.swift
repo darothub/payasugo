@@ -23,6 +23,7 @@ public class OnboardingVM: ViewModel {
         self.uiModel = uiModel
     }
     /// Collect a dictionary of country code and dial code
+    @MainActor
     func getCountryDictionary() {
         phoneNumberFieldUIModel = UIModel.loading
         Task {
@@ -35,6 +36,7 @@ public class OnboardingVM: ViewModel {
         }
     }
     /// Request for activation code
+    @MainActor
     func getActivationCode(request: RequestMap) {
         onActivationRequestUIModel = UIModel.loading
         Task {
@@ -47,6 +49,7 @@ public class OnboardingVM: ViewModel {
         }
     }
     /// Request for confirmation of  OTP
+    @MainActor
     func confirmActivationCode(request: RequestMap) {
         onConfirmActivationUIModel = UIModel.loading
         Task {
@@ -59,6 +62,7 @@ public class OnboardingVM: ViewModel {
         }
     }
     /// Request for System update FSU
+    @MainActor
     func fetchSystemUpdate(request: RequestMap) {
         uiModel = UIModel.loading
         Task {

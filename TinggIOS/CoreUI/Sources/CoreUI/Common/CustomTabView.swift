@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  CustomTabView.swift
 //  
 //
 //  Created by Abdulrasaq on 20/09/2022.
@@ -9,15 +9,15 @@ import SwiftUI
 
 
 /// Custom tab view
-public struct CustomTabView: View {
+public struct CustomTabView<Content:View> : View {
     @Binding var tabColor: Color
     @State private var selectedTab = ""
-    @Binding var items: [TabLayoutItem]
+    @Binding var items: [TabLayoutItem<Content>]
     /// ``CustomTabView`` initialiser
     /// - Parameters:
     ///   - items: List of tab layouts
     ///   - tabColor: tab color
-    public init(items: Binding<[TabLayoutItem]>, tabColor: Binding<Color>) {
+    public init(items: Binding<[TabLayoutItem<Content>]>, tabColor: Binding<Color>) {
         self._tabColor = tabColor
         self._items = items
     }
@@ -42,7 +42,7 @@ public struct CustomTabView: View {
     }
     private func iTerateTabViews() -> some View {
         ForEach(items, id: \.title) { tabId in
-            tabId.view
+            tabId.view()
         }
     }
 }
@@ -69,11 +69,12 @@ public struct TabItemView: View {
     }
 }
 
-public struct TabLayoutItem {
+public struct TabLayoutItem<Content: View> {
     var title: String
-    var view: AnyView
-    public init(title: String, view: AnyView) {
+    var view : () -> Content
+    public init(title: String, @ViewBuilder view: @escaping () -> Content) {
         self.title = title
         self.view = view
     }
 }
+

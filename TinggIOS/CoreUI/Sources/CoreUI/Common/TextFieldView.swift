@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TextFieldView.swift
 //  
 //
 //  Created by Abdulrasaq on 06/09/2022.
@@ -10,6 +10,7 @@ import SwiftUI
 
 /// A text field view with a title label
 public struct TextFieldView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var fieldText: String
     @State var label: String
     @State var placeHolder: String
@@ -32,10 +33,11 @@ public struct TextFieldView: View {
                 Text(label)
                     .foregroundColor(.black)
                     .font(.subheadline)
-                TextField(placeHolder, text: $fieldText)
+                TextField(placeHolder, text: $fieldText, prompt: Text(placeHolder).foregroundColor(.gray))
                     .keyboardType(keyBoardType)
                     .padding(15)
                     .focused($cursor)
+                    .foregroundColor(.black)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
