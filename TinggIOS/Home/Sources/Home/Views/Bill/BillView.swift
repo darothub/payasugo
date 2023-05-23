@@ -12,7 +12,9 @@ import Theme
 public struct BillView: View {
     @State var profileImageUrl: String = ""
     @State var color: Color = .green
-    @State var items:[TabLayoutItem] = [TabLayoutItem(title: "MY BILLS", view: AnyView(EmptyView()))]
+    @State var items = [TabLayoutItem(title: "Bill") {
+       AnyView(Text("My BIll"))
+    }]
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
@@ -27,7 +29,7 @@ public struct BillView: View {
                 .background(secondaryColor)
             CustomTabView(items: $items, tabColor: $color)
         }.onAppear {
-            profileImageUrl = (Observer<Profile>().$objects.wrappedValue.first?.photoURL)!
+            profileImageUrl = (Observer<Profile>().getEntities().first?.photoURL) ?? ""
             color = secondaryColor
             let transactions = Observer<TransactionHistory>().getEntities()
             log(message: "\(transactions)")
@@ -68,10 +70,14 @@ public struct BillView: View {
             
             let view = AnyView(TransactionListView(listOfModel: $sections)) 
 
-            let tabItem = TabLayoutItem(title: "RECEIPTS", view: AnyView(view))
+            let tabItem = TabLayoutItem(title: "RECEIPTS") {
+                AnyView(TransactionListView(listOfModel: $sections))
+            }
             withAnimation {
                 items = [
-                    TabLayoutItem(title: "MY BILLS", view: AnyView(MyBillView())),
+                    TabLayoutItem(title: "MY BILLS") {
+                        AnyView(MyBillView())
+                    },
                     tabItem
                 ]
             }

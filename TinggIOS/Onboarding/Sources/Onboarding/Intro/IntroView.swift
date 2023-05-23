@@ -21,12 +21,11 @@ public struct IntroView: View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
                 topBackgroundDesign(
-                    height: geo.size.height * 0.5,
                     color: PrimaryTheme.getColor(.cellulantLightGray)
-                )
+                ).frame(height: geo.size.height*0.5)
                 tinggColoredLogo
                     .accessibility(identifier: "tingggreenlogo")
-                IntroTabView(geo: geo, active: $active)
+                IntroTabView(active: $active)
                     .environmentObject(navigation)
             }
             .background(.white)
@@ -46,7 +45,6 @@ struct IntroView_Previews: PreviewProvider {
 
 /// Tabview displays the onboarding views in turn
 struct IntroTabView: View {
-    var geo: GeometryProxy
     @Binding var active: Bool
     @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
@@ -54,18 +52,21 @@ struct IntroTabView: View {
             TabView {
                 onboardingViewListView()
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .never))
             .accessibility(identifier: "onboardingtabview")
             Spacer()
-            NavigationLink(
-                destination: PhoneNumberValidationView()
-                    .environmentObject(navigation),
-                isActive: $active
-            ) {
-                getStartedButton()
-            }
+            getStartedButton()
         }
+        .navigationDestination(for: OnboardingScreen.self, destination: { screen in
+            switch screen {
+            case .accountRegistration:
+                PhoneNumberValidationView()
+                    .environmentObject(navigation)
+            default:
+                IntroView()
+            }
+        })
     }
     @ViewBuilder
     /// Iterates over available onboarding screens
@@ -73,7 +74,8 @@ struct IntroTabView: View {
     fileprivate func onboardingViewListView() -> some View {
         ForEach(onboardingItems(), id: \.info) { item in
             VStack {
-                OnboadingView(onboadingItem: item, screenSize: geo.size)
+                OnboadingView(onboadingItem: item)
+                Spacer()
             }
         }
     }
@@ -82,7 +84,7 @@ struct IntroTabView: View {
     /// - Returns: Button
     fileprivate func getStartedButton() -> some View {
         TinggButton(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
-            active.toggle()
+            navigation.navigationStack.append(OnboardingScreen.accountRegistration)
         }
         .padding()
         .accessibility(identifier: "getstarted")
@@ -93,5 +95,4 @@ public var tinggColoredLogo: some View {
         .resizable()
         .frame(width: 60, height: 60)
         .clipShape(Circle())
-        .shadow(radius: 3)
 }

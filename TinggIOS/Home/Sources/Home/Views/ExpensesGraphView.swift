@@ -19,7 +19,7 @@ struct ExpensesGraphView: View {
                 ).foregroundStyle(.green)
             }
         }.padding(20)
-        .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

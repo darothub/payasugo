@@ -7,5 +7,5 @@
 
 import Foundation
 enum OnboardingScreen: Hashable {
-    case intro
+    case intro, accountRegistration
 }

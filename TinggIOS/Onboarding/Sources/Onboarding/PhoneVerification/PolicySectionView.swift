@@ -11,20 +11,17 @@ import Theme
 
 /// Part of the ``PhoneNumberValidationView`` for user to read and accept policies
 struct PolicySectionView: View {
-    @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
-    @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
+    @Binding var termOfAgreementLink : String
+    @Binding var privacyPolicy : String
     @Binding var hasCheckedTermsAndPolicy: Bool
     var body: some View {
         HStack(alignment: .top) {
             Group {
                 CheckBoxView(checkboxChecked: $hasCheckedTermsAndPolicy)
                     .accessibility(identifier: "policycheckbox")
-                Text("By proceeding you agree with the ")
-                + Text(.init(termOfAgreementLink))
-                    .underline()
-                + Text(" and ") + Text(.init(privacyPolicy)).underline()
+                Text(.init("By proceeding you agree with the \(termOfAgreementLink) and \(privacyPolicy)"))
             }
-            .font(.system(size: PrimaryTheme.smallTextSize))
+            .font(.caption)
             .foregroundColor(PrimaryTheme.getColor(.tinggblack))
         }
         .padding(.horizontal, PrimaryTheme.largePadding)
@@ -33,8 +30,14 @@ struct PolicySectionView: View {
 
 struct PolicySectionView_Previews: PreviewProvider {
     struct PolicySectionViewHolder: View {
+        @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
+        @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
         var body: some View {
-            PolicySectionView(hasCheckedTermsAndPolicy: .constant(false))
+            PolicySectionView(
+                termOfAgreementLink: $termOfAgreementLink,
+                privacyPolicy: $privacyPolicy,
+                hasCheckedTermsAndPolicy: .constant(false)
+            )
         }
     }
     static var previews: some View {

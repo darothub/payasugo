@@ -22,37 +22,36 @@ public struct VImageAndNameView: View {
     }
     public var body: some View {
         VStack {
-            if imageUrl.isEmpty {
-                Text(initials)
-                    .padding()
-                    .background(.gray)
-                    .clipShape(Circle())
-                    .scaleEffect(1.3)
-                    .padding()
-                    .shadow(radius: 3)
-            } else {
-                AsyncImage(url: URL(string: imageUrl)) { image in
-                    image.resizable()
-                    .frame(width: 65,
-                           height: 65,
+            AsyncImage(url: URL(string: imageUrl)) { image in
+                image
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.black)
+                    .frame(width: 20,
+                           height: 30,
                            alignment: .center)
-                    .foregroundColor(.red)
-                    .background(.red.opacity(0.08))
-                    .clipShape(Circle())
-                    
-                    .padding(10)
-                } placeholder: {
-                    Image(systemName: "person.fill")
-                        .frame(width: 65,
-                               height: 65,
-                               alignment: .center)
-                        .scaleEffect(1)
-                        .foregroundColor(.red)
-                        .background(.red.opacity(0.08))
+                    .padding(15)
+            } placeholder: {
+                if initials.isEmpty {
+                    ProgressView()
                         .clipShape(Circle())
-                        .padding(10)
+                        .scaleEffect(1.3)
+                        .padding()
+                        .shadow(radius: 3)
+                } else {
+                    Text(initials)
+                        .padding()
+                        .background(.gray)
+                        .clipShape(Circle())
+                        .scaleEffect(1.3)
+                        .padding()
+                        .shadow(radius: 3)
                 }
             }
+            .padding(5)
+            .background(.green.opacity(0.3))
+            .clipShape(Circle())
+            
             Text(title)
                 .frame(width: 65, alignment: .center)
                 .font(.caption)
@@ -67,8 +66,8 @@ public struct VImageAndNameView: View {
 struct VImageAndNameView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            VImageAndNameView(title: "Safaricom airtime", imageUrl: "")
-            VImageAndNameView(title: "Safaricom airtime", imageUrl: "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0022/3561/brand.gif?itok=oIhcrB6h")
+            VImageAndNameView(title: "", imageUrl: "")
+            VImageAndNameView(title: "Safaricom airtime", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/tingg4_icons/airtime.png")
         }
     }
 }

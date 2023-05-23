@@ -34,29 +34,46 @@ struct HomeView: View {
     @State var showDueBills = true
     var body: some View {
         GeometryReader { geo in
-            ScrollView {
-                bodyView(geo: geo)
-                    .onTapGesture {
-                        handleNavigationDrawer()
-                    }
-            }.ignoresSafeArea()
+            VStack(spacing: 0) {
+                HomeTopViewDesign(onHamburgerIconClick: {
+                    drawerStatus = .open
+                })
+                ScrollView(showsIndicators: false) {
+                    bodyView(geo: geo)
+                        .background(
+                            VStack {
+                                topBackgroundDesign(
+                                    color: PrimaryTheme.getColor(.secondaryColor)
+                                ).frame(height: geo.size.height/7)
+                                Spacer()
+                            }
+                        )
+                }
+            }.onTapGesture {
+                handleNavigationDrawer()
+            }
+            
         }
         .background(PrimaryTheme.getColor(.cellulantLightGray))
         .navigationBarHidden(true)
+
     }
  
     @ViewBuilder
     func bodyView(geo: GeometryProxy) -> some View {
-        VStack(spacing: 20) {
-            HomeTopViewDesign(parentSize: geo, onHamburgerIconClick: {
-                drawerStatus = .open
-            })
-            ActivateCardView(parentSize: geo) {
+        VStack(spacing: 5) {
+            Text("Welcome back, \(hvm.profile.firstName!)")
+                .foregroundColor(.white)
+                .font(.system(size: PrimaryTheme.smallTextSize))
+            Text("What would you like to do?")
+                .foregroundColor(.white)
+                .font(.system(size: PrimaryTheme.largeTextSize))
+            ActivateCardView() {
                 // TODO
-            }
+            }.padding(10)
             ActiveCategoryTabView(categories: categories)
                 .background(.white)
-                .shadow(radius: 0, y: 3)
+                .shadow(radius: 0, y: 1)
                 .padding(.vertical, 10)
                 .handleViewStates(uiModel: $hvm.categoryUIModel, showAlert: $hvm
                     .showAlert)
@@ -73,10 +90,12 @@ struct HomeView: View {
                 .environmentObject(hvm)
                 .handleViewStates(uiModel: $hvm.rechargeAndBillUIModel, showAlert: $hvm.showAlert)
             ExpensesGraphView(chartData: chartData)
-                .frame(height: geo.size.height * 0.35)
+                .scaledToFit()
                 .shadowBackground()
             AddNewBillCardView()
-        }.onAppear {
+        }
+     
+        .onAppear {
             fetchedBill = Observer<Invoice>().objects.filter {
                 $0.hasPaymentInProgress ||
                 (

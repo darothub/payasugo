@@ -14,13 +14,15 @@ public struct CountryListView : View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     public var body: some View {
-        GeometryReader { geo in
+        VStack {
             List(countries.sorted(by: <), id: \.key) { key , value in
                 viewBody(key, value)
+                    .listRowBackground(Color.white)
             }
             .padding(.bottom)
-            .frame(width: geo.size.width, height:  geo.size.height)
-        }
+            .background(Color.gray.opacity(0.1))
+            .scrollContentBackground(.hidden)
+        }.background(.white)
     }
     @ViewBuilder
     fileprivate func viewBody(_ key: String, _ value: String) -> some View {
@@ -28,11 +30,11 @@ public struct CountryListView : View {
             Text("\(getFlag(country: key))")
                 .accessibility(identifier: "countryflag")
             Text("\(getCountryName(countryCode: key) ?? key)")
-                .foregroundColor(colorScheme == .dark ? .white : .black)
+                .foregroundColor(colorScheme == .dark ? .black : .black)
                 .accessibility(identifier: "countrydialcode")
             Spacer()
-            Text("+\(value)").foregroundColor(colorScheme == .dark ? .white : .black)
-        }.background(colorScheme == .dark ? .black.opacity(0) : .white)
+            Text("+\(value)").foregroundColor(colorScheme == .dark ? .black : .black)
+        }
             .font(.system(size: 20))
             .onTapGesture {
                 self.countryCode = value

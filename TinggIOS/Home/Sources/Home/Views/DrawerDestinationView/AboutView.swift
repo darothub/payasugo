@@ -9,6 +9,7 @@ import Core
 import SwiftUI
 import Theme
 struct AboutView: View {
+    @Environment(\.colorScheme) var colorScheme
     @State private var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     @State private var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     @State private var facebookLink = "https://facebook.com"
@@ -42,6 +43,9 @@ struct AboutView: View {
             facebookLink = contact?.facebook ?? "https://facebook.com"
             twitterLink = contact?.twitter ?? "https://twitter.com"
         }
+        .frame(maxWidth: .infinity)
+        .backgroundmode(color: .white)
+        .foregroundmode(color: .black)
     }
 }
 

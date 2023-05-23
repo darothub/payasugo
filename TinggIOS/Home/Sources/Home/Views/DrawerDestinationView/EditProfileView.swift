@@ -53,6 +53,7 @@ struct EditProfileView: View {
             .padding(.vertical)
             
             TextFieldView(fieldText: $email, label: "", placeHolder: "Email address", success: $isEmailAddressValid)
+
             
             TinggButton(buttonLabel: "Update profile") {
                 updateProfile()
@@ -62,8 +63,10 @@ struct EditProfileView: View {
         .navigationTitle("Edit profile")
         .padding()
         .padding(.top, 50)
+        .frame(maxWidth: .infinity)
+        .backgroundmode(color: .white)
         .onAppear {
-            profile = Observer<Profile>().$objects.wrappedValue.first!
+            profile = Observer<Profile>().getEntities().first ?? Profile()
             withAnimation {
                 firstName = (profile?.firstName) ?? ""
                 lastName = (profile?.lastName) ?? ""

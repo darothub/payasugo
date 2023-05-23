@@ -26,7 +26,7 @@ public struct GifImage: UIViewRepresentable {
             webView.scrollView.isScrollEnabled = false
             webView.isOpaque = false
             webView.backgroundColor = .clear
-            webView.contentMode = .scaleAspectFill
+//            webView.contentMode = .scaleAspectFit
         } catch {
             print(error.localizedDescription)
         }

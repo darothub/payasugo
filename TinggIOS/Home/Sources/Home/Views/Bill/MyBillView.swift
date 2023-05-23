@@ -16,8 +16,12 @@ enum Tabs: String, CaseIterable {
     case FourthTab
 }
 var sampleItem = [
-    TabLayoutItem(title: "MY BILLS", view: AnyView(Text("MY BILLS"))),
-    TabLayoutItem(title: "RECEIPTS", view: AnyView(Text("RECEIPTS")))
+    TabLayoutItem(title: "MY BILLS"){
+        AnyView(Text("MY BILLS"))
+    },
+    TabLayoutItem(title: "RECEIPTS") {
+        AnyView(Text("RECEIPTS"))
+    }
 ]
 /// Shows user's bills
 /// This view is one of the tabs in ``BillView``

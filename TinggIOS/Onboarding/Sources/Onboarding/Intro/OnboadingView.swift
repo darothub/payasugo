@@ -13,19 +13,31 @@ import Theme
 struct OnboadingView: View {
     @Environment(\.colorScheme) var colorScheme
     let onboadingItem: OnboardingItem
-    let screenSize: CGSize
     var body: some View {
-        VStack {
-            gifImage(size: screenSize)
-            pageIntro
-            pageSubIntro
+        GeometryReader { geo in
+            ZStack {
+                VStack {
+                    Spacer()
+                    gifImage()
+                        .frame(width: geo.size.width/1.5, height: geo.size.height/2)
+                        .padding()
+                        Spacer()
+                    
+                    pageIntro
+                    pageSubIntro
+                    Spacer()
+                }
+            }
+            .frame(width: geo.size.width, height: geo.size.height, alignment: .center)
         }
     }
 }
 
 struct OnboadingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboadingView(onboadingItem: exampleOnboarding(), screenSize: CGSize(width: 500, height: 500))
+        GeometryReader { geo in
+            OnboadingView(onboadingItem: exampleOnboarding())
+        }
     }
 }
 
@@ -33,10 +45,9 @@ extension OnboadingView {
     /// To return a custom view that displays a gif Image
     /// - Parameter size: size of the image
     /// - Returns: A gif Image
-    func gifImage(size: CGSize) -> some View {
+    func gifImage() -> some View {
         let url = Bundle.module.url(forResource: onboadingItem.centerImage, withExtension: "gif")!
         return GifImage(url)
-            .frame(width: size.width * 0.6, height: size.height * 0.6, alignment: .center)
     }
     var pageIntro: some View {
         Text(onboadingItem.info)

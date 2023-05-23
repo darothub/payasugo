@@ -26,18 +26,21 @@ public struct DialogContentView: View {
         VStack {
             Text("Select mobile network")
             Group {
-                Text("Please select the mobile network that")
-                + Text(" \(phoneNumber)").foregroundColor(.green)
+                Text("Please select the mobile network that\n")
+                + Text("\(phoneNumber)").foregroundColor(.green)
                 + Text(" belongs to")
-            }.multilineTextAlignment(.center)
-                .font(.caption)
-            Divider()
-            ForEach(networkList) { network  in
-                NetworkSelectionRowView(item: network, selectedNetwork: $selectedNetwork)
-                    .listRowInsets(EdgeInsets())
-                    .showIfNot(.constant(network.networkName.isEmpty))
             }
-            Text("No have no service yet")
+            .multilineTextAlignment(.center)
+            .font(.caption)
+            Divider()
+            List {
+                ForEach(networkList) { network  in
+                    NetworkSelectionRowView(item: network, selectedNetwork: $selectedNetwork)
+                        .listRowInsets(EdgeInsets())
+                        .showIfNot(.constant(network.networkName.isEmpty))
+                }
+            }.listStyle(PlainListStyle())
+            Text("You have no service yet")
                 .showIf($isNetworkListEmpty)
             TinggButton(
                 backgroundColor: .green,

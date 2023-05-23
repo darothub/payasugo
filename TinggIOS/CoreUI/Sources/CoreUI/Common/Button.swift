@@ -12,6 +12,7 @@ public func TinggButton(
     buttonLabel: String = "Get started",
     padding: CGFloat = 25,
     textPadding: CGFloat = 20,
+    isActive: Binding<Bool> = .constant(true),
     action: @escaping () -> Void
 ) -> some View {
     Button {
@@ -21,9 +22,11 @@ public func TinggButton(
             .frame(maxWidth: .infinity)
             .padding(textPadding)
             .foregroundColor(.white)
-            .background(backgroundColor)
+            .background(isActive.wrappedValue ? backgroundColor : .gray)
             .cornerRadius(10)
-    }.accessibility(identifier: "btn")
+    }
+    .disabled(isActive.wrappedValue ? false : true)
+    .accessibility(identifier: "btn")
 }
 
 public func TinggOutlineButton(

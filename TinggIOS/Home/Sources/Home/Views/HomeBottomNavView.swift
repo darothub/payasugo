@@ -13,6 +13,7 @@ import Theme
 
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
+    @Environment(\.colorScheme) var colorScheme
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationUtils
     
@@ -34,6 +35,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         GeometryReader { _ in
             TabView {
                 homeView()
+                    .backgroundmode(color: .white)
                     .onTapGesture {
                         drawerStatus = .open
                     }
@@ -42,23 +44,27 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                         image: Image(systemName: "house.fill")
                     )
                 billView()
+                    .backgroundmode(color: .gray)
                     .tabItemStyle(
                         title: "Bill",
                         image:PrimaryTheme.getImage(image: .bill)
                     )
                 
                 Text("Group")
+                    .backgroundmode(color: .gray)
                     .tabItemStyle(
                         title: "Group",
                         image: PrimaryTheme.getImage(image: .group)
                     )
                 Text("Cards")
+                    .backgroundmode(color: .gray)
                     .tabItemStyle(
                         title: "Cards",
                         image: Image(systemName: "creditcard")
                     )
             }
         }
+     
         .navigationDestination(for: HomeScreen.self, destination: { screen in
             switch screen {
             case .profile:
@@ -76,23 +82,23 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
             }
         })
         .overlay {
+            let headerItem = HeaderItem(
+                profileImageUrl: profileImageURL,
+                name: name,
+                destination: HomeScreen.profile
+            )
             let menu =  [
-                NavigationMenu(screen: HomeScreen.paymentOptions, title: "Payment"),
-                NavigationMenu(screen: HomeScreen.settings, title: "Settings"),
-                NavigationMenu(screen: HomeScreen.support, title: "Support"),
-                NavigationMenu(screen: HomeScreen.about, title: "About")
+                NavigationDrawerMenuItem(screen: HomeScreen.paymentOptions, title: "Payment"),
+                NavigationDrawerMenuItem(screen: HomeScreen.settings, title: "Settings"),
+                NavigationDrawerMenuItem(screen: HomeScreen.support, title: "Support"),
+                NavigationDrawerMenuItem(screen: HomeScreen.about, title: "About")
             ]
-            NavigationDrawerView(
+            NavigationDrawerView<HomeScreen>(
+                headerItem: headerItem,
                 listOfMenu: menu,
-                header: AnyView(
-                    NavigationHeader(
-                        profileImageUrl: profileImageURL,
-                        userName: name,
-                        navigationDrawerProtocol: self
-                    )
-                ),
                 selectedMenuScreen: $selectedNavigationScreen,
                 status: $drawerStatus,
+                backgroundColor: .constant(.white),
                 navigationDrawerProtocol: self
             )
         }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct PrimaryTheme {
+    
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -33,7 +34,7 @@ public struct PrimaryTheme {
     public enum AppColors: String {
         case secondaryColor, primaryColor, cellulantPurple,
              cellulantRed, skyBlue, cellulantLightGray, textColor, tinggwhite,
-        tinggblack
+             tinggblack
         public static func getColor(_ name: String) -> Color {
             return  Color(name, bundle: .myModule)
         }
@@ -80,3 +81,38 @@ extension Bundle {
 }
 
 class CurrentBundleFinder {}
+
+public struct ForegroundModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+    @State var color: Color = .clear
+    public init(color: Color) {
+        self._color = State(initialValue: color)
+    }
+    public func body(content: Content) -> some View {
+        content
+            .foregroundColor(colorScheme == .dark ? color : color )
+    }
+}
+
+public struct BackgroundModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+    @State var color: Color = .clear
+    public init(color: Color) {
+        self._color = State(initialValue: color)
+    }
+    public func body(content: Content) -> some View {
+        content
+            .background(colorScheme == .dark ? color : color )
+    }
+}
+
+
+extension View {
+    public func foregroundmode(color: Color) -> some View {
+        
+        self.modifier(ForegroundModifier(color: color))
+    }
+    public func backgroundmode(color: Color) -> some View {
+        self.modifier(BackgroundModifier(color: color))
+    }
+}
