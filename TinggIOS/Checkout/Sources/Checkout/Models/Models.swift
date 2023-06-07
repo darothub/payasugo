@@ -33,7 +33,7 @@ public struct FavouriteEnrollmentModel: Hashable, Equatable {
 
 public struct ServicesListModel: Hashable, Equatable {
     public var selectedProvider: String = ""
-    public var services: [MerchantService] = .init()
+    public var services: [MerchantService] = sampleServices
     public var payers: [MerchantPayer] =  [MerchantPayer]()
     public var selectedService: MerchantService = .init()
     public var selectedPayer: MerchantPayer = .init()
@@ -41,7 +41,7 @@ public struct ServicesListModel: Hashable, Equatable {
     public var canOthersPay: Bool = false
     public var orientation = ListOrientation.horizontal
     public static var phoneNumber: String = "080"
-    public init(selectedProvider: String  = "", payers: [MerchantPayer] = .init(), selectedService: MerchantService =  .init(), selectedPayer: MerchantPayer =  .init(), selectPaymentTitle: String = "Select network provider", canOthersPay: Bool = false, orientation: ListOrientation = ListOrientation.horizontal) {
+    public init(selectedProvider: String  = "", payers: [MerchantPayer] = samplePayers, selectedService: MerchantService =  .init(), selectedPayer: MerchantPayer =  .init(), selectPaymentTitle: String = "Select network provider", canOthersPay: Bool = false, orientation: ListOrientation = ListOrientation.horizontal) {
         self.selectedProvider = selectedProvider
         self.payers = payers
         self.selectedService = selectedService

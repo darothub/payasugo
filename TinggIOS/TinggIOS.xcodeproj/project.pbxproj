@@ -23,9 +23,10 @@
 		71463F3828BE4CA800A54384 /* HomeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3728BE4CA800A54384 /* HomeUITestsLaunchTests.swift */; };
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
-		7151502529743F3A00B0D161 /* Checkout in Frameworks */ = {isa = PBXBuildFile; productRef = 7151502429743F3A00B0D161 /* Checkout */; };
 		7156555829B1024F00307866 /* Airtime in Frameworks */ = {isa = PBXBuildFile; productRef = 7156555729B1024F00307866 /* Airtime */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
+		716708DF2A16648700ED5E67 /* Checkout in Frameworks */ = {isa = PBXBuildFile; productRef = 716708DE2A16648700ED5E67 /* Checkout */; };
+		716708EC2A1D17BC00ED5E67 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */; };
 		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
 		718114F729D2C0D200BCDE96 /* NewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718114F629D2C0D100BCDE96 /* NewView.swift */; };
 		718114F929D2C24D00BCDE96 /* CoreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 718114F829D2C24D00BCDE96 /* CoreUI */; };
@@ -92,6 +93,9 @@
 		7151502329743AF600B0D161 /* Checkout */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Checkout; sourceTree = "<group>"; };
 		7156555629B1023400307866 /* Airtime */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Airtime; sourceTree = "<group>"; };
 		715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAsset.xcassets; sourceTree = "<group>"; };
+		716708EA2A1D13E500ED5E67 /* TinggIOSRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TinggIOSRelease.entitlements; sourceTree = "<group>"; };
+		716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		716708ED2A1D1BDA00ED5E67 /* TinggIOSDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TinggIOSDebug.entitlements; sourceTree = "<group>"; };
 		71682415290B035200A80C26 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
 		718114F629D2C0D100BCDE96 /* NewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewView.swift; sourceTree = "<group>"; };
@@ -107,7 +111,6 @@
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		71C72F1A29CCACD7004E7F4C /* CoreUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreUI; sourceTree = "<group>"; };
-		71C72F1B29CCB332004E7F4C /* SmileIdentity */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SmileIdentity; sourceTree = "<group>"; };
 		71DD68C429F8417200E8A57D /* CoreNavigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreNavigation; sourceTree = "<group>"; };
 		71E2BE26289BE97A0025ED12 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 		71F7D7A52981B1700086AE84 /* CreditCard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CreditCard; sourceTree = "<group>"; };
@@ -137,8 +140,8 @@
 				71D019DF28A8537D00312864 /* Home in Frameworks */,
 				718114F929D2C24D00BCDE96 /* CoreUI in Frameworks */,
 				71D019E128A8538400312864 /* Onboarding in Frameworks */,
+				716708DF2A16648700ED5E67 /* Checkout in Frameworks */,
 				710F9D2F2979B2FF0034E193 /* Pin in Frameworks */,
-				7151502529743F3A00B0D161 /* Checkout in Frameworks */,
 				71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,6 +219,9 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
+				716708ED2A1D1BDA00ED5E67 /* TinggIOSDebug.entitlements */,
+				716708EA2A1D13E500ED5E67 /* TinggIOSRelease.entitlements */,
+				716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */,
 				71091ECB29EED46A00843FFA /* VirtualCard */,
 				71091EC729EECEE200843FFA /* pendingstateicon.gif */,
 				71F7D7A829859AA70086AE84 /* Navigation */,
@@ -252,7 +258,6 @@
 				71F7D7A52981B1700086AE84 /* CreditCard */,
 				7156555629B1023400307866 /* Airtime */,
 				71C72F1A29CCACD7004E7F4C /* CoreUI */,
-				71C72F1B29CCB332004E7F4C /* SmileIdentity */,
 				71DD68C429F8417200E8A57D /* CoreNavigation */,
 			);
 			name = Packages;
@@ -331,11 +336,11 @@
 			packageProductDependencies = (
 				71D019DE28A8537D00312864 /* Home */,
 				71D019E028A8538400312864 /* Onboarding */,
-				7151502429743F3A00B0D161 /* Checkout */,
 				710F9D2E2979B2FF0034E193 /* Pin */,
 				71F7D7A62981B1A00086AE84 /* CreditCard */,
 				7156555729B1024F00307866 /* Airtime */,
 				718114F829D2C24D00BCDE96 /* CoreUI */,
+				716708DE2A16648700ED5E67 /* Checkout */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -373,6 +378,8 @@
 				Base,
 			);
 			mainGroup = 718C6283283EBCB4002ADCA8;
+			packageReferences = (
+			);
 			productRefGroup = 718C628D283EBCB4002ADCA8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -408,6 +415,7 @@
 				715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */,
 				71091EC829EECEE200843FFA /* pendingstateicon.gif in Resources */,
 				718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */,
+				716708EC2A1D17BC00ED5E67 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,8 +704,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -711,6 +720,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "TinggIOS requires your microphone access";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "TinggIOS requires camera permission for profile photo";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -746,8 +756,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -761,6 +772,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "TinggIOS requires your microphone access";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "TinggIOS requires camera permission for profile photo";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -770,7 +782,7 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				NEW_SETTING = "";
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -833,13 +845,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Pin;
 		};
-		7151502429743F3A00B0D161 /* Checkout */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Checkout;
-		};
 		7156555729B1024F00307866 /* Airtime */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Airtime;
+		};
+		716708DE2A16648700ED5E67 /* Checkout */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Checkout;
 		};
 		718114F829D2C24D00BCDE96 /* CoreUI */ = {
 			isa = XCSwiftPackageProductDependency;

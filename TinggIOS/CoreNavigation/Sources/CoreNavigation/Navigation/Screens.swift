@@ -17,7 +17,7 @@ public enum Screens: Hashable {
             hasher.combine(1)
         case .home:
             hasher.combine(2)
-        case .buyAirtime:
+        case .buyAirtime(_):
             hasher.combine(3)
         case .billers(_):
             hasher.combine(4)
@@ -39,11 +39,13 @@ public enum Screens: Hashable {
             hasher.combine(value)
         case .lost:
             hasher.combine(0)
+        case .transactionListView(_):
+            hasher.combine(12)
         }
     }
     case intro,
          home,
-         buyAirtime,
+         buyAirtime(String),
          billers(Any),
          categoriesAndServices([Any]),
          billFormView(Any),
@@ -53,6 +55,7 @@ public enum Screens: Hashable {
          securityQuestionView,
          cardDetailsView(Any?, Any?),
          cardWebView(String),
+         transactionListView(Any),
          lost
 }
 

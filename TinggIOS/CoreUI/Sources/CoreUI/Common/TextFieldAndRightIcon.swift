@@ -31,10 +31,50 @@ public struct TextFieldAndRightIcon: View {
                 .keyboardType(keyboardType)
                 .submitLabel(.next)
                 .focused($cursor)
+                .foregroundColor(.black)
             Image(systemName: iconName)
                 .onTapGesture {
                     onImageClick()
                 }
+        }.padding()
+        .background(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(lineWidth: 0.5)
+        ).foregroundColor(success ? .black : .red)
+   
+    }
+}
+
+
+
+
+public struct TextFieldAndLeftTitle: View {
+    @Binding var number: String
+    @Binding var iconName: String
+    @State var placeHolder = "Mobile number"
+    @State var keyboardType: UIKeyboardType = .numberPad
+    @FocusState var cursor: Bool
+    @Binding var success: Bool
+  
+    public init(number: Binding<String>, iconName: Binding<String>, placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, success: Binding<Bool> = .constant(true)
+    ) {
+        self._number = number
+        self._iconName = iconName
+        self.placeHolder = placeHolder
+        self.keyboardType = keyboardType
+        _success = success
+    }
+    public var body: some View {
+        HStack {
+            Text(iconName)
+                .foregroundColor(success ? .black : .red)
+            TextField(placeHolder, text: $number)
+                .keyboardType(keyboardType)
+                .submitLabel(.next)
+                .focused($cursor)
+                .foregroundColor(success ? .black : .red)
+         
+                
         }.padding()
         .background(
             RoundedRectangle(cornerRadius: 5)

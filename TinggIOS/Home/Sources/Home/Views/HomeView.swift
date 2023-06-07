@@ -20,18 +20,13 @@ struct HomeView: View {
     var chartData: [ChartData] {
         hvm.mapHistoryIntoChartData()
     }
-    var airtimeServices: [MerchantService] {
-        hvm.airTimeServices
-    }
     var rechargeAndBill: [MerchantService] {
         hvm.rechargeAndBill
     }
     var profileImageURL : String {
         hvm.getProfile()?.photoURL ?? ""
     }
-    @State var fetchedBill = [Invoice]()
     @Binding var drawerStatus: DrawerStatus
-    @State var showDueBills = true
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
@@ -75,39 +70,27 @@ struct HomeView: View {
                 .background(.white)
                 .shadow(radius: 0, y: 1)
                 .padding(.vertical, 10)
-                .handleViewStates(uiModel: $hvm.categoryUIModel, showAlert: $hvm
-                    .showAlert)
+            QuickTopupView() { service in
+                if service.isAirtimeService {
+                    navigation.navigationStack.append(Screens.buyAirtime(service.serviceName))
+                }
+            }
+            .padding()
+            .shadowBackground()
+            DueBillsView()
+                .shadowBackground()
             
-            QuickTopupView(airtimeServices: airtimeServices)
+            DueBillsView(billType: .upcomingBills)
                 .shadowBackground()
-                .handleViewStates(uiModel: $hvm.quickTopUIModel, showAlert: $hvm.showAlert)
-            DueBillsView(fetchedBill: fetchedBill)
-                .shadowBackground()
-                .showIf($showDueBills)
             
-            RechargeAndBillView(rechargeAndBill: rechargeAndBill)
+            RechargeAndBillView()
                 .shadowBackground()
-                .environmentObject(hvm)
-                .handleViewStates(uiModel: $hvm.rechargeAndBillUIModel, showAlert: $hvm.showAlert)
             ExpensesGraphView(chartData: chartData)
                 .scaledToFit()
                 .shadowBackground()
             AddNewBillCardView()
         }
-     
-        .onAppear {
-            fetchedBill = Observer<Invoice>().objects.filter {
-                $0.hasPaymentInProgress ||
-                (
-                    ($0.amount.convertStringToInt() > 0) &&
-                    "\(String(describing: $0.enrollment?.hubServiceID))" != MerchantService.MULA_CHAMA_ID
-                )
-                
-            }
-            withAnimation {
-                showDueBills = !fetchedBill.isEmpty
-            }
-        }
+
     }
     fileprivate func handleNavigationDrawer() {
         drawerStatus = .close

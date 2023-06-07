@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 // MARK: - MerchantPayer
 public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
-    @Persisted public var hubClientID: String? = ""
+    @Persisted public var hubClientID: String = ""
     @Persisted public var clientName: String? = "Unknown"
     @Persisted public var clientCode: String? = ""
     @Persisted public var countryID: String? = ""
@@ -32,7 +32,7 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var colorCode: String? = ""
     @Persisted public var shortName: String? = ""
     @Persisted public var showLogo: String? = ""
-    @Persisted public var checkoutType: String? = ""
+    @Persisted public var checkoutType: String = ""
     @Persisted public var canPayForOther: String = "0"
     @Persisted public var payerReference: String? = ""
     @Persisted public var chargeSyncMode: String? = ""
@@ -84,7 +84,7 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
 }
 
 public struct MerchantPayerStruct: Decodable {
-    public var hubClientID: String? = ""
+    public var hubClientID: String = ""
     public var clientName: String? = ""
     public var clientCode: String? = ""
     public var countryID: String? = ""
@@ -107,7 +107,7 @@ public struct MerchantPayerStruct: Decodable {
     public var colorCode: String? = ""
     public var shortName: String? = ""
     public var showLogo: String? = ""
-    public var checkoutType: String? = ""
+    public var checkoutType: String = ""
     public var canPayForOther: String = "0"
     public var payerReference: String? = ""
     public var chargeSyncMode: String? = ""
@@ -192,4 +192,15 @@ public struct MerchantPayerStruct: Decodable {
         return p
         
     }
+}
+
+
+public  var samplePayers: [MerchantPayer] {
+    let sampleOne = MerchantPayer()
+    sampleOne.logo = ""
+    sampleOne.clientName = "Sample one"
+    let sampleTwo = MerchantPayer()
+    sampleOne.logo = ""
+    sampleOne.clientName = "Sample two"
+    return [sampleOne, sampleTwo]
 }

@@ -64,7 +64,6 @@ struct TransactionItemView: View {
         .showIfNot($onDeleteFlag)
         .fullScreenCover(isPresented: $isFullScreen, onDismiss: {
             //Dismiss
-            log(message: "Receipt dismissed")
         }) {
            handleFullScreen()
         }

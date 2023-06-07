@@ -17,4 +17,8 @@ public class NavigationUtils: ObservableObject {
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
     }
+    
 }
+
+
+

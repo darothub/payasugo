@@ -15,24 +15,27 @@ struct ActiveCategoryListView: View {
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 0) {
             ForEach(categories, id: \.categoryID) { eachCategory in
                 if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo, let id = eachCategory.categoryID {
                     VImageAndNameView(
                         title: name,
                         imageUrl: logo
-                    ).onTapGesture {
+                    )
+                    .scaleEffect(0.7)
+                    .onTapGesture {
                         onEachCategoryClick(categoryId: id, categoryName: name)
                     }
                 }
             }
         }
+        .frame(maxWidth: .infinity)
     }
     fileprivate func onEachCategoryClick(categoryId: String, categoryName: String) {
         switch categoryId {
         case "2":
             withAnimation {
-                navigation.navigationStack.append(Screens.buyAirtime)
+                navigation.navigationStack.append(Screens.buyAirtime("Airtel"))
             }
         default:
             let services = hvm.services.getEntities().filter {$0.categoryID == categoryId}
@@ -54,14 +57,24 @@ struct ActiveCategoryListView_Previews: PreviewProvider {
 }
 
 var previewCategories: [CategoryEntity] {
-    let catergory = CategoryEntity()
-    catergory.categoryID = "0"
-    catergory.categoryName = "Test"
+    let category = CategoryEntity()
+    category.categoryID = "0"
+    category.categoryName = "Test"
+    category.categoryLogo = "https://logoeps.com/wp-content/uploads/2012/10/airtel-logo-vector.png"
+    let category2 = CategoryEntity()
+    category2.categoryID = "1"
+    category2.categoryName = "Test"
+    let category3 = CategoryEntity()
+    category3.categoryID = "2"
+    category3.categoryName = ""
+    let category4 = CategoryEntity()
+    category4.categoryID = "3"
+    category4.categoryName = ""
     let categories = [
-        catergory,
-        catergory,
-        catergory,
-        catergory
+        category,
+        category2,
+        category3,
+        category4
     ]
     return categories
 }

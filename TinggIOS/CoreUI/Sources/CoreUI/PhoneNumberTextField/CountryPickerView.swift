@@ -36,7 +36,7 @@ public struct CountryPickerView: View {
     public var body: some View {
         ZStack(alignment:.top) {
             HStack (spacing: 0) {
-                Text(countryCode.isEmpty ? "error" : "\(getFlag(country: countryFlag)) +\(countryCode)")
+                Text(countryCode.isEmpty ? "Loading..." : "\(getFlag(country: countryFlag)) +\(countryCode)")
                     .frame(width: 80, height: 50)
                     .foregroundColor(.black)
                     .background(Color.clear)
@@ -51,7 +51,12 @@ public struct CountryPickerView: View {
                     .onChange(of: phoneNumber, perform: change)
                     .accessibility(identifier: "countrytextfield")
             }
-        }.sheet(isPresented: $showPhoneSheet) {
+        }
+        .onAppear {
+           print(countryCode, countryFlag)
+        }
+        
+        .sheet(isPresented: $showPhoneSheet) {
             CountryListView(
                 countryCode: $countryCode,
                 countryFlag: $countryFlag,
@@ -59,7 +64,8 @@ public struct CountryPickerView: View {
             )
         }
         .onChange(of: countries) { newValue in
-            countryFlag = getCountryFlag()
+            print("Here \(newValue)")
+            countryFlag = getCountryCodeString()
             countryCode = getCountryCode()
         }
     }
@@ -72,6 +78,19 @@ public struct CountryPickerView: View {
     fileprivate func getCountryFlag() -> String {
       
         return countries.sorted(by: <).first?.key ?? ""
+    }
+    fileprivate func getCountryCodeString() -> String {
+        let countryLocale = NSLocale.current
+        guard let countryCode = countryLocale.language.region?.identifier else {
+            return getCountryFlag()
+        }
+        _ = (countryLocale as NSLocale).displayName(forKey: NSLocale.Key.countryCode, value: countryCode)
+        let dialCode = countries[countryCode]
+        if dialCode == nil {
+            return getCountryFlag()
+        } else {
+            return countryCode
+        }
     }
     fileprivate func getCountryCode () -> String {
         if let code = countries.sorted(by: <).first?.value {

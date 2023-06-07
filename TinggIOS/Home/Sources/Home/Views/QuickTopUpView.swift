@@ -10,39 +10,73 @@ import Theme
 import Core
 import CoreUI
 struct QuickTopupView: View {
-    var airtimeServices = [MerchantService]()
+    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var airtimeServices = [MerchantService]()
+    @State var show = true
+    var onclick: (MerchantService) -> Void
     var body: some View {
         Section {
             VStack(alignment: .leading) {
                 Text("Quick Top up")
-                    .font(.system(size: PrimaryTheme.mediumTextSize))
+                    .font(.subheadline)
                     .foregroundColor(.black)
+                    .bold()
                 Text("Recharge or pay instantly")
-                    .font(.system(size: PrimaryTheme.smallTextSize))
+                    .font(.caption2)
                     .foregroundColor(.black)
                 quickTopViewBody(airtimeServices: airtimeServices)
                
             }
-            .padding()
+            
+        }
+        .showIf($show)
+        .backgroundmode(color: .white)
+        .onAppear {
+            homeViewModel.getQuickTopups()
+        }
+        .handleViewStatesMods(uiState: homeViewModel.$quickTopUIModel) { content in
+            let services = content.data as? [MerchantService]
+            withAnimation {
+                airtimeServices = services ?? []
+                show = airtimeServices.isNotEmpty()
+            }
+          
         }
     }
     @ViewBuilder
     fileprivate func quickTopViewBody(airtimeServices: [MerchantService]) -> some View{
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
+            HStack(spacing: 20) {
                 ForEach(airtimeServices, id: \.id) { service in
                     IconImageCardView(imageUrl: service.serviceLogo, bgShape: .rectangular)
                         .padding(.vertical)
+                        .onTapGesture {
+                            onclick(service)
+                        }
                 }
-            }
+            }    .padding(5)
 
         }
     }
 }
 
+protocol OnQuickTopClick {
+    func onItemClick(service: MerchantService)
+}
 struct QuickTopupView_Previews: PreviewProvider {
+    struct QuickTopupViewPreview: View, OnQuickTopClick{
+        func onItemClick(service: Core.MerchantService) {
+            //TODO
+        }
+        
+        var body: some View {
+            QuickTopupView(airtimeServices: sampleServices) { s in
+                //TODO
+            }
+        }
+    }
     static var previews: some View {
-        QuickTopupView(airtimeServices: sampleServices)
+        QuickTopupViewPreview()
     }
 }
 

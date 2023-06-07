@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  MerchantPayerListView.swift
 //  
 //
 //  Created by Abdulrasaq on 15/01/2023.
@@ -23,13 +23,13 @@ public struct MerchantPayerListView: View {
             Text(slm.selectPaymentTitle)
                 .font(.body)
                 .padding(.top, 30)
+                .foregroundColor(.black)
             ScrollView(.horizontal, showsIndicators: false) {
                 horizontallistView()
             }.showIf(.constant(slm.orientation == .horizontal))
             gridView()
         }
         .frame(maxWidth: .infinity)
-        .background(.white)
     }
     @ViewBuilder
     fileprivate func horizontallistView() -> some View {
@@ -46,7 +46,8 @@ public struct MerchantPayerListView: View {
     @ViewBuilder
     fileprivate func listView() -> some View {
         ForEach(slm.payers, id: \.self) { payer in
-            RectangleImageCardView(imageUrl: payer.logo!, tag: payer.clientName!, selected: $slm.selectedProvider) {
+            let size = CGSize(width: 80, height: 60)
+            RectangleImageCardView(size: size, imageUrl: payer.logo!, tag: payer.clientName!, selected: $slm.selectedProvider) {
                 onChangeSelection()
                 }
                 .overlay(alignment: .topTrailing) {
@@ -54,6 +55,14 @@ public struct MerchantPayerListView: View {
                         NetworkFavouritedMarkedView()
                     }
                 }
+        }
+    }
+}
+
+struct MerchantPayerListView_Previews: PreviewProvider {
+    static var previews: some View {
+        MerchantPayerListView(slm: .constant(.init())) {
+            //
         }
     }
 }

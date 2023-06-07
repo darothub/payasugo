@@ -32,6 +32,7 @@ public struct PhoneNumberValidationView: View {
     @State private var showSupportTeamContact = false
     @State private var countriesDictionary = [String: String]()
     @State private var activateButton = false
+    @FocusState private var isFocused: Bool
     @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
     @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     public static var policyWarning = "Kindly accept terms and policy"
@@ -52,6 +53,7 @@ public struct PhoneNumberValidationView: View {
                             isValid: $isValidPhoneNumber, notValid: $isNotValidPhoneNumber
                         )
                     )
+                    .focused($isFocused, equals: isValidPhoneNumber)
                     .onChange(
                         of: phoneNumber,
                         perform: onPhoneNumberInput(number:)
@@ -61,7 +63,7 @@ public struct PhoneNumberValidationView: View {
                     termOfAgreementLink: $termOfAgreementLink,
                     privacyPolicy: $privacyPolicy,
                     hasCheckedTermsAndPolicy: $hasCheckedTermsAndPolicy
-                )
+                ).focused($isFocused, equals: hasCheckedTermsAndPolicy)
                 Spacer()
                 TinggSupportSectionView(geometry: geometry, showSupportTeamContact: $showSupportTeamContact)
                 TinggButton(
@@ -109,6 +111,9 @@ public struct PhoneNumberValidationView: View {
                 }
 
             })
+            .toolbar(content: {
+                handleKeyboardDone()
+            })
             .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
                 countriesDictionary = content.data as! [String: String]
             }
@@ -126,6 +131,7 @@ public struct PhoneNumberValidationView: View {
             }
         }
     }
+
     @ViewBuilder
     fileprivate func topRectangleBackground(geometry: GeometryProxy) -> some View {
         Rectangle()
@@ -167,6 +173,14 @@ public struct PhoneNumberValidationView: View {
         }
         Button("Cancel", role: .cancel) {
             // Intentionally unimplemented...no cancel action
+        }
+    }
+    fileprivate func handleKeyboardDone() -> ToolbarItemGroup<TupleView<(Spacer, Button<Text>)>> {
+        return ToolbarItemGroup(placement: .keyboard) {
+            Spacer()
+            Button("Done") {
+                isFocused = false
+            }
         }
     }
 }
@@ -224,7 +238,7 @@ extension PhoneNumberValidationView {
     func validatePhoneNumberInput(number: String) -> Bool {
         var result = false
         if let regex = getSelectedCountryRegexByDialcode(dialCode: countryCode) {
-            result = validatePhoneNumber(with: regex, phoneNumber: number)
+            result = checkStringForPatterns(inputString: number, pattern: regex)
         }
         if  number.count < 8 {
             result = false

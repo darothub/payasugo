@@ -91,7 +91,6 @@ struct SingleReceiptView: View {
                         .foregroundColor(.white)
                 }
                 header()
-               
             }
         }
         .onAppear {

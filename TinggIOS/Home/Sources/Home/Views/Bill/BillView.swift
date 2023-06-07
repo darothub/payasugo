@@ -63,10 +63,10 @@ public struct BillView: View {
 
             
             let dict = Dictionary(grouping: transactionListModels) {$0.date.formatted(with: "EEEE, dd MMMM yyyy")}
-
-            sections = dict.map { (k, v) in
+            let sectionsModels = dict.map { (k, v) in
                 TransactionSectionModel(list: v)
             }.sorted()
+            sections.append(contentsOf: sectionsModels)
             
             let view = AnyView(TransactionListView(listOfModel: $sections)) 
 

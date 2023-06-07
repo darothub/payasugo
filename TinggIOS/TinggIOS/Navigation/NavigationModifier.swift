@@ -34,8 +34,8 @@ struct NavigationModifier: ViewModifier {
                     IntroView()
                         .navigationBarHidden(true)
                         .environmentObject(navigation)
-                case .buyAirtime:
-                    BuyAirtimeView()
+                case .buyAirtime(let serviceName):
+                    BuyAirtimeView(selectedServiceName: serviceName)
                         .environmentObject(checkout)
                         .environmentObject(contactViewModel)
                 case let .billers(billers):
@@ -66,6 +66,9 @@ struct NavigationModifier: ViewModifier {
                 case let .cardDetailsView(response, invoice):
                     EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
                         .environmentObject(navigation)
+                case .transactionListView(let model as TransactionItemModel):
+                    EmptyView()
+//                    TransactionListView(listOfModel: .constant(model))
                 default:
                     EmptyView()
                 }

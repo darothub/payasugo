@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  DebitCardDropDownView.swift
 //  
 //
 //  Created by Abdulrasaq on 19/12/2022.
@@ -14,11 +14,13 @@ struct DebitCardDropDownView: View {
             HStack {
                 DebitCardView(model: $dcddm.selectedCardDetails)
                 Image(systemName: dcddm.showDropDown ? "chevron.up":"chevron.down")
+                    .foregroundColor(.black)
             }
             .padding()
             .overlay {
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(lineWidth: 0.5)
+                    .foregroundColor(.black)
             }
             .onTapGesture {
                 dcddm.showDropDown.toggle()
@@ -28,8 +30,7 @@ struct DebitCardDropDownView: View {
                
             }.listStyle(.plain)
             .showIf($dcddm.showDropDown)
-        
-        }
+        }.background(.white)
   
     }
     @ViewBuilder

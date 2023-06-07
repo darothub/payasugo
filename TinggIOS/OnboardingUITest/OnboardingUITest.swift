@@ -66,7 +66,7 @@ class OnboardingUITest: XCTestCase {
 
         XCTAssert(textField.waitForExistence(timeout: 5))
     }
-    func testWarningShowsUpWhenPolicyIsNotChecked(){
+    func testContinueButtonIsDisabledWhenPolicyIsNotChecked(){
         tapGetStartedButton()
         tapGetStartedButtonThenPickACountry()
         let key7 = app.keys["7"]
@@ -89,15 +89,13 @@ class OnboardingUITest: XCTestCase {
         key5.tap()
         let continueBtn = app/*@START_MENU_TOKEN@*/.buttons["continuebtn"]/*[[".buttons[\"Continue\"]",".buttons[\"continuebtn\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         continueBtn.tap()
-        let warningAlert = app.alerts["Kindly accept terms and policy"].scrollViews.otherElements.buttons["alertbutton"]
-        XCTAssert(warningAlert.waitForExistence(timeout: 5))
+        XCTAssert(!continueBtn.isEnabled)
     }
-    func testWarningShowsUpWhenUserTriesToSubmitAndEmptyPhoneNumber(){
+    func testContinueButtonIsDisabledWhenWhenUserTriesToSubmitAndEmptyPhoneNumber(){
         tapGetStartedButton()
         let continueBtn = app/*@START_MENU_TOKEN@*/.buttons["continuebtn"]/*[[".buttons[\"Continue\"]",".buttons[\"continuebtn\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         continueBtn.tap()
-        let warningAlert = app.alerts["Phone number must not be empty"].scrollViews.otherElements.buttons["alertbutton"]
-        XCTAssert(warningAlert.waitForExistence(timeout: 2))
+        XCTAssert(!continueBtn.isEnabled)
                 
     }
     func testUserInputCorrectPhoneNumberAndCheckedPolicyThenOTPViewShows(){

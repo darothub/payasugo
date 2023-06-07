@@ -94,6 +94,7 @@ public struct ServiceDTO: Codable {
         entity.serviceName = self.serviceName.toString
         entity.clientName = self.clientName.toString
         entity.clientCode = self.clientCode.toString
+        entity.serviceCode = self.serviceCode.toString
         entity.hubClientID = self.hubClientID.toString
         entity.hubServiceID = self.hubServiceID.toString
         entity.minAmount = self.minAmount.toString
@@ -134,6 +135,7 @@ public struct ServiceDTO: Codable {
         entity.charges = self.charges.value as? String ?? ""
         entity.title = self.title.value as? String ?? ""
         entity.message = self.message.value as? String ?? ""
+        entity.presentmentType = self.presentmentType.rawValue
         return entity
     }
     public var isActive: Bool {

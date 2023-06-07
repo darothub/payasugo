@@ -45,7 +45,7 @@ public struct MyBillView: View {
                 buttonLabel: "Add bill"
             ) {
                 onclickAddBill()
-            }
+            }.padding()
         }
     }
     private func onclickAddBill() {

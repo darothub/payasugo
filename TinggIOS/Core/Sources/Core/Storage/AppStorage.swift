@@ -15,6 +15,7 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.countriesExtraInfo.rawValue) fileprivate static var countriesExtraInfo: CountriesExtraInfo? = nil
     @AppStorage(LocalProperties.billReminder.rawValue) fileprivate static var billReminder: Bool = false
     @AppStorage(LocalProperties.campaignMessage.rawValue) fileprivate static var campaignMessage: Bool = false
+    @AppStorage(LocalProperties.deviceToken.rawValue) fileprivate static var deviceToken: String = ""
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -58,6 +59,12 @@ public struct AppStorageManager {
     public static func setOptForCampaignMessages(value: Bool) {
         campaignMessage = value
     }
+    public static func getDeviceToken() -> String {
+        deviceToken
+    }
+    public static func setDeviceToken(value: String) {
+        deviceToken = value
+    }
 }
 
 public enum LocalProperties: String {
@@ -68,5 +75,6 @@ public enum LocalProperties: String {
     case countriesExtraInfo
     case billReminder
     case campaignMessage
+    case deviceToken
 }
 

@@ -66,6 +66,18 @@ public func validatePhoneNumber(with regex: String, phoneNumber: String) -> Bool
     }
 }
 
+public func checkStringForPatterns(inputString: String, pattern: String) -> Bool {
+    do {
+        let regex = try Regex(pattern)
+        let match = inputString.firstMatch(of: regex)
+        let result = match?.output.last?.value
+        return result != nil
+    } catch {
+        print("Regex error: \(error)")
+        return false
+    }
+}
+
 
 public func validatePhoneNumberIsNotEmpty(number: String) -> Bool {
     if number.isEmpty {

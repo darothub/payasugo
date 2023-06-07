@@ -54,149 +54,182 @@ public struct CheckoutView: View, OnPINCompleteListener {
     @State private var showAlertForRINV = false
     @State private var showAlertForFWC = false
     @State private var currency = ""
-    @State private var selectedService: MerchantService = .init()
+    @State private var selectedService: MerchantService = sampleServices[0]
+    let profile = Observer<Profile>().getEntities().first
     @FocusState var focused: String?
     public init () {
       //
     }
     
     public var body: some View {
-        VStack(alignment: .center) {
-            Section {
-                horizontalLogoAndServiceName()
-                DropDownView(selectedText: $selectedAccount, dropDownList: $accountList, showDropDown: $showingDropDown
-                ).showIf($isQuickTopUpOrAirtime)
-                paymentDetailView()
-            
-            }.padding(.horizontal)
-            Section {
-                Toggle("Ask someone else to pay", isOn:  $someoneElseIsPaying)
-                    .toggleStyle(SwitchToggleStyle(tint: PrimaryTheme.getColor(.primaryColor)))
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .center) {
+                Section {
+                    HorizontalLogoAndServiceName()
+                    
+                    DropDownView(selectedText: $selectedAccount, dropDownList: $accountList, showDropDown: $showingDropDown
+                    ).showIf($isQuickTopUpOrAirtime)
+                    
+                    PaymentDetailView()
+                }.padding(.horizontal)
+                Section {
+                    Toggle(
+                        "Ask someone else to pay",
+                        isOn:  $someoneElseIsPaying
+                    )
+                    .toggleStyle(
+                        SwitchToggleStyle(
+                            tint: PrimaryTheme.getColor(.primaryColor)
+                        )
+                    )
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(lineWidth: 0.5)
                     )
-                TextFieldAndRightIcon(
-                    number: $checkoutVm.fem.accountNumber
-                ) {
-                    fetchContacts()
-                }.disabled(checkoutVm.isSomeoneElsePaying ? false : true)
-                .showIf($someoneElseIsPaying)
-                .focused($focused, equals: checkoutVm.fem.accountNumber)
-            }.padding(.horizontal)
-            .showIf($checkoutVm.isSomeoneElsePaying)
-            .showIfNot($showingDropDown)
-            cardDropDownView()
-            Spacer()
-            
-            //MARK: Button
-            TinggButton(
-                backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                buttonLabel: buttonText
-            ) {
-                onButtonClick()
-            }.padding()
-        }
-        .sheet(isPresented: $contactViewModel.showContact) {
-            showContactView(contactViewModel: contactViewModel)
-        }
-        .toolbar {
-            handleKeyboardDone()
-        }
-        .onAppear {
-            selectedService = checkoutVm.slm.selectedService
-            log(message: "\(selectedService)")
-            buttonText = "Pay \(checkoutVm.sam.amount)"
-            currency = (AppStorageManager.getCountry()?.currency)!
-            checkoutVm.slm.payers = Observer<MerchantPayer>().getEntities()
-                .filter{$0.activeStatus != "0"}
-            questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
-            checkoutVm.cardDetails.amount = checkoutVm.sam.amount
-            accountList = checkoutVm.fem.enrollments.compactMap {$0.accountNumber}
-            isQuickTopUpOrAirtime = selectedService.isAirtimeService
-            updateButtonLabel()
-            
-        }
-        .onChange(of: checkoutVm.slm) { model in
-            someoneElseIsPaying = false
-            checkoutVm.isSomeoneElsePaying = model.selectedPayer.canPayForOther == "0" ? false : true
-           
-            if model.selectedPayer.checkoutType == MerchantPayer.CHECKOUT_CARD {
-                let listOfCards = createListOfCards(imageUrl: model.selectedPayer.logo ?? "")
-                if listOfCards.isNotEmpty() {
-                    checkoutVm.dcddm.selectedCardDetails = listOfCards[0]
-                    checkoutVm.dcddm.cardDetails = listOfCards
-                    checkoutVm.showCardOptions = true
+                    .foregroundColor(.black)
+                    TextFieldAndRightIcon(
+                        number: $checkoutVm.fem.accountNumber
+                    ) {
+                        fetchContacts()
+                    }
+                    .disabled(
+                        checkoutVm.isSomeoneElsePaying ? false : true
+                    )
+                    .showIf($someoneElseIsPaying)
+                    .focused(
+                        $focused, equals: checkoutVm.fem.accountNumber
+                    )
                 }
-                checkoutVm.addNewCard = true
-              
-            } else {
-                checkoutVm.showCardOptions = false
-                checkoutVm.addNewCard = false
+                .padding(.horizontal)
+                .showIf($checkoutVm.isSomeoneElsePaying)
+                .showIfNot($showingDropDown)
+                
+                CardDropDownView()
+                
+                Spacer()
+                
+                //MARK: Button
+                TinggButton(
+                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                    buttonLabel: buttonText
+                ) {
+                    onButtonClick()
+                }.padding()
+                .showIfNot($showingDropDown)
+                .focused($focused, equals: nil)
             }
-            let payer = model.payers.first { p in
-                p.clientName == model.selectedProvider
+            .sheet(isPresented: $contactViewModel.showContact) {
+                showContactView(contactViewModel: contactViewModel)
             }
-            if let p = payer {
-                checkoutVm.slm.selectedPayer = p
+        
+            .toolbar {
+                handleKeyboardDone()
             }
-        }
-        .onChange(of: contactViewModel.selectedContact) { newValue in
-            checkoutVm.fem.accountNumber = newValue
-        }
-        .onChange(of: selectedAccount, perform: { newValue in
-            checkoutVm.fem.accountNumber = newValue
-        })
-        .onChange(of: checkoutVm.sam.amount, perform: { newValue in
-            if checkoutVm.slm.selectedService.isAirtimeService {
-                buttonText = "Buy \(checkoutVm.service.serviceName)"
-            } else {
+            .onAppear {
+                selectedService = checkoutVm.slm.selectedService
+                log(message: "\(selectedService)")
+                buttonText = "Pay \(checkoutVm.sam.amount)"
+                currency = (AppStorageManager.getCountry()?.currency) ?? ""
+                checkoutVm.slm.payers = Observer<MerchantPayer>().getEntities()
+                    .filter{$0.activeStatus != "0"}
+                questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
+                checkoutVm.cardDetails.amount = checkoutVm.sam.amount
+                accountList = checkoutVm.fem.enrollments.compactMap {$0.accountNumber}
+                isQuickTopUpOrAirtime = selectedService.isAirtimeService
+                updateButtonLabel()
+                
+            }
+            .onChange(of: checkoutVm.slm) { model in
+                someoneElseIsPaying = false
+                checkoutVm.isSomeoneElsePaying = model.selectedPayer.canPayForOther == "0" ? false : true
+               
+                if model.selectedPayer.checkoutType == MerchantPayer.CHECKOUT_CARD {
+                    let listOfCards = createListOfCards(imageUrl: model.selectedPayer.logo ?? "")
+                    if listOfCards.isNotEmpty() {
+                        checkoutVm.dcddm.selectedCardDetails = listOfCards[0]
+                        checkoutVm.dcddm.cardDetails = listOfCards
+                        checkoutVm.showCardOptions = true
+                    }
+                    checkoutVm.addNewCard = true
+                  
+                } else {
+                    checkoutVm.showCardOptions = false
+                    checkoutVm.addNewCard = false
+                }
+                let payer = model.payers.first { p in
+                    p.clientName == model.selectedProvider
+                }
+                if let p = payer {
+                    checkoutVm.slm.selectedPayer = p
+                }
+            }
+            .onChange(of: contactViewModel.selectedContact) { newValue in
+                checkoutVm.fem.accountNumber = newValue
+            }
+            .onChange(of: selectedAccount, perform: { newValue in
+                checkoutVm.fem.accountNumber = newValue
+            })
+            .onChange(of: checkoutVm.sam.amount, perform: { newValue in
                 buttonText = "Pay \(newValue)"
+            })
+            .customDialog(isPresented: $showDTBPINDialog) {
+                DTBCheckoutDialogView(imageUrl: selectedPayer.logo!, dtbAccounts: dtbAccounts) {
+                    pin in
+                    encryptePIN = pin
+                    raiseInvoice()
+                }
             }
-        })
-        .customDialog(isPresented: $showDTBPINDialog) {
-            DTBCheckoutDialogView(imageUrl: selectedPayer.logo!, dtbAccounts: dtbAccounts) {
-                pin in
-                encryptePIN = pin
-                raiseInvoice()
-            }
-        }
-        .customDialog(isPresented: $showPinView, cancelOnTouchOutside: .constant(true), dialogContent: {
-            VStack {
-                OtpFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)
-                Text("Forgot PIN?")
-                    .font(.caption)
-                    .padding(.vertical)
-            }.padding(40)
-            .handleViewStatesMods(uiState: checkoutVm.$validatePinUImodel) { content in
-                log(message: content)
-                let response = content.data as! BaseDTO
+            .customDialog(isPresented: $showPinView, cancelOnTouchOutside: .constant(true), dialogContent: {
+                VStack {
+                    OtpFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)
+                    Text("Forgot PIN?")
+                        .font(.caption)
+                        .padding(.vertical)
+                }.padding(40)
+                .handleViewStatesMods(uiState: checkoutVm.$validatePinUImodel) { content in
+                    log(message: content)
+                    let response = content.data as! BaseDTO
+                    log(message: "\(response)")
+                    showAlertForPin = true
+                    showPinView = false
+                } action: {
+                    makeCardCheckoutRequest()
+                }
+            })
+            .handleViewStatesMods(uiState: checkoutVm.$raiseInvoiceUIModel) { content in
+                let response = content.data as! RINVResponse
                 log(message: "\(response)")
-                showAlertForPin = true
-                showPinView = false
+               
             } action: {
-                makeCardCheckoutRequest()
+                let alias = profile?.accountAlias ?? "NA"
+                let currentAccountNumber = selectedAccount.isEmpty ? checkoutVm.fem.accountNumber : selectedAccount
+                let transaction = TransactionItemModel(
+                    imageurl: checkoutVm.slm.selectedService.serviceLogo,
+                    accountName: alias,
+                    accountNumber: currentAccountNumber,
+                    date: Date.now,
+                    amount: Double(checkoutVm.sam.amount) ?? 0.0,
+                    payer: checkoutVm.slm.selectedPayer,
+                    service: checkoutVm.slm.selectedService,
+                    status: .pending
+                )
+                navigation.navigationStack.append(Screens.transactionListView(transaction))
+//                navigation.navigationStack.append(Screens.home)
             }
-        })
-        .handleViewStatesMods(uiState: checkoutVm.$raiseInvoiceUIModel) { content in
-            log(message: content)
-            let response = content.data as! RINVResponse
-            showAlertForRINV = true
-            log(message: "\(response)")
-        }
-        .handleViewStatesMods(uiState: checkoutVm.$fwcUIModel) { content in
-            log(message: content)
-            let response = content.data as! DTBAccountsResponse
-            dtbAccounts = response.accounts ?? []
-            showDTBPINDialog = true
-        }
-        .handleViewStatesMods(uiState: checkoutVm.$uiModel) { content in
-            log(message: content)
-            let response = content.data as! CreateCardChannelResponse
-            checkoutVm.cardDetails.checkout = true
-            navigation.navigationStack.append(Screens.cardDetailsView(response, nil))
-        }
+            .handleViewStatesMods(uiState: checkoutVm.$fwcUIModel) { content in
+                log(message: content)
+                let response = content.data as! DTBAccountsResponse
+                dtbAccounts = response.accounts ?? []
+                showDTBPINDialog = true
+            }
+            .handleViewStatesMods(uiState: checkoutVm.$uiModel) { content in
+                log(message: content)
+                let response = content.data as! CreateCardChannelResponse
+                checkoutVm.cardDetails.checkout = true
+                navigation.navigationStack.append(Screens.cardDetailsView(response, nil))
+            }
+        }.background(.white)
        
     }
     fileprivate func handleKeyboardDone() -> ToolbarItemGroup<TupleView<(Spacer, Button<Text>?, Button<Text>?, Button<Text>?)>> {
@@ -222,11 +255,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
     }
     fileprivate func updateButtonLabel() {
         withAnimation {
-            if checkoutVm.slm.selectedService.isAirtimeService {
-                buttonText = "Buy \(checkoutVm.service.serviceName)"
-            } else {
-                buttonText = "Pay \(checkoutVm.sam.amount)"
-            }
+            buttonText = "Pay \(checkoutVm.sam.amount)"
         }
     }
     fileprivate func fetchContacts() {
@@ -237,7 +266,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
         }
     }
     @ViewBuilder
-    fileprivate func cardDropDownView() -> some View {
+    fileprivate func CardDropDownView() -> some View {
         Group {
             DebitCardDropDownView(dcddm: $checkoutVm.dcddm)
                 .padding()
@@ -253,9 +282,10 @@ public struct CheckoutView: View, OnPINCompleteListener {
         }.showIfNot($showingDropDown)
     }
     @ViewBuilder
-    fileprivate func paymentDetailView() -> some View {
+    fileprivate func PaymentDetailView() -> some View {
         Group {
             TextFieldView(fieldText: $checkoutVm.sam.amount, label: "", placeHolder: "Enter amount")
+                .foregroundColor(.black)
                 .disabled(selectedService.canEditAmount == "0" ? false : true)
                 .onChange(of: checkoutVm.sam.amount) { newValue in
                     checkoutVm.sam.amount = newValue.applyPattern(pattern: "\(checkoutVm.sam.currency) ##")
@@ -269,18 +299,19 @@ public struct CheckoutView: View, OnPINCompleteListener {
         }.showIfNot($showingDropDown)
     }
     @ViewBuilder
-    fileprivate func horizontalLogoAndServiceName() -> some View {
+    fileprivate func HorizontalLogoAndServiceName() -> some View {
         HStack {
             Text(title)
                 .frame(alignment: .center)
                 .padding(.vertical)
                 .bold()
+                .foregroundColor(.black)
             Spacer()
             IconImageCardView(
                 imageUrl: checkoutVm.slm.selectedService.serviceLogo,
                 radius: 50,
                 scaleEffect: 0.7
-            )
+            ).scaleEffect(0.7)
         }
     }
     fileprivate func onButtonClick() {
@@ -317,19 +348,23 @@ public struct CheckoutView: View, OnPINCompleteListener {
              CardDetailDTO(cardAlias: c.cardAlias ?? "", payerClientID: c.payerClientID ?? "", cardType: c.cardType ?? "", activeStatus: c.activeStatus ?? "", logoUrl: imageUrl)
         }
     }
-   private func getAvailableInvoice() -> Invoice? {
+   private func getAvailableInvoice() -> Invoice {
        return Observer<Invoice>().getEntities().first(where: { invoice in
             checkoutVm.fem.enrollments.first { e in
                 e.clientProfileAccountID == invoice.enrollment?.clientProfileAccountID
             }?.accountNumber == checkoutVm.fem.accountNumber
-        })
+       }) ?? .init()
     }
     private func raiseInvoice() {
         let _ = Observer<ManualBill>().getEntities()
-        let profile = Observer<Profile>().getEntities().first
+        
+        let country = AppStorageManager.getCountry() ?? .init()
+        let currentCurrency = country.currency ?? ""
         let currentAccountNumber = selectedAccount.isEmpty ? checkoutVm.fem.accountNumber : selectedAccount
-        let currentCurrency = checkoutVm.sam.currency
-        let currentAmount = checkoutVm.sam.amount.replace(string: currentCurrency, replacement: "")
+        let currentAmount = checkoutVm.sam.amount
+        let profileId = profile?.profileID ?? ""
+        let alias = profile?.accountAlias ?? ""
+    
         let request = RequestMap.Builder()
             .add(value: "RINV", for: .SERVICE)
             .add(value: getPayingMSISDN(), for: .MSISDN)
@@ -338,14 +373,14 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: currentAmount, for: .AMOUNT)
             .add(value: checkoutVm.slm.selectedService.hubServiceID, for: .SERVICE_ID)
             .add(value: currentAccountNumber, for: .ACCOUNT_NUMBER)
-            .add(value: getAvailableInvoice()?.invoiceNumber, for: "INVOICE_NUMBER")
-            .add(value: amount, for: "BILL_AMOUNT")
-            .add(value: AppStorageManager.getCountry()?.currency, for: "CURRENCY")
+            .add(value: getAvailableInvoice().invoiceNumber, for: "INVOICE_NUMBER")
+            .add(value: "", for: "BILL_AMOUNT")
+            .add(value: currentCurrency, for: "CURRENCY")
             .add(value: "", for: "REWARD")
             .add(value: "ADD", for: .ACTION)
-            .add(value: getAvailableInvoice()?.dueDate, for: "DUE_DATE")
+            .add(value: getAvailableInvoice().dueDate, for: "DUE_DATE")
             .add(value: "", for: "NARRATION")
-            .add(value: getAvailableInvoice()?.estimateExpiryDate, for: "EXPIRY_DATE")
+            .add(value: getAvailableInvoice().estimateExpiryDate, for: "EXPIRY_DATE")
             .add(value: "", for: "PAYER_TRANSACTION_ID")
             .add(value: checkoutVm.service.serviceName, for: "SERVICE_NAME")
             .add(value: checkoutVm.service.serviceCode, for: "SERVICE_CODE")
@@ -355,14 +390,14 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: "", for: "WALLET_DATA")
             .add(value: checkoutVm.slm.selectedService.hubClientID, for: "HUB_CLIENT_ID")
             .add(value: "", for: "PAYBILL")
-            .add(value: getAvailableInvoice()?.callbackData, for: "CALLBACK_DATA")
-            .add(value: getAvailableInvoice()?.billReference, for: "REFERENCE_NUMBER")
+            .add(value: getAvailableInvoice().callbackData, for: "CALLBACK_DATA")
+            .add(value: getAvailableInvoice().billReference, for: "REFERENCE_NUMBER")
             .add(value: "1", for: "NOMINATE")
-            .add(value: profile?.profileID, for: "PROFILE_ID")
+            .add(value: profileId, for: "PROFILE_ID")
             .add(value: encryptePIN, for: "PIN")
             .add(value: checkoutVm.slm.selectedPayer.checkoutType, for: "CHECKOUT_TYPE")
             .add(value: "", for: "ACCOUNT_ID")
-            .add(value: profile?.accountAlias, for: "ACCOUNT_ALIAS")
+            .add(value: alias, for: "ACCOUNT_ALIAS")
             .add(value: "1", for: "IS_APP_INVOICE")
             .add(value: "0", for: "CHECK_MODE")
             .add(value: "", for: "MERCHANT_TIER_CODE")
@@ -408,7 +443,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: checkoutVm.sam.amount, for: .AMOUNT)
             .add(value: "001", for: "card_type")
             .add(value: country?.currency, for: "currency")
-            .add(value: getAvailableInvoice()?.invoiceNumber, for: "INVOICE_NUMBER")
+            .add(value: getAvailableInvoice().invoiceNumber, for: "INVOICE_NUMBER")
             .add(value: "0", for: "CHECK_MODE")
             .add(value: CreditCardUtil.encrypt(data: pin), for: "MULA_PIN")
             .add(value: CreditCardUtil.encrypt(data: checkoutVm.cardDetails.suffix), for: "CARD_ALIAS")
@@ -426,5 +461,3 @@ struct BuyAirtimeCheckoutView_Previews: PreviewProvider {
             .environmentObject(NavigationUtils())
     }
 }
-
-

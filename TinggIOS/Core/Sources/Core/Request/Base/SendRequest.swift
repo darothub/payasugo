@@ -15,6 +15,7 @@ public class SendRequest {
     /// A call as function to send request with    ``RequestMap`` to the API
     /// - Returns: return Payload from the API`
     public func callAsFunction<T: BaseDTOprotocol>(request: RequestMap) async throws -> Result<T, ApiError> {
-        try await baseRequest.result(tinggRequest: request)
+        print("Tinggrequest \(request)")
+        return try await baseRequest.result(tinggRequest: request)
     }
 }

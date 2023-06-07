@@ -67,7 +67,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
             defaultServiceName = defaultService.serviceName
         }
         .customDialog(isPresented: $showNetworkList, cancelOnTouchOutside: .constant(true)) {
-            DialogContentView(networkList: networkList, phoneNumber: phoneNumber, selectedNetwork: defaultServiceName, listner: self)
+            DialogContentView(networkList: networkList, phoneNumber: phoneNumber, selectedNetwork: defaultServiceName, listener: self)
                 .padding()
         }
         
@@ -137,7 +137,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener {
         }
       
     }
-    func onSubmit(selected: String) {
+    func onServiceSubmission(selected: String) {
         let service = Observer<MerchantService>().getEntities().first { serv in
             serv.serviceName == selected
         }

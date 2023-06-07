@@ -26,19 +26,22 @@ public class BillAccountUsecase {
     /// A call as function to get list of bill accounts
     /// - Returns: list of ``BillAccount``
     public func callAsFunction() -> [BillAccount] {
-        let enrollmenFilteredByMerchantService = merchantServiceRepository.getServices().flatMap { service in
-            enrollmentRepository.getNominationInfo().filter { enrollment  in
-                (String(enrollment.hubServiceID) == service.hubServiceID)  && ((service.presentmentType == "hasPresentment") || (service.presentmentType == "hasValidation")) && (!service.isAirtimeService)
+        let services = merchantServiceRepository.getServices()
+        let nominations = enrollmentRepository.getNominationInfo()
+
+        let billAccounts = nominations.compactMap { nomination in
+           let service = services.first { service in
+               String(nomination.hubServiceID) == service.hubServiceID && (PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasPresentment) && nomination.isExplicit
             }
+            if let service = service {
+                return BillAccount(serviceId:String(service.hubServiceID), accountNumber: String(nomination.accountNumber))
+            }
+            return nil
         }
-        let enrollments = enrollmenFilteredByMerchantService.filter { $0.isExplicit }
-       
-        let billAccounts = enrollments.map { enrollment -> BillAccount in
-            return BillAccount(serviceId:String( enrollment.hubServiceID), accountNumber: String(enrollment.accountNumber))
-        }
-        let setOfBillAccounts = Set(billAccounts)
+        Log.d(message: "\(billAccounts)")
+
+//        let setOfBillAccounts = Set(billAccounts)
         
-        print("BillAccount \(setOfBillAccounts)")
-        return setOfBillAccounts.map {$0}
+        return billAccounts
     }
 }
