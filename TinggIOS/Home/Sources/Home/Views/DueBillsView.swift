@@ -10,12 +10,13 @@ import Theme
 import Core
 import CoreUI
 struct DueBillsView: View {
-    @State var fetchedBill = [Invoice]()
-//    @Binding var showDueBills:Bool
     @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var fetchedBill = [Invoice]()
     @State var showErrorAlert = false
     @State var showSuccessAlert = false
     @State var updatedTimeString: String = ""
+    @State var showDueBills = true
+    @State var billType = DueBillType.dueBills
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -31,8 +32,11 @@ struct DueBillsView: View {
                 let dueDate = makeDateFromString(validDateString: bill.dueDate)
                 let dueDays = dueDate - now
                 let dueDaysString = dueDayString(dueDaysNumber: dueDays.day)
+                let service = Observer<MerchantService>().getEntities().first { s in
+                    s.hubServiceID == bill.serviceID
+                }
                 
-                DueBillCardView(serviceName: bill.biller, serviceImageString: "", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount: bill.currency+"0.0", dueDate: dueDaysString, updatedTimeString: $updatedTimeString)
+                DueBillCardView(serviceName: bill.biller, serviceImageString: service?.serviceLogo ?? "", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount:"\( bill.currency) \(bill.amount)", dueDate: dueDaysString, billType: billType, updatedTimeString: $updatedTimeString)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
@@ -40,17 +44,42 @@ struct DueBillsView: View {
                     )
             }
           
-        }.padding()
+        }
+        .showIf($showDueBills)
+        .padding()
+        .onAppear {
+            homeViewModel.getDueBills()
+        }
+        .handleViewStatesMods(uiState: homeViewModel.$fetchBillUIModel) { content in
+            var invoices = content.data as? [Invoice]
+            let now = Date.now
+            invoices = invoices?.filter { bill in
+                let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - now).day
+                let yearsDiff = (makeDateFromString(validDateString: bill.dueDate) - now).year
+                switch billType {
+                case .dueBills:
+                    return daysDiff <= 2 && yearsDiff <= 5
+                case .upcomingBills:
+                    return daysDiff >= 3 && yearsDiff <= 5
+                }
+               
+            }
+            fetchedBill = invoices ?? []
+            withAnimation {
+                showDueBills = !fetchedBill.isEmpty
+            }
+        }
     
            
     }
     @ViewBuilder
     func tinggAssistAndBillText() -> some View {
+        let type = billType == .dueBills ? "due" : "upcoming"
         VStack(alignment: .leading) {
             Text("Tingg Assist")
                 .bold()
                 .foregroundColor(.black)
-            Text("You have due bills")
+            Text("You have \(type) bills")
                 .font(.caption)
                 .foregroundColor(.black)
         }
@@ -86,18 +115,24 @@ struct DueBillCardView: View {
     @State var accountNumber = ""
     @State var amount = "0.0"
     @State var dueDate = "today"
+    @State var billType = DueBillType.dueBills
+    @State var barColor = Color.red
     @Binding var updatedTimeString: String
     var body: some View {
         HStack {
             Rectangle()
-                     .fill(Color.red)
+                     .fill(barColor)
                      .frame(width: 10, height: 90)
                      .cornerRadius(20, corners: [.topRight, .bottomRight])
             LeftHandSideView(serviceName: serviceName, serviceImageString: serviceImageString, beneficiaryName: beneficiaryName, accountNumber: accountNumber, updatedTimeString: $updatedTimeString)
             Spacer()
             RightHandSideView(amount: amount, dueDate: dueDate)
-        }.frame(maxWidth: .infinity)
+        }
+        .frame(maxWidth: .infinity)
         .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
+        .onAppear {
+            barColor = billType == .dueBills ? .red : .gray
+        }
     }
 }
 struct DueBillItem: Identifiable {
@@ -120,8 +155,8 @@ struct LeftHandSideView: View {
     @State var updatedTime: Int = 0
     @Binding var updatedTimeString: String
     var body: some View {
-        HStack(alignment: .top) {
-            IconImageCardView(imageUrl: serviceImageString)
+        HStack {
+            IconImageCardView(imageUrl: serviceImageString, radius: 0, scaleEffect: 1.5, x: 0, y: 0, shadowRadius: 0)
             VStack(alignment: .leading) {
                 Text("\(serviceName)")
                     .bold()
@@ -174,7 +209,8 @@ struct RightHandSideView: View {
             } label: {
                 Text("Pay")
                     .frame(width: 50)
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.vertical, 10)
                     .foregroundColor(.white)
                     .textCase(.uppercase)
                     .font(.caption)
@@ -187,3 +223,18 @@ struct RightHandSideView: View {
 }
 
 
+struct DueBillModel {
+    var id: String = UUID().uuidString
+    var serviceName: String = ""
+    var serviceImageString = ""
+    var updatedTime = ""
+    var beneficiaryName = ""
+    var accountNumber = ""
+    var amount = "0.0"
+    var dueDate = "today"
+}
+
+enum DueBillType {
+    case dueBills
+    case upcomingBills
+}

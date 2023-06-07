@@ -26,6 +26,7 @@ public class BaseRequest: TinggApiServices {
         tinggRequest: RequestMap,
         onCompletion: @escaping(Result<T, ApiError>) -> Void
     ) {
+        print("Tinggrequest \(tinggRequest)")
         request(tinggRequest: tinggRequest)
             .validate(statusCode: 200..<300)
             .execute { (result:Result<T, ApiError>) in
@@ -54,6 +55,7 @@ public class BaseRequest: TinggApiServices {
              }
     }
     func result<T: BaseDTOprotocol>(urlPath: String, tinggRequest: RequestMap) async throws -> Result<T, ApiError> {
+        print("Tinggrequest \(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(urlPath: urlPath, tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
                 continuation.resume(returning: result)
@@ -61,6 +63,7 @@ public class BaseRequest: TinggApiServices {
         }
     }
     func result<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws -> Result<T, ApiError> {
+        print("Tinggrequest \(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
                 continuation.resume(returning: result)

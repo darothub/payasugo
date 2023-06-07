@@ -21,6 +21,7 @@ import CoreUI
 /// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodel
 
 struct TinggIOSApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.colorScheme) var colorScheme
     @StateObject var navigation = NavigationUtils()
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
@@ -38,6 +39,7 @@ struct TinggIOSApp: App {
                 .environmentObject(ccvm)
                 .sheet(isPresented: $checkoutVm.showView) {
                     checkoutView()
+                        .presentationDetents([.medium, .large])
                 }
                 .onAppear {
                     UITextField.appearance().keyboardAppearance = .light
@@ -53,7 +55,6 @@ struct TinggIOSApp: App {
             .environmentObject(checkoutVm)
             .environmentObject(contactViewModel)
             .environmentObject(navigation)
-            .presentationDetents([.large])
           
     }
     
@@ -63,3 +64,6 @@ struct TinggIOSApp: App {
         }
     }
 }
+
+
+

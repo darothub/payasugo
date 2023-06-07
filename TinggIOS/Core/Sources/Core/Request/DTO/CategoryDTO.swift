@@ -11,7 +11,7 @@ public struct CategoryDTO: Codable {
     public let categoryID, categoryName: String
     public let categoryLogo: String
     public let activeStatus, categoryOrderID: StringOrIntEnum
-    public let showInHomepage: Int?
+    public let showInHomepage: Int = 0
 
     enum CodingKeys: String, CodingKey {
         case categoryID = "CATEGORY_ID"
@@ -23,8 +23,10 @@ public struct CategoryDTO: Codable {
     }
     
     public var toEntity: CategoryEntity {
-        var entity = CategoryEntity()
+        let entity = CategoryEntity()
         entity.categoryID = self.categoryID
+        entity.categoryName = self.categoryName
+        entity.showInHomepage = self.showInHomepage
         entity.categoryLogo = self.categoryLogo
         entity.activeStatus = self.activeStatus.toString
         entity.categoryOrderID = self.categoryOrderID.toString

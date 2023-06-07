@@ -19,6 +19,7 @@ struct ServicesListView: View {
             Text(slm.selectPaymentTitle)
                 .font(.body)
                 .padding(.top, 30)
+                .foregroundColor(.black)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     showListOfServices(model: slm)
@@ -37,6 +38,7 @@ struct ServicesListView: View {
             RectangleImageCardView(imageUrl: service.serviceLogo, tag: service.serviceName, selected: $slm.selectedProvider) {
                 onChangeSelection()
                 }
+               
                 .overlay(alignment: .topTrailing) {
                     if slm.selectedProvider == service.serviceName {
                         NetworkFavouritedMarkedView()

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>64744613589-btaprpmn2kl2jilrhp6j6ralq92g3pmu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.64744613589-btaprpmn2kl2jilrhp6j6ralq92g3pmu</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>64744613589-1vqd4dieidbmt2m77n3ot9fu2ntsq791.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDK0gnwq10GjW1GVioAJ9qJq7LOBU4RPRY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>64744613589</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>io.cellullant.TinggIOS</string>
+	<key>PROJECT_ID</key>
+	<string>mula-consumer</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mula-consumer.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:64744613589:ios:465e0bd0b5fa33626b245c</string>
+	<key>DATABASE_URL</key>
+	<string>https://mula-consumer.firebaseio.com</string>
+</dict>
+</plist>

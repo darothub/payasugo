@@ -11,7 +11,9 @@ import Foundation
 import SwiftUI
 import Photos
 struct ActiveCategoryTabView: View {
-    var categories: [[CategoryEntity]] = [[CategoryEntity]]()
+    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @State var categories: [[CategoryEntity]] = [[CategoryEntity]]()
+    @State var show = true
     var body: some View {
         TabView {
             ForEach(0..<categories.count, id: \.self) { eachChunkIndex in
@@ -20,8 +22,17 @@ struct ActiveCategoryTabView: View {
         }
         .frame(height: 165)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+        .showIf($show)
         .onAppear {
             setPageIndicatorAppearance()
+            homeViewModel.getServicesByCategory()
+        }
+        .handleViewStatesMods(uiState: homeViewModel.$categoryUIModel) { content in
+            withAnimation {
+                categories = content.data as? [[CategoryEntity]] ?? []
+                show = categories.isNotEmpty()
+            }
+          
         }
     }
 }

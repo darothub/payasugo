@@ -17,6 +17,7 @@ struct AddNewDebitOrCreditCardButton: View {
             Image(systemName: "plus")
             Text(addANewCardString)
                 .textCase(.uppercase)
+                .foregroundColor(.black)
         }.onTapGesture {
             onclick()
         }

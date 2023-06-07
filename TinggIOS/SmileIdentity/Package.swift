@@ -24,8 +24,12 @@ let package = Package(
             name: "SmileIdentity",
             dependencies: [
                 .product(name: "Smile_Identity_SDK", package: "ios-swift-package")
+            ],
+            exclude:[
+                "GTMSessionFetcher",
             ]
         ),
+        
         .testTarget(
             name: "SmileIdentityTests",
             dependencies: ["SmileIdentity"]),

@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  IconImageCardView.swift
 //  
 //
 //  Created by Abdulrasaq on 30/07/2022.
@@ -14,7 +14,7 @@ public struct IconImageCardView: View {
     @State var y: CGFloat = 3
     @State var shadowRadius: CGFloat = 3
     @State var bgShape: ImageClipShape = .rectangular
-    public init(imageUrl: String, radius: CGFloat = 10, scaleEffect: CGFloat = 1, x: CGFloat = 0, y:CGFloat = 3, shadowRadius: CGFloat = 0, bgShape: ImageClipShape = .rectangular) {
+    public init(imageUrl: String, radius: CGFloat = 10, scaleEffect: CGFloat = 1, x: CGFloat = 1, y: CGFloat = 1, shadowRadius: CGFloat = 3, bgShape: ImageClipShape = .rectangular) {
         self._imageUrl = State(initialValue: imageUrl)
         self._radius = State(initialValue: radius)
         self._scaleEffect = State(initialValue: scaleEffect)
@@ -31,7 +31,7 @@ public struct IconImageCardView: View {
                 .padding()
                 .scaleEffect(scaleEffect)
         } placeholder: {
-            Image(systemName: "camera.fill")
+            ProgressView()
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
                 .padding()

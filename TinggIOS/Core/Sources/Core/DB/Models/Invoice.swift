@@ -142,7 +142,7 @@ public struct DynamicInvoiceType: Decodable   {
      public var serviceID: String = ""
      public var customerName: String = ""
      public var invoiceNumber: String = ""
-     public var amount: StringOrIntEnum
+     public var amount: Amount
      public var currency: String = ""
      public var dueDate: String = ""
      public var beepTransactionID: String = ""
@@ -206,3 +206,38 @@ public struct DynamicInvoiceType: Decodable   {
     
 }
 
+public enum Amount: Codable {
+    case double(Double)
+    case string(String)
+
+   public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let x = try? container.decode(Double.self) {
+            self = .double(x)
+            return
+        }
+        if let x = try? container.decode(String.self) {
+            self = .string(x)
+            return
+        }
+        throw DecodingError.typeMismatch(Amount.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for Amount"))
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .double(let x):
+            try container.encode(x)
+        case .string(let x):
+            try container.encode(x)
+        }
+    }
+    public var toString: String {
+        switch self {
+        case .double(let value):
+            return "\(value)"
+        case .string(let value):
+            return value
+        }
+    }
+}

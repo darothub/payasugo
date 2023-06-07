@@ -21,7 +21,7 @@ public struct TinggRequest: Encodable {
     public var osType: String = "iOS"
     public var appVersion: String = "4.0.23"
     public var origin: String = "MULA_APP"
-    public var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
+    public var parseInstallationId: String = AppStorageManager.getDeviceToken()
     public var merchantDetails: String? = ""
     public var profileInfo: String? = ""
     public var apiLevel: Int = 15
@@ -62,7 +62,7 @@ public struct TinggRequest: Encodable {
     }
 }
 
-public struct BillAccount: Codable, Hashable {
+public struct BillAccount: Codable {
     public let serviceId: String
     public let accountNumber: String
     public init(serviceId: String, accountNumber: String){
@@ -100,7 +100,7 @@ public struct RequestMap  {
     }
     public class Builder {
         fileprivate var dict: [String: Any] = [:]
-        private var parseInstallationId: String = "fISa32Gnhwg:APA91bGmtBreiR9tcInsNtdjE1U_elSnAczL0OcFUSwaaG-1G2k9yc6tM3fGMzoEzB5l7sXc5XfsEf1HyiF4RNBTNmcGDBGkXbktrNQJe1STZZ2Sf2Ux0LgJk6okjUx85lu9zzzDziGz"
+        private var parseInstallationId: String = AppStorageManager.getDeviceToken()
         public init() {
             self.dict.updateValue(AppStorageManager.getPhoneNumber(), forKey: RequestKey.MSISDN.str)
             if let clientId = AppStorageManager.getCountry()?.mulaClientID, let countryName = AppStorageManager.getCountry()?.name {

@@ -6,9 +6,12 @@
 //
 
 import Foundation
+
 public class Log {
     public static func d(fileName: String = #file, message: String) {
         let nameOfFile = fileName.self.split(separator: ".")[0]
         print("\(nameOfFile) -> \n\(message)")
     }
 }
+
+

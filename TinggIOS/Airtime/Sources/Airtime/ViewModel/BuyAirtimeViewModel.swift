@@ -24,7 +24,7 @@ public class BuyAirtimeViewModel: ViewModel {
     public init(airtimeUsecase: AirtimeUsecase) {
         self.airtimeUsecase = airtimeUsecase
     }
-    
+    @MainActor
     func updateDefaultNetworkId(request: RequestMap) {
         defaultNetworkUIModel = UIModel.loading
         Task {

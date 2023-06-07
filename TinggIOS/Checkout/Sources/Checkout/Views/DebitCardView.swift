@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  DebitCardView.swift
 //  
 //
 //  Created by Abdulrasaq on 19/12/2022.
@@ -16,9 +16,9 @@ struct DebitCardView: View {
             VStack(alignment: .leading) {
                 Text("Normal")
                 Text("Debit ****\(model.cardAlias)")
-            }
+            }.foregroundColor(.black)
             Spacer()
-        }
+        }.background(.white)
     }
 }
 

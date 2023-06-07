@@ -56,12 +56,10 @@ public class HomeViewModel: ViewModel {
     public init(homeUsecase: HomeUsecase) {
         self.homeUsecase = homeUsecase
         getProfile()
-        getQuickTopups()
-        displayedRechargeAndBill()
-        getDueBills()
-//        fetchDueBills()
-        getServicesByCategory()
-        allRecharge()
+//        displayedRechargeAndBill()
+
+//        getServicesByCategory()
+//        allRecharge()
     }
     
     public func updateProfile(_ requestString: String) {
@@ -133,27 +131,17 @@ public class HomeViewModel: ViewModel {
     
     public func getServicesByCategory() {
         categoryUIModel = UIModel.loading
-        Future<[[CategoryEntity]], Never> { [unowned self] promise in
-            let servicesByCategory = homeUsecase.categorisedCategories()
-            promise(.success(servicesByCategory))
-            categoryUIModel = UIModel.nothing
-        }
-        .assign(to: \.servicesByCategory, on: self)
-        .store(in: &subscriptions)
+        let servicesByCategory = homeUsecase.categorisedCategories()
+        handleResultState(model: &categoryUIModel, (Result.success(servicesByCategory) as Result<Any, Error>))
     }
     public func getQuickTopups() {
         quickTopUIModel = UIModel.loading
-        Future<[MerchantService], Never> { [unowned self] promise in
-            do {
-                let quicktopups = try homeUsecase.getQuickTopups()
-                promise(.success(quicktopups))
-                quickTopUIModel = UIModel.nothing
-            } catch {
-                quickTopUIModel = UIModel.error(error.localizedDescription)
-            }
+        do {
+            let quicktopups = try homeUsecase.getQuickTopups()
+            handleResultState(model: &quickTopUIModel, (Result.success(quicktopups) as Result<Any, Error>))
+        } catch {
+            handleResultState(model: &quickTopUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
         }
-        .assign(to: \.airTimeServices, on: self)
-        .store(in: &subscriptions)
         return
     }
     
@@ -204,29 +192,20 @@ public class HomeViewModel: ViewModel {
     }
     public func displayedRechargeAndBill() {
         rechargeAndBillUIModel =  UIModel.loading
-        Future<[MerchantService], Never> { [unowned self] promise in
-            do {
-                let bill = try homeUsecase.displayedRechargeAndBill()
-                promise(.success(bill))
-                rechargeAndBillUIModel = UIModel.nothing
-            } catch {
-                rechargeAndBillUIModel = UIModel.error(error.localizedDescription)
-            }
+        do {
+            let bill = try homeUsecase.displayedRechargeAndBill()
+            Log.d(message: "Recharge \(bill)")
+            handleResultState(model: &rechargeAndBillUIModel, (Result.success(bill) as Result<Any, Error>))
+        } catch {
+            handleResultState(model: &rechargeAndBillUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
         }
-        .assign(to: \.rechargeAndBill, on: self)
-        .store(in: &subscriptions)
         return
     }
     
     public func allRecharge() {
         rechargeAndBillUIModel =  UIModel.loading
-        Future<[String: [MerchantService]], Never> { [unowned self] promise in
-            let recharges = homeUsecase.allRecharge()
-            promise(.success(recharges))
-            rechargeAndBillUIModel = UIModel.nothing
-        }
-        .assign(to: \.categoryNameAndServices, on: self)
-        .store(in: &subscriptions)
+        let recharges = homeUsecase.allRecharge()
+        handleResultState(model: &rechargeAndBillUIModel, (Result.success(recharges) as Result<Any, Error>))
         return
      
     }
@@ -244,23 +223,33 @@ public class HomeViewModel: ViewModel {
     public func getDueBills()  {
         fetchBillUIModel = UIModel.loading
         let billAccount = homeUsecase.getBillAccounts()
-        let partitionedBillAccount = homeUsecase.getBillAccounts().chunked(into: 5)
-        partitionedBillAccount.forEach { ba in
-            let request = RequestMap.Builder()
-                            .add(value: "FBA", for: .SERVICE)
-                            .add(value: ba, for: .BILL_ACCOUNTS)
-                            .add(value: 1, for: "IS_MULTIPLE")
-                            .build()
-             Task {
-                 do {
-                     dueBill = try await homeUsecase.fetchDueBills(request: request)
-                     handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
-                 } catch {
-                     handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
-                 }
-                
-             }
+        var baa:[[String: String]] = []
+       let baaaa = billAccount.reduce(into: [:]) { partialResult, ba in
+            partialResult["SERVICE_ID"] = ba.serviceId
+            partialResult["ACCOUNT_NUMBER"] = ba.accountNumber
         }
+        Log.d(message: "\(baaaa)")
+        billAccount.forEach { ba in
+            var d = [String: String]()
+            d["SERVICE_ID"] = ba.serviceId
+            d["ACCOUNT_NUMBER"] = ba.accountNumber
+            baa.append(d)
+        }
+    
+        let request = RequestMap.Builder()
+                        .add(value: "FBA", for: .SERVICE)
+                        .add(value: baa, for: .BILL_ACCOUNTS)
+                        .add(value: 1, for: "IS_MULTIPLE")
+                        .build()
+         Task {
+             do {
+                 dueBill = try await homeUsecase.fetchDueBills(request: request)
+                 handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
+             } catch {
+                 handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+             }
+            
+         }
     
     }
     public func getSingleDueBill(accountNumber: String, serviceId: String) {

@@ -19,7 +19,7 @@ public struct DropDownView: View {
     @State var placeHolder: String
     @State var showLabel = false
     @State var disableEdit = false
-    public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, showDropDown: Binding<Bool> = .constant(false), rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "",
+    public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, showDropDown: Binding<Bool> = .constant(false), rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "Enter",
         lockTyping: Bool = false
     ) {
         self._selectedText = selectedText
@@ -67,6 +67,7 @@ public struct DropDownView: View {
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 0.5)
                 ).foregroundColor(outlineColor)
+                .background(.white)
             }
             List {
                 ForEach(dropDownList, id: \.self) { number in
@@ -75,8 +76,7 @@ public struct DropDownView: View {
                             .padding(.horizontal)
                             .font(.caption)
                             .frame(alignment: .leading)
-                      
-
+                            .foregroundColor(.black)
                     }
                     .background(rowColor.opacity(0.4))
                     .onTapGesture {
@@ -87,13 +87,15 @@ public struct DropDownView: View {
                     }
               
                 }.listRowInsets(EdgeInsets())
-                
-            }.hideIf(isHidden: $showDropDown)
-                .listStyle(.plain)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.gray, lineWidth: 0.5)
-                }
+            }
+            .background(.white)
+            .scrollContentBackground(.hidden)
+            .hideIf(isHidden: $showDropDown)
+            .listStyle(.plain)
+            .overlay {
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.gray, lineWidth: 0.5)
+            }
         }.onAppear {
             showLabel = !label.isEmpty
         }

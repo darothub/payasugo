@@ -146,7 +146,7 @@ struct NavigationDrawerTestView<S>: View, NavigationMenuClick where S: Hashable 
     @State var status = DrawerStatus.close
     var body: some View {
         NavigationDrawerView<Screens>(headerItem: HeaderItem(destination: Screens.home), listOfMenu: [
-            NavigationDrawerMenuItem(screen: Screens.buyAirtime, title: "Payment"),
+            NavigationDrawerMenuItem(screen: Screens.buyAirtime("Airtel"), title: "Payment"),
             NavigationDrawerMenuItem(screen: Screens.intro, title: "Settings"),
             NavigationDrawerMenuItem(screen: Screens.home, title: "Support")
         ], selectedMenuScreen: $selectedScreen, status: $status,

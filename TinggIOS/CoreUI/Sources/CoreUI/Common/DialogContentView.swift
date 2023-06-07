@@ -15,20 +15,22 @@ public struct DialogContentView: View {
     @State var selectedNetwork: String = "MTN"
     @State private var buttonLabel: String = "Done"
     @State private var isNetworkListEmpty = false
-    var listner: OnNetweorkSelectionListener
-    public init(networkList: [NetworkItem], phoneNumber: String = "090000000000", selectedNetwork: String = "MTN", listner: OnNetweorkSelectionListener) {
+    var listener: OnNetweorkSelectionListener
+    public init(networkList: [NetworkItem], phoneNumber: String = "090000000000", selectedNetwork: String = "MTN", listener: OnNetweorkSelectionListener) {
         self._networkList = State(initialValue: networkList)
         self._phoneNumber = State(initialValue: phoneNumber)
         self._selectedNetwork = State(initialValue: selectedNetwork)
-        self.listner = listner
+        self.listener = listener
     }
     public var body: some View {
         VStack {
             Text("Select mobile network")
             Group {
                 Text("Please select the mobile network that\n")
+                    .foregroundColor(.black)
                 + Text("\(phoneNumber)").foregroundColor(.green)
                 + Text(" belongs to")
+                    .foregroundColor(.black)
             }
             .multilineTextAlignment(.center)
             .font(.caption)
@@ -39,7 +41,10 @@ public struct DialogContentView: View {
                         .listRowInsets(EdgeInsets())
                         .showIfNot(.constant(network.networkName.isEmpty))
                 }
-            }.listStyle(PlainListStyle())
+            }
+            .listStyle(PlainListStyle())
+            .background(Color.white)
+            .scrollContentBackground(.hidden)
             Text("You have no service yet")
                 .showIf($isNetworkListEmpty)
             TinggButton(
@@ -47,12 +52,14 @@ public struct DialogContentView: View {
                 buttonLabel: buttonLabel
             ) {
                 if networkList.isEmpty {
-                    listner.onDismiss()
+                    listener.onDismiss()
                 } else {
-                    listner.onSubmit(selected: selectedNetwork)
+                    listener.onServiceSubmission(selected: selectedNetwork)
                 }
             }
-        }.onAppear {
+        }
+        .background(.white)
+        .onAppear {
             buttonLabel = networkList.isEmpty ? "Dismiss" : buttonLabel
             isNetworkListEmpty = networkList.isEmpty
         }
@@ -75,17 +82,18 @@ public struct NetworkSelectionRowView: View {
                         .clipShape(Circle())
                         .padding()
                 } placeholder: {
-                    Image(systemName: "camera.fill")
+                    ProgressView()
                         .frame(width: 40, height: 40)
                         .clipShape(Circle())
                         .padding()
                 }
                 Text(item.networkName)
+                    .foregroundColor(.black)
                 Spacer()
                 RadioButtonView(selected: $selectedNetwork, id: item.id)
-            }
+            }.background(.white)
             Divider()
-        }
+        }.background(.white)
     }
 }
 
@@ -108,6 +116,6 @@ public struct NetworkItem: Identifiable {
 }
 
 public protocol OnNetweorkSelectionListener {
-    func onSubmit(selected: String)
+    func onServiceSubmission(selected: String)
     func onDismiss()
 }

@@ -44,7 +44,7 @@ public struct CategoriesAndServicesView: View {
                 }))
             }
         }
-        .background(.gray.opacity(0.1))
+        .background(.white.opacity(0.9))
     }
     fileprivate func searchService(_ newValue: String) -> [TitleAndListItem] {
         return categoryNameAndServices
@@ -113,8 +113,7 @@ struct RowView: View {
                 .font(.system(size: PrimaryTheme.mediumTextSize))
                 .foregroundColor(.black)
                 .textCase(.uppercase)
-            ServicesGridView(services: itemList, showTitle: true){ service in
-                print("Service")
+            ServicesGridView(services: $itemList, showTitle: true){ service in
                 onclick(service)
             }
         }

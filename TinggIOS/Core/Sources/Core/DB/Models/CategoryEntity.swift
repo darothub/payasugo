@@ -16,7 +16,7 @@ public class CategoryEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var activeStatus: String? = ""
     @Persisted public var categoryOrderID: String? = ""
     @Persisted public var quickAction: String? = ""
-    @Persisted public var showInHomepage: String? = ""
+    @Persisted public var showInHomepage: Int
     @Persisted public var parkingID: String? = ""
     @Persisted public var payTvID: String? = ""
     @Persisted public var powerID: String? = ""

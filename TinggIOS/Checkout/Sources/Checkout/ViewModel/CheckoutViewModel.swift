@@ -58,12 +58,13 @@ public class CheckoutViewModel: ViewModel  {
             }
         }
     }
+    @MainActor
     public func raiseInvoiceRequest(request: RequestMap)  {
         raiseInvoiceUIModel = UIModel.loading
         Task {
             do {
                 let result:RINVResponse = try await usecase(request: request)
-                handleResultState(model: &raiseInvoiceUIModel, (Result.success(result) as Result<Any, Error>))
+                handleResultState(model: &raiseInvoiceUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
             } catch {
                 handleResultState(model: &raiseInvoiceUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
