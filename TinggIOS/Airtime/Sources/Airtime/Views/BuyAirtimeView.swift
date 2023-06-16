@@ -133,13 +133,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                 fem.accountNumber = newValue
             })
             .onChange(of: fem, perform: { newValue in
-                if defaultService.serviceName == selectedServiceName {
-                    whoseNumber = WhoseNumberLabel.my
-                } else if newValue.accountNumber.isEmpty {
-                    whoseNumber = WhoseNumberLabel.none
-                } else {
-                    whoseNumber = WhoseNumberLabel.other
-                }
+               
                 do {
                     //Using the phone number without the dial code to confirm match
                     //1. get dialcode
@@ -156,6 +150,12 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                     if result != nil {
                         slm.selectedService = defaultService
                         slm.selectedProvider = defaultService.serviceName
+                        whoseNumber = WhoseNumberLabel.my
+                    }
+                    else if newValue.accountNumber.isEmpty {
+                        whoseNumber = WhoseNumberLabel.none
+                    } else {
+                        whoseNumber = WhoseNumberLabel.other
                     }
                 } catch {
                     log(message: error)
@@ -173,11 +173,13 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                 }
                 if defaultService.serviceName.elementsEqual(s.serviceName) {
                     updateDefaultMyDetails()
+                } else {
+                    slm.selectedService = s
+                    whoseNumber = .other
                 }
                 let enrollment = getCorrespondingEnrollment(to: s)
                 fem.enrollments = enrollment
                 fem.selectedNetwork = newValue.selectedProvider
-                slm.selectedService = s
                 contactViewModel.selectedContact = ""
             })
             .onChange(of: sam.amount) { newValue in
@@ -186,6 +188,8 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
             .onChange(of: whoseNumber, perform: { newValue in
                 if whoseNumber == .my {
                     disablePhoneNumberTextField = true
+                } else {
+                    disablePhoneNumberTextField = false
                 }
             })
             .sheet(isPresented: $contactViewModel.showContact) {
@@ -308,6 +312,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
             bavm.uiModel = UIModel.error(response)
             return
         }
+        
         checkoutVm.fem = fem
         checkoutVm.sam = sam
         checkoutVm.slm = slm

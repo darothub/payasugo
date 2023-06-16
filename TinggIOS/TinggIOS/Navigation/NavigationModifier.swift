@@ -30,6 +30,7 @@ struct NavigationModifier: ViewModifier {
                 case .home:
                     HomeBottomNavView()
                         .environmentObject(checkout)
+                        .environmentObject(hvm)
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
@@ -45,7 +46,7 @@ struct NavigationModifier: ViewModifier {
                         }
                 case .categoriesAndServices(let items):
                     CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem])
-            
+
                 case .billFormView(let billDetails):
                     BillFormView(billDetails: .constant(billDetails as! BillDetails))
                         
@@ -74,12 +75,6 @@ struct NavigationModifier: ViewModifier {
                 }
             }
     }
-}
-
-protocol ScreenProtocol: Hashable {
-    func hash(into hasher: inout Hasher)
-    func getScreen() -> Screens
-    
 }
 
 extension View {

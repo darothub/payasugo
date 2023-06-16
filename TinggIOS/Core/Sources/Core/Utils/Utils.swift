@@ -124,6 +124,21 @@ public struct BillDetails: Hashable {
     }
 }
 
+public func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
+    if service.presentmentType != "None" {
+        let nominations: [Enrollment] = nomination.filter { enrollment in
+            return filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
+        }
+        let billDetails = BillDetails(service: service, info: nominations)
+        return billDetails
+    }
+    return nil
+}
+
+public func filterNominationInfoByHubServiceId(enrollment: Enrollment, service: MerchantService) -> Bool {
+    String(enrollment.hubServiceID) == service.hubServiceID
+}
+
 public func computeProfileInfo(service: MerchantService, accountNumber: String) -> String {
     "\(service.receiverSourceAddress)|\(accountNumber)|\(service.serviceName)|\(service.hubClientID)|\(service.hubServiceID)|\(service.categoryID)||||||||"
 }

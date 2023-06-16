@@ -30,6 +30,9 @@ public struct MerchantPayerListView: View {
             gridView()
         }
         .frame(maxWidth: .infinity)
+        .onAppear {
+            slm.selectedProvider = slm.payers[0].clientName
+        }
     }
     @ViewBuilder
     fileprivate func horizontallistView() -> some View {
@@ -47,7 +50,7 @@ public struct MerchantPayerListView: View {
     fileprivate func listView() -> some View {
         ForEach(slm.payers, id: \.self) { payer in
             let size = CGSize(width: 80, height: 60)
-            RectangleImageCardView(size: size, imageUrl: payer.logo!, tag: payer.clientName!, selected: $slm.selectedProvider) {
+            RectangleImageCardView(size: size, imageUrl: payer.logo!, tag: payer.clientName, selected: $slm.selectedProvider) {
                 onChangeSelection()
                 }
                 .overlay(alignment: .topTrailing) {

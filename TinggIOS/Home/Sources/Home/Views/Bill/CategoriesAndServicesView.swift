@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  CategoriesAndServicesView.swift
 //  
 //
 //  Created by Abdulrasaq on 14/09/2022.
@@ -9,10 +9,12 @@ import SwiftUI
 import Theme
 import CoreUI
 import CoreNavigation
+import Checkout
 
 public struct CategoriesAndServicesView: View {
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
     @State private var searchText = ""
     @State private var searching = false
     @State private var searchResult : [TitleAndListItem] = [TitleAndListItem]()
@@ -21,7 +23,6 @@ public struct CategoriesAndServicesView: View {
     @State var categoryNameAndServices: [TitleAndListItem] = [TitleAndListItem]()
     public init(categoryNameAndServices: [TitleAndListItem]) {
         self._categoryNameAndServices = State(initialValue: categoryNameAndServices)
-        
     }
     public var body: some View {
         ScrollView(showsIndicators: false) {
@@ -33,15 +34,7 @@ public struct CategoriesAndServicesView: View {
                 SearchSection(searchText: $searchText)
                     .padding()
                     .onChange(of: searchText, perform: onSearch(text:))
-                ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, onclick: .constant({ service in
-                    if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
-                        withAnimation {
-                            navigation.navigationStack.append(
-                                Screens.billFormView(bills)
-                            )
-                        }
-                    }
-                }))
+                ColumnBody(categoryNameAndServices: $categoryNameAndServices, searchResult: $searchResult, searching: $searching, onclick: onServiceClicked(_:))
             }
         }
         .background(.white.opacity(0.9))
@@ -54,6 +47,25 @@ public struct CategoriesAndServicesView: View {
                 }
                 return items
             })
+    }
+    fileprivate func onServiceClicked(_ service: MerchantService) {
+        checkoutVm.toCheckout(service) { billDetails in
+            if service.isABundleService {
+                hvm.showBundles = true
+                let model = BundleModel(service: service)
+                hvm.bundleModel = model
+                return
+            }
+            if service.isAirtimeService {
+                navigation.navigationStack.append(
+                    Screens.buyAirtime(service.serviceName)
+                )
+                return
+            }
+            navigation.navigationStack.append(
+                Screens.billFormView(billDetails)
+            )
+        }
     }
     fileprivate func onSearch(text: String) {
         searching = !text.isEmpty
@@ -80,7 +92,7 @@ struct SearchSection: View {
             )  .background(.white)
             Image(systemName: "plus")
                 .padding()
-            
+                .foregroundColor(.black)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 0.0)
@@ -93,10 +105,10 @@ struct ColumnBody: View {
     @Binding var categoryNameAndServices: [TitleAndListItem]
     @Binding var searchResult : [TitleAndListItem]
     @Binding var searching: Bool
-    @Binding var onclick: (MerchantService) -> Void
+    var onclick: (MerchantService) -> Void
     var body: some View {
         ForEach(searching ? searchResult : categoryNameAndServices, id: \.title) { item in
-            RowView(title: .constant(item.title), itemList: .constant(item.services), onclick: $onclick)
+            RowView(title: .constant(item.title), itemList: .constant(item.services), onclick: onclick)
                 .showIf(.constant(!item.services.isEmpty))
         }
     }
@@ -105,8 +117,7 @@ struct ColumnBody: View {
 struct RowView: View {
     @Binding var title: String
     @Binding var itemList: [MerchantService]
-    @Binding var onclick: (MerchantService) -> Void
-    @EnvironmentObject var hvm: HomeViewModel
+    var onclick: (MerchantService) -> Void
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
@@ -151,7 +162,6 @@ struct CategoriesAndServicesView_Previews: PreviewProvider {
     }
     static var previews: some View {
         CategoriesAndServicesViewHolder()
-        
     }
 }
 

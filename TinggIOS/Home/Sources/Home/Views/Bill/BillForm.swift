@@ -17,14 +17,10 @@ public struct BillFormView: View {
     @State private var accountNumber: String = ""
     @State private var invoice: Invoice = .init()
     @State private var navigateBillDetailsView = false
-    var accountNumberList: [String] {
-        billDetails.info.map { info in
-            info.accountNumber
-        }.filter { !$0.isEmpty }
-    }
+    @State private var showDropDown = false
+    @State var accountNumberList: [String] = []
     public init(billDetails: Binding<BillDetails> ) {
         self._billDetails = billDetails
-        
     }
     public var body: some View {
         GeometryReader { geo in
@@ -43,7 +39,8 @@ public struct BillFormView: View {
                 
                 DropDownView(
                     selectedText: $accountNumber,
-                    dropDownList: .constant(accountNumberList),
+                    dropDownList: $accountNumberList,
+                    showDropDown: $showDropDown,
                     label: "Enter your \(billDetails.service.referenceLabel)",
                     placeHoder: billDetails.service.referenceLabel
                 ).padding()
@@ -52,17 +49,28 @@ public struct BillFormView: View {
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
                     buttonLabel: "Get bill"
                 ) {
+                    let request: RequestMap = RequestMap.Builder()
+                        .add(value: "FB", for: .SERVICE)
+                        .add(value: accountNumber, for: .ACCOUNT_NUMBER)
+                        .add(value: 1, for: "IS_MULTIPLE")
+                        .add(value: billDetails.service.hubServiceID, for: .SERVICE_ID)
+                        .build()
+           
                     homeViewModel.getSingleDueBill(
-                        accountNumber: accountNumber,
-                        serviceId: billDetails.service.hubServiceID
+                        request: request
                     )
-                 
                 }
                 .padding()
             }
+            .background(.white)
+            .onAppear {
+               let list = billDetails.info.map { info in
+                    info.accountNumber
+                }.filter { !$0.isEmpty }
+                accountNumberList = list
+            }
         }
         .handleViewStatesMods(uiState: homeViewModel.$uiModel) { content in
-            log(message: content)
             let invoice = content.data as! Invoice
             invoice.enrollment = billDetails.info.first(where: { e in
                 e.accountNumber == self.accountNumber

@@ -72,6 +72,7 @@ public struct BillDetailsView: View {
                 }
                 .disabled(true)
                 .padding(.top, 10)
+                .padding(.horizontal)
                 Spacer()
                 HStack {
                     TinggOutlineButton(
@@ -91,17 +92,12 @@ public struct BillDetailsView: View {
                     }  .padding()
                 }
             }
-        }.onAppear {
+        }
+    
+        .background(.white)
+        .onAppear {
             amount = amountComputed
             dueDate = dueDateComputed
-//            homeViewModel.observeUIModel(model: homeViewModel.$serviceBillUIModel, subscriptions: &homeViewModel.subscriptions) { content in
-//                if let bill = content.data as? Bill {
-//                    let enrol = bill.convertBillToEnrollment(accountNumber: bill.merchantAccountNumber, service: service)
-//                    homeViewModel.nominationInfo.$objects.append(enrol)
-//                    navUtils.navigationStack.append(Screens.home)
-//                }
-//
-//            }
             isNewAccountNumber = homeViewModel.nominationInfo.getEntities().first { e in
                 e.accountNumber == fetchBill.billReference
             } == nil

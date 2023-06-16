@@ -30,16 +30,16 @@ public struct CountryListView : View {
             Text("\(getFlag(country: key))")
                 .accessibility(identifier: "countryflag")
             Text("\(getCountryName(countryCode: key) ?? key)")
-                .foregroundColor(colorScheme == .dark ? .black : .black)
+                .foregroundColor(.black)
                 .accessibility(identifier: "countrydialcode")
             Spacer()
             Text("+\(value)").foregroundColor(colorScheme == .dark ? .black : .black)
         }
-            .font(.system(size: 20))
-            .onTapGesture {
-                self.countryCode = value
-                self.countryFlag = key
-                dismiss()
+        .font(.system(size: 20))
+        .onTapGesture {
+            self.countryCode = value
+            self.countryFlag = key
+            dismiss()
         }
     }
 }

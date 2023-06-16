@@ -8,7 +8,7 @@
 import SwiftUI
 public struct VImageAndNameView: View {
     @State var title: String = ""
-    @State var imageUrl: String = ""
+    @Binding var imageUrl: String
     @State var useInitials = false
     var initials: String {
         if title == "None" || title.isEmpty {
@@ -17,9 +17,9 @@ public struct VImageAndNameView: View {
             return title.prefix(2).uppercased()
         }
     }
-    public init(title: String, imageUrl: String, useInitials:Bool = false) {
+    public init(title: String, imageUrl: Binding<String>, useInitials:Bool = false) {
         self._title = State(initialValue: title)
-        self._imageUrl = State(initialValue: imageUrl)
+        self._imageUrl = imageUrl
         self._useInitials = State(initialValue: useInitials)
     }
     public var body: some View {
@@ -62,8 +62,8 @@ public struct VImageAndNameView: View {
 struct VImageAndNameView_Previews: PreviewProvider {
     static var previews: some View {
         HStack(alignment: .top) {
-            VImageAndNameView(title: "", imageUrl: "")
-            VImageAndNameView(title: "Safaricom airtime", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/tingg4_icons/airtime.png")
+            VImageAndNameView(title: "", imageUrl: .constant(""))
+            VImageAndNameView(title: "Safaricom airtime", imageUrl: .constant("https://mula.co.ke/mula_ke/api/v1/images/icons/tingg4_icons/airtime.png"))
         }
     }
 }

@@ -47,6 +47,8 @@ public class HomeViewModel: ViewModel {
     @Published var sections: [TransactionSectionModel] = [.sample, .sample2]
     @Published public var subscriptions = Set<AnyCancellable>()
     @Published var profileImageUrl: String = ""
+    @Published public var showBundles = false
+    @Published public var bundleModel = BundleModel()
     @Published var listOfPaymentOptions = [
         PaymentOptionItem(optionName: "Mpesa", isSelected: false),
         PaymentOptionItem(optionName: "Viusasa", isSelected: false)
@@ -209,42 +211,29 @@ public class HomeViewModel: ViewModel {
         return
      
     }
-    public func fetchDueBills()  {
-        fetchBillUIModel = UIModel.loading
-//        Task {
-//            do {
-//                dueBill = try await homeUsecase.getDueBills()
-//                handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
-//            } catch {
-//                handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
-//            }
-//        }
-    }
     public func getDueBills()  {
-        fetchBillUIModel = UIModel.loading
-        let billAccount = homeUsecase.getBillAccounts()
-        var baa:[[String: String]] = []
-       let baaaa = billAccount.reduce(into: [:]) { partialResult, ba in
-            partialResult["SERVICE_ID"] = ba.serviceId
-            partialResult["ACCOUNT_NUMBER"] = ba.accountNumber
-        }
-        Log.d(message: "\(baaaa)")
-        billAccount.forEach { ba in
+       
+        let billAccounts = homeUsecase.getBillAccounts()
+        var billAccountDict:[[String: String]] = []
+        billAccounts.forEach { billAccount in
             var d = [String: String]()
-            d["SERVICE_ID"] = ba.serviceId
-            d["ACCOUNT_NUMBER"] = ba.accountNumber
-            baa.append(d)
+            d["SERVICE_ID"] = billAccount.serviceId
+            d["ACCOUNT_NUMBER"] = billAccount.accountNumber
+            billAccountDict.append(d)
         }
-    
         let request = RequestMap.Builder()
                         .add(value: "FBA", for: .SERVICE)
-                        .add(value: baa, for: .BILL_ACCOUNTS)
+                        .add(value: billAccountDict, for: .BILL_ACCOUNTS)
                         .add(value: 1, for: "IS_MULTIPLE")
                         .build()
+        fetchBillUIModel = UIModel.loading
          Task {
              do {
                  dueBill = try await homeUsecase.fetchDueBills(request: request)
                  handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
+
+//                 DispatchQueue.main.async { [unowned self]  in
+//                 }
              } catch {
                  handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
              }
@@ -252,16 +241,12 @@ public class HomeViewModel: ViewModel {
          }
     
     }
-    public func getSingleDueBill(accountNumber: String, serviceId: String) {
+    public func getSingleDueBill(request: RequestMap) {
         uiModel = UIModel.loading
-        var tinggRequest: TinggRequest = .init()
-        tinggRequest.service = "FB"
-        tinggRequest.accountNumber = accountNumber
-        tinggRequest.serviceId = serviceId
+        
         Task {
-         
             do {
-                let singleBillInvoice = try await homeUsecase.getSingleDueBills(tinggRequest: tinggRequest)
+                let singleBillInvoice = try await homeUsecase.getSingleDueBills(tinggRequest: request)
                 handleResultState(model: &uiModel, (Result.success(singleBillInvoice) as Result<Any, Error>))
             }catch {
                 handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
@@ -305,19 +290,6 @@ public class HomeViewModel: ViewModel {
             }
         }
         
-    }
-    func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
-        if service.presentmentType != "None" {
-            let nominations: [Enrollment] = nomination.filter { enrollment in
-                return filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
-            }
-            let billDetails = BillDetails(service: service, info: nominations)
-            return billDetails
-        }
-        return nil
-    }
-    func filterNominationInfoByHubServiceId(enrollment: Enrollment, service: MerchantService) -> Bool {
-        String(enrollment.hubServiceID) == service.hubServiceID
     }
     /// Handle result
     public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {

@@ -40,7 +40,8 @@ public class CheckoutViewModel: ViewModel  {
     @Published public var showView = false
     @Published public var enrollment: Enrollment = .init()
     @Published public var amount: String = ""
-    @Published public var accountNumber: String = ""
+    @Published public var phoneNumber: String = ""
+    @Published public var invoices = Observer<Invoice>().getEntities()
     let c = CurrentValueSubject<UIModel, Never>(.nothing)
     public var isCheckout: Bool = false
     private var usecase: CheckoutUsecase
@@ -109,5 +110,46 @@ public class CheckoutViewModel: ViewModel  {
             model = UIModel.content(content)
             return
         }
+    }
+}
+
+extension CheckoutViewModel {
+    public func toCheckout(_ service: MerchantService, action: (BillDetails) -> Void = { b in }) {
+        let nominations = Observer<Enrollment>().getEntities()
+        if let bills = handleServiceAndNominationFilter(service: service, nomination: nominations) {
+            let existingList = bills.info.filter { nomination in
+                (String(nomination.hubServiceID) == service.hubServiceID) && (PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasPresentment || PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasValidation)
+            }
+             
+            if existingList.isNotEmpty() {
+                let exitingInvoice =  self.invoices.first { invoice in
+                     invoice.billReference == existingList[0].accountNumber
+                 }
+                self.fem.accountNumber = existingList[0].accountNumber
+                self.fem.enrollments = existingList
+                self.slm.selectedService = service
+                self.sam.amount = exitingInvoice?.amount ?? ""
+                self.showView = true
+                return
+            }
+            action(bills)
+        }
+    }
+    public func toCheckoutWithANomination(_ service: MerchantService, nomination: Enrollment) {
+        let currentServices = Observer<MerchantService>().getEntities().filter { $0.categoryID == service.categoryID }
+        if  (String(nomination.hubServiceID) == service.hubServiceID) && (PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasPresentment || PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasValidation) {
+            let exitingInvoice =  self.invoices.first { invoice in
+                invoice.billReference == nomination.accountNumber
+             }
+            self.fem.accountNumber = nomination.accountNumber
+            self.fem.enrollment = nomination
+            self.fem.enrollments = []
+            self.slm.selectedService = service
+            self.sam.amount = exitingInvoice?.amount ?? ""
+            self.slm.services = currentServices
+            self.showView = true
+            return
+        }
+ 
     }
 }

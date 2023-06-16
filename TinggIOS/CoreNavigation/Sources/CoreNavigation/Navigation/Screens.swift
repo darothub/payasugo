@@ -22,7 +22,7 @@ public enum Screens: Hashable {
         case .billers(_):
             hasher.combine(4)
         case .categoriesAndServices(_):
-            hasher.combine(5)
+                hasher.combine(5)
         case .billFormView(_):
             hasher.combine(6)
         case .billDetailsView(_, _):
