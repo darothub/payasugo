@@ -34,9 +34,11 @@ struct TransactionListView: View {
                     
                     }
                 }
-            }
+            }.background(.white)
     
         }
+        .background(.white)
+        .scrollContentBackground(.hidden)
     }
 
     fileprivate func removeTransactionFromDB(item: TransactionItemModel) {

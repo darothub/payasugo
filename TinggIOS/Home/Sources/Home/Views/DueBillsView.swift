@@ -9,8 +9,10 @@ import SwiftUI
 import Theme
 import Core
 import CoreUI
+import Checkout
 struct DueBillsView: View {
-    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
     @State var fetchedBill = [Invoice]()
     @State var showErrorAlert = false
     @State var showSuccessAlert = false
@@ -35,13 +37,20 @@ struct DueBillsView: View {
                 let service = Observer<MerchantService>().getEntities().first { s in
                     s.hubServiceID == bill.serviceID
                 }
-                
-                DueBillCardView(serviceName: bill.biller, serviceImageString: service?.serviceLogo ?? "", beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount:"\( bill.currency) \(bill.amount)", dueDate: dueDaysString, billType: billType, updatedTimeString: $updatedTimeString)
+                let nomination = Observer<Enrollment>().getEntities().first { e in
+                    e.accountNumber == bill.billReference
+                }
+                if let currentService = service, let currentNomination = nomination {
+                    DueBillCardView(serviceName: bill.biller, serviceImageString: currentService.serviceLogo, beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount:"\( bill.currency) \(bill.amount)", dueDate: dueDaysString, billType: billType, updatedTimeString: $updatedTimeString) {
+                        checkoutVm.toCheckoutWithANomination(currentService, nomination: currentNomination)
+                    }
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3, x: 0, y: 3)
                     )
+                }
+               
             }
           
         }
@@ -53,19 +62,19 @@ struct DueBillsView: View {
         .handleViewStatesMods(uiState: homeViewModel.$fetchBillUIModel) { content in
             var invoices = content.data as? [Invoice]
             let now = Date.now
-            invoices = invoices?.filter { bill in
-                let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - now).day
-                let yearsDiff = (makeDateFromString(validDateString: bill.dueDate) - now).year
-                switch billType {
-                case .dueBills:
-                    return daysDiff <= 2 && yearsDiff <= 5
-                case .upcomingBills:
-                    return daysDiff >= 3 && yearsDiff <= 5
-                }
-               
-            }
-            fetchedBill = invoices ?? []
             withAnimation {
+                invoices = invoices?.filter { bill in
+                    let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - now).day
+                    let yearsDiff = (makeDateFromString(validDateString: bill.dueDate) - now).year
+                    switch billType {
+                    case .dueBills:
+                        return daysDiff <= 2 && yearsDiff <= 5
+                    case .upcomingBills:
+                        return daysDiff >= 3 && yearsDiff <= 5
+                    }
+                   
+                }
+                fetchedBill = invoices ?? []
                 showDueBills = !fetchedBill.isEmpty
             }
         }
@@ -103,6 +112,8 @@ struct DueBillsView: View {
 struct DueBillsView_Previews: PreviewProvider {
     static var previews: some View {
         DueBillsView(fetchedBill: sampleInvoices)
+            .environmentObject(HomeDI.createHomeViewModel())
+            .environmentObject(CheckoutDI.createCheckoutViewModel())
     }
 }
 
@@ -118,6 +129,7 @@ struct DueBillCardView: View {
     @State var billType = DueBillType.dueBills
     @State var barColor = Color.red
     @Binding var updatedTimeString: String
+    var action:() -> Void = {}
     var body: some View {
         HStack {
             Rectangle()
@@ -126,12 +138,12 @@ struct DueBillCardView: View {
                      .cornerRadius(20, corners: [.topRight, .bottomRight])
             LeftHandSideView(serviceName: serviceName, serviceImageString: serviceImageString, beneficiaryName: beneficiaryName, accountNumber: accountNumber, updatedTimeString: $updatedTimeString)
             Spacer()
-            RightHandSideView(amount: amount, dueDate: dueDate)
+            RightHandSideView(amount: amount, dueDate: dueDate, action: action)
         }
         .frame(maxWidth: .infinity)
         .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
         .onAppear {
-            barColor = billType == .dueBills ? .red : .gray
+            barColor = billType == .dueBills ? dueDate == "today" ? .red : .orange : .gray
         }
     }
 }
@@ -194,6 +206,7 @@ struct LeftHandSideView: View {
 struct RightHandSideView: View {
     @State var amount = "0.0"
     @State var dueDate = "today"
+    var action:() -> Void = {}
     var body: some View {
         VStack(alignment: .leading) {
             Text("\(amount)")
@@ -216,22 +229,13 @@ struct RightHandSideView: View {
                     .font(.caption)
                     .background(.green)
                     .cornerRadius(25)
+                    .onTapGesture {
+                        action()
+                    }
                    
             }
         }
     }
-}
-
-
-struct DueBillModel {
-    var id: String = UUID().uuidString
-    var serviceName: String = ""
-    var serviceImageString = ""
-    var updatedTime = ""
-    var beneficiaryName = ""
-    var accountNumber = ""
-    var amount = "0.0"
-    var dueDate = "today"
 }
 
 enum DueBillType {

@@ -43,7 +43,7 @@ struct TransactionItemView: View {
                 Spacer()
                 VStack(alignment: .leading) {
                     Text(model.amount, format: .currency(code: "\(model.currency)"))
-                    Text("Paid via \(model.payer.clientName!)")
+                    Text("Paid via \(model.payer.clientName)")
                     Text(model.status.rawValue)
                         .foregroundColor(color)
                 }.font(.caption)

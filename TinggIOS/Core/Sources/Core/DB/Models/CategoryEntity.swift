@@ -10,9 +10,9 @@ import Foundation
 import RealmSwift
 // MARK: - Category
 public class CategoryEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
-    @Persisted(primaryKey: true) public var categoryID: String? = ""
-    @Persisted public var categoryName: String? = ""
-    @Persisted public var categoryLogo: String? = ""
+    @Persisted(primaryKey: true) public var categoryID: String = ""
+    @Persisted public var categoryName: String = ""
+    @Persisted public var categoryLogo: String = ""
     @Persisted public var activeStatus: String? = ""
     @Persisted public var categoryOrderID: String? = ""
     @Persisted public var quickAction: String? = ""

@@ -10,7 +10,7 @@ import RealmSwift
 // MARK: - MerchantPayer
 public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var hubClientID: String = ""
-    @Persisted public var clientName: String? = "Unknown"
+    @Persisted public var clientName: String = "Unknown"
     @Persisted public var clientCode: String? = ""
     @Persisted public var countryID: String? = ""
     @Persisted public var country: String? = ""
@@ -85,7 +85,7 @@ public class MerchantPayer: Object, ObjectKeyIdentifiable, Codable {
 
 public struct MerchantPayerStruct: Decodable {
     public var hubClientID: String = ""
-    public var clientName: String? = ""
+    public var clientName: String = ""
     public var clientCode: String? = ""
     public var countryID: String? = ""
     public var country: String? = ""

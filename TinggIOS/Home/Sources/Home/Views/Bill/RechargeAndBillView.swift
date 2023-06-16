@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  RechargeAndBillView.swift
 //  
 //
 //  Created by Abdulrasaq on 15/08/2022.
@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Theme
+import Checkout
 import CoreUI
 import CoreNavigation
 import Core
@@ -18,9 +19,9 @@ struct RechargeAndBillView: View {
     @State var gotoAllRechargesView = false
     @State var show = true
     @State var allRecharges = [String: [MerchantService]]()
-    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
-    
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
     let gridColumn = [
         GridItem(.adaptive(minimum: 90))
     ]
@@ -29,18 +30,23 @@ struct RechargeAndBillView: View {
             VStack {
                 heading()
                 ServicesGridView(services: $rechargeAndBill, showTitle: false) { service in
-                    if let bills = homeViewModel.handleServiceAndNominationFilter(service: service, nomination: homeViewModel.nominationInfo.getEntities()) {
-                        withAnimation {
-                            if service.isAirtimeService {
-                                navigation.navigationStack.append(
-                                    Screens.buyAirtime(service.serviceName)
-                                )
-                                return
-                            }
-                            navigation.navigationStack.append(
-                                Screens.billFormView(bills)
-                            )
+                    checkoutVm.slm.services = rechargeAndBill
+                    checkoutVm.toCheckout(service) { billDetails in
+                        if service.isABundleService {
+                            homeViewModel.showBundles = true
+                            let model = BundleModel(service: service)
+                            homeViewModel.bundleModel = model
+                            return
                         }
+                        if service.isAirtimeService {
+                            navigation.navigationStack.append(
+                                Screens.buyAirtime(service.serviceName)
+                            )
+                            return
+                        }
+                        navigation.navigationStack.append(
+                            Screens.billFormView(billDetails)
+                        )
                     }
                 }
             }
@@ -64,7 +70,7 @@ struct RechargeAndBillView: View {
                     .map{TitleAndListItem(title: $0, services: allRecharges[$0] ?? [])}
                 withAnimation {
                     navigation.navigationStack.append(
-                        Screens.categoriesAndServices(categoryNameAndServices)
+                        HomeScreen.categoriesAndServices(categoryNameAndServices)
                     )
                 }
             }
@@ -116,7 +122,6 @@ struct ServicesGridView: View {
                     IconImageCardView(imageUrl: service.serviceLogo, bgShape: .rectangular)
                         .padding(.vertical)
                         .onTapGesture {
-                            print("Inner service")
                             onclick(service)
                         }
                     Text(service.serviceName)

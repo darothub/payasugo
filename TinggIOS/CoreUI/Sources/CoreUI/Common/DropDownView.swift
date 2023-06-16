@@ -46,7 +46,6 @@ public struct DropDownView: View {
                     TextField(placeHolder, text: $selectedText)
                         .disabled(disableEdit)
                         .padding([.horizontal, .vertical], 17)
-                        .font(.caption)
                         .foregroundColor(selectedTextColor)
                         .onTapGesture {
                             withAnimation(.spring()) {
@@ -63,40 +62,49 @@ public struct DropDownView: View {
                             }
                         }
                         .padding()
-                } .overlay(
+                }
+                .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 0.5)
-                ).foregroundColor(outlineColor)
+                )
+                .foregroundColor(outlineColor)
                 .background(.white)
             }
-            List {
-                ForEach(dropDownList, id: \.self) { number in
-                    VStack(alignment: .leading) {
-                        Text("\(number)")
-                            .padding(.horizontal)
-                            .font(.caption)
-                            .frame(alignment: .leading)
-                            .foregroundColor(.black)
-                    }
-                    .background(rowColor.opacity(0.4))
-                    .onTapGesture {
-                        selectedText = "\(number)"
-                        withAnimation {
-                            showDropDown.toggle()
+            VStack(alignment: .leading) {
+                List {
+                    ForEach(dropDownList, id: \.self) { number in
+                        VStack(alignment: .leading) {
+                            Text("\(number)")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                                .font(.caption)
+                                .foregroundColor(.black)
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .background(rowColor)
+                        .onTapGesture {
+                            selectedText = "\(number)"
+                            withAnimation {
+                                showDropDown.toggle()
+                            }
                         }
                     }
-              
-                }.listRowInsets(EdgeInsets())
+                }
+                .listStyle(PlainListStyle())
+                .background(.white)
+                .scrollContentBackground(.hidden)
             }
-            .background(.white)
-            .scrollContentBackground(.hidden)
-            .hideIf(isHidden: $showDropDown)
-            .listStyle(.plain)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 5)
             .overlay {
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(Color.gray, lineWidth: 0.5)
             }
-        }.onAppear {
+            .hideIf(isHidden: $showDropDown)
+        }
+        .background(.white)
+        .onAppear {
             showLabel = !label.isEmpty
         }
     }
@@ -105,9 +113,10 @@ public struct DropDownView: View {
 struct DropDownView_Previews: PreviewProvider {
     struct DropDownViewHolder: View {
         @State var text = "Number"
-        @State var list = ["egg", "liver", "cassava", "tomato"]
+        @State var list = ["egg", "liver", "cassava", "tomato", "pomato", "lomato"]
+        @State var show = false
         var body: some View {
-            DropDownView(selectedText: $text, dropDownList: $list)
+            DropDownView(selectedText: $text, dropDownList: $list, showDropDown: $show)
         }
     }
     static var previews: some View {

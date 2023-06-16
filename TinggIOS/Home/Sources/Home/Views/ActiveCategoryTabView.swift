@@ -11,7 +11,7 @@ import Foundation
 import SwiftUI
 import Photos
 struct ActiveCategoryTabView: View {
-    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @State var categories: [[CategoryEntity]] = [[CategoryEntity]]()
     @State var show = true
     var body: some View {

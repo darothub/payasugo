@@ -14,17 +14,9 @@ import Theme
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
-    var categories: [[CategoryEntity]] {
-        hvm.servicesByCategory
-    }
+
     var chartData: [ChartData] {
         hvm.mapHistoryIntoChartData()
-    }
-    var rechargeAndBill: [MerchantService] {
-        hvm.rechargeAndBill
-    }
-    var profileImageURL : String {
-        hvm.getProfile()?.photoURL ?? ""
     }
     @Binding var drawerStatus: DrawerStatus
     var body: some View {
@@ -66,30 +58,38 @@ struct HomeView: View {
             ActivateCardView() {
                 // TODO
             }.padding(10)
-            ActiveCategoryTabView(categories: categories)
+            ActiveCategoryTabView()
+                .frame(maxWidth: .infinity)
                 .background(.white)
                 .shadow(radius: 0, y: 1)
                 .padding(.vertical, 10)
+            
             QuickTopupView() { service in
                 if service.isAirtimeService {
                     navigation.navigationStack.append(Screens.buyAirtime(service.serviceName))
                 }
             }
+           
             .padding()
             .shadowBackground()
+           
             DueBillsView()
                 .shadowBackground()
-            
+
             DueBillsView(billType: .upcomingBills)
                 .shadowBackground()
-            
+             
+
             RechargeAndBillView()
                 .shadowBackground()
+          
             ExpensesGraphView(chartData: chartData)
                 .scaledToFit()
                 .shadowBackground()
+            
             AddNewBillCardView()
         }
+        .environmentObject(hvm)
 
     }
     fileprivate func handleNavigationDrawer() {

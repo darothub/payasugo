@@ -11,7 +11,7 @@ public struct SuggestedAmountModel: Hashable, Equatable {
     public var amount: String = ""
     public var historyByAccountNumber: [String] = .init()
     public var currency: String = "KES"
-    public init(amount: String = "", historyByAccountNumber: [String] = .init(), currency: String="") {
+    public init(amount: String = "0", historyByAccountNumber: [String] = .init(), currency: String="") {
         self.amount = amount
         self.historyByAccountNumber = historyByAccountNumber
         self.currency = currency

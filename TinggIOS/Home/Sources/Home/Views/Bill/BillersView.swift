@@ -1,5 +1,5 @@
 //
-//  CoreUI.swift
+//  BillersView.swift
 //  
 //
 //  Created by Abdulrasaq on 03/11/2022.
@@ -47,18 +47,10 @@ public struct BillersView: View {
                 .scaleEffect(1)
                 .onTapGesture {
                     withAnimation {
-                        navigation.navigationStack.append( Screens.categoriesAndServices([billers])
+                        navigation.navigationStack.append( HomeScreen.categoriesAndServices([billers])
                         )
                     }
                 }
-        }
-        .customDialog(
-            isPresented: $showBundles,
-            backgroundColor: .constant(.clear),
-            cancelOnTouchOutside: .constant(true)
-        ) {
-            BundleSelectionView(selectedBundle: selectedBundle, selectedAccount: selectedAccount, mobileNumber: mobileNumber, service: selectedMerchantService, enrollments: enrolments, bundleInfo: bundleService)
-            
         }
         .onAppear {
             let services = billers.services
@@ -88,14 +80,14 @@ public struct BillersView: View {
                             .scaleEffect(0.8)
                         Text(service.serviceName)
                     }.onTapGesture {
-                        if service.isBundleService == "1" {
+                        if service.isABundleService {
                             showBundles.toggle()
                             selectedMerchantService = service
                             bundleService = Observer<BundleData>().getEntities().filter({ data in
                                 String(data.serviceID) == service.hubServiceID
                             })
                         } else {
-                            if let bills = hvm.handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
+                            if let bills = handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                                 withAnimation {
                                     navigation.navigationStack.append(
                                         Screens.billFormView(bills)
@@ -183,11 +175,13 @@ struct SingleNominationView: View {
         }
         .padding()
         .onTapGesture {
-            hvm.getSingleDueBill(accountNumber: nomination.accountNumber, serviceId: String(nomination.hubServiceID))
-//            hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
-//                let invoice = content.data as! Invoice
-//                onClick(nomination, invoice)
-//            }
+            let request: RequestMap = RequestMap.Builder()
+                .add(value: "FB", for: .SERVICE)
+                .add(value: nomination.accountNumber, for: .ACCOUNT_NUMBER)
+                .add(value: String(nomination.hubServiceID), for: .SERVICE_ID)
+                .add(value: 1, for: "IS_MULTIPLE")
+                .build()
+            hvm.getSingleDueBill(request: request)
         }
     }
 }

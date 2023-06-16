@@ -10,7 +10,7 @@ import Theme
 import Core
 import CoreUI
 struct QuickTopupView: View {
-    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @State var airtimeServices = [MerchantService]()
     @State var show = true
     var onclick: (MerchantService) -> Void
@@ -29,6 +29,7 @@ struct QuickTopupView: View {
             }
             
         }
+        .frame(maxWidth: .infinity)
         .showIf($show)
         .backgroundmode(color: .white)
         .onAppear {
@@ -77,6 +78,7 @@ struct QuickTopupView_Previews: PreviewProvider {
     }
     static var previews: some View {
         QuickTopupViewPreview()
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 

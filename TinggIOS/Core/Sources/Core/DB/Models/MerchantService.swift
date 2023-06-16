@@ -113,6 +113,9 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     public var isAirtimeService: Bool {
         return self.categoryID == "2"
     }
+    public var isABundleService: Bool {
+        return self.isBundleService == "1"
+    }
     public var hasPayerCharge: Bool {
         return applicableCharges.contains("PAYER_CHARGE")
     }

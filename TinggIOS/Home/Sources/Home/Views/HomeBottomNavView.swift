@@ -14,7 +14,7 @@ import Theme
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
     @Environment(\.colorScheme) var colorScheme
-    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
@@ -64,7 +64,6 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                     )
             }
         }
-     
         .navigationDestination(for: HomeScreen.self, destination: { screen in
             switch screen {
             case .profile:
@@ -77,6 +76,9 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 SupportView()
             case .about:
                 AboutView()
+            case .categoriesAndServices(let items):
+                CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem])
+                    .environmentObject(hvm)
             default:
                 HomeView(drawerStatus: $drawerStatus)
             }
@@ -102,7 +104,6 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 navigationDrawerProtocol: self
             )
         }
-        .navigationBarBackButtonHidden(true)
     }
     @ViewBuilder
     func homeView() -> some View {
@@ -119,10 +120,6 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
     }
     fileprivate func handleNavigationDrawer() {
         drawerStatus = .close
-    }
-    public func onMenuClick(_ screen: Screens) {
-        drawerStatus = .close
-        navigation.navigationStack.append(screen)
     }
     public func onMenuClick<S>(_ screen: S) where S : Hashable {
         drawerStatus = .close
@@ -142,6 +139,8 @@ struct HomeBottomNavView_Previews: PreviewProvider {
     }
     static var previews: some View {
         HBNPReviewHolder()
+            .environmentObject(HomeDI.createHomeViewModel())
+            .environmentObject(NavigationUtils())
     }
 }
 

@@ -27,7 +27,7 @@ struct TinggIOSApp: App {
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
-
+    @StateObject var hvm = HomeDI.createHomeViewModel()
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -37,9 +37,19 @@ struct TinggIOSApp: App {
                 .environmentObject(checkoutVm)
                 .environmentObject(contactViewModel)
                 .environmentObject(ccvm)
+                .environmentObject(hvm)
                 .sheet(isPresented: $checkoutVm.showView) {
                     checkoutView()
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.fraction(0.7)])
+                        .presentationBackground(.thinMaterial)
+                        .presentationContentInteraction(.scrolls)
+                }
+                .customDialog(
+                    isPresented: $hvm.showBundles,
+                    backgroundColor: .constant(.clear),
+                    cancelOnTouchOutside: .constant(true)
+                ) {
+                    BundleSelectionView(model: $hvm.bundleModel)
                 }
                 .onAppear {
                     UITextField.appearance().keyboardAppearance = .light

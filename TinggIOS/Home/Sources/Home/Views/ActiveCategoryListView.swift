@@ -16,16 +16,14 @@ struct ActiveCategoryListView: View {
     @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
-            ForEach(categories, id: \.categoryID) { eachCategory in
-                if let name = eachCategory.categoryName, let logo = eachCategory.categoryLogo, let id = eachCategory.categoryID {
-                    VImageAndNameView(
-                        title: name,
-                        imageUrl: logo
-                    )
-                    .scaleEffect(0.7)
-                    .onTapGesture {
-                        onEachCategoryClick(categoryId: id, categoryName: name)
-                    }
+            ForEach($categories, id: \.categoryID) { $eachCategory in
+                VImageAndNameView(
+                    title: eachCategory.categoryName,
+                    imageUrl: $eachCategory.categoryLogo
+                )
+                .scaleEffect(0.7)
+                .onTapGesture {
+                    onEachCategoryClick(categoryId: eachCategory.categoryID, categoryName: eachCategory.categoryName)
                 }
             }
         }
@@ -34,9 +32,16 @@ struct ActiveCategoryListView: View {
     fileprivate func onEachCategoryClick(categoryId: String, categoryName: String) {
         switch categoryId {
         case "2":
-            withAnimation {
-                navigation.navigationStack.append(Screens.buyAirtime("Airtel"))
+            if let defaultService = AppStorageManager.getDefaultNetwork() {
+                withAnimation {
+                    navigation.navigationStack.append(Screens.buyAirtime(defaultService.serviceName))
+                }
+            } else {
+                withAnimation {
+                    navigation.navigationStack.append(Screens.buyAirtime(""))
+                }
             }
+            
         default:
             let services = hvm.services.getEntities().filter {$0.categoryID == categoryId}
             let titleAndItemList = TitleAndListItem(title: categoryName, services: services)
