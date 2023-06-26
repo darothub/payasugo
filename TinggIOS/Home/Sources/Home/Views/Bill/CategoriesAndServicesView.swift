@@ -38,6 +38,7 @@ public struct CategoriesAndServicesView: View {
             }
         }
         .background(.white.opacity(0.9))
+
     }
     fileprivate func searchService(_ newValue: String) -> [TitleAndListItem] {
         return categoryNameAndServices
@@ -49,11 +50,12 @@ public struct CategoriesAndServicesView: View {
             })
     }
     fileprivate func onServiceClicked(_ service: MerchantService) {
-        checkoutVm.toCheckout(service) { billDetails in
+        checkoutVm.toCheckout(service) { billDetails, toCheckout in
+            checkoutVm.showView = false
             if service.isABundleService {
-                hvm.showBundles = true
+                checkoutVm.showBundles = true
                 let model = BundleModel(service: service)
-                hvm.bundleModel = model
+                checkoutVm.bundleModel = model
                 return
             }
             if service.isAirtimeService {
@@ -63,7 +65,8 @@ public struct CategoriesAndServicesView: View {
                 return
             }
             navigation.navigationStack.append(
-                Screens.billFormView(billDetails)
+                HomeScreen.billFormView(billDetails)
+
             )
         }
     }

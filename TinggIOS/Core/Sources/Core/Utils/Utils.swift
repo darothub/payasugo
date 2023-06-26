@@ -197,9 +197,22 @@ extension String {
         return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
     }
 }
+public func updatedTimeInUnits(time: Int) -> String {
+    if time > (2*3599) {
+        return "\(time / 3600) hours ago"
+    }
+    else if time > 3599 {
+        return "\(time / 3600) hour ago"
+    }
+    else if time > 59 {
+        return "\(time / 60) mins ago"
+    }
+    else {
+        return "\(time) seconds ago"
+    }
+}
 
-
-public func validatePhoneNumberByCountry(_ country: Country?, phoneNumber: String) -> Bool{
+public func validatePhoneNumberByCountry(_ country: CountriesInfoDTO?, phoneNumber: String) -> Bool{
     if let regex = country?.countryMobileRegex {
         let result = validatePhoneNumber(with: regex, phoneNumber: phoneNumber)
         return result

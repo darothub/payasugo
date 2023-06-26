@@ -17,7 +17,7 @@ import SwiftUI
 import Theme
 struct NavigationModifier: ViewModifier {
     @EnvironmentObject var navigation: NavigationUtils
-    @EnvironmentObject var  hvm: HomeViewModel
+//    @EnvironmentObject var  hvm: HomeViewModel
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var ccvm: CreditCardViewModel
@@ -30,7 +30,7 @@ struct NavigationModifier: ViewModifier {
                 case .home:
                     HomeBottomNavView()
                         .environmentObject(checkout)
-                        .environmentObject(hvm)
+
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
@@ -39,27 +39,9 @@ struct NavigationModifier: ViewModifier {
                     BuyAirtimeView(selectedServiceName: serviceName)
                         .environmentObject(checkout)
                         .environmentObject(contactViewModel)
-                case let .billers(billers):
-                    BillersView(billers: billers as! TitleAndListItem)
-                        .onAppear {
-                            colorTint = .blue
-                        }
                 case .categoriesAndServices(let items):
                     CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem])
 
-                case .billFormView(let billDetails):
-                    BillFormView(billDetails: .constant(billDetails as! BillDetails))
-                        
-                case let .nominationDetails(invoice, nomination):
-                    NominationDetailView(invoice: invoice as! Invoice, nomination:  nomination as! Enrollment)
-                        .onAppear {
-                            colorTint = .white
-                        }
-                case let .billDetailsView(invoice, service):
-                    BillDetailsView(
-                        fetchBill: invoice as! Invoice,
-                        service: service as! MerchantService
-                    )
                 case .pinCreationView:
                     CreditCardPinView(pinPermission: $checkout.pinPermission, pin: $checkout.pin, confirmPin: $checkout.confirmPin, pinIsCreated: $checkout.pinIsCreated)
                 case .securityQuestionView:

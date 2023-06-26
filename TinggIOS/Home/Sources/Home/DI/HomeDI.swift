@@ -39,53 +39,55 @@ public struct HomeDI {
         return BarChartUsecase(transactHistoryRepository: createTransactionHistoryRepository())
     }
     
-    public static func createBillAccountUsecase() -> BillAccountUsecase {
+    private static func createBillAccountUsecase() -> BillAccountUsecase {
         return BillAccountUsecase(
             merchantServiceRepository: createMerchantServiceRepository(),
             enrollmentRepository: createEnrollmentRepository()
         )
     }
     
-    public static func createDueBillUsecase() -> DueBillsUsecase {
+    private static func createDueBillUsecase() -> DueBillsUsecase {
         return DueBillsUsecase(
             fetchBillRepository: createFetchBillRepository()
         )
     }
     
-    public static func createSingleDueBillUsecase() -> SingleDueBillUsecase {
+    private static func createSingleDueBillUsecase() -> SingleDueBillUsecase {
         return SingleDueBillUsecase(
             fetchBillRepository: createFetchBillRepository()
         )
     }
     
-    public static func createSaveBillUsecase() -> SaveBillUsecase {
+    private static func createSaveBillUsecase() -> SaveBillUsecase {
         return SaveBillUsecase(
             fetchBillRepository: createFetchBillRepository()
         )
     }
     
-    public static func createPostMCPUsecase() -> PostMCPUsecase {
+    private static func createPostMCPUsecase() -> PostMCPUsecase {
         return PostMCPUsecase(
             repository: createEnrollmentRepository(),
             invoiceRepository: createFetchBillRepository()
         )
     }
     
-    public static func createCategoriesAndServicesUsecase() -> CategoriesAndServicesUsecase {
+    private static func createCategoriesAndServicesUsecase() -> CategoriesAndServicesUsecase {
         return CategoriesAndServicesUsecase(
             serviceRepository: createMerchantServiceRepository(),
             categoryRepository: createCategoryRepository()
         )
     }
-    public static func createUpdateDefaultNetworkUsecase() -> UpdateDefaultNetworkUsecase {
+    private static func createUpdateDefaultNetworkUsecase() -> UpdateDefaultNetworkUsecase {
         return UpdateDefaultNetworkUsecase(baseRequest: BaseRequest())
     }
     
-    public static func createMCPDeleteAndUpdateUsecase() -> MCPDeleteAndUpdateUsecase {
+    private static func createMCPDeleteAndUpdateUsecase() -> MCPDeleteAndUpdateUsecase {
         return MCPDeleteAndUpdateUsecase(repository: createFetchBillRepository())
     }
-    
-    @MainActor public static func createHomeUsecase() -> HomeUsecase {
+    private static func createSystemUpdateUsecase() -> SystemUpdateUsecase {
+        return SystemUpdateUsecase(sendRequest: .shared)
+    }
+    @MainActor private static func createHomeUsecase() -> HomeUsecase {
         return HomeUsecase(
             billAccountUsecase: createBillAccountUsecase(),
             profileRepository: createProfileRepository(),
@@ -98,7 +100,8 @@ public struct HomeDI {
             saveBillUsecase:  createSaveBillUsecase(),
             mcpDeleteAndUpdateUsecase: createMCPDeleteAndUpdateUsecase(),
             categoriesAndServicesUsecase: createCategoriesAndServicesUsecase(),
-            updateDefaultNetworkIdUsecase: createUpdateDefaultNetworkUsecase()
+            updateDefaultNetworkIdUsecase: createUpdateDefaultNetworkUsecase(),
+            systemUpdateUsecase: createSystemUpdateUsecase()
         )
     }
     @MainActor

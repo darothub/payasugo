@@ -122,6 +122,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     public var hasTierCharge: Bool {
         return applicableCharges.contains("TIER_CHARGE")
     }
+    
 }
 
 // MARK: - SERVICEPARAMETERS

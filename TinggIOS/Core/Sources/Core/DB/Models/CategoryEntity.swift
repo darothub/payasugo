@@ -13,8 +13,8 @@ public class CategoryEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted(primaryKey: true) public var categoryID: String = ""
     @Persisted public var categoryName: String = ""
     @Persisted public var categoryLogo: String = ""
-    @Persisted public var activeStatus: String? = ""
-    @Persisted public var categoryOrderID: String? = ""
+    @Persisted public var activeStatus: String = "0"
+    @Persisted public var categoryOrderID: String = "-1"
     @Persisted public var quickAction: String? = ""
     @Persisted public var showInHomepage: Int
     @Persisted public var parkingID: String? = ""
@@ -45,12 +45,19 @@ public class CategoryEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case otherID = "OTHER_ID"
         case investID = "INVEST_ID"
     }
+    public var toDTO: CategoryDTO {
+        var dto = CategoryDTO()
+        dto.categoryID = self.categoryID
+        dto.categoryName = self.categoryName
+        dto.showInHomepage = self.showInHomepage
+        dto.categoryLogo = self.categoryLogo
+        dto.activeStatus = .string(self.activeStatus)
+        dto.categoryOrderID = .string(self.categoryOrderID)
+        dto.showInHomepage = self.showInHomepage
+        return dto
+    }
     public var isActive: Bool {
-        switch self.activeStatus {
-        case "0" : return false
-        case "1": return true
-        default: return false
-            
-        }
+        let result = activeStatus == "0" ? false : true
+        return result
     }
 }

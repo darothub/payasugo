@@ -8,7 +8,7 @@
 import SwiftUI
 /// A class to manage storage in user default
 public struct AppStorageManager {
-    @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: Country? = nil
+    @AppStorage(LocalProperties.activeCountry.rawValue) fileprivate static var activeCountry: CountriesInfoDTO? = nil
     @AppStorage(LocalProperties.phoneNumber.rawValue) fileprivate static var phoneNumber: String = ""
     @AppStorage(LocalProperties.defaultNetworkId.rawValue) fileprivate static var defaultNetworkId: Int? = 0
     @AppStorage(LocalProperties.defaultNetwork.rawValue) fileprivate static var defaultNetwork: MerchantService? = nil
@@ -35,7 +35,7 @@ public struct AppStorageManager {
         return phoneNumber
     }
 
-    public static func retainActiveCountry(country: Country?) {
+    public static func retainActiveCountry(country: CountriesInfoDTO?) {
         activeCountry = country
     }
     public static func retainCountriesExtraInfo(countrExtra: CountriesExtraInfo?) {
@@ -44,7 +44,7 @@ public struct AppStorageManager {
     public static func getCountriesExtraInfo() -> CountriesExtraInfo? {
         return countriesExtraInfo
     }
-    public static func getCountry() -> Country? {
+    public static func getCountry() -> CountriesInfoDTO? {
         activeCountry
     }
     public static func optInForBillReminder() -> Bool {

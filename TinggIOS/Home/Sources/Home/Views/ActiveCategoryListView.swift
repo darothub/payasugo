@@ -11,7 +11,7 @@ import SwiftUI
 //import RealmSwift
 
 struct ActiveCategoryListView: View {
-    @State var categories = [CategoryEntity]()
+    @State var categories = [CategoryDTO]()
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
@@ -19,7 +19,7 @@ struct ActiveCategoryListView: View {
             ForEach($categories, id: \.categoryID) { $eachCategory in
                 VImageAndNameView(
                     title: eachCategory.categoryName,
-                    imageUrl: $eachCategory.categoryLogo
+                    imageUrl: eachCategory.categoryLogo
                 )
                 .scaleEffect(0.7)
                 .onTapGesture {
@@ -27,7 +27,6 @@ struct ActiveCategoryListView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity)
     }
     fileprivate func onEachCategoryClick(categoryId: String, categoryName: String) {
         switch categoryId {
@@ -37,19 +36,26 @@ struct ActiveCategoryListView: View {
                     navigation.navigationStack.append(Screens.buyAirtime(defaultService.serviceName))
                 }
             } else {
-                withAnimation {
-                    navigation.navigationStack.append(Screens.buyAirtime(""))
+                Task {
+                    let quickTopups = await hvm.getQuickTopups()
+                    if let firstService = quickTopups.first {
+                        withAnimation {
+                            navigation.navigationStack.append(Screens.buyAirtime(firstService.serviceName))
+                        }
+                    }
+                    
                 }
+          
             }
             
         default:
             let services = hvm.services.getEntities().filter {$0.categoryID == categoryId}
             let titleAndItemList = TitleAndListItem(title: categoryName, services: services)
             
-            let enrolments = hvm.nominationInfo.getEntities().filter {$0.serviceCategoryID == categoryId}
+            _ = hvm.nominationInfo.getEntities().filter {$0.serviceCategoryID == categoryId}
             withAnimation {
                 navigation.navigationStack.append(
-                    Screens.billers(titleAndItemList)
+                    HomeScreen.billers(titleAndItemList)
                 )
             }
         }
@@ -57,7 +63,7 @@ struct ActiveCategoryListView: View {
 }
 struct ActiveCategoryListView_Previews: PreviewProvider {
     static var previews: some View {
-        ActiveCategoryListView(categories: previewCategories)
+        ActiveCategoryListView(categories: previewCategories.map {$0.toDTO})
     }
 }
 

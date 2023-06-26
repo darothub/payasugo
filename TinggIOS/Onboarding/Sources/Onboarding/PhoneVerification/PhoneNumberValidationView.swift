@@ -17,6 +17,7 @@ import Theme
 /// User is directed to the Home view after OTP confirmation 
 public struct PhoneNumberValidationView: View {
     @StateObject var ovm = OnboardingDI.createOnboardingVM()
+ 
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
     @Environment(\.realmManager) var realmManager
@@ -101,7 +102,7 @@ public struct PhoneNumberValidationView: View {
                 ovm.getCountryDictionary()
             }
             .onChange(of: countryCode, perform: { newValue in
-                let dbCountries = Observer<Country>().getEntities()
+                let dbCountries = Observer<CountriesInfo>().getEntities()
                 let currentCountry = dbCountries.first {
                     $0.countryDialCode == newValue
                 }
@@ -253,7 +254,7 @@ extension PhoneNumberValidationView {
         return nil
     }
     
-    func getCountryByDialCode(dialCode: String) -> Country? {
+    func getCountryByDialCode(dialCode: String) -> CountriesInfoDTO? {
         ovm.getCountryByDialCode(dialCode: dialCode)
     }
 }

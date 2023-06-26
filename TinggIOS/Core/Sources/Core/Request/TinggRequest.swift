@@ -101,7 +101,9 @@ public struct RequestMap  {
     public class Builder {
         fileprivate var dict: [String: Any] = [:]
         private var parseInstallationId: String = AppStorageManager.getDeviceToken()
+        
         public init() {
+            
             self.dict.updateValue(AppStorageManager.getPhoneNumber(), forKey: RequestKey.MSISDN.str)
             if let clientId = AppStorageManager.getCountry()?.mulaClientID, let countryName = AppStorageManager.getCountry()?.name {
                 self.dict.updateValue(clientId, forKey: RequestKey.CLIENT_ID.str)

@@ -11,12 +11,12 @@ import RealmSwift
 public class CountryRepositoryImpl: CountryRepository {
 
     private var baseRequest: BaseRequest
-    private var dbObserver: Observer<Country>
+    private var dbObserver: Observer<CountriesInfo>
     /// ``CountryRepositoryImpl`` initialiser
     /// - Parameters:
     ///   - baseRequest: ``BaseRequest``
     ///   - dbObserver: ``Observer``
-    public init(baseRequest: BaseRequest, dbObserver: Observer<Country>) {
+    public init(baseRequest: BaseRequest, dbObserver: Observer<CountriesInfo>) {
         self.baseRequest = baseRequest
         self.dbObserver =  dbObserver
     }
@@ -39,22 +39,22 @@ public class CountryRepositoryImpl: CountryRepository {
     }
     /// A method to get countries from local and remote repositories
     /// - Returns: a list of ``Country``
-    public func getCountries() async throws -> [Country] {
+    public func getCountries() async throws -> DTOandObjectWrapper<CountriesInfoDTO, CountriesInfo> {
         let dbCountries = await dbObserver.getEntities()
         if dbCountries.isEmpty {
             let remoteData = try await getRemoteCountries().data
-            await dbObserver.saveEntities(objs: remoteData)
-            return remoteData
+            await dbObserver.saveEntities(objs: remoteData.map {$0.convertToCountriesInfo()})
+            return DTOandObjectWrapper(dtos: remoteData, objs: remoteData.map {$0.convertToCountriesInfo()})
         }
-        return dbCountries
+        return DTOandObjectWrapper(dtos: [], objs: dbCountries)
     }
     
-    public func getCountryByDialCode(dialCode: String) -> Country? {
+    public func getCountryByDialCode(dialCode: String) -> CountriesInfoDTO? {
         let dbCountries =  dbObserver.getEntities()
         let country = dbCountries.first { country in
             country.countryDialCode == dialCode
         }
-        return country
+        return country?.convertToDTO()
     }
     
 }

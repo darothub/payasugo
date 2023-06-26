@@ -1,6 +1,6 @@
 //
-//  SwiftUIView.swift
-//  
+//  DropDownView.swift
+//
 //
 //  Created by Abdulrasaq on 13/09/2022.
 //
@@ -10,7 +10,7 @@ import SwiftUI
 /// Custom drop down menu view
 public struct DropDownView: View {
     @Binding var selectedText: String
-    @Binding var dropDownList:[String]
+    @Binding var dropDownList: [String]
     @Binding var showDropDown: Bool
     @State var rowColor: Color
     @State var outlineColor: Color
@@ -19,19 +19,23 @@ public struct DropDownView: View {
     @State var placeHolder: String
     @State var showLabel = false
     @State var disableEdit = false
+    @State var maxHeight: CGFloat
     public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, showDropDown: Binding<Bool> = .constant(false), rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "Enter",
-        lockTyping: Bool = false
+                lockTyping: Bool = false,
+                maxHeight: CGFloat = 100
     ) {
-        self._selectedText = selectedText
-        self._dropDownList = dropDownList
-        self._showDropDown = showDropDown
-        self._rowColor = State(initialValue: rowColor)
-        self._outlineColor = State(initialValue: outlineColor)
-        self._selectedTextColor = State(initialValue: selectedTextColor)
-        self._label = State(initialValue: label)
-        self._placeHolder = State(initialValue: placeHoder)
-        self._disableEdit = State(initialValue: lockTyping)
+        _selectedText = selectedText
+        _dropDownList = dropDownList
+        _showDropDown = showDropDown
+        _rowColor = State(initialValue: rowColor)
+        _outlineColor = State(initialValue: outlineColor)
+        _selectedTextColor = State(initialValue: selectedTextColor)
+        _label = State(initialValue: label)
+        _placeHolder = State(initialValue: placeHoder)
+        _disableEdit = State(initialValue: lockTyping)
+        _maxHeight = State(initialValue: maxHeight)
     }
+
     public var body: some View {
         VStack(alignment: .leading) {
             Group {
@@ -52,7 +56,7 @@ public struct DropDownView: View {
                                 showDropDown.toggle()
                             }
                         }
-                        .onChange(of: selectedText) { newValue in
+                        .onChange(of: selectedText) { _ in
                             showDropDown = false
                         }
                     Image(systemName: showDropDown ? "chevron.down" : "chevron.right")
@@ -94,7 +98,7 @@ public struct DropDownView: View {
                 .background(.white)
                 .scrollContentBackground(.hidden)
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: maxHeight)
             .padding(.vertical, 10)
             .padding(.horizontal, 5)
             .overlay {
@@ -113,14 +117,17 @@ public struct DropDownView: View {
 struct DropDownView_Previews: PreviewProvider {
     struct DropDownViewHolder: View {
         @State var text = "Number"
-        @State var list = ["egg", "liver", "cassava", "tomato", "pomato", "lomato"]
+        @State var list = ["egg", "liver", "cassava", "tomato", "pomato", "lomato", "cassava", "tomato", "pomato", "lomato"]
         @State var show = false
         var body: some View {
-            DropDownView(selectedText: $text, dropDownList: $list, showDropDown: $show)
+            VStack {
+                DropDownView(selectedText: $text, dropDownList: $list, showDropDown: $show)
+//                DropDownView(selectedText: $text, dropDownList: $list, showDropDown: $show)
+            }
         }
     }
+
     static var previews: some View {
         DropDownViewHolder()
     }
 }
-

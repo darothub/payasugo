@@ -7,6 +7,7 @@
 
 import Foundation
 public class SendRequest {
+    public static let shared = SendRequest(baseRequest: .init())
     public let baseRequest: BaseRequest
     public init(baseRequest: BaseRequest) {
         self.baseRequest = baseRequest

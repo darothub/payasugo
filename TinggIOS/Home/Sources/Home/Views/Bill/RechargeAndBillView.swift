@@ -31,7 +31,8 @@ struct RechargeAndBillView: View {
                 heading()
                 ServicesGridView(services: $rechargeAndBill, showTitle: false) { service in
                     checkoutVm.slm.services = rechargeAndBill
-                    checkoutVm.toCheckout(service) { billDetails in
+                    checkoutVm.toCheckout(service) { billDetails, toCheckout in
+                        
                         if service.isABundleService {
                             homeViewModel.showBundles = true
                             let model = BundleModel(service: service)
@@ -44,8 +45,12 @@ struct RechargeAndBillView: View {
                             )
                             return
                         }
+                        if toCheckout {
+                            checkoutVm.showView = toCheckout
+                            return
+                        }
                         navigation.navigationStack.append(
-                            Screens.billFormView(billDetails)
+                            HomeScreen.billFormView(billDetails)
                         )
                     }
                 }
@@ -53,27 +58,16 @@ struct RechargeAndBillView: View {
         }
         .padding()
         .showIf($show)
-        .onAppear {
-            homeViewModel.displayedRechargeAndBill()
-        }
-        .handleViewStatesMods(uiState: homeViewModel.$rechargeAndBillUIModel) { content in
+        .handleViewStatesModWithShimmer(uiState: homeViewModel.$rechargeAndBillUIModel) { content in
             let data = content.data
             if data is [MerchantService] {
                 withAnimation {
                     rechargeAndBill = data as! [MerchantService]
                 }
                 show = rechargeAndBill.isNotEmpty()
-            } else if data is [String: [MerchantService]]{
-                allRecharges = data as! [String : [MerchantService]]
-                let categoryNameAndServices = allRecharges.keys
-                    .sorted(by: <)
-                    .map{TitleAndListItem(title: $0, services: allRecharges[$0] ?? [])}
-                withAnimation {
-                    navigation.navigationStack.append(
-                        HomeScreen.categoriesAndServices(categoryNameAndServices)
-                    )
-                }
             }
+        } onFailure: { str in
+            show = false
         }
 
     }
@@ -102,7 +96,12 @@ struct RechargeAndBillView: View {
         }
     }
     private func onClickSeeAll() {
-        homeViewModel.allRecharge()
+        let categoryNameAndServices = homeViewModel.getAllServicesForAddBill()
+        withAnimation {
+            navigation.navigationStack.append(
+                HomeScreen.categoriesAndServices(categoryNameAndServices)
+            )
+        }
     }
 }
 

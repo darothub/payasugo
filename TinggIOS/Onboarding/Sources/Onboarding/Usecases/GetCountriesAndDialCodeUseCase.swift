@@ -19,14 +19,18 @@ public class GetCountriesAndDialCodeUseCase {
     /// - Returns: return as dictionary of  ``Country/countryCode`` and ``Country/countryDialCode``
     public func callAsFunction() async throws -> [String : String] {
         let latestCountries = try await countryRepository.getCountries()
-        let dict = Dictionary(uniqueKeysWithValues: latestCountries.map { ($0.countryCode!, $0.countryDialCode!) })
-
+        var dict: [String : String] = .init()
+        if latestCountries.dtos.isEmpty {
+            dict = Dictionary(uniqueKeysWithValues: latestCountries.objs.map { ($0.countryCode!, $0.countryDialCode!) })
+        } else {
+            dict = Dictionary(uniqueKeysWithValues: latestCountries.dtos.map { ($0.countryCode!, $0.countryDialCode!) })
+        }
         return dict
     }
     /// A call as function to get country by dialcode
     /// - Parameter dialCode: ``Country/countryDialCode``
     /// - Returns: ``Country``
-    public func callAsFunction(dialCode: String) -> Country? {
+    public func callAsFunction(dialCode: String) -> CountriesInfoDTO? {
         return countryRepository.getCountryByDialCode(dialCode: dialCode)
     }
 }

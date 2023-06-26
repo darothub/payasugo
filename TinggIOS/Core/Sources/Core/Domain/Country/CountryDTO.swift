@@ -8,7 +8,7 @@
 public struct CountryDTO: BaseDTOprotocol, Codable {
     public var statusCode: Int = 0
     public var statusMessage: String = ""
-    public var data: [Country] = []
+    public var data: [CountriesInfoDTO] = []
     public init() {
         // Intentionally unimplemented...needed for modular accessibility
     }

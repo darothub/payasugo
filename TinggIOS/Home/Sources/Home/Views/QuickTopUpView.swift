@@ -11,7 +11,7 @@ import Core
 import CoreUI
 struct QuickTopupView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
-    @State var airtimeServices = [MerchantService]()
+    @State var airtimeServices = sampleServices
     @State var show = true
     var onclick: (MerchantService) -> Void
     var body: some View {
@@ -32,16 +32,14 @@ struct QuickTopupView: View {
         .frame(maxWidth: .infinity)
         .showIf($show)
         .backgroundmode(color: .white)
-        .onAppear {
-            homeViewModel.getQuickTopups()
-        }
-        .handleViewStatesMods(uiState: homeViewModel.$quickTopUIModel) { content in
+        .padding()
+        .shadowBackground()
+        .handleViewStatesModWithShimmer(uiState: homeViewModel.$quickTopUIModel, useDefaultHeight: true) { content in
             let services = content.data as? [MerchantService]
             withAnimation {
                 airtimeServices = services ?? []
                 show = airtimeServices.isNotEmpty()
             }
-          
         }
     }
     @ViewBuilder

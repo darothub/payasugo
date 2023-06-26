@@ -26,17 +26,15 @@ public struct IconImageCardView: View {
     public var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { image in
             image.resizable()
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-                .padding()
-                .scaleEffect(scaleEffect)
         } placeholder: {
-            ProgressView()
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-                .padding()
-                .scaleEffect(scaleEffect)
+            Image(systemName: "photo")
+                      .foregroundColor(.red)
+                
         }
+        .frame(width: 40, height: 40)
+        .clipShape(Circle())
+        .padding()
+        .scaleEffect(scaleEffect)
         .background(
             bgShape == .rectangular ?
             RoundedRectangle(cornerRadius: radius)
@@ -72,18 +70,15 @@ public struct ResponsiveImageCardView: View {
     public var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { image in
             image.resizable()
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-                .padding()
-                .scaleEffect(scaleEffect)
+                
         } placeholder: {
             Image(systemName: "camera.fill")
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-                .padding()
-                .scaleEffect(scaleEffect)
                 .foregroundColor(colorScheme == .dark ? .black : .black)
         }
+        .frame(width: 40, height: 40)
+        .clipShape(Circle())
+        .padding()
+        .scaleEffect(scaleEffect)
         .background(
             bgShape == .rectangular ?
             RoundedRectangle(cornerRadius: radius)
@@ -105,5 +100,29 @@ public enum ImageClipShape: Hashable {
 struct IconImageCardView_Previews: PreviewProvider {
     static var previews: some View {
         IconImageCardView(imageUrl: "")
+    }
+}
+
+
+public struct BoxShimmerView: View {
+    var size: CGSize
+    public init(size: CGSize = CGSize(width: 60, height: 60)) {
+        self.size = size
+    }
+    public var body: some View {
+        RoundedRectangle(cornerRadius: 10)
+            .fill(.gray)
+            .frame(width: size.width, height: size.height)
+    }
+}
+public struct TextShimmerView: View {
+    var width: CGFloat
+    public init(width: CGFloat = 100) {
+        self.width = width
+    }
+    public var body: some View {
+        RoundedRectangle(cornerRadius: 5)
+            .fill(.gray)
+            .frame(width: width, height: 5)
     }
 }

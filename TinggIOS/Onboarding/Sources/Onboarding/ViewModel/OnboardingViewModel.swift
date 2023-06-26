@@ -31,7 +31,7 @@ public class OnboardingVM: ViewModel {
                 let result = try await getCountriesDictionaryUsecase()
                 handleResultState(model: &phoneNumberFieldUIModel, Result.success(result) as Result<[String: String], ApiError>)
             } catch {
-                handleResultState(model: &uiModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+                handleResultState(model: &phoneNumberFieldUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
             }
         }
     }
@@ -75,7 +75,7 @@ public class OnboardingVM: ViewModel {
         }
     }
     @MainActor
-    func getCountryByDialCode(dialCode: String) -> Country? {
+    func getCountryByDialCode(dialCode: String) -> CountriesInfoDTO? {
         if let country = getCountriesDictionaryUsecase(dialCode: dialCode) {
             return country
         }

@@ -56,10 +56,7 @@ public struct OtpConfirmationView: View {
                
             }
             .padding(20)
-            .handleViewStatesMods(uiState: otpVM.$onConfirmActivationUIModel) { content in
-                dismiss()
-                otpConfirmed = true
-            }
+            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.white)
@@ -68,6 +65,10 @@ public struct OtpConfirmationView: View {
         }
         .onChange(of: otp) { newValue in
             activateButton = otp.count == otpSize
+        }
+        .handleViewStatesMods(uiState: otpVM.$onConfirmActivationUIModel) { content in
+            dismiss()
+            otpConfirmed = true
         }
         
     }
@@ -99,7 +100,7 @@ public struct OtpConfirmationView: View {
 
 struct OtpConfirmationView_Previews: PreviewProvider {
     struct  OtpConfirmationViewHolder: View {
-        @State var country: Country = .init()
+        @State var country: CountriesInfoDTO = .init()
         @State var phoneNumber: String = ""
         @State var confirmedOTP: Bool = false
         var body: some View {
