@@ -38,9 +38,6 @@ public class BillAccountUsecase {
             }
             return nil
         }
-        Log.d(message: "\(billAccounts)")
-
-//        let setOfBillAccounts = Set(billAccounts)
         
         return billAccounts
     }

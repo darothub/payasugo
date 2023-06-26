@@ -90,7 +90,7 @@ public struct BillersView: View {
                             if let bills = handleServiceAndNominationFilter(service: service, nomination: hvm.nominationInfo.getEntities()) {
                                 withAnimation {
                                     navigation.navigationStack.append(
-                                        Screens.billFormView(bills)
+                                        HomeScreen.billFormView(bills)
                                     )
                                 }
                             }
@@ -108,7 +108,7 @@ public struct BillersView: View {
                 NavigationLink(value: enrolment) {
                     SingleNominationView(nomination: enrolment.freeze()) { nomination, invoice in
                         navigation.navigationStack.append(
-                            Screens.nominationDetails(invoice, nomination)
+                            HomeScreen.nominationDetails(invoice, nomination)
                         )
                     }
                 }
@@ -124,7 +124,9 @@ public struct BillersView: View {
         }
         if let s = service {
             let profileInfo = computeProfileInfo(service: s, accountNumber: nom.accountNumber )
-            hvm.handleMCPRequests(action: .DELETE, profileInfoComputed: profileInfo, nom: nom)
+            Task {
+               await hvm.handleMCPRequests(action: .DELETE, profileInfoComputed: profileInfo, nom: nom)
+            }
             if let off = offSet.first {
                 enrolments.remove(at: off)
             }

@@ -114,10 +114,15 @@ public struct NominationDetailView: View {
                 
                 if let s = service {
                     let profileInfo = computeProfileInfo(service: s, accountNumber: nomination.accountNumber )
-                    hvm.handleMCPRequests(action: .UPDATE, profileInfoComputed: profileInfo)
+                    Task {
+                       await hvm.handleMCPRequests(action: .UPDATE, profileInfoComputed: profileInfo)
+                    }
                 }
             }
-        }.handleViewStates(uiModel: $hvm.serviceBillUIModel, showAlert: $hvm.showAlert)
+        }
+        .handleViewStatesMods(uiState: hvm.$serviceBillUIModel) { content in
+            
+        }
         .toolbar {
             EditButton()
                 .foregroundColor(.white)

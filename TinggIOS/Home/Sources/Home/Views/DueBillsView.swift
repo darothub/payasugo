@@ -10,15 +10,25 @@ import Theme
 import Core
 import CoreUI
 import Checkout
+
 struct DueBillsView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var checkoutVm: CheckoutViewModel
-    @State var fetchedBill = [Invoice]()
+    @State var fetchedBill: [DynamicInvoiceType] = []
+    @Binding var isShowingBills: Bool
     @State var showErrorAlert = false
     @State var showSuccessAlert = false
     @State var updatedTimeString: String = ""
-    @State var showDueBills = true
+    @State var dueBillItems: [DueBillItem] = []
     @State var billType = DueBillType.dueBills
+    @State var placeHolderText = "checking for bills.."
+    @State var showDefaultHeader = true
+    @State var newHeader: AnyView? = nil
+    @Binding var isLoading: Bool
+    private let now = Date.now
+    var type: String {
+         billType == .dueBills ? "due" : "upcoming"
+    }
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -27,21 +37,22 @@ struct DueBillsView: View {
                     .frame(width: 35, height: 35)
                 tinggAssistAndBillText()
                 Spacer()
-            }
+            }.showIf($showDefaultHeader)
             
-            ForEach(fetchedBill, id: \.billReference) { bill in
-                let now = Date()
-                let dueDate = makeDateFromString(validDateString: bill.dueDate)
-                let dueDays = dueDate - now
-                let dueDaysString = dueDayString(dueDaysNumber: dueDays.day)
-                let service = Observer<MerchantService>().getEntities().first { s in
-                    s.hubServiceID == bill.serviceID
-                }
+            newHeader
+                .showIfNot($showDefaultHeader)
+                
+            
+            ForEach($dueBillItems, id: \.accountNumber) { $bill in
                 let nomination = Observer<Enrollment>().getEntities().first { e in
-                    e.accountNumber == bill.billReference
+                    (e.accountNumber == bill.accountNumber) && (Double(bill.amount) ?? 1.0) > 0.0
+                }
+                //This will be removed
+                let service = Observer<MerchantService>().getEntities().first { s in
+                    s.serviceName == bill.serviceName
                 }
                 if let currentService = service, let currentNomination = nomination {
-                    DueBillCardView(serviceName: bill.biller, serviceImageString: currentService.serviceLogo, beneficiaryName: bill.customerName, accountNumber: bill.billReference, amount:"\( bill.currency) \(bill.amount)", dueDate: dueDaysString, billType: billType, updatedTimeString: $updatedTimeString) {
+                    DueBillCardView(item: bill, updatedTimeString: $updatedTimeString) {
                         checkoutVm.toCheckoutWithANomination(currentService, nomination: currentNomination)
                     }
                     .background(
@@ -52,38 +63,65 @@ struct DueBillsView: View {
                 }
                
             }
-          
-        }
-        .showIf($showDueBills)
-        .padding()
-        .onAppear {
-            homeViewModel.getDueBills()
-        }
-        .handleViewStatesMods(uiState: homeViewModel.$fetchBillUIModel) { content in
-            var invoices = content.data as? [Invoice]
-            let now = Date.now
-            withAnimation {
-                invoices = invoices?.filter { bill in
-                    let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - now).day
-                    let yearsDiff = (makeDateFromString(validDateString: bill.dueDate) - now).year
-                    switch billType {
-                    case .dueBills:
-                        return daysDiff <= 2 && yearsDiff <= 5
-                    case .upcomingBills:
-                        return daysDiff >= 3 && yearsDiff <= 5
-                    }
-                   
-                }
-                fetchedBill = invoices ?? []
-                showDueBills = !fetchedBill.isEmpty
+            .onAppear {
+                showDefaultHeader = newHeader == nil
             }
         }
-    
+        .padding()
+        .showIf($isShowingBills)
+        .handleViewStatesModWithCustomShimmer(
+            uiState: homeViewModel.$fetchBillUIModel,
+            shimmerView: AnyView(DueBillsShimmerView()),
+            isLoading: $isLoading
+        ) { content in
+            let data = content.data as? [DynamicInvoiceType]
            
+            let dict = data?.reduce(into: [DueBillType: [DueBillItem]]()) { partialResult, bill in
+                let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - now)
+                let yearsDiff = (makeDateFromString(validDateString: bill.dueDate) - now)
+                let dueDaysString = dueDayString(dueDaysNumber: daysDiff.day)
+                let billType = getBillType(dueDays: daysDiff, dueYear: yearsDiff)
+                let service = Observer<MerchantService>().getEntities().first { s in
+                    s.hubServiceID == bill.serviceID
+                }
+                if let currentService = service, (bill.amount.toString.convertStringToInt() > 0) {
+                    let billItem = DueBillItem(
+                        serviceName: currentService.serviceName,
+                        serviceImageString: currentService.serviceLogo,
+                        beneficiaryName: bill.customerName,
+                        accountNumber: bill.billReference,
+                        amount: "\(bill.currency) \(bill.amount.toString)",
+                        dueDate: dueDaysString,
+                        billType: billType
+                        
+                    )
+                    partialResult[billType, default: []].append(billItem)
+                }
+            }
+            withAnimation {
+                if let dict = dict, billType != .others {
+                    dueBillItems = dict[billType, default: []]
+                } else {
+                    var newList = [DueBillItem]()
+                    newList.append(contentsOf: (dict?[.dueBills, default: []])!)
+                    newList.append(contentsOf: (dict?[.upcomingBills, default: []])!)
+                    dueBillItems = newList
+                }
+                isShowingBills = dueBillItems.isNotEmpty()
+            }
+        } onFailure: { str in
+            isShowingBills = false
+        }
+    
     }
+    
+    private func getBillType(dueDays: TimeInterval, dueYear: TimeInterval) -> DueBillType {
+        let billType: DueBillType = (dueDays.day <= 2 && dueYear.year <= 5) ? .dueBills : (dueDays.day >= 3 && dueYear.year <= 5) ? .upcomingBills : .others
+        return billType
+    }
+    
     @ViewBuilder
-    func tinggAssistAndBillText() -> some View {
-        let type = billType == .dueBills ? "due" : "upcoming"
+    private func tinggAssistAndBillText() -> some View {
         VStack(alignment: .leading) {
             Text("Tingg Assist")
                 .bold()
@@ -111,7 +149,7 @@ struct DueBillsView: View {
 
 struct DueBillsView_Previews: PreviewProvider {
     static var previews: some View {
-        DueBillsView(fetchedBill: sampleInvoices)
+        DueBillsView(isShowingBills: .constant(true), isLoading: .constant(false))
             .environmentObject(HomeDI.createHomeViewModel())
             .environmentObject(CheckoutDI.createCheckoutViewModel())
     }
@@ -119,15 +157,8 @@ struct DueBillsView_Previews: PreviewProvider {
 
 
 struct DueBillCardView: View {
-    @State var serviceName: String = ""
-    @State var serviceImageString = ""
-    @State var updatedTime = ""
-    @State var beneficiaryName = ""
-    @State var accountNumber = ""
-    @State var amount = "0.0"
-    @State var dueDate = "today"
-    @State var billType = DueBillType.dueBills
-    @State var barColor = Color.red
+    @State private var barColor = Color.red
+    @State var item: DueBillItem = .init()
     @Binding var updatedTimeString: String
     var action:() -> Void = {}
     var body: some View {
@@ -136,28 +167,29 @@ struct DueBillCardView: View {
                      .fill(barColor)
                      .frame(width: 10, height: 90)
                      .cornerRadius(20, corners: [.topRight, .bottomRight])
-            LeftHandSideView(serviceName: serviceName, serviceImageString: serviceImageString, beneficiaryName: beneficiaryName, accountNumber: accountNumber, updatedTimeString: $updatedTimeString)
+            LeftHandSideView(serviceName: item.serviceName, serviceImageString: item.serviceImageString, beneficiaryName: item.beneficiaryName, accountNumber: item.accountNumber, updatedTimeString: $updatedTimeString)
             Spacer()
-            RightHandSideView(amount: amount, dueDate: dueDate, action: action)
+            RightHandSideView(amount: item.amount, dueDate: item.dueDate, action: action)
         }
         .frame(maxWidth: .infinity)
         .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
         .onAppear {
-            barColor = billType == .dueBills ? dueDate == "today" ? .red : .orange : .gray
+            barColor = item.billType == .dueBills ? item.dueDate == "today" ? .red : .orange : .gray
         }
     }
 }
-struct DueBillItem: Identifiable {
-    var id: String = UUID().uuidString
+public struct DueBillItem: Identifiable {
+    public var id: String = UUID().uuidString
+    public var serviceName: String = "sample service"
+    public var serviceImageString = ""
+    public var beneficiaryName = "Sample Bene"
+    public var accountNumber = "0900000"
+    public var amount = "0.0"
+    public var dueDate = "today"
+    public var billType: DueBillType = .dueBills
     
-    var serviceName: String = ""
-    var serviceImageString = ""
-    var updatedTime = ""
-    var beneficiaryName = ""
-    var accountNumber = ""
-    var amount = "0.0"
-    var dueDate = "today"
 }
+
 struct LeftHandSideView: View {
     @State var serviceName: String = ""
     @State var serviceImageString = ""
@@ -191,17 +223,7 @@ struct LeftHandSideView: View {
             updatedTimeString = updatedTimeInUnits(time: updatedTime)
         }
     }
-    func updatedTimeInUnits(time: Int) -> String {
-        if time > 3599 {
-            return "\(time / 3600) hours ago"
-        }
-        else if time > 59 {
-            return "\(time / 60) mins ago"
-        }
-        else {
-            return "\(time) seconds ago"
-        }
-    }
+
 }
 struct RightHandSideView: View {
     @State var amount = "0.0"
@@ -238,7 +260,11 @@ struct RightHandSideView: View {
     }
 }
 
-enum DueBillType {
+public enum DueBillType {
     case dueBills
     case upcomingBills
+    case others
 }
+
+
+

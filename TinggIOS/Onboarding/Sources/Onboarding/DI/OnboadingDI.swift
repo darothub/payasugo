@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  OnboardingDI.swift
 //  
 //
 //  Created by Abdulrasaq on 24/08/2022.
@@ -26,7 +26,7 @@ public struct OnboardingDI {
         return SystemUpdateUsecase(sendRequest: CoreDI.createSendRequest())
     }
     @MainActor public static func createGetCountriesAndDialCodeUseCase() -> GetCountriesAndDialCodeUseCase {
-        return GetCountriesAndDialCodeUseCase(countryRepository: CountryRepositoryImpl(baseRequest: .init(), dbObserver: Observer<Country>()))
+        return GetCountriesAndDialCodeUseCase(countryRepository: CountryRepositoryImpl(baseRequest: .init(), dbObserver: Observer<CountriesInfo>()))
     }
     @MainActor public static func createOnboardingVM() -> OnboardingVM {
         OnboardingVM(

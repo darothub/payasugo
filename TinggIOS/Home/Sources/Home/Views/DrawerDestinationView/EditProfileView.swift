@@ -86,11 +86,9 @@ struct EditProfileView: View {
         })
         .handleViewStatesMods(uiState: hvm.$uiModel) { content in
             log(message: content)
-            realmManager.realmWrite {
-                profile?.firstName = firstName
-                profile?.lastName = lastName
-                profile?.emailAddress = email
-            }
+            profile?.firstName = firstName
+            profile?.lastName = lastName
+            profile?.emailAddress = email
             showSuccessAlert = true
         }
         .handleViewStates(uiModel: $hvm.uiModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)

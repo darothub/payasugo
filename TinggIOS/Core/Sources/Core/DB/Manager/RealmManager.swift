@@ -69,6 +69,9 @@ public final class RealmManager: ObservableObject {
         
     }
     public func realmWrite<R>(_ block: (() throws -> R)) {
+        if ((localDb?.invalidate()) != nil) {
+            return
+        }
         try? localDb?.write {
             try? block()
         }
@@ -92,7 +95,7 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
     }
     
     public func getEntities() ->[T] {
-        $objects.wrappedValue.map {$0}
+        objects.map {$0}
     }
     
     public func saveEntity(obj: T){
@@ -122,5 +125,6 @@ public class Observer<T> where T: Object, T: ObjectKeyIdentifiable {
 }
 
 public protocol DBObject: Object {}
+
 
 

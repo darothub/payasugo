@@ -12,27 +12,30 @@ import SwiftUI
 import Photos
 struct ActiveCategoryTabView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
-    @State var categories: [[CategoryEntity]] = [[CategoryEntity]]()
+    @State var categories: [[CategoryDTO]] = [[CategoryDTO]]()
     @State var show = true
     var body: some View {
         TabView {
             ForEach(0..<categories.count, id: \.self) { eachChunkIndex in
                 ActiveCategoryListView(categories: categories[eachChunkIndex])
+                   
             }
+            
         }
-        .frame(height: 165)
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         .showIf($show)
+        .shadow(radius: 0, y: 1)
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+        .background(.white)
         .onAppear {
             setPageIndicatorAppearance()
-            homeViewModel.getServicesByCategory()
         }
-        .handleViewStatesMods(uiState: homeViewModel.$categoryUIModel) { content in
+        .handleViewStatesModWithShimmer(uiState: homeViewModel.$categoryUIModel) { content in
             withAnimation {
-                categories = content.data as? [[CategoryEntity]] ?? []
+                categories = content.data as? [[CategoryDTO]] ?? []
                 show = categories.isNotEmpty()
             }
-          
+        } onFailure: { str in
+            show = false
         }
     }
 }
@@ -40,16 +43,42 @@ struct ActiveCategoryTabView: View {
 struct ActiveCategoryTabView_Previews: PreviewProvider {
     static var previews: some View {
         ActiveCategoryTabView(categories: previewProcessedCategories)
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 
-var previewProcessedCategories: [[CategoryEntity]] {
+var previewProcessedCategories: [[CategoryDTO]] {
+    let p = previewCategories.map {$0.toDTO}
     let list = [
-        previewCategories,
-        previewCategories,
-        previewCategories
+        p,
+        p,
+        p
     ]
     return list
 }
 
 
+import SwiftUI
+
+struct ContentView: View {
+    @State private var isSimmering = true
+    
+    var body: some View {
+        VStack {
+            Text("Simmering View")
+                .font(.largeTitle)
+                .opacity(isSimmering ? 0.2 : 1.0)
+                .animation(Animation.easeInOut(duration: 1.0).repeatForever())
+            
+            Button(action: {
+                isSimmering.toggle()
+            }) {
+                Text(isSimmering ? "Stop Simmering" : "Start Simmering")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+        }
+    }
+}

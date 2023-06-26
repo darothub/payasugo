@@ -8,18 +8,21 @@ import CoreUI
 import Core
 import SwiftUI
 import Theme
+import CoreNavigation
 /// Shows a tab for users bills and receipt
 public struct BillView: View {
     @State var profileImageUrl: String = ""
     @State var color: Color = .green
-    @State var items = [TabLayoutItem(title: "Bill") {
-       AnyView(Text("My BIll"))
-    }]
+    @State var items: [TabLayoutItem<AnyView>] =  []
+    @State var receiptView = TabLayoutItem(title: BillView.RECEIPTVIEW_TITLE)
+    @State var myBillView = TabLayoutItem(title: BillView.MYBILLVIEW_TITLE)
     var secondaryColor: Color {
         PrimaryTheme.getColor(.secondaryColor)
     }
     @State var isFullScreen = false
-    @State var sections: [TransactionSectionModel] = [.sample, .sample2]
+    @State var sections: [TransactionSectionModel] = []
+    static var RECEIPTVIEW_TITLE = "RECEIPTS"
+    static var MYBILLVIEW_TITLE = "MY BILLS"
     public init() {
         //
     }
@@ -27,21 +30,20 @@ public struct BillView: View {
         VStack(spacing: 0) {
             ProfileImageAndHelpIconView(imageUrl: $profileImageUrl, title: "My Bills")
                 .background(secondaryColor)
-            CustomTabView(items: $items, tabColor: $color)
+            CustomTabView(items: $items, tabColor: $color, selectedTab: BillView.MYBILLVIEW_TITLE)
         }.onAppear {
             profileImageUrl = (Observer<Profile>().getEntities().first?.photoURL) ?? ""
             color = secondaryColor
             let transactions = Observer<TransactionHistory>().getEntities()
-            log(message: "\(transactions)")
             let transactionListModels = transactions.map { t in
                 let service = Observer<MerchantService>().getEntities().first { s in
                     s.hubServiceID == t.serviceID
                 }
-                log(message: "\(String(describing: service))")
+
                 let payer = Observer<MerchantPayer>().getEntities().first { p in
                     p.hubClientID == t.payerClientID
                 }
-                log(message: "\(String(describing: payer))")
+
                 let serviceLogo = t.serviceLogo ?? ""
                 let accountNumber = t.accountNumber ?? "0"
                 let dateCreated = makeDateFromString(validDateString: t.dateCreated ?? "")
@@ -60,25 +62,28 @@ public struct BillView: View {
                 )
                 return model
             }
+//
 
-            
             let dict = Dictionary(grouping: transactionListModels) {$0.date.formatted(with: "EEEE, dd MMMM yyyy")}
             let sectionsModels = dict.map { (k, v) in
                 TransactionSectionModel(list: v)
             }.sorted()
-            sections.append(contentsOf: sectionsModels)
-            
-            let view = AnyView(TransactionListView(listOfModel: $sections)) 
-
-            let tabItem = TabLayoutItem(title: "RECEIPTS") {
-                AnyView(TransactionListView(listOfModel: $sections))
+            sections = sectionsModels
+//
+            let receiptViewContent = AnyView(TransactionListView(listOfModel: $sections))
+            receiptView.setContent {
+                receiptViewContent
+            }
+            let myBilViewContent = MyBillView()
+                .environmentObject(HomeDI.createHomeViewModel())
+                .environmentObject(NavigationUtils())
+            myBillView.setContent {
+                AnyView(myBilViewContent)
             }
             withAnimation {
                 items = [
-                    TabLayoutItem(title: "MY BILLS") {
-                        AnyView(MyBillView())
-                    },
-                    tabItem
+                    myBillView,
+                    receiptView
                 ]
             }
         }

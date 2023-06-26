@@ -7,7 +7,6 @@ import Contacts
 import Foundation
 import Permissions
 import SwiftUI
-
 @MainActor
 public class HomeViewModel: ViewModel {
     @Published var defaultNetworkServiceId: Int? = AppStorageManager.getDefaultNetworkId()
@@ -19,16 +18,18 @@ public class HomeViewModel: ViewModel {
     @Published public var profile = Profile()
     @Published public var transactionHistory = Observer<TransactionHistory>()
     @Published public var payers = Observer<MerchantPayer>()
-    @Published public var dueBill = [Invoice]()
+    @Published public var dueBill = [DynamicInvoiceType]()
     @Published public var singleBillInvoice = Invoice()
     @Published public var serviceBill = Bill()
     @Published public var categoryNameAndServices = [String: [MerchantService]]()
-    @Published var fetchBillUIModel = UIModel.nothing
-    @Published var quickTopUIModel = UIModel.nothing
-    @Published var categoryUIModel = UIModel.nothing
-    @Published var rechargeAndBillUIModel = UIModel.nothing
+    @Published public var fetchBillUIModel = UIModel.nothing
+    @Published public var quickTopUIModel = UIModel.nothing
+    @Published public var categoryUIModel = UIModel.nothing
+    @Published public var rechargeAndBillUIModel = UIModel.nothing
     @Published var serviceBillUIModel = UIModel.nothing
-    @Published var uiModel = UIModel.nothing
+    @Published var singleBillUIModel = UIModel.nothing
+    @Published var savedBillUIModel = UIModel.nothing
+    @Published public var uiModel = UIModel.nothing
     @Published var campaignMessageUIModel = UIModel.nothing
     @Published var billReminderUIModel = UIModel.nothing
     @Published var defaultNetworkUIModel = UIModel.nothing
@@ -49,6 +50,7 @@ public class HomeViewModel: ViewModel {
     @Published var profileImageUrl: String = ""
     @Published public var showBundles = false
     @Published public var bundleModel = BundleModel()
+    var realmManager: RealmManager = .init()
     @Published var listOfPaymentOptions = [
         PaymentOptionItem(optionName: "Mpesa", isSelected: false),
         PaymentOptionItem(optionName: "Viusasa", isSelected: false)
@@ -57,13 +59,76 @@ public class HomeViewModel: ViewModel {
     public var homeUsecase: HomeUsecase
     public init(homeUsecase: HomeUsecase) {
         self.homeUsecase = homeUsecase
-        getProfile()
-//        displayedRechargeAndBill()
-
-//        getServicesByCategory()
-//        allRecharge()
     }
     
+    func fetchSystemUpdate() async  {
+        let systemUpdateRequest: RequestMap =  RequestMap.Builder()
+            .add(value: "PAR", for: .SERVICE)
+            .build()
+        uiModel = UIModel.loading
+        do {
+            let response = try await homeUsecase.fetchSystemUpdate(request: systemUpdateRequest)
+            await saveDataIntoDB(data: try response.get())
+            handleResultState(model: &uiModel, response)
+        } catch {
+            handleResultState(model: &uiModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+        }
+    }
+    /// Save System  update response in database
+    func saveDataIntoDB(data: SystemUpdateDTO) async  {
+        
+        let sortedCategories = data.categories.sorted { category1, category2 in
+            category1.categoryID.convertStringToInt() < category2.categoryID.convertStringToInt()
+        }.filter { category in
+            category.isActive
+        }.map { c in
+            c.toEntity
+        }
+        realmManager.save(data: sortedCategories)
+        realmManager.save(data: data.contactInfo.map {$0.toEntity})
+        let services = data.services.filter { service in
+            service.isActive
+        }
+        if let defaultNetworkServiceId = data.defaultNetworkServiceID {
+            AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
+            let defaultNetwork = services.first { s in
+                Log.d(message: "default \(defaultNetworkServiceId) \(s.hubServiceID.toInt)")
+                return s.hubServiceID.toInt == defaultNetworkServiceId
+            }
+           
+            if let service = defaultNetwork {
+                AppStorageManager.setDefaultNetwork(service: service.toEntity)
+            }
+        }
+        
+        realmManager.save(data: services.map {$0.toEntity})
+        realmManager.save(data: data.transactionSummaryInfo.map {$0.toEntity})
+        let eligibleNomination = data.nominationInfo.filter { nom in
+            nom.clientProfileAccountID?.toInt != nil
+        }
+        let validNomination = eligibleNomination.filter { e in
+            return !e.isReminder.toBool && e.isActive
+        }
+        let validEnrollment = validNomination.map {$0.toEntity}
+        realmManager.save(data: validEnrollment)
+        let profile = data.mulaProfileInfo.mulaProfile[0]
+        realmManager.save(data: profile.toEntity)
+        realmManager.save(data: data.virtualCards.map {$0.toEntity})
+        let payers: [MerchantPayer] = data.merchantPayers.map {$0.toEntity}
+        realmManager.save(data: data.securityQuestions.map {$0.toEntity})
+        realmManager.save(data: payers)
+
+        realmManager.save(data: data.bundleData.map {$0.toEntity})
+      
+        AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
+    }
+ 
+    public func getAllServicesForAddBill() -> [TitleAndListItem] {
+        let allRecharges = allRecharge()
+       return allRecharges.keys
+            .sorted(by: <)
+            .map{TitleAndListItem(title: $0, services: allRecharges[$0] ?? [])}
+    }
     public func updateProfile(_ requestString: String) {
         let request = RequestMap.Builder()
                         .add(value: "", for: .PROFILE_INFO)
@@ -131,32 +196,79 @@ public class HomeViewModel: ViewModel {
 
     }
     
-    public func getServicesByCategory() {
+    public func getServicesByCategory() -> [[CategoryDTO]] {
         categoryUIModel = UIModel.loading
         let servicesByCategory = homeUsecase.categorisedCategories()
         handleResultState(model: &categoryUIModel, (Result.success(servicesByCategory) as Result<Any, Error>))
+        return servicesByCategory
     }
-    public func getQuickTopups() {
+    public func getQuickTopups() -> [MerchantService] {
         quickTopUIModel = UIModel.loading
-        do {
-            let quicktopups = try homeUsecase.getQuickTopups()
-            handleResultState(model: &quickTopUIModel, (Result.success(quicktopups) as Result<Any, Error>))
-        } catch {
-            handleResultState(model: &quickTopUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
+        let quicktopups = homeUsecase.getQuickTopups()
+        handleResultState(model: &quickTopUIModel, (Result.success(quicktopups) as Result<Any, Error>))
+        return quicktopups
+    }
+    public func getDueBills() async {
+        fetchBillUIModel = UIModel.loading
+        let billAccounts = getBillAccount()
+        var billAccountDict:[[String: String]] = []
+        billAccounts.forEach { billAccount in
+            var d = [String: String]()
+            d["SERVICE_ID"] = billAccount.serviceId
+            d["ACCOUNT_NUMBER"] = billAccount.accountNumber
+            billAccountDict.append(d)
         }
-        return
+        let request = RequestMap.Builder()
+                        .add(value: "FBA", for: .SERVICE)
+                        .add(value: billAccountDict, for: .BILL_ACCOUNTS)
+                        .add(value: 1, for: "IS_MULTIPLE")
+                        .build()
+        do {
+            dueBill = try await homeUsecase.fetchDueBills(request: request)
+            
+            handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
+        } catch {
+            handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+        }
+    
     }
     
-    public func getAirtimeServices() -> [MerchantService] {
-        var services = [MerchantService]()
-        do {
-            services = try homeUsecase.getQuickTopups()
-        } catch {
-           print("Airtime service error")
-        }
-        return services
-    }
     
+    public func getBillAccount() -> [BillAccount] {
+        homeUsecase.getBillAccounts()
+    }
+    public func getSavedBill() {
+        savedBillUIModel = UIModel.loading
+        let invoices = Observer<Invoice>().getEntities()
+        let services = Observer<MerchantService>().getEntities()
+        let billAccounts = getBillAccount()
+        let filteredServicesAndEnrollment = billAccounts.compactMap { ba in
+            let invoice = invoices.first { i in
+                i.billReference == ba.accountNumber
+            }
+            let service = services.first { s in
+                ba.serviceId == s.hubServiceID
+            }
+            return (s: service, i: invoice)
+        }
+
+        let savedBillItems = filteredServicesAndEnrollment.compactMap { (s, i) in
+            if let service = s, let bill = i {
+                return DueBillItem(
+                    serviceName: service.serviceName,
+                    serviceImageString: service.serviceLogo,
+                    beneficiaryName: bill.customerName,
+                    accountNumber: bill.billReference,
+                    amount: "",
+                    dueDate: ""
+                )
+                 
+            } else {
+                return nil
+            }
+        }
+        handleResultState(model: &savedBillUIModel, (Result.success(savedBillItems) as Result<Any, Error>))
+    }
     public func mapHistoryIntoChartData() -> [ChartData] {
         return homeUsecase.getBarChartMappedData().map { (key, value) in
             return ChartData(xName: ChartMonth.allCases[key-1], point: value)
@@ -192,88 +304,52 @@ public class HomeViewModel: ViewModel {
         }
         return chartDataMap
     }
-    public func displayedRechargeAndBill() {
+    public func displayedRechargeAndBill() -> [MerchantService]{
         rechargeAndBillUIModel =  UIModel.loading
-        do {
-            let bill = try homeUsecase.displayedRechargeAndBill()
-            Log.d(message: "Recharge \(bill)")
-            handleResultState(model: &rechargeAndBillUIModel, (Result.success(bill) as Result<Any, Error>))
-        } catch {
-            handleResultState(model: &rechargeAndBillUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
-        }
-        return
+        let data = homeUsecase.displayedRechargeAndBill()
+        handleResultState(model: &rechargeAndBillUIModel, (Result.success(data) as Result<Any, Error>))
+        return data
     }
     
-    public func allRecharge() {
+    public func allRecharge() -> [String: [MerchantService]] {
         rechargeAndBillUIModel =  UIModel.loading
         let recharges = homeUsecase.allRecharge()
         handleResultState(model: &rechargeAndBillUIModel, (Result.success(recharges) as Result<Any, Error>))
-        return
+        return recharges
      
     }
-    public func getDueBills()  {
-       
-        let billAccounts = homeUsecase.getBillAccounts()
-        var billAccountDict:[[String: String]] = []
-        billAccounts.forEach { billAccount in
-            var d = [String: String]()
-            d["SERVICE_ID"] = billAccount.serviceId
-            d["ACCOUNT_NUMBER"] = billAccount.accountNumber
-            billAccountDict.append(d)
-        }
-        let request = RequestMap.Builder()
-                        .add(value: "FBA", for: .SERVICE)
-                        .add(value: billAccountDict, for: .BILL_ACCOUNTS)
-                        .add(value: 1, for: "IS_MULTIPLE")
-                        .build()
-        fetchBillUIModel = UIModel.loading
-         Task {
-             do {
-                 dueBill = try await homeUsecase.fetchDueBills(request: request)
-                 handleResultState(model: &fetchBillUIModel, (Result.success(dueBill) as Result<Any, Error>))
 
-//                 DispatchQueue.main.async { [unowned self]  in
-//                 }
-             } catch {
-                 handleResultState(model: &fetchBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
-             }
-            
-         }
-    
-    }
     public func getSingleDueBill(request: RequestMap) {
-        uiModel = UIModel.loading
+        singleBillUIModel = UIModel.loading
         
         Task {
             do {
                 let singleBillInvoice = try await homeUsecase.getSingleDueBills(tinggRequest: request)
-                handleResultState(model: &uiModel, (Result.success(singleBillInvoice) as Result<Any, Error>))
+                handleResultState(model: &singleBillUIModel, (Result.success(singleBillInvoice) as Result<Any, Error>))
+
             }catch {
-                handleResultState(model: &uiModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+                handleResultState(model: &singleBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
             }
         }
     }
-    public func handleMCPRequests(action: MCPAction, profileInfoComputed: String, nom: Enrollment?=nil) {
+    public func handleMCPRequests(action: MCPAction, profileInfoComputed: String, nom: Enrollment?=nil) async {
         serviceBillUIModel = UIModel.loading
         var request = TinggRequest()
         request.service = "MCP"
         request.profileInfo = profileInfoComputed
         request.action = action.rawValue
         request.isNomination = "1"
-        print("Request \(request)")
-        Task {
-            do {
-                let response: Any
-                switch action {
-                case .ADD:
-                    response = try await homeUsecase.handleMCPRequest(tinggRequest: request)
-                case .UPDATE, .DELETE:
-                    response = try await homeUsecase.handleMCPDeleteAndUpdateRequest(tinggRequest: request)
-                }
-                handleResultState(model: &serviceBillUIModel, (Result.success(response) as Result<Any, Error>))
-            } catch {
-                handleResultState(model: &serviceBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
+        do {
+            let response: Any
+            switch action {
+            case .ADD:
+                response = try await homeUsecase.handleMCPRequest(tinggRequest: request)
+            case .UPDATE, .DELETE:
+                response = try await homeUsecase.handleMCPDeleteAndUpdateRequest(tinggRequest: request)
             }
+            handleResultState(model: &serviceBillUIModel, (Result.success(response) as Result<Any, Error>))
+        } catch {
+            handleResultState(model: &serviceBillUIModel, Result.failure(((error as! ApiError))) as Result<Any, ApiError>)
         }
     }
     

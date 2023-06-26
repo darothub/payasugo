@@ -79,7 +79,9 @@ public struct BillDetailsView: View {
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Save bill"
                     ) {
-                        homeViewModel.handleMCPRequests(action: .ADD, profileInfoComputed: profileInfoComputed)
+                        Task {
+                            await homeViewModel.handleMCPRequests(action: .ADD, profileInfoComputed: profileInfoComputed)
+                        }
                     }
                     .disabled(isNewAccountNumber ? false: true)
                     .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)

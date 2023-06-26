@@ -31,22 +31,10 @@ public struct BundleSelectionView: View {
                     DropDownView(selectedText: $model.selectedDataPlan, dropDownList: $plans,  showDropDown: $dropDownShows, placeHoder: "Plans", lockTyping: true)
                     DropDownView(selectedText: $model.selectedBundle, dropDownList: $bundleList, showDropDown: $bundleDropDownShows, placeHoder: "Select Bundles", lockTyping: true)
                         .showIfNot($dropDownShows)
-                    DropDownView(selectedText: $model.selectedAccount, dropDownList: $accountList, showDropDown: $accountDropDownShows, placeHoder: "Select account", lockTyping: true)
+                    DropDownView(selectedText: $model.selectedAccount, dropDownList: $accountList, showDropDown: $accountDropDownShows, placeHoder: "Select account", lockTyping: false, maxHeight: 100)
                         .showIfNot($dropDownShows)
                         .showIfNot($bundleDropDownShows)
                        
-                    TextField("placeHolder", text: $model.mobileNumber)
-                        .padding([.horizontal, .vertical], 15)
-                        .font(.caption)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 5)
-                                .stroke(lineWidth: 0.5)
-                        )
-                        .showIfNot($dropDownShows)
-                        .showIfNot($bundleDropDownShows)
-                        .showIfNot($accountDropDownShows)
-                   
-                    
                     TinggButton(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),
                         buttonLabel: "Continue",
@@ -54,9 +42,6 @@ public struct BundleSelectionView: View {
                     ) {
                         //TODO
                     }
-//                    .showIfNot($dropDownShows)
-//                    .showIfNot($bundleDropDownShows)
-//                    .showIfNot($accountDropDownShows)
                 }.padding(.horizontal)
             }
             .padding(30)
@@ -93,22 +78,6 @@ public struct BundleSelectionView: View {
             }
         }
     }
-}
-
-public struct BundleModel {
-    public var selectedBundle: String
-    public var selectedAccount: String
-    public var selectedDataPlan: String
-    public var mobileNumber: String
-    public var service: MerchantService
-    public init(selectedBundle: String = "", selectedAccount: String = "", selectedDataPlan: String = "", mobileNumber: String = "", service: MerchantService = MerchantService()) {
-        self.selectedBundle = selectedBundle
-        self.selectedAccount = selectedAccount
-        self.selectedDataPlan = selectedDataPlan
-        self.mobileNumber = mobileNumber
-        self.service = service
-    }
-    
 }
 
 struct BundleSelectionView_Previews: PreviewProvider {

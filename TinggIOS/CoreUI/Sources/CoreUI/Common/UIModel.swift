@@ -9,8 +9,9 @@ import Foundation
 import SwiftUI
 // Mark:
 /// An enum class that holds UI states
+@MainActor
 public enum UIModel: Equatable {
-    public static func == (lhs: UIModel, rhs: UIModel) -> Bool {
+    nonisolated public static func == (lhs: UIModel, rhs: UIModel) -> Bool {
         switch(lhs, rhs) {
         case (.content(let lh), .content(let rh)):
             return lh.statusMessage == rh.statusMessage

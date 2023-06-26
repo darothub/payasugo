@@ -7,8 +7,12 @@
 
 import SwiftUI
 import Core
+import CoreNavigation
 import Theme
 struct AddNewBillCardView: View {
+    @State var allRecharges = [String: [MerchantService]]()
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var navigation: NavigationUtils
     var body: some View {
         VStack {
             HStack {
@@ -30,6 +34,23 @@ struct AddNewBillCardView: View {
                 .padding(.horizontal, PrimaryTheme.largePadding)
                 .shadow(radius: 3, x: 0, y: 3)
         )
+        .onTapGesture {
+            hvm.allRecharge()
+        }
+        .handleViewStatesMods(uiState: hvm.$rechargeAndBillUIModel) { content in
+            let data = content.data
+            if data is [String: [MerchantService]]{
+                allRecharges = data as! [String : [MerchantService]]
+                let categoryNameAndServices = allRecharges.keys
+                    .sorted(by: <)
+                    .map{TitleAndListItem(title: $0, services: allRecharges[$0] ?? [])}
+                withAnimation {
+                    navigation.navigationStack.append(
+                        HomeScreen.categoriesAndServices(categoryNameAndServices)
+                    )
+                }
+            }
+        }
     }
 }
 

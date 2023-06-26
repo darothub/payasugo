@@ -13,7 +13,7 @@ import Core
 public struct BillFormView: View {
     @EnvironmentObject var navUtils: NavigationUtils
     @Binding var billDetails: BillDetails
-    @StateObject var homeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @State private var accountNumber: String = ""
     @State private var invoice: Invoice = .init()
     @State private var navigateBillDetailsView = false
@@ -42,7 +42,8 @@ public struct BillFormView: View {
                     dropDownList: $accountNumberList,
                     showDropDown: $showDropDown,
                     label: "Enter your \(billDetails.service.referenceLabel)",
-                    placeHoder: billDetails.service.referenceLabel
+                    placeHoder: billDetails.service.referenceLabel,
+                    maxHeight: .infinity
                 ).padding()
                 Spacer()
                 TinggButton(
@@ -70,15 +71,15 @@ public struct BillFormView: View {
                 accountNumberList = list
             }
         }
-        .handleViewStatesMods(uiState: homeViewModel.$uiModel) { content in
-            let invoice = content.data as! Invoice
+        .handleViewStatesMods(uiState: homeViewModel.$singleBillUIModel) { content in
+            let invoice = content.data as!  Invoice
             invoice.enrollment = billDetails.info.first(where: { e in
                 e.accountNumber == self.accountNumber
             })
             self.invoice = invoice
             Observer<Invoice>().saveEntity(obj: invoice)
             navUtils.navigationStack.append(
-                Screens.billDetailsView(invoice, billDetails.service)
+                HomeScreen.billDetailsView(invoice, billDetails.service)
             )
         }
     }
@@ -94,6 +95,7 @@ struct BillFormView_Previews: PreviewProvider {
     }
     static var previews: some View {
         BillFormViewHolder()
+            .environmentObject(HomeDI.createHomeViewModel())
     }
 }
 

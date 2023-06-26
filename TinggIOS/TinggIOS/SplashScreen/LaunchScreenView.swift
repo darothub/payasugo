@@ -19,6 +19,7 @@ import Theme
 /// This is the first screen  of ``TinggIOSApp``.
 public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var mvm: MainViewModel
     @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
@@ -32,6 +33,7 @@ public struct LaunchScreenView: View {
                     .accessibility(identifier: "tinggsplashscreenlogo")
             }.onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    
                     navigation.navigationStack.append(Screens.intro)
                 }
             }
@@ -46,8 +48,8 @@ struct LaunchScreenView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreenView()
             .environmentObject(NavigationUtils())
-            .environmentObject(HomeDI.createHomeViewModel())
             .environmentObject(CreditCardDI.createCreditCardViewModel())
+            .environmentObject(MainViewModel(systemUpdateUsecase: .init(sendRequest: .shared)))
     }
 }
 

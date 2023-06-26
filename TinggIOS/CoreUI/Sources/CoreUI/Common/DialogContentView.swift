@@ -8,9 +8,7 @@
 import Foundation
 import SwiftUI
 public struct DialogContentView: View {
-    @State var networkList: [NetworkItem] = [
-        NetworkItem(imageUrl: "", networkName: "Airtel", selectedNetwork: "Airtel")
-    ]
+    @State var networkList: [NetworkItem] = []
     @State var phoneNumber: String = "090000000000"
     @State var selectedNetwork: String = "MTN"
     @State private var buttonLabel: String = "Done"
@@ -76,17 +74,7 @@ public struct NetworkSelectionRowView: View {
     public var body: some View {
         VStack {
             HStack {
-                AsyncImage(url: URL(string: item.imageUrl)) { image in
-                    image.resizable()
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .padding()
-                } placeholder: {
-                    ProgressView()
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .padding()
-                }
+                ResponsiveImageCardView(imageUrl: $item.imageUrl, y: 0, bgShape: .circular)
                 Text(item.networkName)
                     .foregroundColor(.black)
                 Spacer()

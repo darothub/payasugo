@@ -33,7 +33,7 @@ public struct FavouriteEnrollmentModel: Hashable, Equatable {
 
 public struct ServicesListModel: Hashable, Equatable {
     public var selectedProvider: String = ""
-    public var services: [MerchantService] = sampleServices
+    public var services: [MerchantService] = []
     public var payers: [MerchantPayer] =  [MerchantPayer]()
     public var selectedService: MerchantService = .init()
     public var selectedPayer: MerchantPayer = .init()

@@ -18,10 +18,11 @@ public class ChunkedCategoriesUsecase {
     
     /// A call as function to return a list of nested list of categories
     /// - Returns: ``[[Categorys]]``
-    public func callAsFunction() -> [[CategoryEntity]] {
+    public func callAsFunction() -> [[CategoryDTO]] {
         let categories = categoryRepository.getCategories().sorted { c1, c2 in
-            c1.categoryOrderID!.convertStringToInt() < c2.categoryOrderID!.convertStringToInt()
+            c1.categoryOrderID.convertStringToInt() < c2.categoryOrderID.convertStringToInt()
         }
-        return categories.chunked(into: 4)
+        let dtos = categories.map {$0.toDTO}
+        return dtos.chunked(into: 4)
     }
 }

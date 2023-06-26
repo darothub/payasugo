@@ -14,9 +14,9 @@ import Theme
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var hvm: HomeViewModel
+    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationUtils
-    
+    @State var colorTint:Color = .blue
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
 
     var profileImageURL : String {
@@ -43,6 +43,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                         title: "Home",
                         image: Image(systemName: "house.fill")
                     )
+                    
                 billView()
                     .backgroundmode(color: .gray)
                     .tabItemStyle(
@@ -79,10 +80,33 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
             case .categoriesAndServices(let items):
                 CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem])
                     .environmentObject(hvm)
+                    
+            case let .billers(billers):
+                BillersView(billers: billers as! TitleAndListItem)
+                    .onAppear {
+                        colorTint = .blue
+                    }
+                    .environmentObject(hvm)
+            case .billFormView(let billDetails):
+                BillFormView(billDetails: .constant(billDetails as! BillDetails))
+                    .environmentObject(hvm)
+                    
+            case let .nominationDetails(invoice, nomination):
+                NominationDetailView(invoice: invoice as! Invoice, nomination:  nomination as! Enrollment)
+                    .onAppear {
+                        colorTint = .white
+                    }
+                    .environmentObject(hvm)
+            case let .billDetailsView(invoice, service):
+                BillDetailsView(
+                    fetchBill: invoice as! Invoice,
+                    service: service as! MerchantService
+                ).environmentObject(hvm)
             default:
                 HomeView(drawerStatus: $drawerStatus)
             }
         })
+        
         .overlay {
             let headerItem = HeaderItem(
                 profileImageUrl: profileImageURL,
@@ -104,12 +128,22 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 navigationDrawerProtocol: self
             )
         }
+        .onAppear {
+            let _ = AppScheduler.Builder()
+                .setTimeInterval(time: SystemUpdateUsecase.FSU_REFRESH_TIME)
+                .setRequest {
+                    await hvm.fetchSystemUpdate()
+                }
+                .build()
+                .startScheduledRequest()
+        }
     }
     @ViewBuilder
     func homeView() -> some View {
         VStack{
             HomeView(drawerStatus: $drawerStatus)
                 .environmentObject(hvm)
+                
             Spacer()
         }
     }

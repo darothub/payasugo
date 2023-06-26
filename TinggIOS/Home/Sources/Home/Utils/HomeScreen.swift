@@ -26,8 +26,22 @@ enum HomeScreen: Hashable, Equatable {
             hasher.combine(6)
         case .categoriesAndServices(_):
             hasher.combine(7)
+        case .billers(_):
+            hasher.combine(8)
+        case .billFormView(_):
+            hasher.combine(9)
+        case .billDetailsView(_, _):
+            hasher.combine(10)
+        case .nominationDetails(_, _):
+            hasher.combine(11)
+
         }
     }
     case profile, paymentOptions, settings, about, support, none
     case categoriesAndServices([Any])
+    case billers(Any)
+    case billFormView(Any)
+    case billDetailsView(Any, Any)
+    case nominationDetails(Any, Any)
+
 }

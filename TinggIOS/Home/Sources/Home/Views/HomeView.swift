@@ -14,10 +14,19 @@ import Theme
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
-
-    var chartData: [ChartData] {
-        hvm.mapHistoryIntoChartData()
-    }
+    @State var chartData: [ChartData] = .init()
+    @State var categorySectionHeight: CGFloat = 100.0
+    @State var chartSectionHeight: CGFloat = 100.0
+    @State var airtimeServices = [MerchantService]()
+    @State var categories: [[CategoryDTO]] = [[CategoryDTO]]()
+    @State var rechargeAndBill = [MerchantService]()
+    @State var allRecharges = [String: [MerchantService]]()
+    @State var fetchedBill = [DynamicInvoiceType]()
+    @State var billType = DueBillType.dueBills
+    @State var isShowingDueBills = false
+    @State var isShowingUpcomingBills = false
+    @State var dueBillIsLoading = false
+    
     @Binding var drawerStatus: DrawerStatus
     var body: some View {
         GeometryReader { geo in
@@ -25,16 +34,16 @@ struct HomeView: View {
                 HomeTopViewDesign(onHamburgerIconClick: {
                     drawerStatus = .open
                 })
+                .background(
+                    VStack {
+                        topBackgroundDesign(
+                            color: PrimaryTheme.getColor(.secondaryColor)
+                        ).frame(height: geo.size.height/3)
+                        Spacer()
+                    }
+                )
                 ScrollView(showsIndicators: false) {
                     bodyView(geo: geo)
-                        .background(
-                            VStack {
-                                topBackgroundDesign(
-                                    color: PrimaryTheme.getColor(.secondaryColor)
-                                ).frame(height: geo.size.height/7)
-                                Spacer()
-                            }
-                        )
                 }
             }.onTapGesture {
                 handleNavigationDrawer()
@@ -48,7 +57,7 @@ struct HomeView: View {
  
     @ViewBuilder
     func bodyView(geo: GeometryProxy) -> some View {
-        VStack(spacing: 5) {
+        VStack(spacing: 10) {
             Text("Welcome back, \(hvm.profile.firstName!)")
                 .foregroundColor(.white)
                 .font(.system(size: PrimaryTheme.smallTextSize))
@@ -57,43 +66,63 @@ struct HomeView: View {
                 .font(.system(size: PrimaryTheme.largeTextSize))
             ActivateCardView() {
                 // TODO
-            }.padding(10)
-            ActiveCategoryTabView()
-                .frame(maxWidth: .infinity)
-                .background(.white)
-                .shadow(radius: 0, y: 1)
-                .padding(.vertical, 10)
-            
+            }
+            .showIf(.constant(false))
+            .padding(10)
+            ActiveCategoryTabView(categories: categories)
+                .frame(height: categorySectionHeight)
+                
             QuickTopupView() { service in
                 if service.isAirtimeService {
                     navigation.navigationStack.append(Screens.buyAirtime(service.serviceName))
                 }
             }
+          
            
-            .padding()
-            .shadowBackground()
-           
-            DueBillsView()
-                .shadowBackground()
+            Section {
+                DueBillsView(isShowingBills: $isShowingDueBills, isLoading: $dueBillIsLoading)
+                    .shadowBackground()
+                DueBillsView(isShowingBills: $isShowingUpcomingBills, billType: .upcomingBills, isLoading: $dueBillIsLoading)
+                    .shadowBackground()
+            }
 
-            DueBillsView(billType: .upcomingBills)
-                .shadowBackground()
-             
+
 
             RechargeAndBillView()
-                .shadowBackground()
+            .shadowBackground()
           
             ExpensesGraphView(chartData: chartData)
-                .scaledToFit()
+                .frame(height: chartSectionHeight)
                 .shadowBackground()
             
             AddNewBillCardView()
+            
+        }
+        .onAppear {
+            handleFsu()
+            withAnimation {
+                categorySectionHeight = geo.size.height/4
+                chartSectionHeight = geo.size.height/3
+            }
+           
         }
         .environmentObject(hvm)
-
+        .handleViewStatesMods(uiState: hvm.$uiModel) { content in
+            handleFsu()
+        }
     }
     fileprivate func handleNavigationDrawer() {
         drawerStatus = .close
+    }
+    fileprivate func handleFsu()   {
+        Task {
+            categories =  hvm.getServicesByCategory()
+            airtimeServices =  hvm.getQuickTopups()
+            rechargeAndBill =  hvm.displayedRechargeAndBill()
+            chartData =  hvm.mapHistoryIntoChartData()
+            await hvm.getDueBills()
+            hvm.getSavedBill()
+        }
     }
 }
 

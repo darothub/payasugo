@@ -8,7 +8,7 @@
 import SwiftUI
 public struct VImageAndNameView: View {
     @State var title: String = ""
-    @Binding var imageUrl: String
+    @State var imageUrl: String
     @State var useInitials = false
     var initials: String {
         if title == "None" || title.isEmpty {
@@ -17,11 +17,13 @@ public struct VImageAndNameView: View {
             return title.prefix(2).uppercased()
         }
     }
-    public init(title: String, imageUrl: Binding<String>, useInitials:Bool = false) {
-        self._title = State(initialValue: title)
-        self._imageUrl = imageUrl
-        self._useInitials = State(initialValue: useInitials)
+
+    public init(title: String, imageUrl: String, useInitials: Bool = false) {
+        _title = State(initialValue: title)
+        _imageUrl = State(initialValue: imageUrl)
+        _useInitials = State(initialValue: useInitials)
     }
+
     public var body: some View {
         VStack {
             AsyncImage(url: URL(string: imageUrl)) { image in
@@ -34,12 +36,10 @@ public struct VImageAndNameView: View {
                 ProgressView()
                     .foregroundColor(.black)
                     .showIfNot($useInitials)
-                  
+
                 Text(initials)
                     .foregroundColor(.black)
                     .showIf($useInitials)
-                
-                   
             }
             .frame(width: 30,
                    height: 30,
@@ -47,14 +47,13 @@ public struct VImageAndNameView: View {
             .padding(30)
             .background(Color(UIColor(hex: "#aaaaaa")))
             .clipShape(Circle())
-            
+
             Text(title.isEmpty ? initials : title)
                 .frame(width: 65, alignment: .center)
                 .font(.caption)
                 .foregroundColor(.black)
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
-            
         }
     }
 }
@@ -62,15 +61,14 @@ public struct VImageAndNameView: View {
 struct VImageAndNameView_Previews: PreviewProvider {
     static var previews: some View {
         HStack(alignment: .top) {
-            VImageAndNameView(title: "", imageUrl: .constant(""))
-            VImageAndNameView(title: "Safaricom airtime", imageUrl: .constant("https://mula.co.ke/mula_ke/api/v1/images/icons/tingg4_icons/airtime.png"))
+            VImageAndNameView(title: "", imageUrl: "https://c8.alamy.com/comp/2HMGGJB/airtel-logo-2HMGGJB.jpg")
+            VImageAndNameView(title: "Safaricom airtime", imageUrl: "https://mula.co.ke/mula_ke/api/v1/images/icons/tingg4_icons/airtime.png")
         }
     }
 }
 
-
 extension UIColor {
-   public convenience init(hex: String, alpha: CGFloat = 1.0) {
+    public convenience init(hex: String, alpha: CGFloat = 1.0) {
         var hexFormatted: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).uppercased()
 
         if hexFormatted.hasPrefix("#") {

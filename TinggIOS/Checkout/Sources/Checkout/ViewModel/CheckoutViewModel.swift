@@ -42,6 +42,9 @@ public class CheckoutViewModel: ViewModel  {
     @Published public var amount: String = ""
     @Published public var phoneNumber: String = ""
     @Published public var invoices = Observer<Invoice>().getEntities()
+    @Published public var showBundles = false
+    @Published public var bundleModel = BundleModel()
+
     let c = CurrentValueSubject<UIModel, Never>(.nothing)
     public var isCheckout: Bool = false
     private var usecase: CheckoutUsecase
@@ -114,7 +117,7 @@ public class CheckoutViewModel: ViewModel  {
 }
 
 extension CheckoutViewModel {
-    public func toCheckout(_ service: MerchantService, action: (BillDetails) -> Void = { b in }) {
+    public func toCheckout(_ service: MerchantService, action: (BillDetails, Bool) -> Void = { b, bool in }) {
         let nominations = Observer<Enrollment>().getEntities()
         if let bills = handleServiceAndNominationFilter(service: service, nomination: nominations) {
             let existingList = bills.info.filter { nomination in
@@ -129,10 +132,10 @@ extension CheckoutViewModel {
                 self.fem.enrollments = existingList
                 self.slm.selectedService = service
                 self.sam.amount = exitingInvoice?.amount ?? ""
-                self.showView = true
+                action(bills, true)
                 return
             }
-            action(bills)
+            action(bills, false)
         }
     }
     public func toCheckoutWithANomination(_ service: MerchantService, nomination: Enrollment) {

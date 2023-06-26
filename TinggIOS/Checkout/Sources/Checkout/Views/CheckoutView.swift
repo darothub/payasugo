@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  CheckoutView.swift
 //  
 //
 //  Created by Abdulrasaq on 07/12/2022.
@@ -68,7 +68,8 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 Section {
                     HorizontalLogoAndServiceName()
                     HStack(alignment: .top) {
-                        DropDownView(selectedText: $checkoutVm.fem.accountNumber , dropDownList: $accountList, showDropDown: $showingDropDown
+                        DropDownView(selectedText: $checkoutVm.fem.accountNumber , dropDownList: $accountList, showDropDown: $showingDropDown,
+                                     maxHeight: .infinity
                         ).disabled(checkoutVm.fem.enrollments.isEmpty)
                         Image(systemName: "plus")
                             .padding(20)
@@ -233,19 +234,25 @@ public struct CheckoutView: View, OnPINCompleteListener {
                     service: checkoutVm.slm.selectedService,
                     status: .pending
                 )
+                checkoutVm.showView = false
                 navigation.navigationStack.append(Screens.transactionListView(transaction))
+                
             }
             .handleViewStatesMods(uiState: checkoutVm.$fwcUIModel) { content in
                 log(message: content)
                 let response = content.data as! DTBAccountsResponse
                 dtbAccounts = response.accounts ?? []
                 showDTBPINDialog = true
+            } action: {
+                checkoutVm.showView = false
             }
             .handleViewStatesMods(uiState: checkoutVm.$uiModel) { content in
                 log(message: content)
                 let response = content.data as! CreateCardChannelResponse
                 checkoutVm.cardDetails.checkout = true
                 navigation.navigationStack.append(Screens.cardDetailsView(response, nil))
+            } action: {
+                checkoutVm.showView = false
             }
         }
         .background(.white)

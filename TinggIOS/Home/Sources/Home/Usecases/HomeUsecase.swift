@@ -6,7 +6,8 @@
 //
 
 import Foundation
-@MainActor
+import Core
+
 public class HomeUsecase {
     private var billAccountUsecase: BillAccountUsecase
     private var profileRepository: ProfileRepository
@@ -20,6 +21,7 @@ public class HomeUsecase {
     private var mcpDeleteAndUpdateUsecase: MCPDeleteAndUpdateUsecase
     private var categoriesAndServicesUsecase: CategoriesAndServicesUsecase
     private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
+    private var systemUpdateUsecase: SystemUpdateUsecase
     
     /// ``HomeUsecase`` initialiser
     /// - Parameters:
@@ -47,7 +49,8 @@ public class HomeUsecase {
         saveBillUsecase: SaveBillUsecase,
         mcpDeleteAndUpdateUsecase: MCPDeleteAndUpdateUsecase,
         categoriesAndServicesUsecase: CategoriesAndServicesUsecase,
-        updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
+        updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase,
+        systemUpdateUsecase: SystemUpdateUsecase
 
     ){
         self.billAccountUsecase = billAccountUsecase
@@ -62,21 +65,27 @@ public class HomeUsecase {
         self.mcpDeleteAndUpdateUsecase = mcpDeleteAndUpdateUsecase
         self.categoriesAndServicesUsecase = categoriesAndServicesUsecase
         self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
+        self.systemUpdateUsecase = systemUpdateUsecase
     }
 
+    func fetchSystemUpdate(request: RequestMap)async throws ->  Result<SystemUpdateDTO, ApiError> {
+        try await systemUpdateUsecase(request: request)
+    }
     public func getProfile() -> Profile? {
         profileRepository.getProfile()
     }
-    public func displayedRechargeAndBill() throws -> [MerchantService] {
-        merchantRepository.getServices().prefix(8).map { service in
-            service
+    public func displayedRechargeAndBill() -> [MerchantService] {
+        let recharges = merchantRepository.getServices()
+        if recharges.isNotEmpty() {
+            return recharges.prefix(8).map {$0}
         }
+        return []
     }
-    public func getQuickTopups() throws -> [MerchantService] {
+    public func getQuickTopups() -> [MerchantService] {
         let services = merchantRepository.getServices().filter { $0.isAirtimeService }
         return services
     }
-    public func categorisedCategories() -> [[CategoryEntity]]{
+    public func categorisedCategories() -> [[CategoryDTO]]{
         chunkedCategoriesUsecase()
     }
     
@@ -96,7 +105,7 @@ public class HomeUsecase {
         tinggRequest.billAccounts = billAccounts
         return try await dueBillsUsecase(tinggRequest: tinggRequest)
     }
-    public func fetchDueBills(request: RequestMap) async throws -> [Invoice] {
+    public func fetchDueBills(request: RequestMap) async throws -> [DynamicInvoiceType] {
         return try await dueBillsUsecase(tinggRequest: request)
     }
     public func getBillAccounts() -> [BillAccount] {

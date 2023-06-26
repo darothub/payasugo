@@ -43,12 +43,12 @@ public class DueBillsUsecase {
             //TODO: Update invoice
         }
     }
-    public func callAsFunction(tinggRequest: RequestMap) async throws -> [Invoice] {
-        var fetchedBillDTO = try await fetchBillRepository.fetchDueBills(tinggRequest: tinggRequest)
+    public func callAsFunction(tinggRequest: RequestMap) async throws -> [DynamicInvoiceType] {
+        let fetchedBillDTO = try await fetchBillRepository.fetchDueBills(tinggRequest: tinggRequest)
         let fetchedBill = fetchedBillDTO.fetchedBills
         let invoices = fetchedBill.map { $0.convertToInvoice() }
         invoices.forEach { savedInvoice(invoice: $0)}
-        return invoices
+        return fetchedBill
 //        dueBills = dueBills.filter { bill in
 //            Log.d(message: "\(bill.dueDate)")
 //            let daysDiff = (makeDateFromString(validDateString: bill.dueDate) - Date()).day

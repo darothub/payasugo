@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Country
-public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
+public class CountriesInfo: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var name: String? = ""
     @Persisted(primaryKey: true) public var countryCode: String? = ""
     @Persisted public var countryURLNew: String? = ""
@@ -116,5 +116,63 @@ public class Country: Object, DBObject, ObjectKeyIdentifiable, Codable {
         case webHookURL = "WEB_HOOK_URL"
         case fetchBearerTokenURL = "FETCH_BEARER_TOKEN_URL"
         case privacyPolicyURL = "PRIVACY_POLICY_URL"
+    }
+    
+    func convertToDTO() -> CountriesInfoDTO {
+        var countriesInfo = CountriesInfoDTO()
+        countriesInfo.name  = self.name
+        countriesInfo.countryCode  = self.countryCode
+        countriesInfo.countryURLNew  = self.countryURLNew
+        countriesInfo.status  = self.status
+        countriesInfo.currency  = self.currency
+        countriesInfo.mulaClientID  = self.mulaClientID
+        countriesInfo.countryMobileRegex  = self.countryMobileRegex
+        countriesInfo.genericAccountNumberRegex  = self.genericAccountNumberRegex
+    //     countriesInfo.extractSMSOnProfiling = self.extractSMSOnProfiling
+        countriesInfo.countryCurrencyRegex  = self.countryCurrencyRegex
+    //     countriesInfo.excludedSMSSourceAddresses = self.excludedSMSSourceAddresses
+        countriesInfo.countryDialCode  = self.countryDialCode
+    //     countriesInfo.confirmedAccountLimits  = self.confirmedAccountLimits
+        countriesInfo.hotlineAppID  = self.hotlineAppID
+        countriesInfo.hotlineAppKey  = self.hotlineAppKey
+        countriesInfo.freshchatAppID  = self.freshchatAppID
+        countriesInfo.freshchatAppKey  = self.freshchatAppKey
+        countriesInfo.faqURL  = self.faqURL
+        countriesInfo.tacURL  = self.tacURL
+        countriesInfo.alphanumericRegexes  = self.alphanumericRegexes
+        countriesInfo.minimumProfiledAccounts  = self.minimumProfiledAccounts
+        countriesInfo.smsProfilingTimeout  = self.smsProfilingTimeout
+        countriesInfo.roundUpAmounts  = self.roundUpAmounts
+        countriesInfo.maximumCards  = self.maximumCards
+        countriesInfo.countryFlag  = self.countryFlag
+        countriesInfo.hasWallet  = self.hasWallet
+        countriesInfo.hasGroups  = self.hasGroups
+        countriesInfo.hasFloatingButton  = self.hasFloatingButton
+    //     countriesInfo.hasDiscover = self.hasDiscover
+        countriesInfo.useSmileSDK  = self.useSmileSDK
+        countriesInfo.hasReferral  = self.hasReferral
+    //     countriesInfo.isManualKycRegistration = self.isManualKycRegistration
+        countriesInfo.countrySourceAddresses  = self.countrySourceAddresses
+        countriesInfo.isDefault  = self.isDefault
+        countriesInfo.successCallBackURL  = self.successCallBackURL
+        countriesInfo.payerClientCode  = self.payerClientCode
+    //     countriesInfo.isSecureCardPayment  = self.isSecureCardPayment
+        countriesInfo.failedCallBackURL  = self.failedCallBackURL
+        countriesInfo.webCheckoutURL  = self.webCheckoutURL
+        countriesInfo.clevertapAccountID  = self.clevertapAccountID
+        countriesInfo.clevertapToken  = self.clevertapToken
+        countriesInfo.showAssist  = self.showAssist
+        countriesInfo.mulaAssistInterestType  = self.mulaAssistInterestType
+        countriesInfo.mulaAssistDurationType  = self.mulaAssistDurationType
+        countriesInfo.mulaAssistInterestRate  = self.mulaAssistInterestRate
+        countriesInfo.mulaAssistDuration  = self.mulaAssistDuration
+        countriesInfo.mulaAssistLoanTermDuration  = self.mulaAssistLoanTermDuration
+        countriesInfo.accessKey  = self.accessKey
+        countriesInfo.checkoutServiceCode  = self.checkoutServiceCode
+        countriesInfo.webHookURL  = self.webHookURL
+        countriesInfo.fetchBearerTokenURL  = self.fetchBearerTokenURL
+        countriesInfo.privacyPolicyURL  = self.privacyPolicyURL
+        countriesInfo.activeCountry =  self.activeCountry
+        return countriesInfo
     }
 }

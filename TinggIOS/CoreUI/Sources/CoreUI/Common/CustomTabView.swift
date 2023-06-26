@@ -17,9 +17,10 @@ public struct CustomTabView<Content:View> : View {
     /// - Parameters:
     ///   - items: List of tab layouts
     ///   - tabColor: tab color
-    public init(items: Binding<[TabLayoutItem<Content>]>, tabColor: Binding<Color>) {
+    public init(items: Binding<[TabLayoutItem<Content>]>, tabColor: Binding<Color>, selectedTab: String = "") {
         self._tabColor = tabColor
         self._items = items
+        self._selectedTab = State(initialValue: selectedTab)
     }
     public var body: some View {
         VStack {
@@ -28,21 +29,21 @@ public struct CustomTabView<Content:View> : View {
             }
             TabView(selection: $selectedTab) {
                 iTerateTabViews()
-            }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .background(.white)
             
-        }.onAppear{
-            selectedTab = items.first?.title ?? ""
         }
         
     }
     private func iTerateTabHeader() -> some View {
-        ForEach(items, id: \.title) { tab in
-            TabItemView(tabTitle: .constant(tab.title), selected: $selectedTab, color: $tabColor)
+        ForEach($items, id: \.title) { $tab in
+            TabItemView(tabTitle: $tab.title, selected: $selectedTab, color: $tabColor)
         }
     }
     private func iTerateTabViews() -> some View {
         ForEach(items, id: \.title) { tabId in
-            tabId.view()
+            tabId.getContent()
         }
     }
 }
@@ -51,8 +52,8 @@ public struct TabItemView: View {
     @Binding var tabTitle: String
     @Binding var selected: String
     @Binding var color: Color
-    @State var tabWidth = 100.0
-    @State var tabHeight = 50.0
+    @State private var tabWidth = 100.0
+    @State private var tabHeight = 50.0
     public var body: some View {
         Text(tabTitle)
             .font(.caption)
@@ -72,9 +73,15 @@ public struct TabItemView: View {
 public struct TabLayoutItem<Content: View> {
     var title: String
     var view : () -> Content
-    public init(title: String, @ViewBuilder view: @escaping () -> Content) {
+    public init(title: String, @ViewBuilder view: @escaping () -> Content = {AnyView(Text("Sample"))}) {
         self.title = title
         self.view = view
+    }
+    public mutating func setContent(content: @escaping () -> Content) {
+        self.view = content
+    }
+    fileprivate func getContent() -> Content {
+        return self.view()
     }
 }
 

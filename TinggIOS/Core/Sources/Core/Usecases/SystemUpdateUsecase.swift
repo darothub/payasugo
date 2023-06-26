@@ -4,9 +4,10 @@
 //
 //  Created by Abdulrasaq on 08/05/2023.
 //
-import Core
+
 import Foundation
 public class SystemUpdateUsecase {
+    public static var FSU_REFRESH_TIME = TimeInterval(3 * 60 * 60)
     public let sendRequest: SendRequest
     public init(sendRequest: SendRequest) {
         self.sendRequest = sendRequest

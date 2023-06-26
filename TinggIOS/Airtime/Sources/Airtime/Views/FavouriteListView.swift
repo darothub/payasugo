@@ -31,7 +31,7 @@ struct FavouriteListView: View {
     private func showImageAndName(_ enrollment: Enrollment) -> some View {
         let name = enrollment.accountAlias
         if name.isNotEmpty {
-            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: .constant(""), useInitials: true)
+            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: "", useInitials: true)
                 .shadow(color: .red, radius: fem.accountNumber == enrollment.accountNumber ? 5 : 0, x: 0 , y: fem.accountNumber == enrollment.accountNumber ? 3 : 0)
                 .scaleEffect(0.7)
                 .onTapGesture {
