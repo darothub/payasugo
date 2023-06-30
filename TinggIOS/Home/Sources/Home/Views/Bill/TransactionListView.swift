@@ -20,7 +20,7 @@ struct TransactionListView: View {
         List {
             ForEach(listOfModel) { model in
                 Section(model.header) {
-                    var transactionItemModelList = model.list
+                    var transactionItemModelList = model.list.sorted()
                     ForEach(transactionItemModelList) { item in
                         TransactionItemView(model: item) { delete in
                             if delete {

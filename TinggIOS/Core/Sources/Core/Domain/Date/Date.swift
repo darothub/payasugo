@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Date.swift
 //  
 //
 //  Created by Abdulrasaq on 27/08/2022.
@@ -43,6 +43,14 @@ extension Date {
           formatter.dateStyle = .long
           return formatter
     }()
+    
+    public func dateToString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Define the desired date format
+        let dateString = dateFormatter.string(from: self)
+
+       return dateString
+    }
 }
 
 /// Converts a date string to a date object

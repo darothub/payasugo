@@ -9,7 +9,7 @@ import Foundation
 
 public struct TransactionItemModel: Identifiable, Comparable, Hashable {
     public static func < (lhs: TransactionItemModel, rhs: TransactionItemModel) -> Bool {
-        lhs.date < rhs.date
+        lhs.date > rhs.date
     }
     
     public var id = UUID().description

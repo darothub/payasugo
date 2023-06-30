@@ -84,7 +84,7 @@ public struct BillDetailsView: View {
                         }
                     }
                     .disabled(isNewAccountNumber ? false: true)
-                    .handleViewStates(uiModel: $homeViewModel.serviceBillUIModel, showAlert: $homeViewModel.showAlert)
+                    .handleUIState(uiState: $homeViewModel.serviceBillUIModel)
                     
                     TinggButton(
                         backgroundColor: PrimaryTheme.getColor(.primaryColor),

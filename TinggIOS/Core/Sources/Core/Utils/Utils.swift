@@ -12,6 +12,15 @@ public enum Utils {
     public static let defaultNetworkServiceId = "DEFAULT_NETWORK_SERVICE_ID"
 }
 
+public func decodeJSON<T: Decodable>(_ jsonString: String) throws -> T {
+    guard let jsonData = jsonString.data(using: .utf8) else {
+        throw NSError(domain: "JSONDecodeError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON string."])
+    }
+    
+    let decoder = JSONDecoder()
+    let decodedObject = try decoder.decode(T.self, from: jsonData)
+    return decodedObject
+}
 extension Array {
     public func chunked(into size: Int) -> [[Element]] {
         return stride(from: 0, to: count, by: size).map {
@@ -234,7 +243,7 @@ public func validateAmountByService(selectedService: MerchantService, amount: St
     return result
 }
 extension Formatter {
-    static func currencyFormat(currency: String = "KS")-> NumberFormatter {
+    static func currencyFormat(currency: String = "KES")-> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.locale = .init(identifier: "en_US_POSIX")
         formatter.numberStyle = .currencyAccounting

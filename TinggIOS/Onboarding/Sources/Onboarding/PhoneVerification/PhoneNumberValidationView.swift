@@ -115,18 +115,34 @@ public struct PhoneNumberValidationView: View {
             .toolbar(content: {
                 handleKeyboardDone()
             })
-            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
-                countriesDictionary = content.data as! [String: String]
+            .handleUIState(uiState: $ovm.phoneNumberFieldUIModel) {
+                content in
+                    countriesDictionary = content.data as! [String: String]
+                
             }
-            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { content in
+            .handleUIState(uiState: $ovm.onActivationRequestUIModel) {
+                content in
                 log(message: content)
                 showOTPView = true
+                
             }
-            .handleViewStatesMods(uiState: ovm.$uiModel) { content in
+            .handleUIState(uiState: $ovm.uiModel) { content in
                 let systemUpdate = content.data as! SystemUpdateDTO
                 ovm.saveDataIntoDB(data: systemUpdate)
                 gotoHomeView()
             }
+//            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
+//                countriesDictionary = content.data as! [String: String]
+//            }
+//            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { content in
+//                log(message: content)
+//                showOTPView = true
+//            }
+//            .handleViewStatesMods(uiState: ovm.$uiModel) { content in
+//                let systemUpdate = content.data as! SystemUpdateDTO
+//                ovm.saveDataIntoDB(data: systemUpdate)
+//                gotoHomeView()
+//            }
             .onChange(of: hasCheckedTermsAndPolicy) { newValue in
                 activateButton = newValue && isValidPhoneNumber
             }

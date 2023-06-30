@@ -68,10 +68,9 @@ struct DueBillsView: View {
             }
         }
         .padding()
-        .showIf($isShowingBills)
         .handleViewStatesModWithCustomShimmer(
             uiState: homeViewModel.$fetchBillUIModel,
-            shimmerView: AnyView(DueBillsShimmerView()),
+            showAlertOnError: false, shimmerView: AnyView(DueBillsShimmerView()),
             isLoading: $isLoading
         ) { content in
             let data = content.data as? [DynamicInvoiceType]
@@ -112,6 +111,7 @@ struct DueBillsView: View {
         } onFailure: { str in
             isShowingBills = false
         }
+        .showIf($isShowingBills)
     
     }
     

@@ -66,7 +66,7 @@ public struct OtpConfirmationView: View {
         .onChange(of: otp) { newValue in
             activateButton = otp.count == otpSize
         }
-        .handleViewStatesMods(uiState: otpVM.$onConfirmActivationUIModel) { content in
+        .handleUIState(uiState: $otpVM.onConfirmActivationUIModel) { content in
             dismiss()
             otpConfirmed = true
         }

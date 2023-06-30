@@ -29,25 +29,6 @@ public extension View {
     ) -> some View {
         self.modifier(CustomDialog(isPresented: isPresented, backgroundColor: backgroundColor, cancelOnTouchOutside: cancelOnTouchOutside,  dialogContent: dialogContent))
     }
-    @available(swift, deprecated: 5.0 , message: "This has been deprecated in build 6.0 v0.1.0 use handleViewStates instead")
-    func handleViewState(
-        uiModel: Binding<UIModel>
-    ) -> some View {
-      self.modifier(ViewState(uiModel: uiModel))
-    }
-    func handleViewStates(
-        uiModel: Binding<UIModel>,
-        showAlert: Binding<Bool>  = .constant(false),
-        showSuccessAlert: Binding<Bool> = .constant(false),
-        onSuccessAction: @escaping () -> Void = {
-            //TODO
-        },
-        onErrorAction: @escaping () -> Void = {
-            //TODO
-        }
-    ) -> some View {
-      self.modifier(ViewStates(uiModel: uiModel, showAlert: showAlert, showSuccessAlert: showSuccessAlert, onSuccessAction: onSuccessAction, onErrorAction: onErrorAction))
-    }
    
     func setPageIndicatorAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .green

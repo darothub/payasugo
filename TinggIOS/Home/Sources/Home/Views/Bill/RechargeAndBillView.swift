@@ -19,6 +19,7 @@ struct RechargeAndBillView: View {
     @State var gotoAllRechargesView = false
     @State var show = true
     @State var allRecharges = [String: [MerchantService]]()
+    @State var isLoading = false
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var checkoutVm: CheckoutViewModel
@@ -58,7 +59,12 @@ struct RechargeAndBillView: View {
         }
         .padding()
         .showIf($show)
-        .handleViewStatesModWithShimmer(uiState: homeViewModel.$rechargeAndBillUIModel) { content in
+        .handleViewStatesModWithCustomShimmer(
+            uiState: homeViewModel.$rechargeAndBillUIModel,
+            showAlertOnError: false,
+            shimmerView: AnyView(HorizontalBoxesShimmerView()),
+            isLoading: $isLoading
+        ) { content in
             let data = content.data
             if data is [MerchantService] {
                 withAnimation {
@@ -66,10 +72,10 @@ struct RechargeAndBillView: View {
                 }
                 show = rechargeAndBill.isNotEmpty()
             }
+            
         } onFailure: { str in
             show = false
         }
-
     }
     @ViewBuilder
     fileprivate func heading() -> some View {
