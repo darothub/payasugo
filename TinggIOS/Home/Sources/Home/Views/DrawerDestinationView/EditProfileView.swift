@@ -64,7 +64,7 @@ struct EditProfileView: View {
         .padding()
         .padding(.top, 50)
         .frame(maxWidth: .infinity)
-        .backgroundmode(color: .white)
+        .background(.white)
         .onAppear {
             profile = Observer<Profile>().getEntities().first ?? Profile()
             withAnimation {
@@ -73,7 +73,6 @@ struct EditProfileView: View {
                 profileImageURL = profile?.photoURL ?? ""
                 email = profile?.emailAddress ?? ""
             }
-            observeUIModel()
         }
         .onChange(of: firstName, perform: { newValue in
             isFirstNameValid = newValue.isNotEmpty
@@ -91,7 +90,7 @@ struct EditProfileView: View {
             profile?.emailAddress = email
             showSuccessAlert = true
         }
-        .handleViewStates(uiModel: $hvm.uiModel, showAlert: $showErrorAlert, showSuccessAlert: $showSuccessAlert)
+        .handleUIState(uiState: $hvm.uiModel, showAlertonSuccess: showSuccessAlert, showAlertonError: showErrorAlert)
     }
     func updateProfile() {
         if validInputs() {
@@ -106,19 +105,6 @@ struct EditProfileView: View {
         return isFirstNameValid && isLastNameValid && isEmailAddressValid
     }
     
-    func observeUIModel() {
-//        hvm.observeUIModel(model: hvm.$uiModel, subscriptions: &hvm.subscriptions) { content in
-//    
-//            realmManager.realmWrite {
-//                profile?.firstName = firstName
-//                profile?.lastName = lastName
-//                profile?.emailAddress = email
-//            }
-//            showSuccessAlert = true
-//        } onError: { err in
-//            showErrorAlert = true
-//        }
-    }
 }
 
 struct EditProfileView_Previews: PreviewProvider {

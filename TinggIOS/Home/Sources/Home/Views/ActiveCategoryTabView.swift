@@ -14,6 +14,7 @@ struct ActiveCategoryTabView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @State var categories: [[CategoryDTO]] = [[CategoryDTO]]()
     @State var show = true
+    @State var isLoading = false
     var body: some View {
         TabView {
             ForEach(0..<categories.count, id: \.self) { eachChunkIndex in
@@ -22,21 +23,28 @@ struct ActiveCategoryTabView: View {
             }
             
         }
-        .showIf($show)
+       
         .shadow(radius: 0, y: 1)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         .background(.white)
         .onAppear {
             setPageIndicatorAppearance()
         }
-        .handleViewStatesModWithShimmer(uiState: homeViewModel.$categoryUIModel) { content in
+        .handleViewStatesModWithCustomShimmer(
+            uiState: homeViewModel.$categoryUIModel,
+            showAlertOnError: false,
+            shimmerView: AnyView(HorizontalBoxesShimmerView()),
+            isLoading: $isLoading
+        ) { content in
             withAnimation {
                 categories = content.data as? [[CategoryDTO]] ?? []
                 show = categories.isNotEmpty()
             }
+            
         } onFailure: { str in
             show = false
         }
+        .showIf($show)
     }
 }
 

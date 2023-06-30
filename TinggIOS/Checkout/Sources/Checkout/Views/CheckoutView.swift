@@ -15,11 +15,11 @@ import Permissions
 
 
 public struct CheckoutView: View, OnPINCompleteListener {
-    
     @EnvironmentObject var checkoutVm: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var navigation: NavigationUtils
     @Environment(\.dismiss) var dismiss
+    @Environment(\.realmManager) var realmManager
     @State private var selectedButton: String = "Diamond Trust Bank"
     @State private var accountNumber = ""
     @State private var title: String = ""
@@ -135,7 +135,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .sheet(isPresented: $contactViewModel.showContact) {
                 showContactView(contactViewModel: contactViewModel)
             }
-        
+
             .toolbar {
                 handleKeyboardDone()
             }
@@ -217,27 +217,40 @@ public struct CheckoutView: View, OnPINCompleteListener {
                     makeCardCheckoutRequest()
                 }
             })
-            .handleViewStatesMods(uiState: checkoutVm.$raiseInvoiceUIModel) { content in
+            .handleUIState(uiState: $checkoutVm.raiseInvoiceUIModel, showAlertonSuccess: true){ content in
+                let currencyCode = AppStorageManager.getCountry()?.currency
                 let response = content.data as! RINVResponse
+                let invoice = response.raisedInvoice[0]
+                let selectedPayer = Observer<MerchantPayer>().getEntities().first {
+                    $0.clientName == checkoutVm.slm.selectedProvider
+                }
+                if let payer = selectedPayer {
+                    let transaction = TransactionHistory()
+                    transaction.beepTransactionID = "\(invoice.beepTransactionID)"
+                    transaction.accountNumber = invoice.accountNumber
+                    transaction.amount = invoice.amount
+                    transaction.serviceCode = checkoutVm.slm.selectedService.serviceCode
+                    transaction.paymentDate = Date.now.dateToString()
+                    transaction.clientCode = payer.clientCode!
+                    transaction.payerClientID = payer.hubClientID
+                    transaction.serviceID = checkoutVm.slm.selectedService.hubServiceID
+                    transaction.serviceName = checkoutVm.slm.selectedService.serviceName
+                    transaction.status = "pending"
+                    transaction.serviceLogo = checkoutVm.slm.selectedService.serviceLogo
+                    transaction.requestOrigin = "MULA_APP"
+                    transaction.msisdn = AppStorageManager.getPhoneNumber()
+                    transaction.currencyCode = currencyCode
+                    realmManager.save(data: transaction)
+                }
+              
                 log(message: "\(response)")
-               
             } action: {
                 let alias = profile?.accountAlias ?? "NA"
-                let currentAccountNumber = selectedAccount.isEmpty ? checkoutVm.fem.accountNumber : selectedAccount
-                let transaction = TransactionItemModel(
-                    imageurl: checkoutVm.slm.selectedService.serviceLogo,
-                    accountName: alias,
-                    accountNumber: currentAccountNumber,
-                    date: Date.now,
-                    amount: Double(checkoutVm.sam.amount) ?? 0.0,
-                    payer: checkoutVm.slm.selectedPayer,
-                    service: checkoutVm.slm.selectedService,
-                    status: .pending
-                )
                 checkoutVm.showView = false
-                navigation.navigationStack.append(Screens.transactionListView(transaction))
+                navigation.navigationStack.append(Screens.billView(Screens.RECEIPTVIEW_TITLE))
                 
             }
+            
             .handleViewStatesMods(uiState: checkoutVm.$fwcUIModel) { content in
                 log(message: content)
                 let response = content.data as! DTBAccountsResponse

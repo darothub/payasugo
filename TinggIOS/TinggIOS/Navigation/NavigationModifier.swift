@@ -17,7 +17,7 @@ import SwiftUI
 import Theme
 struct NavigationModifier: ViewModifier {
     @EnvironmentObject var navigation: NavigationUtils
-//    @EnvironmentObject var  hvm: HomeViewModel
+    @EnvironmentObject var  hvm: HomeViewModel
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var ccvm: CreditCardViewModel
@@ -30,6 +30,7 @@ struct NavigationModifier: ViewModifier {
                 case .home:
                     HomeBottomNavView()
                         .environmentObject(checkout)
+                        .environmentObject(hvm)
 
                 case .intro:
                     IntroView()
@@ -52,6 +53,9 @@ struct NavigationModifier: ViewModifier {
                 case .transactionListView(let model as TransactionItemModel):
                     EmptyView()
 //                    TransactionListView(listOfModel: .constant(model))
+                case .billView(let selectedTab):
+                    BillView(selectedTab: selectedTab)
+                        .environmentObject(hvm)
                 default:
                     EmptyView()
                 }

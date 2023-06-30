@@ -14,7 +14,7 @@ import Theme
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
     @Environment(\.colorScheme) var colorScheme
-    @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
+    @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
     @State var colorTint:Color = .blue
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }

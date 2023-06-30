@@ -78,15 +78,10 @@ struct HomeView: View {
                 }
             }
           
-           
-            Section {
-                DueBillsView(isShowingBills: $isShowingDueBills, isLoading: $dueBillIsLoading)
-                    .shadowBackground()
-                DueBillsView(isShowingBills: $isShowingUpcomingBills, billType: .upcomingBills, isLoading: $dueBillIsLoading)
-                    .shadowBackground()
-            }
-
-
+            DueBillsView(isShowingBills: $isShowingDueBills, isLoading: $dueBillIsLoading)
+                .shadowBackground()
+            DueBillsView(isShowingBills: $isShowingUpcomingBills, billType: .upcomingBills, isLoading: $dueBillIsLoading)
+                .shadowBackground()
 
             RechargeAndBillView()
             .shadowBackground()

@@ -13,6 +13,7 @@ struct QuickTopupView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @State var airtimeServices = sampleServices
     @State var show = true
+    @State var isLoading = false
     var onclick: (MerchantService) -> Void
     var body: some View {
         Section {
@@ -30,17 +31,24 @@ struct QuickTopupView: View {
             
         }
         .frame(maxWidth: .infinity)
-        .showIf($show)
+     
         .backgroundmode(color: .white)
         .padding()
         .shadowBackground()
-        .handleViewStatesModWithShimmer(uiState: homeViewModel.$quickTopUIModel, useDefaultHeight: true) { content in
+        .handleViewStatesModWithCustomShimmer(
+            uiState: homeViewModel.$quickTopUIModel,
+            showAlertOnError: false,
+            shimmerView: AnyView(HorizontalBoxesShimmerView()),
+            isLoading: $isLoading
+        ) { content in
             let services = content.data as? [MerchantService]
             withAnimation {
                 airtimeServices = services ?? []
                 show = airtimeServices.isNotEmpty()
             }
+            
         }
+        .showIf($show)
     }
     @ViewBuilder
     fileprivate func quickTopViewBody(airtimeServices: [MerchantService]) -> some View{

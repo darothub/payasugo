@@ -33,9 +33,8 @@ public struct VImageAndNameView: View {
                     .foregroundColor(.black)
 
             } placeholder: {
-                ProgressView()
-                    .foregroundColor(.black)
-                    .showIfNot($useInitials)
+                Image(systemName: "photo")
+                          .foregroundColor(.black)
 
                 Text(initials)
                     .foregroundColor(.black)

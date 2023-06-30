@@ -27,6 +27,7 @@ struct TinggIOSApp: App {
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
+    @StateObject var hvm = HomeDI.createHomeViewModel()
     @StateObject var mvm = MainViewModel(systemUpdateUsecase: .init(sendRequest: .shared))
     
     var body: some Scene {
@@ -38,6 +39,7 @@ struct TinggIOSApp: App {
                 .environmentObject(checkoutVm)
                 .environmentObject(contactViewModel)
                 .environmentObject(ccvm)
+                .environmentObject(hvm)
                 .environmentObject(mvm)
                 .sheet(isPresented: $checkoutVm.showView) {
                     checkoutView()

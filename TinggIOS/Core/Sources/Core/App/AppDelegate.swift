@@ -8,6 +8,7 @@
 import Firebase
 import Foundation
 import UserNotifications
+import UIKit
 
 public class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
@@ -67,19 +68,19 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification,
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    
-        let content = notification.request.content
-       
-        let userInfo = content.userInfo
 
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+        let content = notification.request.content
+        do {
+            let body: NotificationBody = try decodeJSON(content.body)
+            let transaction = Observer<TransactionHistory>().getEntities().first { $0.beepTransactionID == body.beepTransactionID }
+            transaction?.status = body.status
+        } catch {
+            print("Error decoding JSON: \(error)")
         }
 
-        print(userInfo)
-
         // Change this to your preferred presentation option
-        completionHandler([[.banner, .badge, .sound]])
+        completionHandler([])
+         
   }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -95,14 +96,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                               didReceive response: UNNotificationResponse,
                               withCompletionHandler completionHandler: @escaping () -> Void) {
         let content = response.notification.request.content
-        Log.d(message: "\(content)")
-        let userInfo = content.userInfo
-
-        if let messageID = userInfo[gcmMessageIDKey] {
-          print("Message ID from userNotificationCenter didReceive: \(messageID)")
-        }
-
-        print(userInfo)
 
         completionHandler()
   }

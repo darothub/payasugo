@@ -7,6 +7,8 @@
 
 import Foundation
 public enum Screens: Hashable {
+    public static var RECEIPTVIEW_TITLE = "RECEIPTS"
+    public static var MYBILLVIEW_TITLE = "MY BILLS"
     public static func == (lhs: Screens, rhs: Screens) -> Bool {
         lhs.hashValue == rhs.hashValue
     }
@@ -33,6 +35,8 @@ public enum Screens: Hashable {
             hasher.combine(0)
         case .transactionListView(_):
             hasher.combine(12)
+        case .billView(_):
+            hasher.combine(13)
         }
     }
     case intro,
@@ -44,7 +48,9 @@ public enum Screens: Hashable {
          cardDetailsView(Any?, Any?),
          cardWebView(String),
          transactionListView(Any),
+         billView(String),
          lost
+    
 }
 
 

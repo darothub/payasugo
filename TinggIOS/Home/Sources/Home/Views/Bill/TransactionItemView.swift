@@ -79,8 +79,7 @@ struct TransactionItemView: View {
         
         checkoutVm.fem = fem
         checkoutVm.sam = sam
-        checkoutVm.service = model.service
-        log(message: "\(model.service)")
+        checkoutVm.slm.selectedService = model.service
         checkoutVm.showView = true
     }
     
