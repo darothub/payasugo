@@ -20,9 +20,19 @@ public struct DropDownView: View {
     @State var showLabel = false
     @State var disableEdit = false
     @State var maxHeight: CGFloat
-    public init(selectedText: Binding<String>, dropDownList: Binding<[String]>, showDropDown: Binding<Bool> = .constant(false), rowColor: Color = .white, outlineColor: Color = .black, selectedTextColor: Color = .black, label: String = "", showLabel: Bool = false, placeHoder: String = "Enter",
+    @State var keyboardType: UIKeyboardType = .default
+    public init(selectedText: Binding<String>,
+                dropDownList: Binding<[String]>,
+                showDropDown: Binding<Bool> = .constant(false),
+                rowColor: Color = .white,
+                outlineColor: Color = .black,
+                selectedTextColor: Color = .black,
+                label: String = "",
+                showLabel: Bool = false,
+                placeHoder: String = "Enter",
                 lockTyping: Bool = false,
-                maxHeight: CGFloat = 100
+                maxHeight: CGFloat = 100,
+                keyboardType: UIKeyboardType = .default
     ) {
         _selectedText = selectedText
         _dropDownList = dropDownList
@@ -34,6 +44,7 @@ public struct DropDownView: View {
         _placeHolder = State(initialValue: placeHoder)
         _disableEdit = State(initialValue: lockTyping)
         _maxHeight = State(initialValue: maxHeight)
+        _keyboardType = State(initialValue: keyboardType)
     }
 
     public var body: some View {
@@ -51,6 +62,7 @@ public struct DropDownView: View {
                         .disabled(disableEdit)
                         .padding([.horizontal, .vertical], 17)
                         .foregroundColor(selectedTextColor)
+                        .keyboardType(keyboardType)
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 showDropDown.toggle()

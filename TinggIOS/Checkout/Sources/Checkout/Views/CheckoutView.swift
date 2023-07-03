@@ -51,7 +51,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
     @State private var showAlert = false
     @State private var showAlertOnSuccess = false
     @State private var showAlertForPin = false
-    @State private var showAlertForRINV = false
+    @State private var showAlertForRINV = true
     @State private var showAlertForFWC = false
     @State private var currency = ""
     @State private var selectedService: MerchantService = sampleServices[0]
@@ -217,7 +217,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                     makeCardCheckoutRequest()
                 }
             })
-            .handleUIState(uiState: $checkoutVm.raiseInvoiceUIModel, showAlertonSuccess: true){ content in
+            .handleViewStatesMods(uiState: checkoutVm.$raiseInvoiceUIModel){ content in
                 let currencyCode = AppStorageManager.getCountry()?.currency
                 let response = content.data as! RINVResponse
                 let invoice = response.raisedInvoice[0]
@@ -245,9 +245,10 @@ public struct CheckoutView: View, OnPINCompleteListener {
               
                 log(message: "\(response)")
             } action: {
-                let alias = profile?.accountAlias ?? "NA"
-                checkoutVm.showView = false
-                navigation.navigationStack.append(Screens.billView(Screens.RECEIPTVIEW_TITLE))
+                if !showAlert {
+                    checkoutVm.showView = false
+                    navigation.navigationStack.append(Screens.billView(Screens.RECEIPTVIEW_TITLE))
+                }
                 
             }
             
@@ -256,16 +257,14 @@ public struct CheckoutView: View, OnPINCompleteListener {
                 let response = content.data as! DTBAccountsResponse
                 dtbAccounts = response.accounts ?? []
                 showDTBPINDialog = true
-            } action: {
-                checkoutVm.showView = false
             }
             .handleViewStatesMods(uiState: checkoutVm.$uiModel) { content in
                 log(message: content)
                 let response = content.data as! CreateCardChannelResponse
                 checkoutVm.cardDetails.checkout = true
                 navigation.navigationStack.append(Screens.cardDetailsView(response, nil))
-            } action: {
-                checkoutVm.showView = false
+            } onFailure: { err in
+                showAlert = true
             }
         }
         .background(.white)
@@ -388,7 +387,6 @@ public struct CheckoutView: View, OnPINCompleteListener {
         let currentAmount = checkoutVm.sam.amount.replace(string: currentCurrency, replacement: "")
         let isValidAmount = validateAmountByService(selectedService: checkoutVm.slm.selectedService, amount: currentAmount)
         if !isValidAmount.isEmpty {
-            showAlert = true
             checkoutVm.uiModel = UIModel.error(isValidAmount)
             return
         }
@@ -427,7 +425,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
         let profileId = profile?.profileID ?? ""
         let alias = profile?.accountAlias ?? ""
     
-        let request = RequestMap.Builder()
+        let builder = RequestMap.Builder()
             .add(value: "RINV", for: .SERVICE)
             .add(value: getPayingMSISDN(), for: .MSISDN)
             .add(value: checkoutVm.isSomeoneElsePaying, for: "IS_THIRD_PARTY_PAYMENT")
@@ -445,7 +443,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: getAvailableInvoice().estimateExpiryDate, for: "EXPIRY_DATE")
             .add(value: "", for: "PAYER_TRANSACTION_ID")
             .add(value: checkoutVm.service.serviceName, for: "SERVICE_NAME")
-            .add(value: checkoutVm.service.serviceCode, for: "SERVICE_CODE")
+            .add(value: checkoutVm.slm.selectedService.serviceCode, for: "SERVICE_CODE")
             .add(value: checkoutVm.slm.selectedPayer.hubClientID, for: "PAYER_CLIENT_ID")
             .add(value: "", for: "PRODUCT_CODE")
             .add(value: "", for: "BEEP_TRANSACTION_ID")
@@ -467,7 +465,12 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: "", for: "PIN_CODE")
             .add(value: "", for: "MULA_PIN")
             .add(value: "", for: "EXTRA_DATA")
-            .build()
+        
+        if checkoutVm.slm.selectedService.isABundleService {
+            builder.add(value: checkoutVm.bundleModel.selectedBundleObject.bundleID, for: "BUNDLE_ID")
+           
+        }
+        let request = builder.build()
         
         checkoutVm.raiseInvoiceRequest(request: request)
     }

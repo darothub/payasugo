@@ -36,7 +36,7 @@ public struct Bundle: Codable {
     let bundleID: Int
     let bundleName: String
     let position: Int
-    let cost: DynamicType
+    let cost: StringOrIntEnum
     let bundleCode: String?
 
     enum CodingKeys: String, CodingKey {

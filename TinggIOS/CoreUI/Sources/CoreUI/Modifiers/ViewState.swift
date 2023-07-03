@@ -10,7 +10,7 @@ import SwiftUI
 
 /// A view modifier to handle view state changes
 public struct ViewStatesModifier: ViewModifier {
-    let uiState: Published<UIModel>.Publisher
+    var uiState: Published<UIModel>.Publisher
     @State var showAlert = false
     @State var message = ""
     @State private var showProgressBar = false
@@ -35,7 +35,6 @@ public struct ViewStatesModifier: ViewModifier {
         ZStack {
             content
                 .disabled(disableContent)
- 
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                 .scaleEffect(2)
@@ -281,7 +280,7 @@ extension View {
     public func handleUIState(
         uiState: Binding<UIModel>,
         showAlertonSuccess: Bool = false,
-        showAlertonError: Bool = false,
+        showAlertonError: Bool = true,
         onSuccess: @escaping (UIModel.Content) -> Void = {c in},
         onFailure:  @escaping (String) -> Void = {str in},
         action: @escaping () -> Void = {

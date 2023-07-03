@@ -7,7 +7,7 @@
 import RealmSwift
 import Foundation
 // MARK: - BundleDatum
-public class BundleData: Object, DBObject, ObjectKeyIdentifiable, Codable {
+public class BundleData: Object, ObjectKeyIdentifiable, Codable {
     @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var bundleCategoryID: Int
     @Persisted public var categoryName: String
@@ -25,7 +25,7 @@ public class BundleData: Object, DBObject, ObjectKeyIdentifiable, Codable {
 }
 
 // MARK: - Bundle
-public class BundleObject: Object, DBObject, ObjectKeyIdentifiable, Codable {
+public class BundleObject: Object, ObjectKeyIdentifiable, Codable {
     @Persisted public var bundleID: Int
     @Persisted public var bundleName: String
     @Persisted public var position: Int

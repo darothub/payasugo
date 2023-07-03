@@ -37,4 +37,7 @@ extension ViewModel {
     public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool) {
         //TODO
     }
+    public func cancelPublishers() {
+        //TODO
+    }
 }
