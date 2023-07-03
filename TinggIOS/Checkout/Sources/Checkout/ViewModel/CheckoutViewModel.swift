@@ -114,6 +114,13 @@ public class CheckoutViewModel: ViewModel  {
             return
         }
     }
+    public func cancelPublishers() {
+        uiModel = UIModel.nothing
+        raiseInvoiceUIModel = UIModel.nothing
+        validatePinUImodel = UIModel.nothing
+        fwcUIModel = UIModel.nothing
+        
+    }
 }
 
 extension CheckoutViewModel {

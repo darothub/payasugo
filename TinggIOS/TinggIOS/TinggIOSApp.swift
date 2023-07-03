@@ -41,7 +41,10 @@ struct TinggIOSApp: App {
                 .environmentObject(ccvm)
                 .environmentObject(hvm)
                 .environmentObject(mvm)
-                .sheet(isPresented: $checkoutVm.showView) {
+                
+                .sheet(isPresented: $checkoutVm.showView, onDismiss: {
+                    checkoutVm.cancelPublishers()
+                }) {
                     checkoutView()
                         .presentationDetents([.fraction(0.7)])
                         .presentationBackground(.thinMaterial)
@@ -53,6 +56,7 @@ struct TinggIOSApp: App {
                     cancelOnTouchOutside: .constant(true)
                 ) {
                     BundleSelectionView(model: $checkoutVm.bundleModel)
+                        .environmentObject(checkoutVm)
 
                 }
                 .onAppear {
@@ -60,8 +64,7 @@ struct TinggIOSApp: App {
                     UITabBar.appearance().backgroundColor = colorScheme == .dark ? UIColor.white : UIColor.white
 
                     Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
-                    
-                  
+                
                         
                 }
         }

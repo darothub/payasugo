@@ -6,12 +6,13 @@
 //
 import Core
 import CoreUI
-
+import Checkout
 import SwiftUI
 import Theme
 
 public struct BundleSelectionView: View {
     @Binding var model: BundleModel
+    @EnvironmentObject var checkoutVm: CheckoutViewModel
     @State private var enrollments: [Enrollment] = .init()
     @State private var bundleList: [String] = []
     @State private var accountList: [String] = []
@@ -28,10 +29,10 @@ public struct BundleSelectionView: View {
             VStack {
                 Group {
                     Text(model.service.serviceName)
-                    DropDownView(selectedText: $model.selectedDataPlan, dropDownList: $plans,  showDropDown: $dropDownShows, placeHoder: "Plans", lockTyping: true)
-                    DropDownView(selectedText: $model.selectedBundle, dropDownList: $bundleList, showDropDown: $bundleDropDownShows, placeHoder: "Select Bundles", lockTyping: true)
+                    DropDownView(selectedText: $model.selectedDataPlanName, dropDownList: $plans,  showDropDown: $dropDownShows, placeHoder: "Plans", lockTyping: true)
+                    DropDownView(selectedText: $model.selectedBundleName, dropDownList: $bundleList, showDropDown: $bundleDropDownShows, placeHoder: "Select Bundles", lockTyping: true)
                         .showIfNot($dropDownShows)
-                    DropDownView(selectedText: $model.selectedAccount, dropDownList: $accountList, showDropDown: $accountDropDownShows, placeHoder: "Select account", lockTyping: false, maxHeight: 100)
+                    DropDownView(selectedText: $model.selectedAccount, dropDownList: $accountList, showDropDown: $accountDropDownShows, placeHoder: "Select account", lockTyping: false, maxHeight: 100, keyboardType: .phonePad)
                         .showIfNot($dropDownShows)
                         .showIfNot($bundleDropDownShows)
                        
@@ -40,7 +41,23 @@ public struct BundleSelectionView: View {
                         buttonLabel: "Continue",
                         padding: 0
                     ) {
+                      
                         //TODO
+                        withAnimation {
+                            let bundleService = Observer<BundleObject>().getEntities().first { $0.bundleName == model.selectedBundleName
+                            }
+                            if let bundleSelected = bundleService {
+                                checkoutVm.showBundles = false
+                                model.selectedBundleObject = bundleSelected
+                                checkoutVm.slm.selectedService = model.service
+                                checkoutVm.fem.accountNumber = model.selectedAccount
+                                checkoutVm.sam.amount = "\(bundleSelected.cost)"
+                                log(message: bundleSelected)
+                                checkoutVm.showView = true
+                            }
+                         
+                        }
+                        
                     }
                 }.padding(.horizontal)
             }
@@ -67,7 +84,7 @@ public struct BundleSelectionView: View {
                 data.categoryName
             }
         }
-        .onChange(of: model.selectedDataPlan) { newValue in
+        .onChange(of: model.selectedDataPlanName) { newValue in
             bundleList = bundleServices.filter({ data in
                 data.categoryName == newValue
             }).flatMap({ data in
@@ -83,5 +100,6 @@ public struct BundleSelectionView: View {
 struct BundleSelectionView_Previews: PreviewProvider {
     static var previews: some View {
         BundleSelectionView(model: .constant(BundleModel()))
+            .environmentObject(CheckoutDI.createCheckoutViewModel())
     }
 }
