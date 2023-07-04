@@ -31,7 +31,8 @@ struct HomeView: View {
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
-                HomeTopViewDesign(onHamburgerIconClick: {
+                HomeTopViewDesign(
+                    onHamburgerIconClick: {
                     drawerStatus = .open
                 })
                 .background(

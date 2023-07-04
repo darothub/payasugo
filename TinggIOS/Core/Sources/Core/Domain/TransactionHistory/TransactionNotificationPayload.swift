@@ -26,15 +26,15 @@ struct TransactionNotification: Codable {
 }
 
 // MARK: - NotificationBody
-struct NotificationBody: Codable {
-    let amount, serviceCode, billType, beepTransactionID: String
-    let source, devicePlatform, accountNumber, serviceName: String
-    let message, deviceID, customerName: String
-    let requestOriginID: Int
-    let paymentID: String
-    let invoiceNumber: JSONNull?
-    let shortDesc, installationID, serviceID, currencyCode: String
-    let overallStatus, status: String
+public struct NotificationBody: Codable {
+    public let amount, serviceCode, billType, beepTransactionID: String
+    public let source, devicePlatform, accountNumber, serviceName: String
+    public let message, deviceID, customerName: String
+    public let requestOriginID: Int
+    public let paymentID: String
+    public let invoiceNumber: String?
+    public let shortDesc, installationID, serviceID, currencyCode: String
+    public let overallStatus, status: String
 }
 
 

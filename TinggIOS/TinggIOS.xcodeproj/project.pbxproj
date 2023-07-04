@@ -25,14 +25,13 @@
 		714B15AC2899D5C6005338EB /* OnboardingUITestLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15AB2899D5C6005338EB /* OnboardingUITestLaunchTests.swift */; };
 		7156555829B1024F00307866 /* Airtime in Frameworks */ = {isa = PBXBuildFile; productRef = 7156555729B1024F00307866 /* Airtime */; };
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
-		716708DF2A16648700ED5E67 /* Checkout in Frameworks */ = {isa = PBXBuildFile; productRef = 716708DE2A16648700ED5E67 /* Checkout */; };
 		716708EC2A1D17BC00ED5E67 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */; };
 		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
 		718114F729D2C0D200BCDE96 /* NewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718114F629D2C0D100BCDE96 /* NewView.swift */; };
-		718114F929D2C24D00BCDE96 /* CoreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 718114F829D2C24D00BCDE96 /* CoreUI */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
+		71988FB32A53213300C7D72F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FB22A53213300C7D72F /* AppDelegate.swift */; };
 		71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */; };
 		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
@@ -106,6 +105,8 @@
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6293283EBCB8002ADCA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		71988FB22A53213300C7D72F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		71988FB42A53246200C7D72F /* FreshChat */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FreshChat; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,9 +139,7 @@
 			files = (
 				7156555829B1024F00307866 /* Airtime in Frameworks */,
 				71D019DF28A8537D00312864 /* Home in Frameworks */,
-				718114F929D2C24D00BCDE96 /* CoreUI in Frameworks */,
 				71D019E128A8538400312864 /* Onboarding in Frameworks */,
-				716708DF2A16648700ED5E67 /* Checkout in Frameworks */,
 				710F9D2F2979B2FF0034E193 /* Pin in Frameworks */,
 				71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */,
 			);
@@ -219,6 +218,7 @@
 		718C628E283EBCB4002ADCA8 /* TinggIOS */ = {
 			isa = PBXGroup;
 			children = (
+				71988FB12A5320FA00C7D72F /* App */,
 				716708ED2A1D1BDA00ED5E67 /* TinggIOSDebug.entitlements */,
 				716708EA2A1D13E500ED5E67 /* TinggIOSRelease.entitlements */,
 				716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */,
@@ -245,6 +245,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		71988FB12A5320FA00C7D72F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				71988FB22A53213300C7D72F /* AppDelegate.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
 		71AED58B28665C9400A4B14F /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +267,7 @@
 				7156555629B1023400307866 /* Airtime */,
 				71C72F1A29CCACD7004E7F4C /* CoreUI */,
 				71DD68C429F8417200E8A57D /* CoreNavigation */,
+				71988FB42A53246200C7D72F /* FreshChat */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -339,8 +348,6 @@
 				710F9D2E2979B2FF0034E193 /* Pin */,
 				71F7D7A62981B1A00086AE84 /* CreditCard */,
 				7156555729B1024F00307866 /* Airtime */,
-				718114F829D2C24D00BCDE96 /* CoreUI */,
-				716708DE2A16648700ED5E67 /* Checkout */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -467,6 +474,7 @@
 				71091ED529EED86E00843FFA /* CardFrontLayoutView.swift in Sources */,
 				71091ED129EED7CE00843FFA /* VirtualCardHomeView.swift in Sources */,
 				71091ED329EED7CE00843FFA /* VirtualCardActionView.swift in Sources */,
+				71988FB32A53213300C7D72F /* AppDelegate.swift in Sources */,
 				71091EDD29F0179800843FFA /* VirtualCardState.swift in Sources */,
 				71091ED229EED7CE00843FFA /* TransactionListView.swift in Sources */,
 				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
@@ -706,7 +714,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -758,7 +766,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -848,14 +856,6 @@
 		7156555729B1024F00307866 /* Airtime */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Airtime;
-		};
-		716708DE2A16648700ED5E67 /* Checkout */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Checkout;
-		};
-		718114F829D2C24D00BCDE96 /* CoreUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CoreUI;
 		};
 		71D019DE28A8537D00312864 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;

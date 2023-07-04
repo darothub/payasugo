@@ -10,12 +10,14 @@ import Core
 import CoreUI
 import CoreNavigation
 import Theme
+import FreshChat
 
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var hvm: HomeViewModel
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
     @State var colorTint:Color = .blue
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
 
@@ -75,6 +77,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 SettingsView()
             case .support:
                 SupportView()
+                    .environmentObject(freshchatWrapper)
             case .about:
                 AboutView()
             case .categoriesAndServices(let items):
@@ -143,6 +146,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         VStack{
             HomeView(drawerStatus: $drawerStatus)
                 .environmentObject(hvm)
+                .environmentObject(freshchatWrapper)
                 
             Spacer()
         }
@@ -175,6 +179,7 @@ struct HomeBottomNavView_Previews: PreviewProvider {
         HBNPReviewHolder()
             .environmentObject(HomeDI.createHomeViewModel())
             .environmentObject(NavigationUtils())
+            .environmentObject(FreshchatWrapper())
     }
 }
 
