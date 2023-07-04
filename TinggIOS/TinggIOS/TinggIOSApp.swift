@@ -14,6 +14,7 @@ import Onboarding
 import SwiftUI
 import Theme
 import CoreUI
+import FreshChat
 
 @main
 /// This is entry point into the application.
@@ -29,7 +30,7 @@ struct TinggIOSApp: App {
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
     @StateObject var hvm = HomeDI.createHomeViewModel()
     @StateObject var mvm = MainViewModel(systemUpdateUsecase: .init(sendRequest: .shared))
-    
+    @StateObject private var freshchatWrapper = FreshchatWrapper()
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -41,7 +42,7 @@ struct TinggIOSApp: App {
                 .environmentObject(ccvm)
                 .environmentObject(hvm)
                 .environmentObject(mvm)
-                
+                .environmentObject(freshchatWrapper)
                 .sheet(isPresented: $checkoutVm.showView, onDismiss: {
                     checkoutVm.cancelPublishers()
                 }) {

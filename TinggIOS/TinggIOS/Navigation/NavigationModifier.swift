@@ -15,12 +15,14 @@ import Permissions
 import Pin
 import SwiftUI
 import Theme
+import FreshChat
 struct NavigationModifier: ViewModifier {
     @EnvironmentObject var navigation: NavigationUtils
     @EnvironmentObject var  hvm: HomeViewModel
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var ccvm: CreditCardViewModel
+    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
     @State var colorTint:Color = .blue
     func body(content: Content) -> some View {
         content
@@ -31,11 +33,14 @@ struct NavigationModifier: ViewModifier {
                     HomeBottomNavView()
                         .environmentObject(checkout)
                         .environmentObject(hvm)
+                        .environmentObject(freshchatWrapper)
 
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
                         .environmentObject(navigation)
+                        .environmentObject(freshchatWrapper)
+           
                 case .buyAirtime(let serviceName):
                     BuyAirtimeView(selectedServiceName: serviceName)
                         .environmentObject(checkout)

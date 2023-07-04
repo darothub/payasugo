@@ -8,10 +8,12 @@ import Core
 import CoreUI
 import SwiftUI
 import Theme
+import FreshChat
 struct SupportView: View, OnSupportItemClick {
     @Environment(\.openURL) var openURL
     @Environment(\.colorScheme) var colorScheme
     @StateObject var hvm = HomeDI.createHomeViewModel()
+    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
     @State var supportItems = [SupportItem]()
     @State var showSheet = false
     @State var supportPhoneNumber = ""
@@ -31,16 +33,13 @@ struct SupportView: View, OnSupportItemClick {
         .onAppear {
             let contact = Observer<Contact>().getEntities()
             if contact.isNotEmpty() {
-                supportPhoneNumber = Observer<Contact>().getEntities()[0].phone
+                supportPhoneNumber = contact[0].phone
             }
             let callSupport = SupportItem(unit: .Call_Tingg_support, ref: supportPhoneNumber)
             let chatSupport = SupportItem(unit: .Chat_Tingg_support, ref: "")
-            supportItems.append(callSupport)
-            supportItems.append(chatSupport)
-            if let faqUrl = AppStorageManager.getCountriesExtraInfo()?.faqURL.toString {
-                let faqSupport = SupportItem(unit: .FAQ, ref: faqUrl)
-                supportItems.append(faqSupport)
-            }
+            let faqUrl = AppStorageManager.getCountriesExtraInfo()?.faqURL.toString ?? "Empty"
+            let faqSupport = SupportItem(unit: .FAQ, ref: faqUrl)
+            supportItems = [callSupport, chatSupport, faqSupport]
         }
   
     }
@@ -48,16 +47,10 @@ struct SupportView: View, OnSupportItemClick {
         switch item.unit {
         case .Call_Tingg_support:
             callSupport(phoneNumber: item.ref)
+        case .Chat_Tingg_support :
+            freshchatWrapper.showFreshchat()
         default:
             showSheet = true
-        }
-    }
-    fileprivate func callSupport(phoneNumber: String) {
-        let tel = "tel://"
-        let formattedPhoneNumber = tel+phoneNumber
-        guard let url = URL(string: formattedPhoneNumber) else {return}
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
         }
     }
 }
@@ -104,6 +97,7 @@ protocol OnSupportItemClick {
 struct SupportView_Previews: PreviewProvider {
     static var previews: some View {
         SupportView()
+            .environmentObject(FreshchatWrapper())
     }
 }
 

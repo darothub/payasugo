@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "freshchat-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/freshdesk/freshchat-ios",
+      "state" : {
+        "revision" : "a8457b17d35b7cbeff3904df45dcb23df46fb0c4",
+        "version" : "5.8.0"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -11,6 +11,7 @@ import CoreUI
 import Core
 import SwiftUI
 import Theme
+import FreshChat
 /// The view for phone number input and validation
 /// User can also have access to support features
 /// Upon successful input validation user is taken to ``OtpConfirmationView``
@@ -20,6 +21,8 @@ public struct PhoneNumberValidationView: View {
  
     @Environment(\.openURL) var openURL
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
+
     @Environment(\.realmManager) var realmManager
     @State private var showOTPView = false
     @State private var isOTPConfirmed = false
@@ -38,7 +41,7 @@ public struct PhoneNumberValidationView: View {
     @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
     public static var policyWarning = "Kindly accept terms and policy"
     public static var phoneNumberEmptyWarning = "Phone number must not be empty"
-    
+    private let dbCountries = Observer<CountriesInfo>().getEntities()
     public init() {
         // Empty constructor
     }
@@ -101,51 +104,41 @@ public struct PhoneNumberValidationView: View {
             .onAppear {
                 ovm.getCountryDictionary()
             }
-            .onChange(of: countryCode, perform: { newValue in
-                let dbCountries = Observer<CountriesInfo>().getEntities()
+            .onReceive(Just(countryCode), perform: { newValue in
                 let currentCountry = dbCountries.first {
                     $0.countryDialCode == newValue
                 }
-                if let currentTacUrl = currentCountry?.tacURL, let currentPrivacyPolicyUrl = currentCountry?.privacyPolicyURL {
-                    termOfAgreementLink = "[Terms of Agreement](\(currentTacUrl))"
-                    privacyPolicy = "[Privacy Policy](\(currentPrivacyPolicyUrl))"
+                if let country = currentCountry {
+                    termOfAgreementLink = "[Terms of Agreement](\(String(describing: country.tacURL)))"
+                    privacyPolicy = "[Privacy Policy](\(String(describing: country.privacyPolicyURL)))"
+                    
+                    _ = FreshChatSetup(appID: country.freshchatAppID!, appKey: country.freshchatAppKey!)
                 }
-
             })
+
             .toolbar(content: {
                 handleKeyboardDone()
             })
-            .handleUIState(uiState: $ovm.phoneNumberFieldUIModel) {
-                content in
-                    countriesDictionary = content.data as! [String: String]
-                
+            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
+                countriesDictionary = content.data as! [String: String]
             }
-            .handleUIState(uiState: $ovm.onActivationRequestUIModel) {
-                content in
+            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { content in
                 log(message: content)
                 showOTPView = true
-                
             }
-            .handleUIState(uiState: $ovm.uiModel) { content in
+            .handleViewStatesMods(uiState: ovm.$uiModel) { content in
                 let systemUpdate = content.data as! SystemUpdateDTO
                 ovm.saveDataIntoDB(data: systemUpdate)
                 gotoHomeView()
             }
-//            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
-//                countriesDictionary = content.data as! [String: String]
-//            }
-//            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { content in
-//                log(message: content)
-//                showOTPView = true
-//            }
-//            .handleViewStatesMods(uiState: ovm.$uiModel) { content in
-//                let systemUpdate = content.data as! SystemUpdateDTO
-//                ovm.saveDataIntoDB(data: systemUpdate)
-//                gotoHomeView()
-//            }
             .onChange(of: hasCheckedTermsAndPolicy) { newValue in
                 activateButton = newValue && isValidPhoneNumber
             }
+        }
+        .onDisappear {
+            ovm.uiModel = UIModel.nothing
+            ovm.phoneNumberFieldUIModel = UIModel.nothing
+            ovm.onActivationRequestUIModel = UIModel.nothing
         }
     }
 
@@ -183,11 +176,10 @@ public struct PhoneNumberValidationView: View {
     @ViewBuilder
     fileprivate func callSupportActions() -> some View {
         Button("Call Ting Support") {
-            callSupport()
+            Core.callSupport(phoneNumber: "254708802299")
         }
         Button("Chat Ting Support") {
-            print("Chat")
-        }
+            freshchatWrapper.showFreshchat()        }
         Button("Cancel", role: .cancel) {
             // Intentionally unimplemented...no cancel action
         }
@@ -205,6 +197,7 @@ public struct PhoneNumberValidationView: View {
 struct PhoneNumberValidationView_Previews: PreviewProvider {
     static var previews: some View {
         PhoneNumberValidationView()
+            .environmentObject(FreshchatWrapper())
     }
 }
 

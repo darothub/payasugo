@@ -5,8 +5,10 @@
 //  Created by Abdulrasaq on 23/05/2023.
 //
 
+import Core
 import Firebase
 import Foundation
+import FreshChat
 import UserNotifications
 import UIKit
 
@@ -17,6 +19,9 @@ public class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+       
+        
         FirebaseApp.configure()
 
         Messaging.messaging().delegate = self

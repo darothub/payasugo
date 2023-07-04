@@ -9,11 +9,14 @@ import Core
 import CoreNavigation
 import SwiftUI
 import Theme
+import FreshChat
 
 /// Introduces the onboarding screens to the user
 public struct IntroView: View {
     @State private var active = false
     @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
+
     public init() {
         // Intentionally unimplemented...modular accessibility
     }
@@ -40,6 +43,7 @@ struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
             .environmentObject(NavigationUtils())
+            .environmentObject(FreshchatWrapper())
     }
 }
 

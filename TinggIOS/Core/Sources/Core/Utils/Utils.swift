@@ -229,6 +229,15 @@ public func validatePhoneNumberByCountry(_ country: CountriesInfoDTO?, phoneNumb
     return false
 }
 
+public func callSupport(phoneNumber: String) {
+    let tel = "tel://"
+    let formattedPhoneNumber = tel+phoneNumber
+    guard let url = URL(string: formattedPhoneNumber) else {return}
+    if UIApplication.shared.canOpenURL(url) {
+        UIApplication.shared.open(url)
+    }
+}
+
 public func validateAmountByService(selectedService: MerchantService, amount: String) -> String {
     var result = ""
     let intAmount = convertStringToInt(value: amount.removeWhitespace())
