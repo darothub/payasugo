@@ -11,7 +11,7 @@ public struct VImageAndNameView: View {
     @State var imageUrl: String
     @State var useInitials = false
     var initials: String {
-        if title == "None" || title.isEmpty {
+        if title.isEmpty {
             return "NA"
         } else {
             return title.prefix(2).uppercased()
@@ -34,7 +34,8 @@ public struct VImageAndNameView: View {
 
             } placeholder: {
                 Image(systemName: "photo")
-                          .foregroundColor(.black)
+                    .foregroundColor(.black)
+                    .showIfNot($useInitials)
 
                 Text(initials)
                     .foregroundColor(.black)

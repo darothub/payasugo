@@ -10,18 +10,18 @@ import RealmSwift
 
 public class CountryRepositoryImpl: CountryRepository {
 
-    private var baseRequest: BaseRequest
-    private var dbObserver: Observer<CountriesInfo>
+    private var baseRequest: TinggApiServices
+    private var dbObserver: Observer<CountryInfo>
     /// ``CountryRepositoryImpl`` initialiser
     /// - Parameters:
-    ///   - baseRequest: ``BaseRequest``
+    ///   - baseRequest: ``TinggApiServices``
     ///   - dbObserver: ``Observer``
-    public init(baseRequest: BaseRequest, dbObserver: Observer<CountriesInfo>) {
+    public init(baseRequest: TinggApiServices, dbObserver: Observer<CountryInfo>) {
         self.baseRequest = baseRequest
         self.dbObserver =  dbObserver
     }
     private func getCountries(onCompletion: @escaping(Result<CountryDTO, ApiError>) -> Void) {
-        baseRequest.makeRequest(urlPath: "countriesNew.php/", tinggRequest: .Builder().build()) {(result: Result<CountryDTO, ApiError>) in
+        baseRequest.makeRequest(urlPath: "countriesNew.php/", tinggRequest: .Builder().build()) { (result: Result<CountryDTO, ApiError>) in
             switch result {
             case .failure(let error):
                 onCompletion(.failure(.networkError(error.localizedDescription)))
@@ -39,14 +39,21 @@ public class CountryRepositoryImpl: CountryRepository {
     }
     /// A method to get countries from local and remote repositories
     /// - Returns: a list of ``Country``
-    public func getCountries() async throws -> DTOandObjectWrapper<CountriesInfoDTO, CountriesInfo> {
-        let dbCountries = await dbObserver.getEntities()
+    @MainActor
+    public func getCountries() async throws -> [CountriesInfoDTO] {
+        let dbCountries = dbObserver.getEntities()
         if dbCountries.isEmpty {
             let remoteData = try await getRemoteCountries().data
-            await dbObserver.saveEntities(objs: remoteData.map {$0.convertToCountriesInfo()})
-            return DTOandObjectWrapper(dtos: remoteData, objs: remoteData.map {$0.convertToCountriesInfo()})
+            let countries: [CountryInfo] = remoteData.map {
+                $0.convertToCountriesInfo()
+            }
+            dbObserver.saveEntities(objs: countries)
+            return remoteData
         }
-        return DTOandObjectWrapper(dtos: [], objs: dbCountries)
+        let countries: [CountriesInfoDTO] = dbCountries.map {
+            $0.convertToDTO()
+        }
+        return countries
     }
     
     public func getCountryByDialCode(dialCode: String) -> CountriesInfoDTO? {

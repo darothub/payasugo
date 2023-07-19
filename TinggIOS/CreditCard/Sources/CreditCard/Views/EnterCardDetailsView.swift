@@ -13,7 +13,7 @@ import Theme
 public struct EnterCardDetailsView: View {
     //MARK: Variables
     @EnvironmentObject var creditCardVm: CreditCardViewModel
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject var contactVm: ContactViewModel
     @State private var isFilling = false
     @State private var cardNumberHolderText = "Card number"
@@ -62,9 +62,15 @@ public struct EnterCardDetailsView: View {
                     Text("Card details are saved securely")
                 }
                 VStack {
-                    TextFieldAndRightIcon(number: $cardDetails.cardNumber, iconName: cardIcon, placeHolder: cardNumberHolderText, success: $cardIsValid) {
+                    TextFieldAndRightIcon(
+                        number: $cardDetails.cardNumber,
+                        iconName: cardIcon,
+                        placeHolder: cardNumberHolderText,
+                        validation: { value in
+                        cardIsValid
+                    }, onImageClick:  {
                         print("")
-                    }
+                    })
                     HStack {
                         Spacer()
                         Text("\(cardDetails.cardNumber.replacingOccurrences(of: " ", with: "").count)/16")
@@ -164,7 +170,7 @@ public struct EnterCardDetailsView: View {
                     successUrl = ""
                     showWebView.toggle()
                 } else {
-                    _ = navigation.navigationStack.removeLast()
+                    navigation.goBack()
                 }
             }){
                 Text("Back")
@@ -241,7 +247,7 @@ public struct EnterCardDetailsView: View {
         let webUrl = createCardChannelResponse.webUrl
         let statusUrl = createCardChannelResponse.successUrl + "?"
         
-        guard let msisdn = Observer<Profile>().getEntities()[0].msisdn else {
+        guard let msisdn = profile.msisdn else {
             throwError(message: "Invalid MSISDN")
         }
         guard let countryCode = country.countryCode else {
@@ -322,7 +328,7 @@ public struct EnterCardDetailsView: View {
         }
     }
     fileprivate func updateTransactionHistory(_ raisedInvoice: Invoice?, _ amount: Double, _ customerName: String, _ accountNumber: String) {
-        let payer = creditCardVm.slm.selectedPayer
+        let payer = creditCardVm.currentPaymentProvider
         let transactionHistory = TransactionHistory()
         let beepTransactionId = (raisedInvoice?.beepTransactionID.isNotEmpty)! ? raisedInvoice?.beepTransactionID : createChannelResponse?.beepTransactionId
         transactionHistory.beepTransactionID = beepTransactionId ?? ""

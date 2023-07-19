@@ -13,7 +13,7 @@ public struct HomeDI {
         //public init
     }
 
-    public static func createFetchBillRepository() -> FetchBillRepository {
+    public static func createFetchBillRepository() -> InvoiceRepository {
         return FetchBillRepositoryImpl(baseRequest: BaseRequest(), dbObserver: Observer<Invoice>())
     }
     public static func createProfileRepository() -> ProfileRepository {

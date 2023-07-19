@@ -5,112 +5,117 @@
 //  Created by Abdulrasaq on 08/07/2022.
 //
 import Combine
-import CoreUI
 import Core
+import CoreNavigation
+import CoreUI
 import SwiftUI
 import Theme
 
 ///  Displays OTP text field for confirmation.
 ///  Upon successful OTP confirmation user returns to Phone number verification view.
 public struct OtpConfirmationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var navigation: NavigationManager
+    @StateObject private var otpVM = OnboardingDI.createOnboardingVM()
     @State private var otpSize = 4
     @State private var otp = ""
-    @State private var timeLeft = 60
-    @State private var timeAdvice = ""
-    @Binding var otpConfirmed: Bool
-//    @StateObject private var otpViewOVM = OnboardingDI.createOnboardingViewModel()
-    @StateObject private var otpVM = OnboardingDI.createOnboardingVM()
-    @State var disableButton = false
-    @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.dismiss) private var dismiss
-    @State private var showErrorAlert = false
-    @State private var showSuccessAlert = false
-    @State private var onSubmit = false
+    @State private var timeAdvice = "Resend code in "
     @State private var activateButton = false
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+    @State private var timer: Timer?
+    @State private var remainingTime = 60
+
     public var body: some View {
         VStack(alignment: .center) {
             Text("Confirm OTP")
                 .fontWeight(.bold)
+                .foregroundColor(.black)
             Divider()
             Text("Enter the code received via SMS\nto confirm request")
                 .smallTextViewStyle(SmallTextStyle())
                 .foregroundColor(PrimaryTheme.getColor(.tinggblack))
             OtpFieldView(fieldSize: otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
-                .padding(.vertical, 20)
-            Text(timeAdvice)
+
+            Text("Resend code in \(timeAdvice)")
                 .smallTextViewStyle(SmallTextStyle())
                 .foregroundColor(PrimaryTheme.getColor(.tinggblack))
+
             TinggButton(
                 backgroundColor: PrimaryTheme.getColor(.primaryColor),
                 buttonLabel: "Confirm",
                 isActive: $activateButton
-                
+
             ) {
-                let confirmOTPRequest: RequestMap =  RequestMap.Builder()
-                    .add(value: "VAK", for: .SERVICE)
-                    .add(value: otp, for: .ACTIVATION_CODE)
-                    .build()
-                otpVM.confirmActivationCode(request: confirmOTPRequest)
-               
+                otpVM.confirmActivationCode(otp: otp)
             }
             .padding(20)
-            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.white)
-        .onReceive(timer) { _ in
-            handleCountDown()
+        .onAppear {
+            startCountdown()
         }
-        .onChange(of: otp) { newValue in
+        .onChange(of: otp) { _ in
             activateButton = otp.count == otpSize
         }
-        .handleUIState(uiState: $otpVM.onConfirmActivationUIModel) { content in
-            dismiss()
-            otpConfirmed = true
-        }
-        
-    }
-    /// Reset the count down timer for OTP receipt
-    fileprivate func resetTimer() {
-        timeLeft = 60
-    }
-    /// Handles countdown timer
-    /// A new otp request is made when the countdown times out
-    fileprivate func handleCountDown() {
-        if timeLeft > 0 {
-            timeLeft -= 1
-            if timeLeft < 10 {
-                timeAdvice = "Resend code in 00:0\(timeLeft)"
+        .onChange(of: remainingTime, perform: { newValue in
+            if newValue < 10 {
+                timeAdvice = "00:0\(newValue)"
             } else {
-                timeAdvice = "Resend code in 00:\(timeLeft)"
+                timeAdvice = "00:\(newValue)"
             }
-        } else {
-            let activationCodeRequest: RequestMap = RequestMap.Builder()
-                .add(value: "MAK", for: .SERVICE)
-                .build()
-            otpVM.getActivationCode(request: activationCodeRequest)
-            timeAdvice = "Code resent"
-            resetTimer()
+        })
+
+        .handleViewStatesMods(uiState: otpVM.$onConfirmActivationUIModel) { _ in
+            otpVM.fetchSystemUpdate()
+        }
+        .handleViewStatesMods(uiState: otpVM.$uiModel) { _ in
+            dismiss()
+            gotoHomeView()
+        }
+        .onDisappear {
+            stopCountdown()
         }
     }
 
+    func startCountdown() {
+        guard timer == nil else {
+            return // Timer is already running
+        }
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            if remainingTime > 0 {
+                remainingTime -= 1
+            } else {
+                otpVM.otpRequest()
+                timeAdvice = "Code resent"
+                remainingTime = 60
+            }
+        }
+    }
+
+    func stopCountdown() {
+        timer?.invalidate()
+        timer = nil
+    }
+
+    fileprivate func gotoHomeView() {
+        AppStorageManager.setIsLogin(value: true)
+        withAnimation {
+            navigation.goHome()
+        }
+    }
 }
 
 struct OtpConfirmationView_Previews: PreviewProvider {
-    struct  OtpConfirmationViewHolder: View {
+    struct OtpConfirmationViewHolder: View {
         @State var country: CountriesInfoDTO = .init()
         @State var phoneNumber: String = ""
         @State var confirmedOTP: Bool = false
         var body: some View {
-            OtpConfirmationView(otpConfirmed: $confirmedOTP)
+            OtpConfirmationView()
         }
     }
+
     static var previews: some View {
         OtpConfirmationViewHolder()
     }
 }
-
-
-

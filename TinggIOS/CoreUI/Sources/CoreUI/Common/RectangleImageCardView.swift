@@ -12,8 +12,8 @@ public struct RectangleImageCardView: View {
     @State var radius: CGFloat = 5
     @State var y: CGFloat = 3
     @Binding var selected: String
-    var onResetAccountNumber: () -> Void
-    public init(size: CGSize = CGSize(width: 100, height: 70), imageUrl: String = "", tag: String = "", radius: CGFloat = 5, y: CGFloat = 3, selected: Binding<String> = .constant(""), onResetAccountNumber: @escaping () -> Void = {
+    var onClick: () -> Void
+    public init(size: CGSize = CGSize(width: 100, height: 70), imageUrl: String = "", tag: String = "", radius: CGFloat = 5, y: CGFloat = 3, selected: Binding<String> = .constant(""), onClick: @escaping () -> Void = {
         //TODO
     }) {
         self._size = State(initialValue: size)
@@ -22,7 +22,7 @@ public struct RectangleImageCardView: View {
         self._radius = State(initialValue: radius)
         self._y = State(initialValue: y)
         self._selected = selected
-        self.onResetAccountNumber = onResetAccountNumber
+        self.onClick = onClick
     }
     public var body: some View {
         AsyncImage(url: URL(string: imageUrl)) { image in
@@ -43,7 +43,7 @@ public struct RectangleImageCardView: View {
         .onTapGesture {
             withAnimation {
                 selected = tag
-                onResetAccountNumber()
+                onClick()
             }
         }
     }

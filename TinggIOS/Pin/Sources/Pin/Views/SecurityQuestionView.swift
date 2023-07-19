@@ -10,7 +10,7 @@ import Core
 import SwiftUI
 
 public struct SecurityQuestionView: View {
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     @StateObject var pinVm: PinViewModel = PinDI.createPinViewModel()
     @State private var screenAdvice = Properties.securityQuestionAdvice
     @State private var questions:[String] = []
@@ -75,15 +75,13 @@ public struct SecurityQuestionView: View {
         return ""
     }
     func navigateToCardDetailsView() {
-        navigation.navigationStack.append(
-            Screens.cardDetailsView(nil, nil)
-        )
+        navigation.navigateTo(screen:  Screens.cardDetailsView(nil, nil))
     }
 }
 
 struct SecurityQuestionView_Previews: PreviewProvider {
     static var previews: some View {
         SecurityQuestionView(selectedQuestion: .constant("Q"), answer: .constant("A"))
-            .environmentObject(NavigationUtils())
+            .environmentObject(NavigationManager())
     }
 }

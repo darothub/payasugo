@@ -13,14 +13,14 @@ public struct MerchantPayerListView: View {
     let gridColumn = [
         GridItem(.adaptive(minimum: 110))
     ]
-    var onChangeSelection: () -> Void
-    public init(slm: Binding<ServicesListModel>, onChangeSelection: @escaping () -> Void) {
+    var onClick: () -> Void
+    public init(slm: Binding<ServicesListModel>, onClick: @escaping () -> Void) {
         self._slm = slm
-        self.onChangeSelection = onChangeSelection
+        self.onClick = onClick
     }
     public var body: some View {
         VStack(alignment: .leading) {
-            Text(slm.selectPaymentTitle)
+            Text(slm.title)
                 .font(.body)
                 .padding(.top, 30)
                 .foregroundColor(.black)
@@ -31,7 +31,7 @@ public struct MerchantPayerListView: View {
         }
         .frame(maxWidth: .infinity)
         .onAppear {
-            slm.selectedProvider = slm.payers[0].clientName
+//            slm.selectedProvider = slm
         }
     }
     @ViewBuilder
@@ -48,13 +48,11 @@ public struct MerchantPayerListView: View {
     }
     @ViewBuilder
     fileprivate func listView() -> some View {
-        ForEach(slm.payers, id: \.self) { payer in
+        ForEach(slm.serviceModels, id: \.logoUrl) { payer in
             let size = CGSize(width: 80, height: 60)
-            RectangleImageCardView(size: size, imageUrl: payer.logo!, tag: payer.clientName, selected: $slm.selectedProvider) {
-                onChangeSelection()
-                }
+            RectangleImageCardView(size: size, imageUrl: payer.logoUrl, tag: payer.name, selected: $slm.selectedProvider, onClick: onClick)
                 .overlay(alignment: .topTrailing) {
-                    if slm.selectedProvider == payer.clientName {
+                    if slm.selectedProvider == payer.name {
                         NetworkFavouritedMarkedView()
                     }
                 }

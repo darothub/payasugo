@@ -4,52 +4,78 @@
 //
 //  Created by Abdulrasaq on 18/10/2022.
 //
+import Airtime
 import CreditCard
 import CoreNavigation
 import Core
+import CoreUI
 import Checkout
-import Home
 import Onboarding
 import Permissions
 import Pin
 import SwiftUI
 import Theme
+import RealmSwift
+import Foundation
+import Bills
 /// This view display the splash screen on launch.
 ///
 /// This is the first screen  of ``TinggIOSApp``.
-public struct LaunchScreenView: View {
-    @EnvironmentObject var navigation: NavigationUtils
+public struct LaunchScreenView: View, ServicesListener {
+    @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject var mvm: MainViewModel
     @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
-        // Intentionally unimplemented...modular accessibility
+        //
     }
     public var body: some View {
-        NavigationStack(path: $navigation.navigationStack) {
-            ZStack {
-                background
-                image
-                    .accessibility(identifier: "tinggsplashscreenlogo")
-            }.onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    
-                    navigation.navigationStack.append(Screens.intro)
+        NavigationStack(path: navigation.getNavigationStack()) {
+            NavigationLink(value: HomeScreen.intro) {
+                ZStack {
+                    background
+                    image
+                        .accessibility(identifier: "tinggsplashscreenlogo")
+                }.onAppear {
+                    let userAlreadyLoggedIn = AppStorageManager.getIsLogin()
+                    if userAlreadyLoggedIn {
+                        gotoHomeView()
+                        return
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        navigation.navigateTo(screen: HomeScreen.intro)
+                    }
                 }
+                .edgesIgnoringSafeArea(.all)
             }
-            .edgesIgnoringSafeArea(.all)
+         
             .navigation()
+            .billsNavigation(quickTopUpListener: self)
+            .airtimesNavigation()
+            .navigationDestination(for: NavigationHome.self) { screen in
+                navigation.getHomeView()
+            }
             
         }
+        .transition(.move(edge: .bottom))
+    }
+    fileprivate func gotoHomeView() {
+        withAnimation {
+            navigation.navigateTo(screen: HomeScreen.home(HomeBottomNavView.HOME, Tab.first))
+        }
+    }
+    public func onQuicktop(serviceName: String) {
+        log(message: serviceName)
+        navigation.navigateTo(screen: BuyAirtimeScreen.buyAirtime(serviceName))
     }
 }
 /// Struct responsible for preview of changes in Xcode
 struct LaunchScreenView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreenView()
-            .environmentObject(NavigationUtils())
+            .environmentObject(NavigationManager())
             .environmentObject(CreditCardDI.createCreditCardViewModel())
-            .environmentObject(MainViewModel(systemUpdateUsecase: .init(sendRequest: .shared)))
+            .environmentObject(MainViewModel(systemUpdateUsecase: .init()))
     }
 }
 
@@ -64,4 +90,8 @@ private extension LaunchScreenView {
             .foregroundColor(Color.white)
     }
 }
+
+
+
+
 

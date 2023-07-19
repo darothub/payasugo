@@ -9,7 +9,7 @@ import XCTest
 
 final class PostMCPUsecaseTest: XCTestCase {
     private var enrolmentRepository: EnrollmentRepository!
-    private var invoiceRepository: FetchBillRepository!
+    private var invoiceRepository: InvoiceRepository!
     private var usecase: PostMCPUsecase!
 
     

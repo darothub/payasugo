@@ -16,7 +16,7 @@ import FreshChat
 public struct HomeBottomNavView: View, NavigationMenuClick {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var hvm: HomeViewModel
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
     @State var colorTint:Color = .blue
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
@@ -178,7 +178,7 @@ struct HomeBottomNavView_Previews: PreviewProvider {
     static var previews: some View {
         HBNPReviewHolder()
             .environmentObject(HomeDI.createHomeViewModel())
-            .environmentObject(NavigationUtils())
+            .environmentObject(NavigationManager())
             .environmentObject(FreshchatWrapper())
     }
 }

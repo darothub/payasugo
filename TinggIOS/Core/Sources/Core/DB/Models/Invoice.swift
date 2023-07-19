@@ -180,7 +180,7 @@ public struct DynamicInvoiceType: Decodable   {
 //        case statusCode = "STATUS_CODE"
     }
     
-    func convertToInvoice() -> Invoice {
+    public func convertToInvoice() -> Invoice {
         let invoice = Invoice()
         invoice.billReference = self.billReference
         invoice.billDescription = self.billDescription

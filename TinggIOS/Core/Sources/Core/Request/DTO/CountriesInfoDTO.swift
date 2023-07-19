@@ -164,8 +164,8 @@ public struct CountriesInfoDTO: Codable {
         case fetchBearerTokenURL = "FETCH_BEARER_TOKEN_URL"
         case privacyPolicyURL = "PRIVACY_POLICY_URL"
     }
-    public func convertToCountriesInfo() -> CountriesInfo {
-        var countriesInfo = CountriesInfo()
+    public func convertToCountriesInfo() -> CountryInfo {
+        var countriesInfo = CountryInfo()
         countriesInfo.name  = self.name
         countriesInfo.countryCode  = self.countryCode
         countriesInfo.countryURLNew  = self.countryURLNew

@@ -8,10 +8,10 @@
 import Foundation
 
 public class DueBillsUsecase {
-    private let fetchBillRepository: FetchBillRepository
+    private let fetchBillRepository: InvoiceRepository
     /// DueBillsUsecase initialiser
     /// - Parameter fetchBillRepository:``FetchBillRepositoryImpl`` repository for fetchbill
-    public init(fetchBillRepository: FetchBillRepository) {
+    public init(fetchBillRepository: InvoiceRepository) {
         self.fetchBillRepository = fetchBillRepository
     }
     

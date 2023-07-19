@@ -7,7 +7,5 @@
 
 import Foundation
 public struct CoreDI {
-    public static func createSendRequest() -> SendRequest {
-        SendRequest(baseRequest: BaseRequest())
-    }
+    
 }

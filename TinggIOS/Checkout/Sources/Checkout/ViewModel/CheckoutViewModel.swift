@@ -9,8 +9,8 @@ import CoreUI
 import Core
 import SwiftUI
 public class CheckoutViewModel: ViewModel  {
-    @Published public var sam: SuggestedAmountModel = .init()
-    @Published public var fem: FavouriteEnrollmentModel = .init()
+//    @Published public var sam: SuggestedAmountModel = .init()
+//    @Published public var fem: FavouriteEnrollmentModel = .init()
     @Published public var slm: ServicesListModel = .init()
     @Published public var dcm: DebitCardModel = .init()
     @Published public var dcddm: DebitCardDropDownModel = .init()
@@ -44,8 +44,26 @@ public class CheckoutViewModel: ViewModel  {
     @Published public var invoices = Observer<Invoice>().getEntities()
     @Published public var showBundles = false
     @Published public var bundleModel = BundleModel()
-
-    let c = CurrentValueSubject<UIModel, Never>(.nothing)
+    @Published public var currentAccountNumber = ""
+    @Published var myPhoneNumber = AppStorageManager.getPhoneNumber()
+    @Published public var selectedAmount = ""
+    @Published var amountHistory = [String]()
+    @Published var networkList: [NetworkItem] = []
+    @Published public var enrollments = [Enrollment]()
+    @Published public var currentService: MerchantService = sampleServices[0]
+    @Published public var services: [MerchantService] = Observer<MerchantService>().getEntities()
+    @Published var accountList: [String] = []
+    @Published public var currentPaymentProvider: MerchantPayer = .init()
+    @Published public var canPayForOthers = false
+    public var currentCountry = AppStorageManager.getCountry()
+    public var currency: String {
+        currentCountry?.currency ?? "NA"
+    }
+    public var countryMobileRegex: String {
+        currentCountry?.countryMobileRegex ?? ""
+    }
+  
+    public var paymentServiceProviders = Observer<MerchantPayer>().getEntities()
     public var isCheckout: Bool = false
     private var usecase: CheckoutUsecase
     public init(usecase: CheckoutUsecase) {
@@ -135,10 +153,10 @@ extension CheckoutViewModel {
                 let exitingInvoice =  self.invoices.first { invoice in
                      invoice.billReference == existingList[0].accountNumber
                  }
-                self.fem.accountNumber = existingList[0].accountNumber
-                self.fem.enrollments = existingList
-                self.slm.selectedService = service
-                self.sam.amount = exitingInvoice?.amount ?? ""
+//                self.fem.accountNumber = existingList[0].accountNumber
+//                self.fem.enrollments = existingList
+//                self.slm.selectedService = service
+//                self.sam.amount = exitingInvoice?.amount ?? ""
                 action(bills, true)
                 return
             }
@@ -151,15 +169,16 @@ extension CheckoutViewModel {
             let exitingInvoice =  self.invoices.first { invoice in
                 invoice.billReference == nomination.accountNumber
              }
-            self.fem.accountNumber = nomination.accountNumber
-            self.fem.enrollment = nomination
-            self.fem.enrollments = []
-            self.slm.selectedService = service
-            self.sam.amount = exitingInvoice?.amount ?? ""
-            self.slm.services = currentServices
-            self.showView = true
+//            self.fem.accountNumber = nomination.accountNumber
+//            self.fem.enrollment = nomination
+//            self.fem.enrollments = []
+//            self.slm.selectedService = service
+//            self.sam.amount = exitingInvoice?.amount ?? ""
+//            self.slm.services = currentServices
+//            self.showView = true
             return
         }
  
     }
 }
+

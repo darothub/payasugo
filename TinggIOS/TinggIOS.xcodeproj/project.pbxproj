@@ -32,8 +32,24 @@
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
 		71988FB32A53213300C7D72F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FB22A53213300C7D72F /* AppDelegate.swift */; };
+		71988FB92A545FAE00C7D72F /* Bills in Frameworks */ = {isa = PBXBuildFile; productRef = 71988FB82A545FAE00C7D72F /* Bills */; };
+		71988FD82A57036500C7D72F /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FBC2A57036400C7D72F /* HomeScreen.swift */; };
+		71988FD92A57036500C7D72F /* HomeDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FBE2A57036400C7D72F /* HomeDI.swift */; };
+		71988FDA2A57036500C7D72F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FC02A57036400C7D72F /* HomeViewModel.swift */; };
+		71988FDB2A57036500C7D72F /* HomeUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FC22A57036400C7D72F /* HomeUsecase.swift */; };
+		71988FDE2A57036500C7D72F /* HomeBottomNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FC72A57036500C7D72F /* HomeBottomNavView.swift */; };
+		71988FDF2A57036500C7D72F /* ActiveCategoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FC82A57036500C7D72F /* ActiveCategoryTabView.swift */; };
+		71988FE02A57036500C7D72F /* ShimmerUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FCA2A57036500C7D72F /* ShimmerUIViews.swift */; };
+		71988FE12A57036500C7D72F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FCB2A57036500C7D72F /* HomeView.swift */; };
+		71988FE22A57036500C7D72F /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FCD2A57036500C7D72F /* AboutView.swift */; };
+		71988FE32A57036500C7D72F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FCE2A57036500C7D72F /* SettingsView.swift */; };
+		71988FE42A57036500C7D72F /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FCF2A57036500C7D72F /* EditProfileView.swift */; };
+		71988FE52A57036500C7D72F /* PaymentOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD02A57036500C7D72F /* PaymentOptionsView.swift */; };
+		71988FE62A57036500C7D72F /* SupportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD12A57036500C7D72F /* SupportView.swift */; };
+		71988FE82A57036500C7D72F /* ActiveCategoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD32A57036500C7D72F /* ActiveCategoryListView.swift */; };
+		71988FE92A57036500C7D72F /* ActivateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD42A57036500C7D72F /* ActivateCardView.swift */; };
+		71988FEB2A57036500C7D72F /* HomeTopViewDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD62A57036500C7D72F /* HomeTopViewDesign.swift */; };
 		71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */; };
-		71D019DF28A8537D00312864 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019DE28A8537D00312864 /* Home */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
 		71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */ = {isa = PBXBuildFile; productRef = 71F7D7A62981B1A00086AE84 /* CreditCard */; };
 		71F7D7AA29859ABE0086AE84 /* NavigationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F7D7A929859ABE0086AE84 /* NavigationModifier.swift */; };
@@ -100,13 +116,29 @@
 		718114F629D2C0D100BCDE96 /* NewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewView.swift; sourceTree = "<group>"; };
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
-		71867FBA28946EF0008A5411 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinggIOSApp.swift; sourceTree = "<group>"; };
 		718C6293283EBCB8002ADCA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		71988FB22A53213300C7D72F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		71988FB42A53246200C7D72F /* FreshChat */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FreshChat; sourceTree = "<group>"; };
+		71988FB72A545C4600C7D72F /* Bills */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Bills; sourceTree = "<group>"; };
+		71988FBC2A57036400C7D72F /* HomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		71988FBE2A57036400C7D72F /* HomeDI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeDI.swift; sourceTree = "<group>"; };
+		71988FC02A57036400C7D72F /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		71988FC22A57036400C7D72F /* HomeUsecase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeUsecase.swift; sourceTree = "<group>"; };
+		71988FC72A57036500C7D72F /* HomeBottomNavView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeBottomNavView.swift; sourceTree = "<group>"; };
+		71988FC82A57036500C7D72F /* ActiveCategoryTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveCategoryTabView.swift; sourceTree = "<group>"; };
+		71988FCA2A57036500C7D72F /* ShimmerUIViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShimmerUIViews.swift; sourceTree = "<group>"; };
+		71988FCB2A57036500C7D72F /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		71988FCD2A57036500C7D72F /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		71988FCE2A57036500C7D72F /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		71988FCF2A57036500C7D72F /* EditProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		71988FD02A57036500C7D72F /* PaymentOptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentOptionsView.swift; sourceTree = "<group>"; };
+		71988FD12A57036500C7D72F /* SupportView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportView.swift; sourceTree = "<group>"; };
+		71988FD32A57036500C7D72F /* ActiveCategoryListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveCategoryListView.swift; sourceTree = "<group>"; };
+		71988FD42A57036500C7D72F /* ActivateCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivateCardView.swift; sourceTree = "<group>"; };
+		71988FD62A57036500C7D72F /* HomeTopViewDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTopViewDesign.swift; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,8 +170,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7156555829B1024F00307866 /* Airtime in Frameworks */,
-				71D019DF28A8537D00312864 /* Home in Frameworks */,
 				71D019E128A8538400312864 /* Onboarding in Frameworks */,
+				71988FB92A545FAE00C7D72F /* Bills in Frameworks */,
 				710F9D2F2979B2FF0034E193 /* Pin in Frameworks */,
 				71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */,
 			);
@@ -219,14 +251,11 @@
 			isa = PBXGroup;
 			children = (
 				71988FB12A5320FA00C7D72F /* App */,
+				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
 				716708ED2A1D1BDA00ED5E67 /* TinggIOSDebug.entitlements */,
 				716708EA2A1D13E500ED5E67 /* TinggIOSRelease.entitlements */,
 				716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */,
-				71091ECB29EED46A00843FFA /* VirtualCard */,
 				71091EC729EECEE200843FFA /* pendingstateicon.gif */,
-				71F7D7A829859AA70086AE84 /* Navigation */,
-				71BA90B428FE738B007B85F2 /* SplashScreen */,
-				718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */,
 				718C6293283EBCB8002ADCA8 /* Assets.xcassets */,
 				715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */,
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
@@ -248,9 +277,92 @@
 		71988FB12A5320FA00C7D72F /* App */ = {
 			isa = PBXGroup;
 			children = (
+				71988FBA2A57033500C7D72F /* Home */,
+				71091ECB29EED46A00843FFA /* VirtualCard */,
+				71F7D7A829859AA70086AE84 /* Navigation */,
+				71BA90B428FE738B007B85F2 /* SplashScreen */,
 				71988FB22A53213300C7D72F /* AppDelegate.swift */,
 			);
 			name = App;
+			sourceTree = "<group>";
+		};
+		71988FBA2A57033500C7D72F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				71988FBD2A57036400C7D72F /* DI */,
+				71988FC12A57036400C7D72F /* Usecases */,
+				71988FBB2A57036400C7D72F /* Utils */,
+				71988FBF2A57036400C7D72F /* ViewModel */,
+				71988FC32A57036500C7D72F /* Views */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		71988FBB2A57036400C7D72F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				71988FBC2A57036400C7D72F /* HomeScreen.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		71988FBD2A57036400C7D72F /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				71988FBE2A57036400C7D72F /* HomeDI.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
+		71988FBF2A57036400C7D72F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				71988FC02A57036400C7D72F /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		71988FC12A57036400C7D72F /* Usecases */ = {
+			isa = PBXGroup;
+			children = (
+				71988FC22A57036400C7D72F /* HomeUsecase.swift */,
+			);
+			path = Usecases;
+			sourceTree = "<group>";
+		};
+		71988FC32A57036500C7D72F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				71988FC72A57036500C7D72F /* HomeBottomNavView.swift */,
+				71988FC82A57036500C7D72F /* ActiveCategoryTabView.swift */,
+				71988FC92A57036500C7D72F /* Shimmers */,
+				71988FCB2A57036500C7D72F /* HomeView.swift */,
+				71988FCC2A57036500C7D72F /* DrawerDestinationView */,
+				71988FD32A57036500C7D72F /* ActiveCategoryListView.swift */,
+				71988FD42A57036500C7D72F /* ActivateCardView.swift */,
+				71988FD62A57036500C7D72F /* HomeTopViewDesign.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		71988FC92A57036500C7D72F /* Shimmers */ = {
+			isa = PBXGroup;
+			children = (
+				71988FCA2A57036500C7D72F /* ShimmerUIViews.swift */,
+			);
+			path = Shimmers;
+			sourceTree = "<group>";
+		};
+		71988FCC2A57036500C7D72F /* DrawerDestinationView */ = {
+			isa = PBXGroup;
+			children = (
+				71988FCD2A57036500C7D72F /* AboutView.swift */,
+				71988FCE2A57036500C7D72F /* SettingsView.swift */,
+				71988FCF2A57036500C7D72F /* EditProfileView.swift */,
+				71988FD02A57036500C7D72F /* PaymentOptionsView.swift */,
+				71988FD12A57036500C7D72F /* SupportView.swift */,
+			);
+			path = DrawerDestinationView;
 			sourceTree = "<group>";
 		};
 		71AED58B28665C9400A4B14F /* Packages */ = {
@@ -258,7 +370,6 @@
 			children = (
 				71867FB628946D8E008A5411 /* Theme */,
 				71867FB728946DCB008A5411 /* Onboarding */,
-				71867FBA28946EF0008A5411 /* Home */,
 				71E2BE26289BE97A0025ED12 /* Core */,
 				71707E5028FFBDD700CD9BB6 /* Permissions */,
 				7151502329743AF600B0D161 /* Checkout */,
@@ -268,6 +379,7 @@
 				71C72F1A29CCACD7004E7F4C /* CoreUI */,
 				71DD68C429F8417200E8A57D /* CoreNavigation */,
 				71988FB42A53246200C7D72F /* FreshChat */,
+				71988FB72A545C4600C7D72F /* Bills */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -343,11 +455,11 @@
 			);
 			name = TinggIOS;
 			packageProductDependencies = (
-				71D019DE28A8537D00312864 /* Home */,
 				71D019E028A8538400312864 /* Onboarding */,
 				710F9D2E2979B2FF0034E193 /* Pin */,
 				71F7D7A62981B1A00086AE84 /* CreditCard */,
 				7156555729B1024F00307866 /* Airtime */,
+				71988FB82A545FAE00C7D72F /* Bills */,
 			);
 			productName = TingIOS;
 			productReference = 718C628C283EBCB4002ADCA8 /* TinggIOS.app */;
@@ -471,21 +583,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71988FE62A57036500C7D72F /* SupportView.swift in Sources */,
+				71988FDE2A57036500C7D72F /* HomeBottomNavView.swift in Sources */,
 				71091ED529EED86E00843FFA /* CardFrontLayoutView.swift in Sources */,
+				71988FDA2A57036500C7D72F /* HomeViewModel.swift in Sources */,
+				71988FE12A57036500C7D72F /* HomeView.swift in Sources */,
+				71988FE22A57036500C7D72F /* AboutView.swift in Sources */,
+				71988FDF2A57036500C7D72F /* ActiveCategoryTabView.swift in Sources */,
 				71091ED129EED7CE00843FFA /* VirtualCardHomeView.swift in Sources */,
+				71988FE82A57036500C7D72F /* ActiveCategoryListView.swift in Sources */,
 				71091ED329EED7CE00843FFA /* VirtualCardActionView.swift in Sources */,
+				71988FDB2A57036500C7D72F /* HomeUsecase.swift in Sources */,
+				71988FE52A57036500C7D72F /* PaymentOptionsView.swift in Sources */,
+				71988FE02A57036500C7D72F /* ShimmerUIViews.swift in Sources */,
 				71988FB32A53213300C7D72F /* AppDelegate.swift in Sources */,
+				71988FD82A57036500C7D72F /* HomeScreen.swift in Sources */,
 				71091EDD29F0179800843FFA /* VirtualCardState.swift in Sources */,
+				71988FE42A57036500C7D72F /* EditProfileView.swift in Sources */,
 				71091ED229EED7CE00843FFA /* TransactionListView.swift in Sources */,
 				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
 				71091EDB29EFEDFD00843FFA /* VirtualCardLinkedStateView.swift in Sources */,
+				71988FD92A57036500C7D72F /* HomeDI.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71F7D7AA29859ABE0086AE84 /* NavigationModifier.swift in Sources */,
 				718114F729D2C0D200BCDE96 /* NewView.swift in Sources */,
+				71988FE32A57036500C7D72F /* SettingsView.swift in Sources */,
 				71091ED729EED95100843FFA /* VerificationPendingStateView.swift in Sources */,
 				71091ECA29EED24300843FFA /* VirtualCardBannerView.swift in Sources */,
 				71091ED929EEF3C800843FFA /* VirtualCardViewModel.swift in Sources */,
+				71988FE92A57036500C7D72F /* ActivateCardView.swift in Sources */,
 				71682416290B035200A80C26 /* Documentation.docc in Sources */,
+				71988FEB2A57036500C7D72F /* HomeTopViewDesign.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -714,7 +842,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -766,7 +894,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
@@ -857,9 +985,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Airtime;
 		};
-		71D019DE28A8537D00312864 /* Home */ = {
+		71988FB82A545FAE00C7D72F /* Bills */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Home;
+			productName = Bills;
 		};
 		71D019E028A8538400312864 /* Onboarding */ = {
 			isa = XCSwiftPackageProductDependency;

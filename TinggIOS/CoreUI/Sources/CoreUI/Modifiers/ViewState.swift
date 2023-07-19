@@ -10,12 +10,11 @@ import SwiftUI
 
 /// A view modifier to handle view state changes
 public struct ViewStatesModifier: ViewModifier {
-    var uiState: Published<UIModel>.Publisher
+    @State var uiState: Published<UIModel>.Publisher
     @State var showAlert = false
     @State var message = ""
     @State private var showProgressBar = false
-    @State private var disableContent = false
-    @State var subscriptions = Set<AnyCancellable>()
+    @State private var cancellable: AnyCancellable?
     var action: () -> Void
     var onSuccess: (UIModel.Content) -> Void
     var onFailure: (String) -> Void
@@ -25,7 +24,7 @@ public struct ViewStatesModifier: ViewModifier {
         onFailure:  @escaping (String) -> Void = {str in },
         action: @escaping () -> Void = {}
     ) {
-        self.uiState = uiState
+        self._uiState = State(initialValue: uiState)
         self.onSuccess = onSuccess
         self.onFailure = onFailure
         self.action = action
@@ -34,7 +33,11 @@ public struct ViewStatesModifier: ViewModifier {
     public func body(content: Content) -> some View {
         ZStack {
             content
-                .disabled(disableContent)
+                .disabled(showProgressBar)
+                .onDisappear {
+                    resetPublisher()
+                    cancellable?.cancel()
+                }
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                 .scaleEffect(2)
@@ -42,13 +45,12 @@ public struct ViewStatesModifier: ViewModifier {
                 .showIf($showProgressBar)
         }
         .onAppear {
-            uiState.sink { us in
+            cancellable = uiState.sink { us in
                 switch us {
                 case .error(let err):
                     showAlert = true
                     showProgressBar = false
                     message = err
-                    disableContent = false
                     onFailure(message)
                     log(message: err)
                 case .content(let content):
@@ -57,22 +59,22 @@ public struct ViewStatesModifier: ViewModifier {
                     showAlert = content.showAlert
                     message = cont.statusMessage
                     onSuccess(cont)
-                    disableContent = false
-
                 case .loading:
-                    disableContent = true
                     showProgressBar = true
                     log(message: "loading")
                 case .nothing:
-                    disableContent = false
                     showProgressBar = false
                     log(message: "nothing")
                 }
-            }.store(in: &subscriptions)
+            }
         }
+     
         .alert(message, isPresented: $showAlert) {
             buttonEvent(action: action)
         }
+    }
+    private func resetPublisher() {
+        let _ = uiState.output(at: 0)
     }
     fileprivate func buttonEvent(action:  @escaping () -> Void ) -> some View {
         return Button("OK") {
@@ -96,7 +98,6 @@ public struct UIState: ViewModifier {
         uiState:  Binding<UIModel>,
         showAlertOnError: Bool = true,
         showAlertOnSuccess: Bool = false,
-
         onSuccess: @escaping (UIModel.Content) -> Void,
         onFailure:  @escaping (String) -> Void = {str in },
         action: @escaping () -> Void = {}
@@ -128,22 +129,28 @@ public struct UIState: ViewModifier {
                 message = err
                 onFailure(message)
                 log(message: err)
+//                uiState = UIModel.nothing
             case .content(let content):
                 let cont = content
                 showProgressBar = false
                 showAlert = showAlertOnSuccess
                 message = cont.statusMessage
                 onSuccess(cont)
+//                uiState = UIModel.nothing
             case .loading:
                 showProgressBar = true
                 log(message: "loading")
             case .nothing:
                 showProgressBar = false
                 log(message: "nothing")
+          
             }
         })
         .alert(message, isPresented: $showAlert) {
             buttonEvent(action: action)
+        }
+        .onDisappear {
+            uiState = UIModel.nothing
         }
     }
     fileprivate func buttonEvent(action:  @escaping () -> Void ) -> some View {
@@ -322,3 +329,4 @@ extension View {
         )
     }
 }
+

@@ -20,11 +20,11 @@ struct PolicySectionView: View {
                 CheckBoxView(checkboxChecked: $hasCheckedTermsAndPolicy)
                     .accessibility(identifier: "policycheckbox")
                 Text(.init("By proceeding you agree with the \(termOfAgreementLink) and \(privacyPolicy)"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             .font(.caption)
             .foregroundColor(PrimaryTheme.getColor(.tinggblack))
         }
-        .padding(.horizontal, PrimaryTheme.largePadding)
     }
 }
 

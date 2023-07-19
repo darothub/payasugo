@@ -7,7 +7,7 @@
 
 import Core
 import Foundation
-@MainActor
+
 public class GetCountriesAndDialCodeUseCase {
     public let countryRepository: CountryRepository
     /// ``GetCountriesAndDialCodeUseCase`` initialiser
@@ -18,13 +18,9 @@ public class GetCountriesAndDialCodeUseCase {
     /// A call as function to get country dialcode and country code
     /// - Returns: return as dictionary of  ``Country/countryCode`` and ``Country/countryDialCode``
     public func callAsFunction() async throws -> [String : String] {
-        let latestCountries = try await countryRepository.getCountries()
+        let latestCountries: [CountriesInfoDTO] = try await countryRepository.getCountries()
         var dict: [String : String] = .init()
-        if latestCountries.dtos.isEmpty {
-            dict = Dictionary(uniqueKeysWithValues: latestCountries.objs.map { ($0.countryCode!, $0.countryDialCode!) })
-        } else {
-            dict = Dictionary(uniqueKeysWithValues: latestCountries.dtos.map { ($0.countryCode!, $0.countryDialCode!) })
-        }
+        dict = Dictionary(uniqueKeysWithValues: latestCountries.map { ($0.countryCode!, $0.countryDialCode!) })
         return dict
     }
     /// A call as function to get country by dialcode

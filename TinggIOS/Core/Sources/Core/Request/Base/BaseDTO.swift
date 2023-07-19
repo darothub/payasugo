@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BaseDTO.swift
 //  
 //
 //  Created by Abdulrasaq on 05/07/2022.

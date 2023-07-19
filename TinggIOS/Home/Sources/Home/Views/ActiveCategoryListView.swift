@@ -8,12 +8,11 @@ import CoreUI
 import Core
 import CoreNavigation
 import SwiftUI
-//import RealmSwift
 
 struct ActiveCategoryListView: View {
     @State var categories = [CategoryDTO]()
     @EnvironmentObject var hvm: HomeViewModel
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             ForEach($categories, id: \.categoryID) { $eachCategory in
@@ -33,14 +32,18 @@ struct ActiveCategoryListView: View {
         case "2":
             if let defaultService = AppStorageManager.getDefaultNetwork() {
                 withAnimation {
-                    navigation.navigationStack.append(Screens.buyAirtime(defaultService.serviceName))
+                    navigation.navigateTo(
+                        screen: Screens.buyAirtime(defaultService.serviceName)
+                    )
                 }
             } else {
                 Task {
                     let quickTopups = await hvm.getQuickTopups()
                     if let firstService = quickTopups.first {
                         withAnimation {
-                            navigation.navigationStack.append(Screens.buyAirtime(firstService.serviceName))
+                            navigation.navigateTo(
+                                screen: Screens.buyAirtime(firstService.serviceName)
+                            )
                         }
                     }
                     
@@ -54,8 +57,8 @@ struct ActiveCategoryListView: View {
             
             _ = hvm.nominationInfo.getEntities().filter {$0.serviceCategoryID == categoryId}
             withAnimation {
-                navigation.navigationStack.append(
-                    HomeScreen.billers(titleAndItemList)
+                navigation.navigateTo(
+                    screen: HomeScreen.billers(titleAndItemList)
                 )
             }
         }

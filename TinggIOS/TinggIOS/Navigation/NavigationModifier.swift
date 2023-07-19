@@ -5,19 +5,23 @@
 //  Created by Abdulrasaq on 28/01/2023.
 //
 import Airtime
+import Bills
 import CreditCard
 import Core
 import CoreNavigation
 import Checkout
-import Home
 import Onboarding
 import Permissions
 import Pin
 import SwiftUI
 import Theme
 import FreshChat
-struct NavigationModifier: ViewModifier {
-    @EnvironmentObject var navigation: NavigationUtils
+struct NavigationModifier: ViewModifier, ServicesListener {
+    func onQuicktop(serviceName: String) {
+        print("NavigationModifier \(serviceName)")
+    }
+    
+//    @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject var  hvm: HomeViewModel
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
@@ -27,44 +31,60 @@ struct NavigationModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .changeTint($colorTint)
-            .navigationDestination(for: Screens.self) { screen in
+            .navigationDestination(for: HomeScreen.self) { screen in
                 switch screen {
-                case .home:
-                    HomeBottomNavView()
-                        .environmentObject(checkout)
-                        .environmentObject(hvm)
+                case .profile:
+                    EditProfileView()
+                case .paymentOptions:
+                    PaymentOptionsView()
+                case .settings:
+                    SettingsView()
+                case .support:
+                    SupportView()
                         .environmentObject(freshchatWrapper)
-
+                case .about:
+                    AboutView()
+                case let .home(bottomNavTab, billViewTab):
+                    if bottomNavTab.isEmpty {
+                        HomeBottomNavView()
+                            .environmentObject(checkout)
+                            .environmentObject(hvm)
+                            .environmentObject(freshchatWrapper)
+                            .environmentObject(contactViewModel)
+                    } else {
+                        HomeBottomNavView(selectedTab: bottomNavTab, billViewTab: billViewTab)
+                            .environmentObject(checkout)
+                            .environmentObject(hvm)
+                            .environmentObject(freshchatWrapper)
+                            .environmentObject(contactViewModel)
+                    }
+                  
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
-                        .environmentObject(navigation)
+//                        .environmentObject(navigation)
                         .environmentObject(freshchatWrapper)
-           
-                case .buyAirtime(let serviceName):
-                    BuyAirtimeView(selectedServiceName: serviceName)
-                        .environmentObject(checkout)
-                        .environmentObject(contactViewModel)
-                case .categoriesAndServices(let items):
-                    CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem])
-
                 case .pinCreationView:
                     CreditCardPinView(pinPermission: $checkout.pinPermission, pin: $checkout.pin, confirmPin: $checkout.confirmPin, pinIsCreated: $checkout.pinIsCreated)
                 case .securityQuestionView:
                     SecurityQuestionView(selectedQuestion: $checkout.selectedQuestion, answer: $checkout.answer)
                 case let .cardDetailsView(response, invoice):
                     EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
-                        .environmentObject(navigation)
-                case .transactionListView(let model as TransactionItemModel):
-                    EmptyView()
-//                    TransactionListView(listOfModel: .constant(model))
+//                        .environmentObject(navigation)
                 case .billView(let selectedTab):
-                    BillView(selectedTab: selectedTab)
-                        .environmentObject(hvm)
+                    Text("select")
+//                    BillView(selectedTab: )
+//                        .environmentObject(hvm)
+                case .categoriesAndServices(let items):
+                    CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem], quickTopUpListener: self)
+                        .environmentObject(checkout)
+//                        .environmentObject(navigation)
+                    
                 default:
                     EmptyView()
                 }
             }
+
     }
 }
 

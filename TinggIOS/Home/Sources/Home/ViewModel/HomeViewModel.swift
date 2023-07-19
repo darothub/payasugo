@@ -237,38 +237,38 @@ public class HomeViewModel: ViewModel {
     public func getBillAccount() -> [BillAccount] {
         homeUsecase.getBillAccounts()
     }
-    public func getSavedBill() {
-        savedBillUIModel = UIModel.loading
-        let invoices = Observer<Invoice>().getEntities()
-        let services = Observer<MerchantService>().getEntities()
-        let billAccounts = getBillAccount()
-        let filteredServicesAndEnrollment = billAccounts.compactMap { ba in
-            let invoice = invoices.first { i in
-                i.billReference == ba.accountNumber
-            }
-            let service = services.first { s in
-                ba.serviceId == s.hubServiceID
-            }
-            return (s: service, i: invoice)
-        }
-
-        let savedBillItems = filteredServicesAndEnrollment.compactMap { (s, i) in
-            if let service = s, let bill = i {
-                return DueBillItem(
-                    serviceName: service.serviceName,
-                    serviceImageString: service.serviceLogo,
-                    beneficiaryName: bill.customerName,
-                    accountNumber: bill.billReference,
-                    amount: "",
-                    dueDate: ""
-                )
-                 
-            } else {
-                return nil
-            }
-        }
-        handleResultState(model: &savedBillUIModel, (Result.success(savedBillItems) as Result<Any, Error>))
-    }
+//    public func getSavedBill() {
+//        savedBillUIModel = UIModel.loading
+//        let invoices = Observer<Invoice>().getEntities()
+//        let services = Observer<MerchantService>().getEntities()
+//        let billAccounts = getBillAccount()
+//        let filteredServicesAndEnrollment = billAccounts.compactMap { ba in
+//            let invoice = invoices.first { i in
+//                i.billReference == ba.accountNumber
+//            }
+//            let service = services.first { s in
+//                ba.serviceId == s.hubServiceID
+//            }
+//            return (s: service, i: invoice)
+//        }
+//
+//        let savedBillItems = filteredServicesAndEnrollment.compactMap { (s, i) in
+//            if let service = s, let bill = i {
+//                return DueBillItem(
+//                    serviceName: service.serviceName,
+//                    serviceImageString: service.serviceLogo,
+//                    beneficiaryName: bill.customerName,
+//                    accountNumber: bill.billReference,
+//                    amount: "",
+//                    dueDate: ""
+//                )
+//                 
+//            } else {
+//                return nil
+//            }
+//        }
+//        handleResultState(model: &savedBillUIModel, (Result.success(savedBillItems) as Result<Any, Error>))
+//    }
     public func mapHistoryIntoChartData() -> [ChartData] {
         return homeUsecase.getBarChartMappedData().map { (key, value) in
             return ChartData(xName: ChartMonth.allCases[key-1], point: value)

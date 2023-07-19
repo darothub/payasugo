@@ -12,7 +12,7 @@ import SwiftUI
 
 
 public struct CreditCardPinView: View {
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     @Environment(\.dismiss) var dismiss
     private let instruction = "Enter and confirm your pin below"
     private let pinPermission1 = Properties.pinPermission1
@@ -51,9 +51,7 @@ public struct CreditCardPinView: View {
             TinggButton(backgroundColor: buttonBgColor, buttonLabel: "Continue", padding: 0) {
                 if buttonBgColor == .green {
                     pinIsCreated = true
-                    navigation.navigationStack.append(
-                        Screens.securityQuestionView
-                    )
+                    navigation.navigateTo(screen: Screens.securityQuestionView)
                 } 
                
             }
@@ -113,6 +111,6 @@ struct CheckoutCardPinView_Previews: PreviewProvider {
     }
     static var previews: some View {
         CheckoutCardPreviewHolder()
-            .environmentObject(NavigationUtils())
+            .environmentObject(NavigationManager())
     }
 }

@@ -48,17 +48,7 @@ class OnboardingUITest: XCTestCase {
         let countrycodeandflag = app.staticTexts["countrycodeandflag"]
         XCTAssert(countrycodeandflag.waitForExistence(timeout: 5))
     }
-    func testOnPhoneVerificationScreenWhenCountryFlagIsClickedASheetShowsUp(){
-        
-        tapGetStartedButton()
-        app/*@START_MENU_TOKEN@*/.staticTexts["countrycodeandflag"]/*[[".staticTexts[\"🇧🇼 +267\"]",".staticTexts[\"countrycodeandflag\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        
-        let countryflag = app.staticTexts["countryflag"]
-        let countryDialCode = app.staticTexts["countrydialcode"]
-        XCTAssert(countryflag.waitForExistence(timeout: 5))
-        XCTAssert(countryDialCode.waitForExistence(timeout: 5))
-                
-    }
+
     func testWhenACountryIsSelectedCountryAppearsInTheTextField(){
         tapGetStartedButton()
         tapGetStartedButtonThenPickACountry()

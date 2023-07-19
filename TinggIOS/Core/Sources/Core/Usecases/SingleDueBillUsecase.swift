@@ -7,10 +7,10 @@
 
 import Foundation
 public class SingleDueBillUsecase {
-    private let fetchBillRepository: FetchBillRepository
+    private let fetchBillRepository: InvoiceRepository
     /// Single due bill usecase initialiser
     /// - Parameter fetchBillRepository: ``FetchBillRepositoryImpl``
-    public init(fetchBillRepository: FetchBillRepository) {
+    public init(fetchBillRepository: InvoiceRepository) {
         self.fetchBillRepository = fetchBillRepository
     }
     

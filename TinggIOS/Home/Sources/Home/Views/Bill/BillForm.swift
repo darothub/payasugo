@@ -11,7 +11,7 @@ import CoreNavigation
 import Theme
 import Core
 public struct BillFormView: View {
-    @EnvironmentObject var navUtils: NavigationUtils
+    @EnvironmentObject var navUtils: NavigationManager
     @Binding var billDetails: BillDetails
     @EnvironmentObject var homeViewModel: HomeViewModel
     @State private var accountNumber: String = ""
@@ -78,9 +78,9 @@ public struct BillFormView: View {
             })
             self.invoice = invoice
             Observer<Invoice>().saveEntity(obj: invoice)
-            navUtils.navigationStack.append(
-                HomeScreen.billDetailsView(invoice, billDetails.service)
-            )
+//            navUtils.navigateTo(
+//                screen: HomeScreen.billDetailsView(invoice, billDetails.service)
+//            )
         }
     }
 }

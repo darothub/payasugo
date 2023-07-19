@@ -28,7 +28,7 @@ public struct IconImageCardView: View {
             image.resizable()
         } placeholder: {
             Image(systemName: "photo")
-                      .foregroundColor(.red)
+                .foregroundColor(.red)
                 
         }
         .frame(width: 40, height: 40)
@@ -72,12 +72,11 @@ public struct ResponsiveImageCardView: View {
             image.resizable()
                 
         } placeholder: {
-            Image(systemName: "camera.fill")
+            Image(systemName: "photo")
                 .foregroundColor(colorScheme == .dark ? .black : .black)
         }
         .frame(width: 40, height: 40)
         .clipShape(Circle())
-        .padding()
         .scaleEffect(scaleEffect)
         .background(
             bgShape == .rectangular ?

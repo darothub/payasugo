@@ -13,10 +13,10 @@ struct ServicesListView: View {
     let gridColumn = [
         GridItem(.adaptive(minimum: 110))
     ]
-    var onChangeSelection: () -> Void
+    var onClick: () -> Void
     var body: some View {
         VStack(alignment: .leading) {
-            Text(slm.selectPaymentTitle)
+            Text(slm.title)
                 .font(.body)
                 .padding(.top, 30)
                 .foregroundColor(.black)
@@ -34,13 +34,10 @@ struct ServicesListView: View {
     }
     @ViewBuilder
     private func showListOfServices(model slm: ServicesListModel) -> some View {
-        ForEach(slm.services, id: \.hubServiceID) { service in
-            RectangleImageCardView(imageUrl: service.serviceLogo, tag: service.serviceName, selected: $slm.selectedProvider) {
-                onChangeSelection()
-                }
-               
+        ForEach(slm.serviceModels, id: \.logoUrl) { service in
+            RectangleImageCardView(imageUrl: service.logoUrl, tag: service.name, selected: $slm.selectedProvider, onClick: onClick) 
                 .overlay(alignment: .topTrailing) {
-                    if slm.selectedProvider == service.serviceName {
+                    if slm.selectedProvider == service.name {
                         NetworkFavouritedMarkedView()
                     }
                 }

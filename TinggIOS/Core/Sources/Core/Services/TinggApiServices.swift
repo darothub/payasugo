@@ -56,10 +56,33 @@ extension TinggApiServices {
             }
     }
     
+    public func makeRequest<T: BaseDTOprotocol>(
+        urlPath: String,
+        tinggRequest: RequestMap,
+        onCompletion: @escaping(Result<T, ApiError>) -> Void
+    ) {
+        request(urlPath: urlPath, tinggRequest: tinggRequest)
+            .validate(statusCode: 200..<300)
+            .execute { (result:Result<T, ApiError>) in
+                onCompletion(result)
+            }
+    }
+    
     public func result<T: BaseDTOprotocol>(tinggRequest: RequestMap) async throws -> T {
-        print("TinggRequestApi \(tinggRequest)")
         return try await withCheckedThrowingContinuation { continuation in
             makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
+                switch result {
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                case .success(let data):
+                    continuation.resume(returning: data)
+                }
+            }
+        }
+    }
+    public func result<T: BaseDTOprotocol>(urlPath: String, tinggRequest: RequestMap) async throws -> T {
+        return try await withCheckedThrowingContinuation { continuation in
+            makeRequest(urlPath: urlPath, tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
                 switch result {
                 case .failure(let error):
                     continuation.resume(throwing: error)

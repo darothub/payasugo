@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ServiceDTO.swift
 //  
 //
 //  Created by Abdulrasaq on 13/03/2023.
@@ -8,37 +8,88 @@
 import Foundation
 // MARK: - ServiceDTO
 public struct ServiceDTO: Codable {
-    public let serviceName, clientName, hubClientID, serviceCode: DynamicType
-    public let hubServiceID, clientCode, minAmount, maxAmount: DynamicType
-    public let servicePatternID, serviceAccountKey: DynamicType
+    public let serviceName, clientName, hubClientID, serviceCode: String
+    public let hubServiceID, clientCode, minAmount, maxAmount: String
+    public let servicePatternID, serviceAccountKey: String
     public let exactPayment: String
     public let categoryID: StringOrIntEnum
-    public let activeStatus: DynamicType
-    public let serviceLogo: DynamicType
-    public let isPrepaidService, paybill, networkID, webTemplateID: DynamicType
-    public let receiverSourceAddress, referenceLabel: DynamicType
+    public let activeStatus: String
+    public let serviceLogo: String
+    public let isPrepaidService, paybill, networkID, webTemplateID: String
+    public let receiverSourceAddress, referenceLabel: String
     public let presentmentType: PresentmentType
-    public let referenceInputMask, formatErrorMessage: DynamicType
-    public let inputType: InputType
-    public let colorCode: DynamicType
-    public let formType: FormType
+    public let referenceInputMask, formatErrorMessage: String
+    public let inputType: String
+    public let colorCode: String
+    public let formType: String
     public let formParameters: FORMPARAMETERSDTO
-    public let abbreviation: DynamicType
+    public let abbreviation: String
     public let paymentLabel: String
-    public let orderID, regexType, isBundleService, ignoreSaveEnrollment: DynamicType
-    public let hasBillAmount: DynamicType
+    public let orderID, regexType, isBundleService, ignoreSaveEnrollment: String
+    public let hasBillAmount: String
     public let serviceParameters: SERVICEPARAMETERSDTO
     public let bundleLabel: String
     public let bundleCategoryLabel: String
-    public let displayNoPendingBillDialog, canEditAmount, isCyclicService, isDislayableOnLifestream: DynamicType
+    public let displayNoPendingBillDialog, canEditAmount, isCyclicService, isDislayableOnLifestream: String
     public let favoritesDisplayMode: String
     public let isRefresh: String
-    public let applicableCharges: [DynamicType]
+    public let applicableCharges: [String] = []
     public let validateBillAmount: String
-    public let charges: DynamicType
-    public let title: DynamicType
-    public let message: DynamicType
+    public let charges: String
+    public let title: String
+    public let message: String
 
+    public init(
+        serviceName: String = "", clientName: String = "", hubClientID: String = "", serviceCode: String = "", hubServiceID: String = "", clientCode: String = "", minAmount: String = "", maxAmount: String = "", servicePatternID: String = "", serviceAccountKey: String = "", exactPayment: String = "", categoryID: StringOrIntEnum = .string(""), activeStatus: String = "", serviceLogo: String = "", isPrepaidService: String = "", paybill: String = "", networkID: String = "", webTemplateID: String = "", receiverSourceAddress: String = "", referenceLabel: String = "", presentmentType: PresentmentType, referenceInputMask: String = "", formatErrorMessage: String = "", inputType: String = "", colorCode: String = "", formType: String = "", formParameters: FORMPARAMETERSDTO = .string(""), abbreviation: String = "", paymentLabel: String = "", orderID: String = "", regexType: String = "", isBundleService: String = "", ignoreSaveEnrollment: String = "", hasBillAmount: String = "", serviceParameters: SERVICEPARAMETERSDTO = .string(""), bundleLabel: String = "", bundleCategoryLabel: String = "", displayNoPendingBillDialog: String = "", canEditAmount: String = "", isCyclicService: String = "", isDislayableOnLifestream: String = "", favoritesDisplayMode: String = "", isRefresh: String = "", validateBillAmount: String = "", charges: String = "", title: String = "", message: String = ""
+    ) {
+        self.serviceName = serviceName
+        self.clientName = clientName
+        self.hubClientID = hubClientID
+        self.serviceCode = serviceCode
+        self.hubServiceID = hubServiceID
+        self.clientCode = clientCode
+        self.minAmount = minAmount
+        self.maxAmount = maxAmount
+        self.servicePatternID = servicePatternID
+        self.serviceAccountKey = serviceAccountKey
+        self.exactPayment = exactPayment
+        self.categoryID = categoryID
+        self.activeStatus = activeStatus
+        self.serviceLogo = serviceLogo
+        self.isPrepaidService = isPrepaidService
+        self.paybill = paybill
+        self.networkID = networkID
+        self.webTemplateID = webTemplateID
+        self.receiverSourceAddress = receiverSourceAddress
+        self.referenceLabel = referenceLabel
+        self.presentmentType = presentmentType
+        self.referenceInputMask = referenceInputMask
+        self.formatErrorMessage = formatErrorMessage
+        self.inputType = inputType
+        self.colorCode = colorCode
+        self.formType = formType
+        self.formParameters = formParameters
+        self.abbreviation = abbreviation
+        self.paymentLabel = paymentLabel
+        self.orderID = orderID
+        self.regexType = regexType
+        self.isBundleService = isBundleService
+        self.ignoreSaveEnrollment = ignoreSaveEnrollment
+        self.hasBillAmount = hasBillAmount
+        self.serviceParameters = serviceParameters
+        self.bundleLabel = bundleLabel
+        self.bundleCategoryLabel = bundleCategoryLabel
+        self.displayNoPendingBillDialog = displayNoPendingBillDialog
+        self.canEditAmount = canEditAmount
+        self.isCyclicService = isCyclicService
+        self.isDislayableOnLifestream = isDislayableOnLifestream
+        self.favoritesDisplayMode = favoritesDisplayMode
+        self.isRefresh = isRefresh
+        self.validateBillAmount = validateBillAmount
+        self.charges = charges
+        self.title = title
+        self.message = message
+    }
     enum CodingKeys: String, CodingKey {
         case serviceName = "SERVICE_NAME"
         case clientName = "CLIENT_NAME"
@@ -91,54 +142,55 @@ public struct ServiceDTO: Codable {
     }
    public var toEntity: MerchantService {
         let entity = MerchantService()
-        entity.serviceName = self.serviceName.toString
-        entity.clientName = self.clientName.toString
-        entity.clientCode = self.clientCode.toString
-        entity.serviceCode = self.serviceCode.toString
-        entity.hubClientID = self.hubClientID.toString
-        entity.hubServiceID = self.hubServiceID.toString
-        entity.minAmount = self.minAmount.toString
-        entity.maxAmount = self.maxAmount.toString
-        entity.servicePatternID = self.servicePatternID.toString
-        entity.serviceAccountKey = self.serviceAccountKey.toString
+        entity.serviceName = self.serviceName
+        entity.clientName = self.clientName
+        entity.clientCode = self.clientCode
+        entity.serviceCode = self.serviceCode
+        entity.hubClientID = self.hubClientID
+        entity.hubServiceID = self.hubServiceID
+        entity.minAmount = self.minAmount
+        entity.maxAmount = self.maxAmount
+        entity.servicePatternID = self.servicePatternID
+        entity.serviceAccountKey = self.serviceAccountKey
         entity.exactPayment = self.exactPayment
         entity.categoryID = self.categoryID.toString
-        entity.activeStatus = self.activeStatus.toString
-        entity.serviceLogo = self.serviceLogo.toString
-        entity.isPrepaidService = self.isPrepaidService.toString
-        entity.paybill = self.paybill.toString
-        entity.networkID = self.networkID.toString
-        entity.webTemplateID = self.webTemplateID.toString
-        entity.receiverSourceAddress = self.receiverSourceAddress.toString
-        entity.referenceLabel = self.referenceLabel.toString
-        entity.formatErrorMessage = self.formatErrorMessage.toString
-        entity.inputType = self.inputType.rawValue
-        entity.colorCode = self.colorCode.toString
-        entity.formType = self.formType.rawValue
+        entity.activeStatus = self.activeStatus
+        entity.serviceLogo = self.serviceLogo
+        entity.isPrepaidService = self.isPrepaidService
+        entity.paybill = self.paybill
+        entity.networkID = self.networkID
+        entity.webTemplateID = self.webTemplateID
+        entity.receiverSourceAddress = self.receiverSourceAddress
+        entity.referenceLabel = self.referenceLabel
+        entity.formatErrorMessage = self.formatErrorMessage
+        entity.inputType = self.inputType
+        entity.colorCode = self.colorCode
+        entity.formType = self.formType
         entity.formParameters = self.formParameters.toEntity
-        entity.abbreviation = self.abbreviation.toString
+        entity.abbreviation = self.abbreviation
         entity.paymentLabel = self.paymentLabel
-        entity.orderID = self.orderID.toString
-        entity.regexType = self.regexType.toString
-        entity.isBundleService = self.isBundleService.toString
-        entity.ignoreSaveEnrollment = self.ignoreSaveEnrollment.toString
-        entity.hasBillAmount = self.hasBillAmount.toString
+        entity.orderID = self.orderID
+        entity.regexType = self.regexType
+        entity.isBundleService = self.isBundleService
+        entity.ignoreSaveEnrollment = self.ignoreSaveEnrollment
+        entity.hasBillAmount = self.hasBillAmount
         entity.serviceParameters = self.serviceParameters.toEntity
         entity.bundleLabel = self.bundleLabel
         entity.bundleCategoryLabel = self.bundleCategoryLabel
-        entity.displayNoPendingBillDialog = self.displayNoPendingBillDialog.toString
+        entity.displayNoPendingBillDialog = self.displayNoPendingBillDialog
         entity.favoritesDisplayMode = self.favoritesDisplayMode
         entity.isRefresh = self.isRefresh
-        let applicableChargeList: [String] = self.applicableCharges.map {$0.toString}
+        let applicableChargeList: [String] = self.applicableCharges.map {$0}
         entity.applicableCharges.append(objectsIn: applicableChargeList)
         entity.validateBillAmount = self.validateBillAmount
-        entity.charges = self.charges.value as? String ?? ""
-        entity.title = self.title.value as? String ?? ""
-        entity.message = self.message.value as? String ?? ""
+        entity.charges = self.charges
+        entity.title = self.title
+        entity.message = self.message
         entity.presentmentType = self.presentmentType.rawValue
         return entity
     }
     public var isActive: Bool {
-        return self.activeStatus.toString == "0" ? false : true
+        return self.activeStatus == "0" ? false : true
     }
 }
+

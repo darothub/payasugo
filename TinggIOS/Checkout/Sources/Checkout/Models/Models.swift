@@ -31,24 +31,29 @@ public struct FavouriteEnrollmentModel: Hashable, Equatable {
     }
 }
 
-public struct ServicesListModel: Hashable, Equatable {
-    public var selectedProvider: String = ""
-    public var services: [MerchantService] = []
-    public var payers: [MerchantPayer] =  [MerchantPayer]()
-    public var selectedService: MerchantService = .init()
-    public var selectedPayer: MerchantPayer = .init()
-    public var selectPaymentTitle = "Select network provider"
-    public var canOthersPay: Bool = false
+public struct ServicesListModel: Equatable {
+    public var selectedProvider: String 
+    public var title: String
+    public var serviceModels: [ServiceModel]
     public var orientation = ListOrientation.horizontal
     public static var phoneNumber: String = "080"
-    public init(selectedProvider: String  = "", payers: [MerchantPayer] = samplePayers, selectedService: MerchantService =  .init(), selectedPayer: MerchantPayer =  .init(), selectPaymentTitle: String = "Select network provider", canOthersPay: Bool = false, orientation: ListOrientation = ListOrientation.horizontal) {
+    public static var othersPhoneNumber: String = ""
+    public init(title: String = "Select network provider", serviceModels: [ServiceModel] = [], selectedProvider: String  = "", orientation: ListOrientation = ListOrientation.horizontal) {
         self.selectedProvider = selectedProvider
-        self.payers = payers
-        self.selectedService = selectedService
-        self.selectedPayer = selectedPayer
-        self.selectPaymentTitle = selectPaymentTitle
-        self.canOthersPay = canOthersPay
+        self.title = title
+        self.serviceModels = serviceModels
         self.orientation = orientation
+    }
+}
+
+public struct ServiceModel: Equatable {
+    public var name: String
+    public var logoUrl: String
+    public var canOthersPay: Bool
+    public init(name: String, logoUrl: String, canOthersPay: Bool = false) {
+        self.name = name
+        self.logoUrl = logoUrl
+        self.canOthersPay = canOthersPay
     }
 }
 

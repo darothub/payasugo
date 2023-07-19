@@ -8,13 +8,13 @@ import Core
 import Foundation
 
 public class ActivationCodeUsecase {
-    public let sendRequest: SendRequest
-    public init(sendRequest: SendRequest) {
+    public let sendRequest: TinggApiServices
+    public init(sendRequest: TinggApiServices) {
         self.sendRequest = sendRequest
     }
 
-    public func callAsFunction(request: RequestMap) async throws ->  Result<BaseDTO, ApiError> {
-        try await sendRequest(request: request)
+    public func callAsFunction(request: RequestMap) async throws ->  BaseDTO {
+        try await sendRequest.result(tinggRequest: request)
     }
     
 }

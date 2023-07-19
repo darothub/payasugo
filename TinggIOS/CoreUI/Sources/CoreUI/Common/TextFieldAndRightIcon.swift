@@ -9,13 +9,13 @@ import SwiftUI
 
 public struct TextFieldAndRightIcon: View {
     @Binding var number: String
-    @State var iconName = "person"
-    @State var placeHolder = "Mobile number"
-    @State var keyboardType: UIKeyboardType = .numberPad
     @FocusState var cursor: Bool
-    @Binding var success: Bool
-    var onImageClick: () -> Void
-    public init(number: Binding<String>, iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, success: Binding<Bool> = .constant(true), onImageClick: @escaping () -> Void = {
+    var iconName = "person"
+    var placeHolder = "Mobile number"
+    var keyboardType: UIKeyboardType = .numberPad
+    private var validation: (String) -> Bool
+    private var onImageClick: () -> Void
+    public init(number: Binding<String>, iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, validation: @escaping (String) -> Bool = {_ in false }, onImageClick: @escaping () -> Void = {
         //TODO
     }) {
         self._number = number
@@ -23,7 +23,7 @@ public struct TextFieldAndRightIcon: View {
         self.placeHolder = placeHolder
         self.keyboardType = keyboardType
         self.onImageClick = onImageClick
-        _success = success
+        self.validation = validation
     }
     public var body: some View {
         HStack {
@@ -37,11 +37,7 @@ public struct TextFieldAndRightIcon: View {
                     onImageClick()
                 }
         }.padding()
-        .background(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(lineWidth: 0.5)
-        ).foregroundColor(success ? .black : .red)
-   
+        .validateBorderStyle(text: $number, validation: validation)
     }
 }
 
@@ -50,36 +46,31 @@ public struct TextFieldAndRightIcon: View {
 
 public struct TextFieldAndLeftTitle: View {
     @Binding var number: String
-    @Binding var iconName: String
+    var iconName: String
     @State var placeHolder = "Mobile number"
     @State var keyboardType: UIKeyboardType = .numberPad
     @FocusState var cursor: Bool
-    @Binding var success: Bool
-  
-    public init(number: Binding<String>, iconName: Binding<String>, placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, success: Binding<Bool> = .constant(true)
+    private var validation: (String) -> Bool
+    
+    public init(number: Binding<String>, iconName: String, placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, validation: @escaping (String) -> Bool = {_ in false }
     ) {
         self._number = number
-        self._iconName = iconName
+        self.iconName = iconName
         self.placeHolder = placeHolder
         self.keyboardType = keyboardType
-        _success = success
+        self.validation = validation
+
     }
     public var body: some View {
         HStack {
             Text(iconName)
-                .foregroundColor(success ? .black : .red)
             TextField(placeHolder, text: $number)
                 .keyboardType(keyboardType)
                 .submitLabel(.next)
                 .focused($cursor)
-                .foregroundColor(success ? .black : .red)
-         
                 
         }.padding()
-        .background(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(lineWidth: 0.5)
-        ).foregroundColor(success ? .black : .red)
+        .validateBorderStyle(text: $number, validation: validation)
    
     }
 }

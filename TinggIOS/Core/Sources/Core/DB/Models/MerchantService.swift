@@ -37,7 +37,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var inputType:String = ""
     @Persisted public var colorCode:String = ""
     @Persisted public var formType: String = ""
-    @Persisted public var formParameters: FORMPARAMETERSClassEntity?
+    @Persisted public var formParameters: FORMPARAMETERSClassEntity? = .some(.init())
     @Persisted public var abbreviation:String = ""
     @Persisted public var paymentLabel:String = ""
     @Persisted public var orderID: String = ""
@@ -45,7 +45,7 @@ public class MerchantService: Object, DBObject, ObjectKeyIdentifiable, Codable {
     @Persisted public var isBundleService:String = ""
     @Persisted public var ignoreSaveEnrollment:String = ""
     @Persisted public var hasBillAmount: String = ""
-    @Persisted public var serviceParameters: ServiceParametersEntity?
+    @Persisted public var serviceParameters: ServiceParametersEntity? = .init()
     @Persisted public var bundleLabel:String = ""
     @Persisted public var bundleCategoryLabel:String = ""
     @Persisted public var displayNoPendingBillDialog: String = ""
@@ -136,8 +136,8 @@ public class ServiceParametersEntity: Object, ObjectKeyIdentifiable, Codable {
 
 //MARK: - ServicesDatumEntity
 public class ServicesDatumEntity: Object, ObjectKeyIdentifiable, Codable {
-    @Persisted public var serviceID: Int
-    @Persisted public var serviceName: String
+    @Persisted public var serviceID: Int = 0
+    @Persisted public var serviceName: String = ""
     
     enum CodingKeys: String, CodingKey {
         case serviceID = "SERVICE_ID"
@@ -149,9 +149,11 @@ public var sampleServices:[MerchantService]  {
     let service1 = MerchantService()
     service1.serviceLogo = "https://cdn3.vectorstock.com/i/1000x1000/35/52/placeholder-rgb-color-icon-vector-32173552.jpg"
     service1.serviceName = "Service one"
+//    service1.formParameters = .some(.init())
     let service2 = MerchantService()
     service2.serviceLogo = "https://cdn3.vectorstock.com/i/1000x1000/35/52/placeholder-rgb-color-icon-vector-32173552.jpg"
     service2.serviceName = "Service two"
+//    service2.formParameters = .some(.init())
     return [service1, service2]
 }
 
@@ -171,12 +173,12 @@ public class FORMPARAMETERSClassEntity: Object, DBObject, ObjectKeyIdentifiable,
 
 // MARK: - FormParameter
 public class FormParameterEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
-    @Persisted public var itemName: String?
-    @Persisted public var displayName: String?
-    @Persisted public var itemType : String?
-    @Persisted public var isReferenceField: String?
-    @Persisted public var keyValueData: String?
-    @Persisted public var name: String?
+    @Persisted public var itemName: String? = ""
+    @Persisted public var displayName: String? = ""
+    @Persisted public var itemType : String? = ""
+    @Persisted public var isReferenceField: String? = ""
+    @Persisted public var keyValueData: String? = ""
+    @Persisted public var name: String? = ""
     @Persisted public var items = List<ItemEntity>()
 
     enum CodingKeys: String, CodingKey {
@@ -191,9 +193,9 @@ public class FormParameterEntity: Object, DBObject, ObjectKeyIdentifiable, Codab
 }
 
 public class ItemEntity: Object, DBObject, ObjectKeyIdentifiable, Codable {
-    @Persisted public var itemID: Int
-    @Persisted public var name: String
-    @Persisted public var amount: Int
+    @Persisted public var itemID: Int = 0
+    @Persisted public var name: String = ""
+    @Persisted public var amount: Int = 0
 
     enum CodingKeys: String, CodingKey {
         case itemID = "ITEM_ID"

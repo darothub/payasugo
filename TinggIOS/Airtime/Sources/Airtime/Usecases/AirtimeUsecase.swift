@@ -34,9 +34,8 @@ public class AirtimeUsecase {
     public func getProfile() -> Profile? {
         profileRepository.getProfile()
     }
-    public func getQuickTopups() throws -> [MerchantService] {
+    public func getQuickTopups() -> [MerchantService] {
         let services = merchantRepository.getServices().filter { $0.isAirtimeService }
-        Log.d(message: "Services \(services)")
         return services
     }
     
