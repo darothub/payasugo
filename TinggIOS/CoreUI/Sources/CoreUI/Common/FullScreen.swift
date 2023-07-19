@@ -8,11 +8,9 @@
 import Foundation
 import SwiftUI
 public struct FullScreen: View {
-    @Binding public var isFullScreen: Bool
     public var view = AnyView(Text("Sample"))
     public var color = Color.white
-    public init(isFullScreen: Binding<Bool>, view: AnyView = AnyView(Text("Sample")), color: SwiftUI.Color = Color.white) {
-        self._isFullScreen = isFullScreen
+    public init(view: AnyView = AnyView(Text("Sample")), color: SwiftUI.Color = Color.white) {
         self.view = view
         self.color = color
     }

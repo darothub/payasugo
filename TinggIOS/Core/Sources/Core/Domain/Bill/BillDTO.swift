@@ -24,7 +24,7 @@ public struct BillDTO: BaseDTOprotocol, Codable {
 }
 
 // MARK: - SavedBill
-public class Bill: NSObject, Codable {
+public class Bill: NSObject, Codable, BaseDTOprotocol {
     public var statusCode: Int = 0
     public var manualBillID: DynamicType?
     public var statusMessage: String = ""

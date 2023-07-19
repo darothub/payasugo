@@ -11,9 +11,9 @@ import Theme
 struct VerificationCodeAdviceTextView: View {
     var body: some View {
         Text("We'll send verification code to this number")
+            .frame(maxWidth: .infinity, alignment: .leading)
             .bold()
             .font(.system(size: PrimaryTheme.smallTextSize))
-            .padding(.leading, PrimaryTheme.largePadding)
             .foregroundColor(PrimaryTheme.getColor(.tinggblack))
     }
 }

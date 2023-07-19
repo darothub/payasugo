@@ -4,12 +4,13 @@
 //
 //  Created by Abdulrasaq on 25/05/2022.
 //
+import Airtime
+import Bills
 import CreditCard
 import Core
 import CoreNavigation
 import Checkout
 import Permissions
-import Home
 import Onboarding
 import SwiftUI
 import Theme
@@ -21,16 +22,19 @@ import FreshChat
 /// The first screen displayed to the user is the ``LaunchScreenView``.
 /// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodel
 
-struct TinggIOSApp: App {
+struct TinggIOSApp: App, CheckoutListener {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.colorScheme) var colorScheme
-    @StateObject var navigation = NavigationUtils()
+    @StateObject var navigation = NavigationManager()
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
     @StateObject var contactViewModel: ContactViewModel = .init()
     @StateObject var ccvm = CreditCardDI.createCreditCardViewModel()
     @StateObject var hvm = HomeDI.createHomeViewModel()
-    @StateObject var mvm = MainViewModel(systemUpdateUsecase: .init(sendRequest: .shared))
+    @StateObject var mvm = MainViewModel(systemUpdateUsecase: .init())
     @StateObject private var freshchatWrapper = FreshchatWrapper()
+    
+
+  
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
@@ -58,21 +62,21 @@ struct TinggIOSApp: App {
                 ) {
                     BundleSelectionView(model: $checkoutVm.bundleModel)
                         .environmentObject(checkoutVm)
-
                 }
                 .onAppear {
                     UITextField.appearance().keyboardAppearance = .light
                     UITabBar.appearance().backgroundColor = colorScheme == .dark ? UIColor.white : UIColor.white
-
                     Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
-                
-                        
+                    navigation.setHomeView(
+                        view:
+                        getHomeView()
+                    )
                 }
         }
 
     }
     func checkoutView() -> some View {
-        return  CheckoutView()
+        return CheckoutView(listener: self)
             .environmentObject(checkoutVm)
             .environmentObject(contactViewModel)
             .environmentObject(navigation)
@@ -82,6 +86,45 @@ struct TinggIOSApp: App {
     func showContactView() -> some View {
         return ContactRowView(listOfContactRow: contactViewModel.listOfContact.sorted(by: <)){contact in
             contactViewModel.selectedContact = contact.phoneNumber
+        }
+    }
+    func getHomeView() -> AnyView {
+        AnyView(
+            HomeBottomNavView()
+                .environmentObject(checkoutVm)
+                .environmentObject(hvm)
+                .environmentObject(freshchatWrapper)
+                .environmentObject(contactViewModel)
+        )
+    }
+    func onCheckoutSuccess(checkoutType: String, response: BaseDTOprotocol) {
+        //
+    }
+    
+    func navigateToInvoicePage() {
+        checkoutVm.showView = false
+        navigation.navigateTo(
+            screen: HomeScreen.home(HomeBottomNavView.BILL, .second)
+        )
+    }
+    
+    func onAddNewBillClick() {
+        addNewBill()
+    }
+    fileprivate func addNewBill() {
+        let category = Observer<CategoryEntity>().getEntities().first { $0.categoryID == checkoutVm.currentService.categoryID }
+        let services = checkoutVm.services.filter { $0.categoryID == checkoutVm.currentService.categoryID }
+        if let currentCategory = category {
+            let item = TitleAndListItem(title: category!.categoryName, services: services)
+            withAnimation {
+                checkoutVm.showView = false
+                navigation.navigateTo(screen:  BillsScreen.categoriesAndServices([item]))
+            }
+            return
+        }
+
+        if checkoutVm.currentService.isAirtimeService {
+            navigation.navigateTo(screen: BuyAirtimeScreen.buyAirtime(checkoutVm.currentService.serviceName))
         }
     }
 }
@@ -106,8 +149,8 @@ class MainViewModel: ViewModel {
         homeViewModel.uiModel = UIModel.loading
         do {
             let response = try await systemUpdateUsecase(request: systemUpdateRequest)
-            await saveDataIntoDB(data: try response.get())
-            handleResultState(model: &homeViewModel.uiModel, response)
+            await saveDataIntoDB(data: response)
+            handleResultState(model: &homeViewModel.uiModel, Result.success(response) as Result<Any, ApiError>)
         } catch {
             handleResultState(model: &homeViewModel.uiModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
         }
@@ -130,8 +173,7 @@ class MainViewModel: ViewModel {
         if let defaultNetworkServiceId = data.defaultNetworkServiceID {
             AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
             let defaultNetwork = services.first { s in
-                Log.d(message: "default \(defaultNetworkServiceId) \(s.hubServiceID.toInt)")
-                return s.hubServiceID.toInt == defaultNetworkServiceId
+                return s.hubServiceID.convertStringToInt() == defaultNetworkServiceId
             }
            
             if let service = defaultNetwork {
@@ -161,3 +203,30 @@ class MainViewModel: ViewModel {
         AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
     }
 }
+
+
+//protocol H {
+//    func getSomething()
+//}
+//
+//class Hello {
+//    var h: H?
+//    init(h: H?) {
+//        self.h = h
+//    }
+//}
+//
+//struct N: H {
+//
+//  func getSomething() {
+//    //...
+//  }
+//
+//  var h: Hello
+//
+//  init() {
+//    self.h = Hello(h: nil)
+//    self.h = Hello(h: self)
+//  }
+//
+//}

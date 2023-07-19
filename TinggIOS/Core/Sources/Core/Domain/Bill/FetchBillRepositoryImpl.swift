@@ -1,19 +1,19 @@
 //
-//  File.swift
+//  FetchBillRepositoryImpl.swift
 //  
 //
 //  Created by Abdulrasaq on 23/08/2022.
 //
 import RealmSwift
 import Foundation
-public class FetchBillRepositoryImpl: FetchBillRepository {
+public class FetchBillRepositoryImpl: InvoiceRepository {
     private var baseRequest: TinggApiServices
     private var dbObserver: Observer<Invoice>
     /// ``FetchBillRepositoryImpl`` initialiser
     /// - Parameters:
     ///   - baseRequest: an instance of ``BaseRequest``
     ///   - dbObserver: an instance  of ``Observer``
-    public init(baseRequest: TinggApiServices, dbObserver: Observer<Invoice>) {
+    public init(baseRequest: TinggApiServices = BaseRequest.shared, dbObserver: Observer<Invoice>) {
         self.baseRequest = baseRequest
         self.dbObserver = dbObserver
     }

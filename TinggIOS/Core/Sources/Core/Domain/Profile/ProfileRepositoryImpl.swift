@@ -7,7 +7,7 @@
 
 import Foundation
 public class ProfileRepositoryImpl: ProfileRepository {
-
+  
     
     var dbObserver: Observer<Profile>
     var baseRequest: BaseRequest
@@ -29,5 +29,24 @@ public class ProfileRepositoryImpl: ProfileRepository {
                 continuation.resume(with: result)
             }
         }
+    }
+    public func updateProfileImage(request: RequestMap) async throws -> PhotoUploadResponse {
+        return try await withCheckedThrowingContinuation { continuation in
+            baseRequest.makeRequest(urlPath: "TinggUploadImagesAPI/", tinggRequest: request) { (result: Result<PhotoUploadResponse, ApiError>) in
+                continuation.resume(with: result)
+            }
+        }
+    }
+}
+
+/// Base DTO struct for Tingg API services
+public struct PhotoUploadResponse: BaseDTOprotocol {
+    public var statusCode: Int
+    public var statusMessage: String
+    public var profilePicUrl: String
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case profilePicUrl = "profilePicUrl"
     }
 }

@@ -52,10 +52,6 @@ public struct CountryPickerView: View {
                     .accessibility(identifier: "countrytextfield")
             }
         }
-        .onAppear {
-           print(countryCode, countryFlag)
-        }
-        
         .sheet(isPresented: $showPhoneSheet) {
             CountryListView(
                 countryCode: $countryCode,
@@ -64,7 +60,6 @@ public struct CountryPickerView: View {
             )
         }
         .onChange(of: countries) { newValue in
-            print("Here \(newValue)")
             countryFlag = getCountryCodeString()
             countryCode = getCountryCode()
         }

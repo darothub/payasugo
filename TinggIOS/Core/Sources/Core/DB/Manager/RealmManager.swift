@@ -11,6 +11,7 @@ import SwiftUI
 ///  Class for managing Realm database
 public final class RealmManager: ObservableObject {
     private(set) var localDb: Realm?
+   
     public init() {
         openRealmDb()
     }
@@ -72,7 +73,7 @@ public final class RealmManager: ObservableObject {
         if ((localDb?.invalidate()) != nil) {
             return
         }
-        try? localDb?.write {
+        try! localDb?.write {
             try? block()
         }
     }
@@ -82,6 +83,12 @@ public final class RealmManager: ObservableObject {
           } else {
               try localDb?.write(block)
           }
+    }
+    public static func write<R>(_ block: (() throws -> R)) {
+        let realm = try! Realm()
+        try! realm.write {
+            try? block()
+        }
     }
 }
 

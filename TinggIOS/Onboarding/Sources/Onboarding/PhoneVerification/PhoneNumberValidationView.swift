@@ -6,149 +6,117 @@
 //  swiftlint:disable all
 
 import Combine
+import Core
 import CoreNavigation
 import CoreUI
-import Core
+import FreshChat
 import SwiftUI
 import Theme
-import FreshChat
 /// The view for phone number input and validation
 /// User can also have access to support features
 /// Upon successful input validation user is taken to ``OtpConfirmationView``
-/// User is directed to the Home view after OTP confirmation 
+/// User is directed to the Home view after OTP confirmation
 public struct PhoneNumberValidationView: View {
     @StateObject var ovm = OnboardingDI.createOnboardingVM()
- 
     @Environment(\.openURL) var openURL
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
-
-    @Environment(\.realmManager) var realmManager
     @State private var showOTPView = false
-    @State private var isOTPConfirmed = false
-    @State private var phoneNumber = ""
-    @State private var countryCode = ""
-    @State private var countryFlag = ""
-    @State private var isValidPhoneNumber = false
-    @State private var isNotValidPhoneNumber = false
-    @State private var warning = ""
-    @State private var hasCheckedTermsAndPolicy = false
     @State private var showSupportTeamContact = false
-    @State private var countriesDictionary = [String: String]()
     @State private var activateButton = false
     @FocusState private var isFocused: Bool
-    @State var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
-    @State var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
-    public static var policyWarning = "Kindly accept terms and policy"
-    public static var phoneNumberEmptyWarning = "Phone number must not be empty"
-    private let dbCountries = Observer<CountriesInfo>().getEntities()
+    private let dbCountries = Observer<CountryInfo>().getEntities()
+
     public init() {
         // Empty constructor
     }
-    
+
     public var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(spacing: 10) {
                 topView(geo: geometry)
-                MobileNumberView()
-                CountryPickerView(phoneNumber: $phoneNumber, countryCode: $countryCode, countryFlag: $countryFlag, countries: $countriesDictionary)
-                    .textFiedStyle(
-                        TextFiedValidationStyle(
-                            isValid: $isValidPhoneNumber, notValid: $isNotValidPhoneNumber
-                        )
-                    )
-                    .focused($isFocused, equals: isValidPhoneNumber)
-                    .onChange(
-                        of: phoneNumber,
-                        perform: onPhoneNumberInput(number:)
-                    )
-                VerificationCodeAdviceTextView()
-                PolicySectionView(
-                    termOfAgreementLink: $termOfAgreementLink,
-                    privacyPolicy: $privacyPolicy,
-                    hasCheckedTermsAndPolicy: $hasCheckedTermsAndPolicy
-                ).focused($isFocused, equals: hasCheckedTermsAndPolicy)
-                Spacer()
-                TinggSupportSectionView(geometry: geometry, showSupportTeamContact: $showSupportTeamContact)
-                TinggButton(
-                    backgroundColor: PrimaryTheme.getColor(.primaryColor),
-                    buttonLabel: "Continue",
-                    isActive: $activateButton
-                ) {
-                    prepareActivationRequest()
-                }
-                .accessibility(identifier: "continuebtn")
-                .padding()
-                .keyboardShortcut(.return)
-
+                Section {
+                    MobileNumberView()
+                    FlagTextField(phoneNumber: $ovm.phoneNumber, flags: $ovm.flags, selectedFlag: $ovm.countryFlag) { text in
+                        ovm.validatePhoneNumberInput(text, ovm.currentCountryDialCode)
+                    }
+                    .focused($isFocused, equals: ovm.isValidPhoneNumber)
+                    VerificationCodeAdviceTextView()
+                    PolicySectionView(
+                        termOfAgreementLink: $ovm.termOfAgreementLink,
+                        privacyPolicy: $ovm.privacyPolicy,
+                        hasCheckedTermsAndPolicy: $ovm.hasCheckedTermsAndPolicy
+                    ).focused($isFocused, equals: ovm.hasCheckedTermsAndPolicy)
+                    Spacer()
+                    TinggSupportSectionView(showSupportTeamContact: $showSupportTeamContact)
+                    TinggButton(
+                        backgroundColor: PrimaryTheme.getColor(.primaryColor),
+                        buttonLabel: "Continue",
+                        isActive: $activateButton
+                    ) {
+                        ovm.prepareActivationRequest()
+                    }
+                    .accessibility(identifier: "continuebtn")
+                }.padding(.horizontal)
+            }
+            .background(.white)
+            .onAppear {
+                ovm.getCountryDictionary()
+                Publishers.CombineLatest(ovm.$isValidPhoneNumber, ovm.$hasCheckedTermsAndPolicy)
+                    .sink { isValidPhoneNumber, hasCheckedTermsAndPolicy in
+                        activateButton = isValidPhoneNumber && hasCheckedTermsAndPolicy
+                    }.store(in: &ovm.subscriptions)
             }
             .navigationBarTitleDisplayMode(.inline)
             .confirmationDialog("Contact", isPresented: $showSupportTeamContact) {
-               callSupportActions()
+                callSupportActions()
             } message: {
                 Text("Support")
             }
-            .sheet(isPresented: $showOTPView, onDismiss: {
-                if isOTPConfirmed {
-                    let systemUpdateRequest: RequestMap =  RequestMap.Builder()
-                        .add(value: "PAR", for: .SERVICE)
-                        .build()
-                    ovm.fetchSystemUpdate(request: systemUpdateRequest)
-                }
-            }, content: {
-                OtpConfirmationView(
-                    otpConfirmed: $isOTPConfirmed
-                )
+            .sheet(isPresented: $showOTPView, content: {
+                OtpConfirmationView()
+                    .environmentObject(navigation)
             })
-            .background(PrimaryTheme.getColor(.tinggwhite))
-            .onAppear {
-                ovm.getCountryDictionary()
-            }
-            .onReceive(Just(countryCode), perform: { newValue in
+            .onChange(of: ovm.countryFlag, perform: { newValue in
+                let dialCode = newValue.split(separator: " ")[1]
+                ovm.currentCountryDialCode = String(dialCode.dropFirst())
                 let currentCountry = dbCountries.first {
-                    $0.countryDialCode == newValue
+                    $0.countryDialCode == ovm.currentCountryDialCode
                 }
                 if let country = currentCountry {
-                    termOfAgreementLink = "[Terms of Agreement](\(String(describing: country.tacURL)))"
-                    privacyPolicy = "[Privacy Policy](\(String(describing: country.privacyPolicyURL)))"
-                    
-                    _ = FreshChatSetup(appID: country.freshchatAppID!, appKey: country.freshchatAppKey!)
-                }
-            })
+                    ovm.termOfAgreementLink = "[Terms of Agreement](\(String(describing: country.tacURL)))"
+                    ovm.privacyPolicy = "[Privacy Policy](\(String(describing: country.privacyPolicyURL)))"
 
+                    _ = FreshChatSetup(appID: country.freshchatAppID!, appKey: country.freshchatAppKey!)
+                    ovm.currentCountry = country
+                }
+
+            })
             .toolbar(content: {
                 handleKeyboardDone()
             })
-            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
-                countriesDictionary = content.data as! [String: String]
-            }
-            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { content in
-                log(message: content)
+            .handleViewStatesMods(uiState: ovm.$onActivationRequestUIModel) { _ in
                 showOTPView = true
             }
-            .handleViewStatesMods(uiState: ovm.$uiModel) { content in
-                let systemUpdate = content.data as! SystemUpdateDTO
-                ovm.saveDataIntoDB(data: systemUpdate)
-                gotoHomeView()
-            }
-            .onChange(of: hasCheckedTermsAndPolicy) { newValue in
-                activateButton = newValue && isValidPhoneNumber
+            .handleViewStatesMods(uiState: ovm.$phoneNumberFieldUIModel) { content in
+                let countriesDictionary = content.data as! [String: String]
+                DispatchQueue.main.async {
+                    ovm.flags = countriesDictionary.sorted(by: <).map({ key, value in
+                        let flag = getFlag(country: key)
+                        return "\(flag) +\(value)"
+                    })
+                    if ovm.flags.isNotEmpty() && ovm.countryFlag == "🇺🇸 +1" {
+                        ovm.countryFlag = ovm.flags.first!
+                    }
+                }
             }
         }
         .onDisappear {
-            ovm.uiModel = UIModel.nothing
             ovm.phoneNumberFieldUIModel = UIModel.nothing
             ovm.onActivationRequestUIModel = UIModel.nothing
         }
     }
 
-    @ViewBuilder
-    fileprivate func topRectangleBackground(geometry: GeometryProxy) -> some View {
-        Rectangle()
-            .fill(PrimaryTheme.getColor(.cellulantLightGray))
-            .frame(width: geometry.size.width, height: abs(geometry.size.height * 1.4 * 0.25))
-            .edgesIgnoringSafeArea(.all)
-    }
     @ViewBuilder
     fileprivate func topCameraImage(geometry: GeometryProxy) -> some View {
         Image(systemName: "camera.fill")
@@ -166,24 +134,30 @@ public struct PhoneNumberValidationView: View {
                 -align[VerticalAlignment.center] * 0.5
             }
     }
+
     @ViewBuilder
     fileprivate func topView(geo: GeometryProxy) -> some View {
-        ZStack(alignment: .top) {
-            topRectangleBackground(geometry: geo)
+        VStack {
+            Rectangle()
+                .fill(PrimaryTheme.getColor(.cellulantLightGray))
+                .edgesIgnoringSafeArea(.all)
         }
         .frame(width: geo.size.width, height: abs(geo.size.height * 0.25))
     }
+
     @ViewBuilder
     fileprivate func callSupportActions() -> some View {
         Button("Call Ting Support") {
             Core.callSupport(phoneNumber: "254708802299")
         }
         Button("Chat Ting Support") {
-            freshchatWrapper.showFreshchat()        }
+            freshchatWrapper.showFreshchat()
+        }
         Button("Cancel", role: .cancel) {
             // Intentionally unimplemented...no cancel action
         }
     }
+
     fileprivate func handleKeyboardDone() -> ToolbarItemGroup<TupleView<(Spacer, Button<Text>)>> {
         return ToolbarItemGroup(placement: .keyboard) {
             Spacer()
@@ -191,6 +165,14 @@ public struct PhoneNumberValidationView: View {
                 isFocused = false
             }
         }
+    }
+
+    fileprivate func callSupport() {
+        let tel = "tel://"
+        let supportNumber = "+254708802299"
+        let formattedPhoneNumber = tel + supportNumber
+        guard let url = URL(string: formattedPhoneNumber) else { return }
+        openURL(url)
     }
 }
 
@@ -200,71 +182,3 @@ struct PhoneNumberValidationView_Previews: PreviewProvider {
             .environmentObject(FreshchatWrapper())
     }
 }
-
-extension PhoneNumberValidationView {
-    fileprivate func callSupport() {
-        let tel = "tel://"
-        let supportNumber = "+254708802299"
-        let formattedPhoneNumber = tel+supportNumber
-        guard let url = URL(string: formattedPhoneNumber) else {return}
-        openURL(url)
-    }
-    fileprivate func gotoHomeView() {
-        withAnimation {
-            navigation.navigationStack.append(Screens.home)
-        }
-    }
-    
-    fileprivate func onPhoneNumberInput(number: String) -> Void {
-        isValidPhoneNumber = validatePhoneNumberInput(number: "\(phoneNumber)")
-        isNotValidPhoneNumber = !isValidPhoneNumber
-        activateButton = hasCheckedTermsAndPolicy && isValidPhoneNumber
-    }
-    fileprivate func prepareActivationRequest() {
-        let isPhoneNumberNotEmpty = validatePhoneNumberIsNotEmpty(number: phoneNumber)
-        
-        if !isPhoneNumberNotEmpty {
-            ovm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.phoneNumberEmptyWarning)
-            return
-        }
-        if !isValidPhoneNumber {
-            ovm.phoneNumberFieldUIModel = UIModel.error("Invalid phone number")
-            return
-        }
-        if !hasCheckedTermsAndPolicy {
-            ovm.phoneNumberFieldUIModel = UIModel.error(PhoneNumberValidationView.policyWarning)
-            return
-        }
-        let number = "\(countryCode)\(phoneNumber)"
-        AppStorageManager.retainPhoneNumber(number: number)
-        if let country = getCountryByDialCode(dialCode: countryCode) {
-            AppStorageManager.retainActiveCountry(country: country)
-        }
-        let activationCodeRequest: RequestMap = RequestMap.Builder()
-            .add(value: "MAK", for: .SERVICE)
-            .build()
-        ovm.getActivationCode(request: activationCodeRequest)
-    }
-    func validatePhoneNumberInput(number: String) -> Bool {
-        var result = false
-        if let regex = getSelectedCountryRegexByDialcode(dialCode: countryCode) {
-            result = checkStringForPatterns(inputString: number, pattern: regex)
-        }
-        if  number.count < 8 {
-            result = false
-        }
-        return result
-    }
-    
-    func getSelectedCountryRegexByDialcode(dialCode: String) -> String? {
-        if let country = getCountryByDialCode(dialCode: dialCode)  {
-            return country.countryMobileRegex
-        }
-        return nil
-    }
-    
-    func getCountryByDialCode(dialCode: String) -> CountriesInfoDTO? {
-        ovm.getCountryByDialCode(dialCode: dialCode)
-    }
-}
-

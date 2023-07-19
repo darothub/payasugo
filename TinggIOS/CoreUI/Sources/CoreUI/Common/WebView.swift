@@ -140,9 +140,9 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
         DispatchQueue.main.async {
             webView.evaluateJavaScript("document.body.innerHTML") { value, error in
                 print("HTMLFinishValue \(String(describing: value))")
-                print("Errot\(error)")
+                print("Errot\(String(describing: error))")
            }
-            var tryAgainJsString = """
+            let tryAgainJsString = """
                            document.getElementsByClassName('btn')[0].addEventListener("click", function test() {
                             webkit.messageHandlers.tryAgain.postMessage("TRY AGAIN CLICKED");
                     })

@@ -7,10 +7,10 @@
 
 import Foundation
 public class SaveBillUsecase {
-    private let fetchBillRepository: FetchBillRepository
+    private let fetchBillRepository: InvoiceRepository
     /// Save bills
     /// - Parameter fetchBillRepository: ``FetchBillRepositoryImpl``
-    public init(fetchBillRepository: FetchBillRepository) {
+    public init(fetchBillRepository: InvoiceRepository) {
         self.fetchBillRepository = fetchBillRepository
     }
     
@@ -21,10 +21,10 @@ public class SaveBillUsecase {
 
 
 public class DeleteBillUsecase {
-    private let fetchBillRepository: FetchBillRepository
+    private let fetchBillRepository: InvoiceRepository
     /// Save bills
     /// - Parameter fetchBillRepository: ``FetchBillRepositoryImpl``
-    public init(fetchBillRepository: FetchBillRepository) {
+    public init(fetchBillRepository: InvoiceRepository) {
         self.fetchBillRepository = fetchBillRepository
     }
     
@@ -34,10 +34,10 @@ public class DeleteBillUsecase {
 }
 
 public class UpdateBillUsecase {
-    private let fetchBillRepository: FetchBillRepository
+    private let fetchBillRepository: InvoiceRepository
     /// Save bills
     /// - Parameter fetchBillRepository: ``FetchBillRepositoryImpl``
-    public init(fetchBillRepository: FetchBillRepository) {
+    public init(fetchBillRepository: InvoiceRepository) {
         self.fetchBillRepository = fetchBillRepository
     }
     

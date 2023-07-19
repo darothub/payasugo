@@ -16,6 +16,7 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.billReminder.rawValue) fileprivate static var billReminder: Bool = false
     @AppStorage(LocalProperties.campaignMessage.rawValue) fileprivate static var campaignMessage: Bool = false
     @AppStorage(LocalProperties.deviceToken.rawValue) fileprivate static var deviceToken: String = ""
+    @AppStorage(LocalProperties.isLogin.rawValue) fileprivate static var isLogin: Bool = false
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -65,6 +66,12 @@ public struct AppStorageManager {
     public static func setDeviceToken(value: String) {
         deviceToken = value
     }
+    public static func setIsLogin(value: Bool) {
+        isLogin = value
+    }
+    public static func getIsLogin() -> Bool {
+        isLogin
+    }
 }
 
 public enum LocalProperties: String {
@@ -76,5 +83,6 @@ public enum LocalProperties: String {
     case billReminder
     case campaignMessage
     case deviceToken
+    case isLogin
 }
 

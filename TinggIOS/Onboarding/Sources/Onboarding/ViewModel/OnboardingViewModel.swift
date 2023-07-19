@@ -2,28 +2,47 @@
 //  TinggIOS
 //  Created by Abdulrasaq on 13/07/2022.
 import Combine
-import CoreUI
 import Core
+import CoreUI
 import Foundation
-import SwiftUI
 import RealmSwift
+import SwiftUI
+@MainActor
 public class OnboardingVM: ViewModel {
     let activationUsecase: ActivationCodeUsecase
     let systemUpdateUsecase: SystemUpdateUsecase
     let getCountriesDictionaryUsecase: GetCountriesAndDialCodeUseCase
     @Published var uiModel = UIModel.nothing
-    @Published var phoneNumberFieldUIModel = UIModel.loading
+    @Published var phoneNumberFieldUIModel = UIModel.nothing
     @Published var onActivationRequestUIModel = UIModel.nothing
     @Published var onConfirmActivationUIModel = UIModel.nothing
     @Published var realmManager: RealmManager = .init()
-    public init(activationUsecase: ActivationCodeUsecase, systemUpdateUsecase: SystemUpdateUsecase, getCountriesDictionaryUsecase: GetCountriesAndDialCodeUseCase) {
+    @Published var currentCountryDialCode = ""
+    @Published var isValidPhoneNumber = false
+    @Published var phoneNumber = ""
+    @Published var hasCheckedTermsAndPolicy = false
+    @Published var activateContinueButton = false
+    @Published var currentCountry: CountryInfo = .init()
+    @Published var flags = ["🇺🇸 +1", "🇬🇧 +44", "🇨🇦 +1", "🇦🇺 +61", "🇩🇪 +49"]
+    @Published var countryFlag = "🇺🇸 +1"
+    @Published var termOfAgreementLink = "[Terms of Agreement](https://cellulant.io)"
+    @Published var privacyPolicy = "[Privacy Policy](https://cellulant.io)"
+    private static var policyWarning = "Kindly accept terms and policy"
+    private static var phoneNumberIsEmptyWarning = "Phone number must not be empty"
+    private static var invalidPhoneNumber = "Invalid phone number"
+    var subscriptions = Set<AnyCancellable>()
+    public init(
+        activationUsecase: ActivationCodeUsecase,
+        systemUpdateUsecase: SystemUpdateUsecase,
+        getCountriesDictionaryUsecase: GetCountriesAndDialCodeUseCase
+    ) {
         self.activationUsecase = activationUsecase
         self.systemUpdateUsecase = systemUpdateUsecase
         self.getCountriesDictionaryUsecase = getCountriesDictionaryUsecase
-        self.uiModel = uiModel
+        uiModel = uiModel
     }
+
     /// Collect a dictionary of country code and dial code
-    @MainActor
     func getCountryDictionary() {
         phoneNumberFieldUIModel = UIModel.loading
         Task {
@@ -31,58 +50,108 @@ public class OnboardingVM: ViewModel {
                 let result = try await getCountriesDictionaryUsecase()
                 handleResultState(model: &phoneNumberFieldUIModel, Result.success(result) as Result<[String: String], ApiError>)
             } catch {
-                handleResultState(model: &phoneNumberFieldUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+                handleResultState(model: &phoneNumberFieldUIModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
             }
         }
     }
+
     /// Request for activation code
-    @MainActor
     func getActivationCode(request: RequestMap) {
         onActivationRequestUIModel = UIModel.loading
         Task {
             do {
                 let result = try await activationUsecase(request: request)
-                handleResultState(model: &onActivationRequestUIModel, result)
+                handleResultState(model: &onActivationRequestUIModel, Result.success(result) as Result<BaseDTO, ApiError>)
             } catch {
-                handleResultState(model: &onActivationRequestUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+                handleResultState(model: &onActivationRequestUIModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
             }
         }
     }
+
     /// Request for confirmation of  OTP
-    @MainActor
-    func confirmActivationCode(request: RequestMap) {
+    func confirmActivationCode(otp: String) {
         onConfirmActivationUIModel = UIModel.loading
+        let confirmOTPRequest: RequestMap = RequestMap.Builder()
+            .add(value: "VAK", for: .SERVICE)
+            .add(value: otp, for: .ACTIVATION_CODE)
+            .build()
         Task {
             do {
-                let response = try await activationUsecase(request: request)
-                handleResultState(model: &onConfirmActivationUIModel, response)
+                let response = try await activationUsecase(request: confirmOTPRequest)
+                handleResultState(model: &onConfirmActivationUIModel, Result.success(response) as Result<BaseDTO, ApiError>)
             } catch {
-                handleResultState(model: &onConfirmActivationUIModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+                handleResultState(model: &onConfirmActivationUIModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
             }
         }
     }
+
     /// Request for System update FSU
-    @MainActor
-    func fetchSystemUpdate(request: RequestMap) {
+
+    func fetchSystemUpdate() {
+        let systemUpdateRequest: RequestMap = RequestMap.Builder()
+            .add(value: "PAR", for: .SERVICE)
+            .build()
         uiModel = UIModel.loading
         Task {
             do {
-                let response = try await systemUpdateUsecase(request: request)
-                handleResultState(model: &uiModel, response)
+                let response = try await systemUpdateUsecase(request: systemUpdateRequest)
+                saveDataIntoDB(data: response)
+                handleResultState(model: &uiModel, Result.success(response) as Result<Any, ApiError>)
             } catch {
-                handleResultState(model: &uiModel, Result.failure(ApiError.networkError(error.localizedDescription)) as Result<BaseDTO, ApiError>)
+                let err = error as! ApiError
+                handleResultState(model: &uiModel, Result.failure(err) as Result<BaseDTO, ApiError>)
             }
         }
     }
-    @MainActor
+
+    func validatePhoneNumberInput(_ number: String, _ countryDialCode: String) -> Bool {
+        var result = false
+        if let regex = getSelectedCountryRegexByDialcode(dialCode: countryDialCode) {
+            result = checkStringForPatterns(inputString: number, pattern: regex)
+        }
+        if number.count < 8 {
+            result = false
+        }
+        DispatchQueue.main.async {
+            self.isValidPhoneNumber = result
+        }
+        return result
+    }
+
+    func getSelectedCountryRegexByDialcode(dialCode: String) -> String? {
+        if let country = getCountryByDialCode(dialCode: dialCode) {
+            return country.countryMobileRegex
+        }
+        return nil
+    }
+
     func getCountryByDialCode(dialCode: String) -> CountriesInfoDTO? {
         if let country = getCountriesDictionaryUsecase(dialCode: dialCode) {
             return country
         }
         return nil
     }
+
+    func otpRequest() {
+        let activationCodeRequest: RequestMap = RequestMap.Builder()
+            .add(value: "MAK", for: .SERVICE)
+            .build()
+        getActivationCode(request: activationCodeRequest)
+    }
+
+    func prepareActivationRequest() {
+        let number = "\(currentCountryDialCode)\(phoneNumber)"
+        AppStorageManager.retainPhoneNumber(number: number)
+        if let country = getCountryByDialCode(dialCode: currentCountryDialCode) {
+            Log.d(message: "\(country)")
+            AppStorageManager.retainActiveCountry(country: country)
+            otpRequest()
+        }
+       
+    }
+
     /// Save System  update response in database
-    func saveDataIntoDB(data: SystemUpdateDTO)  {
+    private func saveDataIntoDB(data: SystemUpdateDTO) {
         let categoriesTable = Observer<CategoryEntity>()
         let servicesTable = Observer<MerchantService>()
         let enrollmentsTable = Observer<Enrollment>()
@@ -104,36 +173,35 @@ public class OnboardingVM: ViewModel {
             c.toEntity
         }
         categoriesTable.clearAndSaveEntities(objs: sortedCategories)
-        realmManager.save(data: data.contactInfo.map {$0.toEntity})
+        realmManager.save(data: data.contactInfo.map { $0.toEntity })
         let services = data.services.filter { service in
             service.isActive
         }
         if let defaultNetworkServiceId = data.defaultNetworkServiceID {
             AppStorageManager.setDefaultNetworkId(id: defaultNetworkServiceId)
             let defaultNetwork = services.first { s in
-                Log.d(message: "default \(defaultNetworkServiceId) \(s.hubServiceID.toInt)")
-                return s.hubServiceID.toInt == defaultNetworkServiceId
+                s.hubServiceID.convertStringToInt() == defaultNetworkServiceId
             }
-           
+
             if let service = defaultNetwork {
                 AppStorageManager.setDefaultNetwork(service: service.toEntity)
             }
         }
-        
+
         itemTable.deleteEntries()
         formParameterTable.deleteEntries()
         formParameterClassTable.deleteEntries()
         servicesDatumTable.deleteEntries()
         serviceParametersTable.deleteEntries()
-        servicesTable.clearAndSaveEntities(objs: services.map {$0.toEntity})
-        transactioSummaryTable.clearAndSaveEntities(objs: data.transactionSummaryInfo.map {$0.toEntity})
+        servicesTable.clearAndSaveEntities(objs: services.map { $0.toEntity })
+        transactioSummaryTable.clearAndSaveEntities(objs: data.transactionSummaryInfo.map { $0.toEntity })
         let eligibleNomination = data.nominationInfo.filter { nom in
             nom.clientProfileAccountID?.toInt != nil
         }
         let validNomination = eligibleNomination.filter { e in
-            return !e.isReminder.toBool && e.isActive
+            !e.isReminder.toBool && e.isActive
         }
-        let validEnrollment = validNomination.map {$0.toEntity}
+        let validEnrollment = validNomination.map { $0.toEntity }
         enrollmentsTable.clearAndSaveEntities(objs: validEnrollment)
         let profile = data.mulaProfileInfo.mulaProfile[0]
         profileTable.clearAndSaveEntity(obj: profile.toEntity)
@@ -143,22 +211,24 @@ public class OnboardingVM: ViewModel {
         Observer<BundleObject>().getEntities().forEach { data in
             realmManager.delete(data: data)
         }
-        cardsTable.clearAndSaveEntities(objs: data.virtualCards.map {$0.toEntity})
-        let payers: [MerchantPayer] = data.merchantPayers.map {$0.toEntity}
-        securityQuestionTable.clearAndSaveEntities(objs: data.securityQuestions.map {$0.toEntity})
+        cardsTable.clearAndSaveEntities(objs: data.virtualCards.map { $0.toEntity })
+        let payers: [MerchantPayer] = data.merchantPayers.map { $0.toEntity }
+        securityQuestionTable.clearAndSaveEntities(objs: data.securityQuestions.map { $0.toEntity })
         merchantPayerTable.clearAndSaveEntities(objs: payers)
 
-        realmManager.save(data: data.bundleData.map {$0.toEntity})
-      
+        realmManager.save(data: data.bundleData.map { $0.toEntity })
+
         AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
     }
+
     /// Handle Result
-    public func handleResultState<T, E>(model: inout CoreUI.UIModel, _ result: Result<T, E>) where E : Error {
+    public func handleResultState<T, E>(model: inout CoreUI.UIModel, _ result: Result<T, E>) where E: Error {
         switch result {
-        case .failure(let apiError):
+        case let .failure(apiError):
+            Log.d(message: "\(apiError)")
             model = UIModel.error((apiError as! ApiError).localizedString)
             return
-        case .success(let data):
+        case let .success(data):
             let dto = data as? BaseDTO
             if let statusCode = dto?.statusCode {
                 if statusCode > 201 {
@@ -171,8 +241,4 @@ public class OnboardingVM: ViewModel {
             return
         }
     }
-    
 }
-
-
-

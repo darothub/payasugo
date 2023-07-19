@@ -9,3 +9,8 @@ import Foundation
 public protocol MerchantServiceRepository {
     func getServices() -> [MerchantService]
 }
+public extension MerchantServiceRepository {
+    func getServices() -> [MerchantService] {
+        Observer<MerchantService>().getEntities()
+    }
+}

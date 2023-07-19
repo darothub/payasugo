@@ -23,35 +23,35 @@ public struct SystemUpdateDTO: Codable, BaseDTOprotocol {
     public let showcaseData: [ShowcaseDatum]
     public let transactionSummaryInfo: [TransactionSummaryInfoDTO]
     public let inviteMessage: String
-    let invitesVisibility: Int
+    public let invitesVisibility: Int
     public let defaultNetworkServiceID: Int?
-    let manualBillsSetup: ManualBillsSetup
-    let manualBillAccounts: [DynamicType]
+    public let manualBillsSetup: ManualBillsSetup
+    public let manualBillAccounts: [DynamicType]
     public let bundleData: [BundleDatum] 
-    let bundleChecksum, bundleSyncDate: String
+    public let bundleChecksum, bundleSyncDate: String
     public let countriesExtraInfo: CountriesExtraInfo
     public let securityQuestions: [SecurityQuestionDTO]
     public let cardDetails: [Card]
-    let scanEnabled: Int
-    let bannerData: [BannerDatum]
-    let groupType: [DynamicType]
-    let isInGroupWhitelist: Int
+    public let scanEnabled: Int
+    public let bannerData: [BannerDatum]
+    public let groupType: [DynamicType]
+    public let isInGroupWhitelist: Int
     public let virtualCards: [VirtualCard]
-    let isTinggRetailEnabled, hasWallet, hasVirtualCard: Int
-    let smilePartnerID: String
-    let gasDetailsURL: String
-    let gasOrderURL: String
-    let cancelGasorderURL: String
-    let iprsURL: String
-    let iprsKey: String
-    let gasRegionsURL, gasBrandsURL, gasProductsURL, gasPostOrderURL: String
-    let discountImageURL: String
-    let discountHeader, discountText: String
-    let discountNoTimesShown, discountUserHasTransacted, tacVersion: Int
-    let tacMessage: String
-    let profileImageUploadAPI, britamAPIBaseEndpoint: String
-    let britamAPIUser, britamAPIPass, britamAdMessage: String
-    let britamShowAdCount: Int
+    public let isTinggRetailEnabled, hasWallet, hasVirtualCard: Int
+    public let smilePartnerID: String
+    public let gasDetailsURL: String
+    public let gasOrderURL: String
+    public let cancelGasorderURL: String
+    public let iprsURL: String
+    public let iprsKey: String
+    public let gasRegionsURL, gasBrandsURL, gasProductsURL, gasPostOrderURL: String
+    public let discountImageURL: String
+    public let discountHeader, discountText: String
+    public let discountNoTimesShown, discountUserHasTransacted, tacVersion: Int
+    public let tacMessage: String
+    public let profileImageUploadAPI, britamAPIBaseEndpoint: String
+    public let britamAPIUser, britamAPIPass, britamAdMessage: String
+    public let britamShowAdCount: Int
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
         case statusMessage = "STATUS_MESSAGE"
@@ -115,15 +115,15 @@ public struct SystemUpdateDTO: Codable, BaseDTOprotocol {
 }
 
 // MARK: - BannerDatum
-struct BannerDatum: Codable {
-    let activeStatus: Int
-    let title, description: String
-    let hasDeepLink, categoryID, serviceID: Int
-    let imageURL: String
-    let deepLink, dynamicLink: String
-    let amount: String
-    let priority: Int
-    let actionName: String
+public struct BannerDatum: Codable {
+    public let activeStatus: Int
+    public let title, description: String
+    public let hasDeepLink, categoryID, serviceID: Int
+    public let imageURL: String
+    public let deepLink, dynamicLink: String
+    public let amount: String
+    public let priority: Int
+    public let actionName: String
 
     enum CodingKeys: String, CodingKey {
         case activeStatus = "ACTIVE_STATUS"
@@ -194,11 +194,11 @@ public enum StringOrIntEnum: Codable {
 
 
 // MARK: - ManualBillsSetup
-struct ManualBillsSetup: Codable {
-    let isManualBillEnabled, isMBillFloatingButtonEnabled: Int
-    let paymentFrequencies: [PaymentFrequency]
-    let manualBillServiceID, mnoProfilingService, genericProfilingService, minimumMbillAmount: Int
-    let maximumMbillAmount: Int
+public struct ManualBillsSetup: Codable {
+    public let isManualBillEnabled, isMBillFloatingButtonEnabled: Int
+    public let paymentFrequencies: [PaymentFrequency]
+    public let manualBillServiceID, mnoProfilingService, genericProfilingService, minimumMbillAmount: Int
+    public let maximumMbillAmount: Int
 
     enum CodingKeys: String, CodingKey {
         case isManualBillEnabled = "IS_MANUAL_BILL_ENABLED"
@@ -213,8 +213,8 @@ struct ManualBillsSetup: Codable {
 }
 
 // MARK: - PaymentFrequency
-struct PaymentFrequency: Codable {
-    let frequency, value: String
+public struct PaymentFrequency: Codable {
+    public let frequency, value: String
 
     enum CodingKeys: String, CodingKey {
         case frequency = "FREQUENCY"

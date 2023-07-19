@@ -13,7 +13,7 @@ import Theme
 
 struct HomeView: View {
     @EnvironmentObject var hvm: HomeViewModel
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     @State var chartData: [ChartData] = .init()
     @State var categorySectionHeight: CGFloat = 100.0
     @State var chartSectionHeight: CGFloat = 100.0

@@ -12,7 +12,7 @@ import Theme
 struct AddNewBillCardView: View {
     @State var allRecharges = [String: [MerchantService]]()
     @StateObject var hvm: HomeViewModel = HomeDI.createHomeViewModel()
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     var body: some View {
         VStack {
             HStack {

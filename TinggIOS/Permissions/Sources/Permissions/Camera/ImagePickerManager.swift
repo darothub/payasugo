@@ -12,26 +12,16 @@ import SwiftUI
 
 
 public final class ImagePickerManager :  ObservableObject {
-    var appName:String = "this"
-    public static let shared = ImagePickerManager(appName: "TinggIOS")
-    public init () {
-        // Intentionally unimplemented...Needed for modular accessibility
-    }
-    
-    public convenience init(appName:String){
-        self.init()
-        self.appName = appName
-    }
-    
+   
         
-    public func requestCameraPermission(onSuccess: @escaping (Bool) -> Void) throws {
+    public static func requestCameraPermission(onSuccess: @escaping (Bool) -> Void) throws {
         try checkCameraAvailability()
         AVCaptureDevice.requestAccess(for: .video) { granted in
             onSuccess(granted)
         }
     }
     
-    public func requestPhotoLibraryPermission(onCompletion: @escaping (PermissionResponse) -> Void){
+    public static func requestPhotoLibraryPermission(onCompletion: @escaping (PermissionResponse) -> Void){
         let photos = PHPhotoLibrary.authorizationStatus()
                if photos == .notDetermined {
                    PHPhotoLibrary.requestAuthorization({status in
@@ -49,11 +39,11 @@ public final class ImagePickerManager :  ObservableObject {
                }
     }
     
-    public func getCameraAuthorizationState() -> AVAuthorizationStatus {
+    public static func getCameraAuthorizationState() -> AVAuthorizationStatus {
         return AVCaptureDevice.authorizationStatus(for: .video)
     }
     
-    public func checkCameraAvailability() throws {
+    private static func checkCameraAvailability() throws {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             switch getCameraAuthorizationState() {
             case .denied :

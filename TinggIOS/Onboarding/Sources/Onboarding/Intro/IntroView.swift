@@ -9,13 +9,13 @@ import Core
 import CoreNavigation
 import SwiftUI
 import Theme
-import FreshChat
+
 
 /// Introduces the onboarding screens to the user
 public struct IntroView: View {
     @State private var active = false
-    @EnvironmentObject var navigation: NavigationUtils
-    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
+    @EnvironmentObject var navigation: NavigationManager
+
 
     public init() {
         // Intentionally unimplemented...modular accessibility
@@ -42,15 +42,14 @@ public struct IntroView: View {
 struct IntroView_Previews: PreviewProvider {
     static var previews: some View {
         IntroView()
-            .environmentObject(NavigationUtils())
-            .environmentObject(FreshchatWrapper())
+            .environmentObject(NavigationManager.shared)
     }
 }
 
 /// Tabview displays the onboarding views in turn
 struct IntroTabView: View {
     @Binding var active: Bool
-    @EnvironmentObject var navigation: NavigationUtils
+    @EnvironmentObject var navigation: NavigationManager
     var body: some View {
         VStack {
             TabView {
@@ -88,7 +87,9 @@ struct IntroTabView: View {
     /// - Returns: Button
     fileprivate func getStartedButton() -> some View {
         TinggButton(backgroundColor: PrimaryTheme.getColor(.primaryColor)) {
-            navigation.navigationStack.append(OnboardingScreen.accountRegistration)
+            navigation.navigateTo(
+                screen: OnboardingScreen.accountRegistration
+            )
         }
         .padding()
         .accessibility(identifier: "getstarted")

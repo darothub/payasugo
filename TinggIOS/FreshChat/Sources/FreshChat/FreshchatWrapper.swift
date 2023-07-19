@@ -27,7 +27,6 @@ public class FreshchatWrapper: ObservableObject {
     private func topViewController() -> UIViewController? {
         let scenes = UIApplication.shared.connectedScenes
         let windowScene = scenes.first as? UIWindowScene
-        let window = windowScene?.windows.first
         guard let window = windowScene?.windows.first(where: { $0.isKeyWindow }) else { return nil }
         guard var topViewController = window.rootViewController else { return nil }
 

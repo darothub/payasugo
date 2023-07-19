@@ -75,6 +75,11 @@ public func validatePhoneNumber(with regex: String, phoneNumber: String) -> Bool
     }
 }
 
+public func validateWithRegex(_ regex: String, value: String) -> Bool {
+    let tester = NSPredicate(format:"SELF MATCHES %@", regex)
+    return tester.evaluate(with: value)
+}
+
 public func checkStringForPatterns(inputString: String, pattern: String) -> Bool {
     do {
         let regex = try Regex(pattern)
@@ -127,7 +132,7 @@ public struct TitleAndListItem: Hashable {
 public struct BillDetails: Hashable {
     public let service: MerchantService
     public let info: [Enrollment]
-    public init(service: MerchantService, info: [Enrollment]) {
+    public init(service: MerchantService, info: [Enrollment] = []) {
         self.service = service
         self.info = info
     }
@@ -251,6 +256,18 @@ public func validateAmountByService(selectedService: MerchantService, amount: St
     }
     return result
 }
+public func validateAmountByService(selectedService: MerchantService, amount: String) -> Bool {
+    let intAmount = convertStringToInt(value: amount.removeWhitespace())
+    let minAmount = convertStringToInt(value: selectedService.minAmount)
+    let maxAmount = convertStringToInt(value: selectedService.maxAmount)
+    if amount.isEmpty {
+        return false
+    }
+    else if intAmount < minAmount || intAmount > maxAmount {
+        return false
+    }
+    return true
+}
 extension Formatter {
     static func currencyFormat(currency: String = "KES")-> NumberFormatter {
         let formatter = NumberFormatter()
@@ -325,5 +342,28 @@ extension View {
 }
 
 
+public func formatNumber(_ numberString: String) -> String {
+    let numberFormatter = NumberFormatter()
+    numberFormatter.numberStyle = .decimal
 
+    if let number = numberFormatter.number(from: numberString) {
+        let formattedString = numberFormatter.string(from: number) ?? numberString
+        return formattedString
+    } else {
+        return numberString
+    }
+
+}
+public func formatNumber(_ number: Double) -> String {
+
+    let numberFormatter = NumberFormatter()
+    numberFormatter.numberStyle = .decimal
+
+    if let formattedString = numberFormatter.string(from: NSNumber(value: number)) {
+        return formattedString
+    } else {
+       return String(number)
+    }
+
+}
 

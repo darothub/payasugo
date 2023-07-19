@@ -18,7 +18,8 @@ let package = Package(
         .package(path: "../Theme"),
         .package(path: "../Core"),
         .package(path: "../CoreUI"),
-        .package(path: "../CoreNavigation")
+        .package(path: "../CoreNavigation"),
+        .package(path: "../FreshChat")
 //        .package(path: "../SmileIdentity")
     ],
     targets: [
@@ -26,7 +27,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Onboarding",
-            dependencies: ["Theme", "Core", "CoreUI", "CoreNavigation"],
+            dependencies: ["Theme", "Core", "CoreUI", "CoreNavigation", "FreshChat"],
             resources: [.process("Resources")]
         ),
         .testTarget(

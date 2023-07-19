@@ -10,7 +10,9 @@ import SwiftUI
 import Theme
 import Checkout
 struct FavouriteListView: View {
-    @Binding var fem: FavouriteEnrollmentModel
+    @Binding var currentPhoneNumber: String
+    @Binding var beneficiaries: [PreviousBeneficiaryModel]
+    @State var isSelectedBeneficiary = false
     var body: some View {
         VStack(alignment: .leading) {
             Text("MY FAVOURITES")
@@ -18,8 +20,8 @@ struct FavouriteListView: View {
                 .foregroundColor(.black)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top) {
-                    ForEach(fem.enrollments, id: \.accountNumber) { enrollment in
-                        showImageAndName(enrollment)
+                    ForEach(beneficiaries, id: \.id) { beneficiary in
+                        showImageAndName(beneficiary)
                     }
                 }
             }
@@ -28,32 +30,36 @@ struct FavouriteListView: View {
         .background(.white)
     }
     @ViewBuilder
-    private func showImageAndName(_ enrollment: Enrollment) -> some View {
-        let name = enrollment.accountAlias
+    private func showImageAndName(_ enrollment: PreviousBeneficiaryModel) -> some View {
+        let name = enrollment.name
         if name.isNotEmpty {
-            VImageAndNameView(title: name.isEmpty ? "None" : name, imageUrl: "", useInitials: true)
-                .shadow(color: .red, radius: fem.accountNumber == enrollment.accountNumber ? 5 : 0, x: 0 , y: fem.accountNumber == enrollment.accountNumber ? 3 : 0)
+            VImageAndNameView(title: name.isEmpty ? "NA" : name, imageUrl: "", useInitials: true)
+                .shadow(color: .red, radius: isSelectedBeneficiary ? 5 : 0, x: 0 , y: isSelectedBeneficiary ? 3 : 0)
                 .scaleEffect(0.7)
                 .onTapGesture {
                     withAnimation {
-                        fem.enrollment = enrollment
-                        fem.accountNumber = enrollment.accountNumber
+                        currentPhoneNumber = enrollment.phoneNumber
                     }
                 }
+                .onAppear {
+                    isSelectedBeneficiary = currentPhoneNumber == enrollment.phoneNumber
+                }
+
         }
     }
 }
 
 struct FavouriteListView_Previews: PreviewProvider {
     struct FavouriteListViewPreviewHolder: View {
-        @State var selectedProvider = ""
-        @State var accountNumber = ""
-        @State var fem: FavouriteEnrollmentModel = .init()
+ 
         var body: some View {
-            FavouriteListView(fem: $fem)
+            FavouriteListView(currentPhoneNumber: .constant(""), beneficiaries: .constant([]))
         }
     }
     static var previews: some View {
         FavouriteListViewPreviewHolder()
     }
 }
+
+
+

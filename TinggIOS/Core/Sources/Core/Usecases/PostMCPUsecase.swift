@@ -8,12 +8,12 @@
 import Foundation
 public class PostMCPUsecase {
     private var repository: EnrollmentRepository
-    private var invoiceRepository: FetchBillRepository
+    private var invoiceRepository: InvoiceRepository
     /// ``PostMCPUsecase`` initialiser
     /// - Parameters:
     ///   - repository: ``EnrollmentRepositoryImpl``
     ///   - invoiceRepository: ``FetchBillRepositoryImpl``
-    public init(repository: EnrollmentRepository, invoiceRepository: FetchBillRepository) {
+    public init(repository: EnrollmentRepository, invoiceRepository: InvoiceRepository) {
         self.repository = repository
         self.invoiceRepository = invoiceRepository
     }
@@ -30,8 +30,8 @@ public class PostMCPUsecase {
 public class MCPDeleteAndUpdateUsecase {
     private var deleteUsecase: DeleteBillUsecase
     private var updateUsecase: UpdateBillUsecase
-    private var repopository: FetchBillRepository
-    public init(repository: FetchBillRepository) {
+    private var repopository: InvoiceRepository
+    public init(repository: InvoiceRepository) {
         self.repopository = repository
         self.deleteUsecase = DeleteBillUsecase(fetchBillRepository: repository)
         self.updateUsecase = UpdateBillUsecase(fetchBillRepository: repository)
