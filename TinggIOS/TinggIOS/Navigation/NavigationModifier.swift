@@ -8,6 +8,7 @@ import Airtime
 import Bills
 import CreditCard
 import Core
+import CoreUI
 import CoreNavigation
 import Checkout
 import Onboarding
@@ -46,7 +47,7 @@ struct NavigationModifier: ViewModifier, ServicesListener {
                     AboutView()
                 case let .home(bottomNavTab, billViewTab):
                     if bottomNavTab.isEmpty {
-                        HomeBottomNavView()
+                        HomeBottomNavView(selectedTab: HomeBottomNavView.HOME, billViewTab: Tab.first)
                             .environmentObject(checkout)
                             .environmentObject(hvm)
                             .environmentObject(freshchatWrapper)
@@ -83,6 +84,13 @@ struct NavigationModifier: ViewModifier, ServicesListener {
                 default:
                     EmptyView()
                 }
+            }
+            .navigationDestination(for: NavigationHome.self) { screen in
+                HomeBottomNavView(selectedTab: HomeBottomNavView.HOME, billViewTab: Tab.first)
+                    .environmentObject(checkout)
+                    .environmentObject(hvm)
+                    .environmentObject(freshchatWrapper)
+                    .environmentObject(contactViewModel)
             }
 
     }

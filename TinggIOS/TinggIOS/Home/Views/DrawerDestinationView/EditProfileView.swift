@@ -188,9 +188,8 @@ struct EditProfileView: View {
         } else if !isLastNameValid {
             hvm.uiModel = UIModel.error("Invalid last name")
          
-        } else {
+        } else if !isEmailAddressValid {
             hvm.uiModel = UIModel.error("Invalid email address")
-           
         }
         return isFirstNameValid && isLastNameValid && isEmailAddressValid
     }

@@ -144,7 +144,9 @@ public struct EnterCardDetailsView: View {
             updateButton()
         })
         .onAppear {
-           
+            creditCardVm.currentPaymentProvider = Observer<MerchantPayer>().getEntities().first {
+                $0.clientName == "Card"
+            }!
             updateButton()
             if cardDetails.checkout {
                 let cvaKeyValueInRequest = createKeyValueAsRequest(createCardChannelResponse: createChannelResponse!)
