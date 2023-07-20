@@ -37,9 +37,7 @@ public class CreditCardViewModel: ViewModel {
     @Published public var selectedQuestion:String = ""
     @Published public var answer:String = ""
     @Published public var subscriptions = Set<AnyCancellable>()
-    @Published public var currentPaymentProvider: MerchantPayer = Observer<MerchantPayer>().getEntities().first {
-        $0.clientName == "Card"
-    }!
+    @Published public var currentPaymentProvider: MerchantPayer = .init()
     let creditCardUsecases: CreditCardUsecases
     
     public init( creditCardUsecases: CreditCardUsecases) {
