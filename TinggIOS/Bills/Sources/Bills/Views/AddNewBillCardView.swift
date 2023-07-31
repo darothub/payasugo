@@ -4,7 +4,6 @@
 //
 //  Created by Abdulrasaq on 17/07/2022.
 //
-import Bills
 import SwiftUI
 import Core
 import CoreNavigation

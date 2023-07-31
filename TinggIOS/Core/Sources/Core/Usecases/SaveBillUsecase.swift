@@ -14,7 +14,7 @@ public class SaveBillUsecase {
         self.fetchBillRepository = fetchBillRepository
     }
     
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> Bill {
+    public func callAsFunction(tinggRequest: RequestMap) async throws -> Bill {
         try await fetchBillRepository.saveBill(tinggRequest: tinggRequest)
     }
 }
@@ -28,7 +28,7 @@ public class DeleteBillUsecase {
         self.fetchBillRepository = fetchBillRepository
     }
     
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> BaseDTO {
+    public func callAsFunction(tinggRequest: RequestMap) async throws -> BaseDTO {
         try await fetchBillRepository.deleteBill(tinggRequest: tinggRequest)
     }
 }
@@ -41,7 +41,7 @@ public class UpdateBillUsecase {
         self.fetchBillRepository = fetchBillRepository
     }
     
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> BaseDTO {
+    public func callAsFunction(tinggRequest: RequestMap) async throws -> BaseDTO {
         try await fetchBillRepository.updateBill(tinggRequest: tinggRequest)
     }
 }

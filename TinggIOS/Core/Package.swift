@@ -16,7 +16,8 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.1")),
         .package(url: "https://github.com/realm/realm-swift.git", .upToNextMajor(from: "10.27.0")),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "10.12.0"))
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "10.12.0")),
+        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.7.2"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -27,7 +28,9 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
+                .product(name: "FirebaseDatabase", package: "firebase-ios-sdk"),
 //                .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
+                "CryptoSwift"
             ]
         ),
         .testTarget(

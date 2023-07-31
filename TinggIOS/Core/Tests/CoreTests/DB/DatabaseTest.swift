@@ -24,9 +24,9 @@ class DatabaseTest: XCTestCase {
             let realm = try Realm()
             try realm.write {
                 let json = try JSONSerialization.jsonObject(with: json, options: [])
-                realm.create(CountriesInfoDTO.self, value: json)
+                realm.create(CountryInfo.self, value: json)
             }
-            XCTAssertEqual(realm.objects(CountriesInfoDTO.self).first?.name, "Botswana",
+            XCTAssertEqual(realm.objects(CountryInfo.self).first?.name, "Botswana",
                            "Country was not properly updated from server.")
         } catch {
             print("Realm writing error")

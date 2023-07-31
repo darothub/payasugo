@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  AppStorageManager.swift
+//
 //
 //  Created by Abdulrasaq on 21/07/2022.
 //
@@ -16,7 +16,14 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.billReminder.rawValue) fileprivate static var billReminder: Bool = false
     @AppStorage(LocalProperties.campaignMessage.rawValue) fileprivate static var campaignMessage: Bool = false
     @AppStorage(LocalProperties.deviceToken.rawValue) fileprivate static var deviceToken: String = ""
-    @AppStorage(LocalProperties.isLogin.rawValue) fileprivate static var isLogin: Bool = false
+    @AppStorage(LocalProperties.isLogin.rawValue) fileprivate static var isLogin: Data?
+    @AppStorage(LocalProperties.authClientId.rawValue) fileprivate static var authClientId: String = ""
+    @AppStorage(LocalProperties.authClientSecret.rawValue) fileprivate static var authClientSecret: String = ""
+    @AppStorage(LocalProperties.fetchTokenUrl.rawValue) fileprivate static var fetchTokenUrl: String = ""
+    @AppStorage(LocalProperties.token.rawValue) fileprivate static var token: String = ""
+    @AppStorage(LocalProperties.processRequestUrl.rawValue) fileprivate static var processRequestUrl: String = ""
+    @AppStorage(LocalProperties.privateKeyData.rawValue) fileprivate static var privateKeyData: Data?
+    @AppStorage(LocalProperties.publicKeyData.rawValue) fileprivate static var publicKeyData: Data?
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -66,12 +73,55 @@ public struct AppStorageManager {
     public static func setDeviceToken(value: String) {
         deviceToken = value
     }
-    public static func setIsLogin(value: Bool) {
+    public static func setIsLogin(value: Data) {
         isLogin = value
     }
-    public static func getIsLogin() -> Bool {
+    public static func getIsLogin() -> Data? {
         isLogin
     }
+    public static func setAuthClientId(_ id: String) -> Void {
+        authClientId = id
+    }
+    public static func getAuthClientId() -> String {
+        authClientId
+    }
+    public static func setAuthClientSecret(_ secret: String) -> Void {
+        authClientSecret = secret
+    }
+    public static func getAuthClientSecret() -> String {
+        authClientSecret
+    }
+    public static func setFetchTokenUrl(_ url: String) -> Void {
+        fetchTokenUrl = url
+    }
+    public static func getFetchTokenUrl() -> String {
+        fetchTokenUrl
+    }
+    public static func setToken(_ value: String) -> Void {
+        token = value
+    }
+    public static func getToken() -> String {
+        token
+    }
+    public static func setProcessRequestUrl(_ value: String) -> Void {
+        processRequestUrl = value
+    }
+    public static func getProcessRequestUrl() -> String {
+        processRequestUrl
+    }
+    public static func getPublicKeyData() -> Data? {
+        publicKeyData
+    }
+    public static func getPrivateKeyData() -> Data? {
+        privateKeyData
+    }
+    public static func setPublicKeyData(_ data: Data) -> Void {
+        publicKeyData = data
+    }
+    public static func setPrivateKeyData(_ data: Data) -> Void {
+        privateKeyData = data
+    }
+    
 }
 
 public enum LocalProperties: String {
@@ -84,5 +134,12 @@ public enum LocalProperties: String {
     case campaignMessage
     case deviceToken
     case isLogin
+    case authClientId
+    case authClientSecret
+    case fetchTokenUrl
+    case token
+    case processRequestUrl
+    case privateKeyData
+    case publicKeyData
 }
 

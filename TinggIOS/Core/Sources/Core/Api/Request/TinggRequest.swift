@@ -1,11 +1,13 @@
 //
-//  File.swift
-//  
+//  TinggRequest.swift
+//
 //
 //  Created by Abdulrasaq on 07/07/2022.
 //
 
 import Foundation
+
+import CryptoSwift
 import UIKit
 @available(swift, deprecated: 5.0 , message: "This has been deprecated in build 9.0 v0.1.0 use Request instead")
 /// A type for parameterized for tingg request
@@ -95,6 +97,9 @@ public var uuidForVendor: String {
 
 public struct RequestMap  {
     public var dict: [String: Any]
+    private var iv: String?
+    private var secretKey:String?
+    public var base64Payload: [String: String] = [:]
     private init(dict: [String: Any]) {
         self.dict = dict
     }
@@ -135,6 +140,47 @@ public struct RequestMap  {
             RequestMap(dict: dict)
         }
     }
+    public func encryptPayload() -> [String: String]? {
+        let iv = TinggSecurity.generateRandomAlphanumericString(length: 12)
+        let secretKey = TinggSecurity.generateRandomAlphanumericString(length: 32)
+        let dictCopy = dict
+        let payload = dictCopy.convertDictionaryToJson()
+        let ivByte = iv.data(using: .utf8)!
+        let secretKeyByte = secretKey.data(using: .utf8)!
+        let ivbase64String = ivByte.base64EncodedString()
+        let secretKeyBase64String = secretKeyByte.base64EncodedString()
+        if let encryptedDataInBase64String = TinggSecurity.symmetricEncrypt(plainText: payload, secretKeyBase64: secretKeyBase64String, ivBase64: ivbase64String),
+           let encryptedData = Data(base64Encoded: encryptedDataInBase64String) {
+            return encryptSecretKeyAsymmetrically(secretKeyBase64String, ivbase64String, encryptedPayload: encryptedData)
+        }
+        return nil
+    }
+    func encryptSecretKeyAsymmetrically(_ key: String, _ iv: String, encryptedPayload: Data) -> [String: String]? {
+        guard let publicKeyData = AppStorageManager.getPublicKeyData() else {
+            return nil
+        }
+        guard let publicKey = TinggSecurity.dataToSecKey(publicKeyData, isPrivateKey: false) else {
+         
+            return nil
+        }
+        Log.d(message: "Public key \(publicKey)")
+        do {
+            let encryptedSecretKeyData = try TinggSecurity.asymmetricEncrypt("\(key):\(iv)", publicKey: publicKey)
+            var payloadDict = [String: String]()
+            payloadDict["PAYLOAD"] = encryptedPayload.base64EncodedString()
+            payloadDict["SIGNATURE"] = encryptedSecretKeyData.base64EncodedString()
+            let json = payloadDict.convertDictionaryToJson()
+            let data = json.data(using: .utf8)
+            let base64String = data?.base64EncodedString()
+            Log.d(message: base64String!)
+            var messageDict = [String:String]()
+            messageDict["MESSAGE"] = base64String
+            return messageDict
+        } catch {
+            print(error)
+            return nil
+        }
+    }
     public enum RequestKey: String {
         case MSISDN
         case CLIENT_ID
@@ -167,4 +213,8 @@ public struct RequestMap  {
         }
     }
 }
+
+
+
+
 

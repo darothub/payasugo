@@ -16,6 +16,6 @@ class MCPUsecaseImpl: MCPUsecase {
         self.tinggApiService = tinggApiService
     }
     func callAsFunction<T: BaseDTOprotocol>(request: Core.RequestMap) async throws -> T {
-        try await tinggApiService.result(tinggRequest: request)
+        try await tinggApiService.result(request.encryptPayload()!)
     }
 }

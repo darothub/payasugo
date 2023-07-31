@@ -105,7 +105,7 @@ class BillViewModel : ViewModel {
     }
     public func handleMCPRequests(action: MCPAction, profileInfoComputed: String, nom: Enrollment?=nil) async {
         serviceBillUIModel = UIModel.loading
-        var request = RequestMap.Builder()
+        let request = RequestMap.Builder()
             .add(value: "MCP", for: .SERVICE)
             .add(value: profileInfoComputed, for: .PROFILE_INFO)
             .add(value: action.rawValue, for: .ACTION)

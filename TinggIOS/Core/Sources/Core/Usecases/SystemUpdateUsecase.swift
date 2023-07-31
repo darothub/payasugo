@@ -13,6 +13,9 @@ public class SystemUpdateUsecase {
         self.tinggApiService = tinggApiService
     }
     public func callAsFunction(request: RequestMap) async throws -> SystemUpdateDTO {
-        try await tinggApiService.result(tinggRequest: request)
+        try await tinggApiService.result(request.encryptPayload()!)
+    }
+    public func callAsFunction(parameters: [String: String]) async throws -> SystemUpdateDTO  {
+        try await tinggApiService.result(parameters)
     }
 }

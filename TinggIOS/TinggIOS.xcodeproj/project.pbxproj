@@ -27,6 +27,7 @@
 		715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 715C27E3286D0F93003EDB03 /* ColorAsset.xcassets */; };
 		716708EC2A1D17BC00ED5E67 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */; };
 		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
+		717219D12A7018240061F639 /* tingg.jks in Resources */ = {isa = PBXBuildFile; fileRef = 717219D02A7018240061F639 /* tingg.jks */; };
 		718114F729D2C0D200BCDE96 /* NewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718114F629D2C0D100BCDE96 /* NewView.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
@@ -113,6 +114,7 @@
 		716708ED2A1D1BDA00ED5E67 /* TinggIOSDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TinggIOSDebug.entitlements; sourceTree = "<group>"; };
 		71682415290B035200A80C26 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
+		717219D02A7018240061F639 /* tingg.jks */ = {isa = PBXFileReference; lastKnownFileType = file; path = tingg.jks; sourceTree = "<group>"; };
 		718114F629D2C0D100BCDE96 /* NewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewView.swift; sourceTree = "<group>"; };
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				71F7D7A829859AA70086AE84 /* Navigation */,
 				71BA90B428FE738B007B85F2 /* SplashScreen */,
 				71988FB22A53213300C7D72F /* AppDelegate.swift */,
+				717219D02A7018240061F639 /* tingg.jks */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -531,6 +534,7 @@
 			files = (
 				7108CB1A29C4695B0053B113 /* smile_config.json in Resources */,
 				718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */,
+				717219D12A7018240061F639 /* tingg.jks in Resources */,
 				715C27E4286D0F93003EDB03 /* ColorAsset.xcassets in Resources */,
 				71091EC829EECEE200843FFA /* pendingstateicon.gif in Resources */,
 				718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */,

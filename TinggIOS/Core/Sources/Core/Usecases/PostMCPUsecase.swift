@@ -27,21 +27,3 @@ public class PostMCPUsecase {
 }
 
 
-public class MCPDeleteAndUpdateUsecase {
-    private var deleteUsecase: DeleteBillUsecase
-    private var updateUsecase: UpdateBillUsecase
-    private var repopository: InvoiceRepository
-    public init(repository: InvoiceRepository) {
-        self.repopository = repository
-        self.deleteUsecase = DeleteBillUsecase(fetchBillRepository: repository)
-        self.updateUsecase = UpdateBillUsecase(fetchBillRepository: repository)
-    }
-    
-    public func callAsFunction(request: TinggRequest) async throws -> BaseDTO {
-        if request.action == MCPAction.DELETE.rawValue {
-            return try await deleteUsecase(tinggRequest: request)
-        } else {
-            return try await updateUsecase(tinggRequest: request)
-        }
-    }
-}

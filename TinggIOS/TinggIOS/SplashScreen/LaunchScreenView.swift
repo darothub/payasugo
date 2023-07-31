@@ -18,16 +18,19 @@ import Theme
 import RealmSwift
 import Foundation
 import Bills
+import CommonCrypto
+
 /// This view display the splash screen on launch.
 ///
 /// This is the first screen  of ``TinggIOSApp``.
 public struct LaunchScreenView: View, ServicesListener {
     @EnvironmentObject var navigation: NavigationManager
-    @EnvironmentObject var mvm: MainViewModel
+    @EnvironmentObject var hvm: HomeViewModel
     @State var colorTint:Color = .blue
     /// Creates a view that display the splash screen
     public init() {
         //
+      
     }
     public var body: some View {
         NavigationStack(path: navigation.getNavigationStack()) {
@@ -37,14 +40,25 @@ public struct LaunchScreenView: View, ServicesListener {
                     image
                         .accessibility(identifier: "tinggsplashscreenlogo")
                 }.onAppear {
-                    let userAlreadyLoggedIn = AppStorageManager.getIsLogin()
-                    if userAlreadyLoggedIn {
-                        gotoHomeView()
+                    guard let sessionData = AppStorageManager.getIsLogin() else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            navigation.navigateTo(screen: HomeScreen.intro)
+                        }
                         return
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        navigation.navigateTo(screen: HomeScreen.intro)
+                    do {
+                        guard let userAlreadyLoggedIn: Bool = try TinggSecurity.simptleDecryption(sessionData) else {
+                            return
+                        }
+                        if userAlreadyLoggedIn {
+                            gotoHomeView()
+                            return
+                        }
+                    } catch {
+                        hvm.uiModel = UIModel.error("Error reading user session")
+                        log(message: "Error reading user session")
                     }
+                    
                 }
                 .edgesIgnoringSafeArea(.all)
             }
@@ -55,6 +69,7 @@ public struct LaunchScreenView: View, ServicesListener {
             .navigationDestination(for: NavigationHome.self) { screen in
                 navigation.getHomeView()
             }
+            .handleUIState(uiState: $hvm.uiModel)
             
         }
         .transition(.move(edge: .bottom))

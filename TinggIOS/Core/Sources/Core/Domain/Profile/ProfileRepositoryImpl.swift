@@ -25,11 +25,12 @@ public class ProfileRepositoryImpl: ProfileRepository {
     
     public func updateProfile(request: RequestMap) async throws -> BaseDTO {
         return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(tinggRequest: request) { (result: Result<BaseDTO, ApiError>) in
+            baseRequest.makeRequest(parameters: request.encryptPayload()!) { (result: Result<BaseDTO, ApiError>) in
                 continuation.resume(with: result)
             }
         }
     }
+    
     public func updateProfileImage(request: RequestMap) async throws -> PhotoUploadResponse {
         return try await withCheckedThrowingContinuation { continuation in
             baseRequest.makeRequest(urlPath: "TinggUploadImagesAPI/", tinggRequest: request) { (result: Result<PhotoUploadResponse, ApiError>) in

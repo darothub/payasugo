@@ -1,25 +1,21 @@
 //
-//  AppDelegate.swift
-//  
+//  FirebaseAppDelegate.swift
 //
-//  Created by Abdulrasaq on 23/05/2023.
+//
+//  Created by Abdulrasaq on 20/07/2023.
 //
 
-import Core
 import Firebase
-import Foundation
-import FreshChat
 import UserNotifications
 import UIKit
 
-public class AppDelegate: NSObject, UIApplicationDelegate {
+public class FirebaseAppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
     public override init() {
         super.init()
     }
 
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
         FirebaseApp.configure()
         
         Messaging.messaging().delegate = self
@@ -55,17 +51,17 @@ public class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
-extension AppDelegate: MessagingDelegate {
+extension FirebaseAppDelegate: MessagingDelegate {
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
 
         let deviceToken:[String: String] = ["token": fcmToken ?? ""]
         AppStorageManager.setDeviceToken(value: fcmToken ?? "")
-        print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
+        print("Device token: ", deviceToken)
     }
 }
 
 @available(iOS 10, *)
-extension AppDelegate : UNUserNotificationCenterDelegate {
+extension FirebaseAppDelegate : UNUserNotificationCenterDelegate {
 
   // Receive displayed notifications for iOS 10 devices.
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -88,7 +84,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        Log.d(message: "Token \(token)")
+//        Log.d(message: "Token \(token)")
     }
 
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {

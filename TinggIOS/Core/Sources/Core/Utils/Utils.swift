@@ -21,17 +21,7 @@ public func decodeJSON<T: Decodable>(_ jsonString: String) throws -> T {
     let decodedObject = try decoder.decode(T.self, from: jsonData)
     return decodedObject
 }
-extension Array {
-    public func chunked(into size: Int) -> [[Element]] {
-        return stride(from: 0, to: count, by: size).map {
-            Array(self[$0..<Swift.min($0 + size, count)])
-        }
-    }
-    
-    public func isNotEmpty() -> Bool {
-        return !self.isEmpty
-    }
-}
+
 
 public func addDaysToCurrentDate(numOfDays: Int) -> Date {
     let currentDate = Date()
@@ -171,46 +161,6 @@ public func checkLength(_ newValue: String, length: Int) -> String {
     return number
 }
 
-extension String {
-    public func applyPattern(pattern: String = "#### #### #### ####", replacmentCharacter: Character = "#") -> String {
-        var pureNumber = self.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
-        for index in 0 ..< pattern.count {
-            guard index < pureNumber.count else { return pureNumber }
-            let stringIndex = String.Index(utf16Offset: index, in: self)
-            let patternCharacter = pattern[stringIndex]
-            guard patternCharacter != replacmentCharacter else { continue }
-            pureNumber.insert(patternCharacter, at: stringIndex)
-        }
-        return pureNumber
-    }
-    public func applyDatePattern(pattern: String = "##/##", replacmentCharacter: Character = "#") -> String {
-        var pureNumber = self.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
-        for index in 0 ..< pattern.count {
-            guard index < pureNumber.count else { return pureNumber }
-            let stringIndex = String.Index(utf16Offset: index, in: self)
-            let patternCharacter = pattern[stringIndex]
-            guard patternCharacter != replacmentCharacter else { continue }
-            pureNumber.insert(patternCharacter, at: stringIndex)
-        }
-        return pureNumber
-    }
-
-    public func convertStringToInt() -> Int {
-        let floatValue = Float(self)
-        let intAmount = Int(floatValue ?? 0.0)
-        return intAmount
-    }
-    public var isNotEmpty: Bool {
-        return !self.isEmpty
-    }
-    
-    public func isValidEmail() -> Bool {
-        guard let regex = try? NSRegularExpression(pattern: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", options: .caseInsensitive) else {
-            return false
-        }
-        return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
-    }
-}
 public func updatedTimeInUnits(time: Int) -> String {
     if time > (2*3599) {
         return "\(time / 3600) hours ago"
@@ -366,4 +316,6 @@ public func formatNumber(_ number: Double) -> String {
     }
 
 }
+
+
 

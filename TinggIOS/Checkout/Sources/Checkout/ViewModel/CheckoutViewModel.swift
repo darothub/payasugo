@@ -150,7 +150,7 @@ extension CheckoutViewModel {
             }
              
             if existingList.isNotEmpty() {
-                let exitingInvoice =  self.invoices.first { invoice in
+                _ =  self.invoices.first { invoice in
                      invoice.billReference == existingList[0].accountNumber
                  }
 //                self.fem.accountNumber = existingList[0].accountNumber
@@ -164,9 +164,9 @@ extension CheckoutViewModel {
         }
     }
     public func toCheckoutWithANomination(_ service: MerchantService, nomination: Enrollment) {
-        let currentServices = Observer<MerchantService>().getEntities().filter { $0.categoryID == service.categoryID }
+        _ = Observer<MerchantService>().getEntities().filter { $0.categoryID == service.categoryID }
         if  (String(nomination.hubServiceID) == service.hubServiceID) && (PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasPresentment || PresentmentType(rawValue: service.presentmentType) == PresentmentType.hasValidation) {
-            let exitingInvoice =  self.invoices.first { invoice in
+            _ =  self.invoices.first { invoice in
                 invoice.billReference == nomination.accountNumber
              }
 //            self.fem.accountNumber = nomination.accountNumber

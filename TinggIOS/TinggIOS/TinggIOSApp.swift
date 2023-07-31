@@ -16,6 +16,10 @@ import SwiftUI
 import Theme
 import CoreUI
 import FreshChat
+import CommonCrypto
+import Security
+import CryptoSwift
+import CryptoKit
 
 @main
 /// This is entry point into the application.
@@ -23,7 +27,7 @@ import FreshChat
 /// The ``TinggIOSApp`` initialises the ``navigation`` and viewmodel
 
 struct TinggIOSApp: App, CheckoutListener {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @UIApplicationDelegateAdaptor(FirebaseAppDelegate.self) var appDelegate
     @Environment(\.colorScheme) var colorScheme
     @StateObject var navigation = NavigationManager()
     @StateObject var checkoutVm: CheckoutViewModel = CheckoutDI.createCheckoutViewModel()
@@ -32,7 +36,7 @@ struct TinggIOSApp: App, CheckoutListener {
     @StateObject var hvm = HomeDI.createHomeViewModel()
     @StateObject var mvm = MainViewModel(systemUpdateUsecase: .init())
     @StateObject private var freshchatWrapper = FreshchatWrapper()
-    
+    @StateObject var firebaseManager = FirebaseDatabaseManager()
 
   
     var body: some Scene {
@@ -64,6 +68,7 @@ struct TinggIOSApp: App, CheckoutListener {
                         .environmentObject(checkoutVm)
                 }
                 .onAppear {
+                    
                     UITextField.appearance().keyboardAppearance = .light
                     UITabBar.appearance().backgroundColor = colorScheme == .dark ? UIColor.white : UIColor.white
                     Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
@@ -72,6 +77,26 @@ struct TinggIOSApp: App, CheckoutListener {
                         getHomeView()
                     )
                 }
+                .task {
+                    firebaseManager.handleAuthCredentials()
+                    do {
+                        if let url = hvm.getJKSFileUrl() {
+                            let (privateKey, publicKey) =  try await hvm.getCryptoKeysFromJKSFile(url)
+                            if let publicKeyData = TinggSecurity.secKeyToData(publicKey), let privateKeyData = TinggSecurity.secKeyToData(privateKey) {
+                                hvm.savePublicKeyAsData(publicKeyData)
+                                hvm.savePrivateKeyAsData(privateKeyData)
+                            }
+                        }
+                    } catch {
+                        hvm.uiModel = UIModel.error(error.localizedDescription)
+                    }
+//                    let base64String = "Oi3uayEWDiPLO8mpIBosVJ5Fhwp74zrhGDcmGYy+46udLZuXql2Wc9kcJ6wiUYp9rklzMEpOk84k8/rUhE3NlARMc6j3mKUzCkID6vOC/jzwgotfhN8ZbQhv3cyFEIF7MHfvW4DxQBGhX7dB0zRTv0tc9zBAvuMUYpL4atgwVlhAjgovF6hfOvwtdRU3T1FnHMofZ2X7V42mEJsR32KxYg=="
+//                    let secretbase64String = "1eBeKWI9ozmpL/WgLGhPUjlBjAODpaat7TuUiXCQ68o="
+//                    let ivbase64String = "qOxrUeyu2zJ7KBWW"
+//                    let result = decryptCode(ciphertextBase64: base64String, secretKeyBase64: secretbase64String, ivBase64: ivbase64String)
+//                    Log.d(message: result ?? "NOthing")
+                }
+                .handleUIState(uiState: $hvm.uiModel)
         }
 
     }
@@ -82,12 +107,13 @@ struct TinggIOSApp: App, CheckoutListener {
             .environmentObject(navigation)
           
     }
-    
+
     func showContactView() -> some View {
         return ContactRowView(listOfContactRow: contactViewModel.listOfContact.sorted(by: <)){contact in
             contactViewModel.selectedContact = contact.phoneNumber
         }
     }
+
     func getHomeView() -> AnyView {
         AnyView(
             HomeBottomNavView()
@@ -107,14 +133,13 @@ struct TinggIOSApp: App, CheckoutListener {
             screen: HomeScreen.home(HomeBottomNavView.BILL, .second)
         )
     }
-    
     func onAddNewBillClick() {
         addNewBill()
     }
     fileprivate func addNewBill() {
         let category = Observer<CategoryEntity>().getEntities().first { $0.categoryID == checkoutVm.currentService.categoryID }
         let services = checkoutVm.services.filter { $0.categoryID == checkoutVm.currentService.categoryID }
-        if let currentCategory = category {
+        if category != nil {
             let item = TitleAndListItem(title: category!.categoryName, services: services)
             withAnimation {
                 checkoutVm.showView = false
@@ -204,29 +229,3 @@ class MainViewModel: ViewModel {
     }
 }
 
-
-//protocol H {
-//    func getSomething()
-//}
-//
-//class Hello {
-//    var h: H?
-//    init(h: H?) {
-//        self.h = h
-//    }
-//}
-//
-//struct N: H {
-//
-//  func getSomething() {
-//    //...
-//  }
-//
-//  var h: Hello
-//
-//  init() {
-//    self.h = Hello(h: nil)
-//    self.h = Hello(h: self)
-//  }
-//
-//}

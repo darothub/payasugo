@@ -21,10 +21,10 @@ public class CheckoutRepositoryImpl: CheckoutRepository {
         self.baseRequest = baseRequest
     }
     public func raiseInvoiceRequest(request: RequestMap) async throws ->  RINVResponse {
-        try await baseRequest.result(tinggRequest: request)
+        try await baseRequest.result(request.encryptPayload()!)
     }
     public func makeFWCRequest(request: Core.RequestMap) async throws -> DTBAccountsResponse {
-        try await baseRequest.result(tinggRequest: request)
+        try await baseRequest.result(request.encryptPayload()!)
     }
 }
 

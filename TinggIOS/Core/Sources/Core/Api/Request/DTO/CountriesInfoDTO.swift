@@ -165,7 +165,7 @@ public struct CountriesInfoDTO: Codable {
         case privacyPolicyURL = "PRIVACY_POLICY_URL"
     }
     public func convertToCountriesInfo() -> CountryInfo {
-        var countriesInfo = CountryInfo()
+        let countriesInfo = CountryInfo()
         countriesInfo.name  = self.name
         countriesInfo.countryCode  = self.countryCode
         countriesInfo.countryURLNew  = self.countryURLNew

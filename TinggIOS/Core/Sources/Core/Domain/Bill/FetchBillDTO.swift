@@ -17,7 +17,7 @@ public struct FetchBillDTO: BaseDTOprotocol, Decodable {
     ///   - statusCode: http status code
     ///   - statusMessage: remote message
     ///   - fetchedBills: List of fetched bills
-    public init(statusCode: Int, statusMessage: String, fetchedBills: [DynamicInvoiceType]) {
+    public init(statusCode: Int, statusMessage: String, fetchedBills: [DynamicInvoiceType] = []) {
         self.statusCode = statusCode
         self.statusMessage = statusMessage
         self.fetchedBills = fetchedBills
