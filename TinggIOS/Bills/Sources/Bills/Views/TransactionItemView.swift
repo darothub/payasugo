@@ -73,7 +73,6 @@ struct TransactionItemView: View {
     }    
     private func gotoCheckout() -> Void {
         let enrollments = filterNomination(by: model.service)
-        let selectedNetwork = model.service.serviceName
         checkoutVm.enrollments = enrollments
         checkoutVm.selectedAmount = String(model.amount)
         checkoutVm.currentService = model.service

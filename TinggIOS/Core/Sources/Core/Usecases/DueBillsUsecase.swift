@@ -18,7 +18,7 @@ public class DueBillsUsecase {
     /// A call as function to get invoices
     /// - Parameter tinggRequest: ``TinggRequest``
     /// - Returns: list of ``Invoice``
-    public func callAsFunction(tinggRequest: TinggRequest) async throws -> [Invoice] {
+    public func callAsFunction(tinggRequest: RequestMap) async throws -> [Invoice] {
         let fetchedBillDTO = try await fetchBillRepository.getDueBills(tinggRequest: tinggRequest)
         let fetchedBill = fetchedBillDTO.fetchedBills
         let invoices = fetchedBill.map { $0.convertToInvoice() }

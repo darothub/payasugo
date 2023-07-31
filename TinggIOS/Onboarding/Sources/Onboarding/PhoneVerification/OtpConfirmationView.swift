@@ -98,7 +98,14 @@ public struct OtpConfirmationView: View {
     }
 
     fileprivate func gotoHomeView() {
-        AppStorageManager.setIsLogin(value: true)
+        do {
+            guard let data = try TinggSecurity.simpleEncryption(true) else {
+                return
+            }
+            AppStorageManager.setIsLogin(value: data)
+        } catch {
+            otpVM.uiModel = UIModel.error("Error writing user session")
+        }
         withAnimation {
             navigation.goHome()
         }

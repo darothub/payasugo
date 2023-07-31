@@ -17,17 +17,10 @@ public class FetchBillRepositoryImpl: InvoiceRepository {
         self.baseRequest = baseRequest
         self.dbObserver = dbObserver
     }
-    public func billRequest<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws ->  T {
-        return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
-                continuation.resume(with: result)
-            }
-        }
-    }
     public func billRequest<T: BaseDTOprotocol>(tinggRequest: RequestMap) async throws ->  T {
-        try await baseRequest.result(tinggRequest: tinggRequest)
+        try await baseRequest.result(tinggRequest.encryptPayload()!)
     }
-    public func getDueBills(tinggRequest: TinggRequest) async throws -> FetchBillDTO {
+    public func getDueBills(tinggRequest: RequestMap) async throws -> FetchBillDTO {
         let dto: FetchBillDTO = try await billRequest(tinggRequest: tinggRequest)
         if dto.statusCode > 200 {
             throw ApiError.networkError(dto.statusMessage)
@@ -44,17 +37,17 @@ public class FetchBillRepositoryImpl: InvoiceRepository {
         return dto
     }
     
-    public func saveBill(tinggRequest: TinggRequest) async throws -> Bill {
+    public func saveBill(tinggRequest: RequestMap) async throws -> Bill {
         let dto: BillDTO = try await billRequest(tinggRequest: tinggRequest)
         let savedBill = dto.savedBill[0]
         return savedBill
     }
     
-    public func deleteBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
+    public func deleteBill(tinggRequest: RequestMap) async throws -> BaseDTO {
         return try await updateBill(tinggRequest: tinggRequest)
     }
     
-    public func updateBill(tinggRequest: TinggRequest) async throws -> BaseDTO {
+    public func updateBill(tinggRequest: RequestMap) async throws -> BaseDTO {
         let dto: BaseDTO = try await billRequest(tinggRequest: tinggRequest)
         return dto
     }

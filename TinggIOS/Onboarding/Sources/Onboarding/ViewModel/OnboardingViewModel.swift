@@ -67,6 +67,7 @@ public class OnboardingVM: ViewModel {
             }
         }
     }
+    
 
     /// Request for confirmation of  OTP
     func confirmActivationCode(otp: String) {
@@ -75,6 +76,7 @@ public class OnboardingVM: ViewModel {
             .add(value: "VAK", for: .SERVICE)
             .add(value: otp, for: .ACTIVATION_CODE)
             .build()
+        
         Task {
             do {
                 let response = try await activationUsecase(request: confirmOTPRequest)
@@ -136,6 +138,8 @@ public class OnboardingVM: ViewModel {
         let activationCodeRequest: RequestMap = RequestMap.Builder()
             .add(value: "MAK", for: .SERVICE)
             .build()
+        let encrypted = activationCodeRequest.encryptPayload()
+        Log.d(message: "\(String(describing: encrypted))")
         getActivationCode(request: activationCodeRequest)
     }
 

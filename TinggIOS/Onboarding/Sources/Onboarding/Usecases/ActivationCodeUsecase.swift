@@ -14,7 +14,6 @@ public class ActivationCodeUsecase {
     }
 
     public func callAsFunction(request: RequestMap) async throws ->  BaseDTO {
-        try await sendRequest.result(tinggRequest: request)
+        try await sendRequest.result(request.encryptPayload()!)
     }
-    
 }

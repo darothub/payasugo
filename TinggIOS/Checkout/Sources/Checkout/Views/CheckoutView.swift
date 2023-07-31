@@ -223,7 +223,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
                         .padding(.vertical)
                 }.padding(40)
                 .handleViewStatesMods(uiState: checkoutVm.$validatePinUImodel) { content in
-                    let response = content.data as! BaseDTO
+                    _ = content.data as! BaseDTO
                     showAlertForPin = true
                     showPinView = false
                 } action: {
@@ -442,7 +442,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .add(value: "", for: "EXTRA_DATA")
         
         if checkoutVm.currentService.isABundleService {
-            builder.add(value: checkoutVm.bundleModel.selectedBundleObject.bundleID, for: "BUNDLE_ID")
+           _ = builder.add(value: checkoutVm.bundleModel.selectedBundleObject.bundleID, for: "BUNDLE_ID")
            
         }
         let request = builder.build()
@@ -471,7 +471,6 @@ public struct CheckoutView: View, OnPINCompleteListener {
         checkoutVm.validatePin(request: request)
     }
     private func makeCardCheckoutRequest() {
-        let country = AppStorageManager.getCountry()
         let request = RequestMap.Builder()
             .add(value: "CREATE_CHANNEL_REQUEST", for: .ACTION)
             .add(value: "ECP", for: .SERVICE)
