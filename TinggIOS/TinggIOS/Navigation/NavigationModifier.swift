@@ -18,11 +18,7 @@ import SwiftUI
 import Theme
 import FreshChat
 struct NavigationModifier: ViewModifier, ServicesListener {
-    func onQuicktop(serviceName: String) {
-        print("NavigationModifier \(serviceName)")
-    }
-    
-//    @EnvironmentObject var navigation: NavigationManager
+    @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject var  hvm: HomeViewModel
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
@@ -66,19 +62,9 @@ struct NavigationModifier: ViewModifier, ServicesListener {
 //                        .environmentObject(navigation)
                         .environmentObject(freshchatWrapper)
                 case .pinCreationView:
-                    CreditCardPinView(pinPermission: $checkout.pinPermission, pin: $checkout.pin, confirmPin: $checkout.confirmPin, pinIsCreated: $checkout.pinIsCreated)
-                case .securityQuestionView:
-                    SecurityQuestionView(selectedQuestion: $checkout.selectedQuestion, answer: $checkout.answer)
+                    EnterPinFullScreenView()
                 case let .cardDetailsView(response, invoice):
                     EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
-//                        .environmentObject(navigation)
-                case .billView(let selectedTab):
-                    Text("select")
-//                    BillView(selectedTab: )
-//                        .environmentObject(hvm)
-                case .categoriesAndServices(let items):
-                    CategoriesAndServicesView(categoryNameAndServices: items as! [TitleAndListItem], quickTopUpListener: self)
-                        .environmentObject(checkout)
 //                        .environmentObject(navigation)
                     
                 default:
@@ -86,13 +72,24 @@ struct NavigationModifier: ViewModifier, ServicesListener {
                 }
             }
             .navigationDestination(for: NavigationHome.self) { screen in
-                HomeBottomNavView(selectedTab: HomeBottomNavView.HOME, billViewTab: Tab.first)
+                navigation.getHomeView()
                     .environmentObject(checkout)
                     .environmentObject(hvm)
                     .environmentObject(freshchatWrapper)
                     .environmentObject(contactViewModel)
             }
+            .navigationDestination(for: Settings.self) { screen in
+                SettingsView()
+            }
+            .billsNavigation(quickTopUpListener: self)
+            .airtimesNavigation()
+            .pinNavigation()
+         
 
+    }
+    func onQuicktop(serviceName: String) {
+        log(message: serviceName)
+        navigation.navigateTo(screen: BuyAirtimeScreen.buyAirtime(serviceName))
     }
 }
 

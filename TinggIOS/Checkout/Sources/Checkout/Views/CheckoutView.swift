@@ -462,11 +462,12 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .build()
         checkoutVm.makeFWCRequest(request: request)
     }
-    public func submit() {
+    public func onOTPComplete(_ otp: String) {
+        let pin  = AppStorageManager.mulaPin
         let request = RequestMap.Builder()
             .add(value: "VALIDATE", for: .ACTION)
             .add(value: "MPM", for: .SERVICE)
-            .add(value: CreditCardUtil.encrypt(data: pin), for: "MULA_PIN")
+            .add(value: pin, for: "MULA_PIN")
             .build()
         checkoutVm.validatePin(request: request)
     }

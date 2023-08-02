@@ -41,7 +41,7 @@ public struct OtpFieldView: View {
                     focus = index - 1
                 }
              }
-            .frame(maxWidth: .infinity, maxHeight: 50)
+            .frame(maxWidth: .infinity, maxHeight: 30)
             .focused($focus, equals: index)
             .multilineTextAlignment(.center)
             .padding(5)
@@ -78,7 +78,7 @@ public struct OtpFieldView: View {
                 cursorMovement(value: newValue, index: index)
                 otpValue = fields.joined()
                 if onCompleteListener != nil  && index == fieldSize-1 && !newValue.isEmpty {
-                    onCompleteListener?.submit()
+                    onCompleteListener?.onOTPComplete(otpValue)
                 }
             }
             .frame(width: 40)
@@ -117,6 +117,6 @@ struct OtpFieldView_Previews: PreviewProvider {
 }
 
 public protocol OnPINCompleteListener {
-    func submit() -> Void
+    func onOTPComplete(_ otp: String) -> Void
 }
 
