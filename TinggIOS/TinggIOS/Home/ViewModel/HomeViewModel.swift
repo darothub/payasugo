@@ -15,33 +15,17 @@ public class HomeViewModel: ViewModel {
     @Published public var quickTopUIModel = UIModel.nothing
     @Published public var categoryUIModel = UIModel.nothing
     @Published public var uiModel = UIModel.nothing
-    @Published public var disablePinUIModel = UIModel.nothing
-    @Published public var pinRequestChoiceUIModel = UIModel.nothing
-    @Published var campaignMessageUIModel = UIModel.nothing
     @Published var photoUploadUIModel = UIModel.nothing
     @Published var billReminderUIModel = UIModel.nothing
     @Published var defaultNetworkUIModel = UIModel.nothing
-    @Published var buyAirtimeUiModel = UIModel.nothing
     @Published var selectedDefaultNetworkName = ""
-    @Published var showNetworkList = false
     @Published var permission = ContactManager()
     @Published var country = AppStorageManager.getCountry()
     @Published var sections: [TransactionSectionModel] = [.sample, .sample2]
-    @Published var setNewPin = AppStorageManager.mulaPin == nil
-    @Published private var optInForBillReminder = AppStorageManager.optInForBillReminder()
-    @Published private var optInForCampaignMessage = AppStorageManager.optInForCampaignMessages()
-    @Published var selectedPinRequestChoice = AppStorageManager.pinRequestChoice
-    @Published var settings: [SettingsSectionItem] = []
+
     var subscriptions = Set<AnyCancellable>()
     var baseRequest: TinggApiServices = BaseRequest()
     var realmManager: RealmManager = .init()
-
-    private var actionWordForBillReminder: String {
-        optInForBillReminder ? "Disable" : "Enable"
-    }
-    private var actionWordForCampaignMessage: String {
-        optInForCampaignMessage ? "Disable" : "Enable"
-    }
     private var profileRepository: ProfileRepository
     private var merchantRepository: MerchantServiceRepository
     private var chunkedCategoriesUsecase: ChunkedCategoriesUsecase
@@ -67,9 +51,6 @@ public class HomeViewModel: ViewModel {
         self.chunkedCategoriesUsecase = chunkedCategoriesUsecase
         self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
         self.systemUpdateUsecase = systemUpdateUsecase
-        settings = populateSettings()
-       
-        Log.d(message: "Mulapin \(AppStorageManager.mulaPin) \(setNewPin)")
     }
 
     func fetchSystemUpdate() async {
@@ -86,27 +67,6 @@ public class HomeViewModel: ViewModel {
         }
     }
 
-    func pinNotYetSet() -> Bool {
-        guard  let pin: Base64String = AppStorageManager.mulaPin else {
-//            uiModel = UIModel.error("Pin has not been set for this profile")
-            return true
-        }
-        guard pin.isNotEmpty, let pinDecoded = Data(base64Encoded: pin) else {
-//            uiModel = UIModel.error("Error getting pin")
-            return true
-        }
-        do {
-            guard let _: String? = try TinggSecurity.simptleDecryption(pinDecoded) else {
-                return true
-            }
-            Log.d(message: "\(setNewPin)")
-            return false
-            
-        } catch {
-            uiModel = UIModel.error(error.localizedDescription)
-            return true
-        }
-    }
     /// Save System  update response in database
     func saveDataIntoDB(data: SystemUpdateDTO) async {
         let sortedCategories = data.categories.sorted { category1, category2 in
@@ -153,30 +113,6 @@ public class HomeViewModel: ViewModel {
 
         AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
     }
-    public func disablePin(request: RequestMap) {
-        disablePinUIModel = UIModel.loading
-        Task {
-            do {
-                let result:BaseDTO = try await baseRequest.result(request.encryptPayload()!)
-                handleResultState(model: &disablePinUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
-                AppStorageManager.mulaPin = ""
-            } catch {
-                handleResultState(model: &disablePinUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
-            }
-        }
-    }
-    
-    public func updatePinRequestChoice(request: RequestMap) {
-        pinRequestChoiceUIModel = UIModel.loading
-        Task {
-            do {
-                let result:BaseDTO = try await baseRequest.result(request.encryptPayload()!)
-                handleResultState(model: &pinRequestChoiceUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
-            } catch {
-                handleResultState(model: &pinRequestChoiceUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
-            }
-        }
-    }
 
     public func updateProfile(_ request: RequestMap) {
         uiModel = .loading
@@ -190,28 +126,7 @@ public class HomeViewModel: ViewModel {
             }
         }
     }
-    func populateSettings() -> [SettingsSectionItem] {
-        let allSettings = [
-            SettingsSectionItem(section: SettingsSectionItem.GENERAL, items: [
-                SettingsItem(main: SettingsItem.CARD, actionInformation: "Add or Delete card"),
-                SettingsItem(main: SettingsItem.MOBILENETWORK, actionInformation: "Choose your main mobile network")
-            ]),
-            SettingsSectionItem(section: SettingsSectionItem.TINGPIN , items: [
-                SettingsItem(main: SettingsItem.SETPIN, actionInformation: "", isActive: setNewPin),
-                SettingsItem(main: SettingsItem.CHANGEPIN, actionInformation: "", isActive: !setNewPin),
-                SettingsItem(main: SettingsItem.REMOVEPIN, actionInformation: "", isActive: !setNewPin),
-                SettingsItem(main: SettingsItem.SECURITYLEVEL, actionInformation: selectedPinRequestChoice, isActive: !setNewPin)
-            ]),
-            SettingsSectionItem(section: SettingsSectionItem.NOTIFICATION, items: [
-                SettingsItem(main: SettingsItem.BILLREMINDER, actionInformation: "\(actionWordForBillReminder) receiving bill reminders", showBoolItem: true, isToggled: optInForBillReminder),
-                SettingsItem(main: SettingsItem.CAMPAIGNMESSAGE, actionInformation: "\(actionWordForCampaignMessage) receiving campaign messages", showBoolItem: true, isToggled: optInForCampaignMessage)
-            ]),
-            SettingsSectionItem(section: SettingsSectionItem.ACCOUNT, items: [
-                SettingsItem(main: SettingsItem.DEACTIVATEACCOUNT, actionInformation: "")
-            ])
-        ]
-        return allSettings
-    }
+
     public func updateProfileImage(_ request: RequestMap) {
         photoUploadUIModel = .loading
 
@@ -250,18 +165,6 @@ public class HomeViewModel: ViewModel {
                 handleResultState(model: &billReminderUIModel, Result.success(result) as Result<Any, Error>, showAlertOnSuccess: true)
             } catch {
                 handleResultState(model: &billReminderUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
-            }
-        }
-    }
-
-    func updateCampaignMessages(request: RequestMap) {
-        campaignMessageUIModel = UIModel.loading
-        Task {
-            do {
-                let result = try await updateDefaultNetworkIdUsecase(request: request)
-                handleResultState(model: &campaignMessageUIModel, Result.success(result) as Result<Any, Error>, showAlertOnSuccess: true)
-            } catch {
-                handleResultState(model: &campaignMessageUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
     }

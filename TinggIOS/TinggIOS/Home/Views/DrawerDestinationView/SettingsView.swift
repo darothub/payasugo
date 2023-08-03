@@ -10,9 +10,10 @@ import SwiftUI
 import Theme
 import CoreNavigation
 import Pin
-struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterPINListener {
+struct SettingsView: View, OnSettingClick, OnDefaultServiceSelectionListener, OnEnterPINListener {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var hvm = HomeDI.createHomeViewModel()
+    @StateObject private var settingsVm = SettingsViewModel()
     @EnvironmentObject var navigation: NavigationManager
     @State private var settings: [SettingsSectionItem] = []
     @State private var list:[String] = ["Hello", "Hi"]
@@ -41,7 +42,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
     var body: some View {
         VStack {
             List {
-                ForEach($hvm.settings, id: \.id) { $sectionedSetting in
+                ForEach($settingsVm.settings, id: \.id) { $sectionedSetting in
                     SettingsSectionItemView(section: $sectionedSetting, delegate: self)
                         .listRowBackground(colorScheme == .dark ? Color.white : Color.white)
                 }
@@ -51,7 +52,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
         }
         .backgroundmode(color: .white)
         .onAppear {
-            hvm.setNewPin = hvm.pinNotYetSet()
+            settingsVm.setNewPin = settingsVm.pinNotYetSet()
             phoneNumber = AppStorageManager.getPhoneNumber()
             defaultService = AppStorageManager.getDefaultNetwork() ?? .init()
             defaultServiceName = defaultService.serviceName
@@ -64,7 +65,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
             EnterPinDialogView(pin: pin, next: nextActionForPin, listener: self)
         }
         .customDialog(isPresented: $showPinRequestChoiceDialog, cancelOnTouchOutside: .constant(true)) {
-            SelectPinRequestTypeView(pinRequestChoice: $hvm.selectedPinRequestChoice) { choice in
+            SelectPinRequestTypeView(pinRequestChoice: $settingsVm.selectedPinRequestChoice) { choice in
                 showPinRequestChoiceDialog = false
                 showPinDialog = true
                 nextActionForPin = "UPDATE_CHOICE"
@@ -72,7 +73,6 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
                 showPinRequestChoiceDialog = false
             }
         }
-
         .alert(isPresented: $showPinAlert) {
             Alert(
                 title: Text("Clear Old PIN and Information?").font(.headline),
@@ -86,101 +86,81 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
                 secondaryButton: .cancel(Text("Cancel"))
             )
         }
-        .onReceive(hvm.$setNewPin) { newValue in
-            hvm.selectedPinRequestChoice = AppStorageManager.pinRequestChoice
-            hvm.settings = hvm.populateSettings()
+        .onReceive(settingsVm.$setNewPin) { newValue in
+            settingsVm.selectedPinRequestChoice = AppStorageManager.pinRequestChoice
+            settingsVm.settings = settingsVm.populateSettings()
             log(message: "set new pin? \(newValue)")
         }
-        .handleUIState(uiState: $hvm.billReminderUIModel) { content in
+        .handleUIState(uiState: $settingsVm.billReminderUIModel) { content in
             let dto = content.data as! BaseDTO
             updateStorageBillReminderContent(dto: dto)
         } action: {
             updateBillReminderItem()
         }
-        .handleUIState(uiState: $hvm.campaignMessageUIModel, showAlertonSuccess: true) { content in
+        .handleUIState(uiState: $settingsVm.campaignMessageUIModel, showAlertonSuccess: true) { content in
             let dto = content.data as! BaseDTO
             updateStorageCampaignMessageContent(dto: dto)
         } action: {
             updateCampaignMessageItem()
         }
-        .handleUIState(uiState: $hvm.defaultNetworkUIModel, showAlertonSuccess: true) { content in
+        .handleUIState(uiState: $settingsVm.defaultNetworkUIModel, showAlertonSuccess: true) { content in
             log(message: content)
+            dismissDialogView()
         } action: {
             dismissDialogView()
         }
-        .handleUIState(uiState: $hvm.disablePinUIModel, showAlertonSuccess: true) { content in
+        .handleUIState(uiState: $settingsVm.disablePinUIModel, showAlertonSuccess: true) { content in
             log(message: "Pin disable request")
         } action: {
-            hvm.setNewPin = true
+            settingsVm.setNewPin = true
             AppStorageManager.pinRequestChoice = ""
-            hvm.selectedPinRequestChoice = ""
-            hvm.settings = hvm.populateSettings()
+            settingsVm.selectedPinRequestChoice = ""
+            settingsVm.settings = settingsVm.populateSettings()
             showPinDialog = false
         }
-        .handleUIState(uiState: $hvm.pinRequestChoiceUIModel, showAlertonSuccess: true) { content in
+        .handleUIState(uiState: $settingsVm.pinRequestChoiceUIModel, showAlertonSuccess: true) { content in
             log(message: "Pin update request")
         } action: {
-            AppStorageManager.pinRequestChoice = hvm.selectedPinRequestChoice
-            hvm.settings = hvm.populateSettings()
+            AppStorageManager.pinRequestChoice = settingsVm.selectedPinRequestChoice
+            settingsVm.settings = settingsVm.populateSettings()
             showPinDialog = false
         }
-        .handleUIState(uiState: $hvm.uiModel, showAlertonSuccess: true)
+        .handleUIState(uiState: $settingsVm.uiModel, showAlertonSuccess: true)
         .navigationBarBackButton(navigation: navigation)
     }
     func dismissDialogView() {
-        showNetworkList = false
+        withAnimation(.easeOut(duration: 1.0)) {
+            showNetworkList = false
+        }
     }
 
     func onFinish(_ otp: String, next: String) {
         switch next {
         case "DISABLE":
-            onFinishPinInput(otp) { mulaPin in
+            settingsVm.onFinishPinInput(otp) { mulaPin in
                 let request = RequestMap.Builder()
                     .add(value: "DISABLE_PIN", for: .ACTION)
                     .add(value: "MPM", for: .SERVICE)
                     .add(value: mulaPin, for: "MULA_PIN")
                     .build()
-                hvm.disablePin(request: request)
+                settingsVm.disablePin(request: request)
             }
         case "UPDATE_CHOICE":
-            log(message: "PIN_REQUEST_TYPE \(hvm.selectedPinRequestChoice)")
-            onFinishPinInput(otp) { mulaPin in
+            log(message: "PIN_REQUEST_TYPE \(settingsVm.selectedPinRequestChoice)")
+            settingsVm.onFinishPinInput(otp) { mulaPin in
                 let request = RequestMap.Builder()
                     .add(value: "UPDATE_PIN_REQUEST_TYPE", for: .ACTION)
                     .add(value: "MPM", for: .SERVICE)
                     .add(value: mulaPin, for: "MULA_PIN")
-                    .add(value: hvm.selectedPinRequestChoice, for: "PIN_REQUEST_TYPE" )
+                    .add(value: settingsVm.selectedPinRequestChoice, for: "PIN_REQUEST_TYPE" )
                     .build()
-                hvm.updatePinRequestChoice(request: request)
+                settingsVm.updatePinRequestChoice(request: request)
             }
         default:
             log(message: "Default")
         }
     }
-    func onFinishPinInput(_ otp: String, callback: (String) -> Void) {
-        guard let mulaPin: Base64String =  AppStorageManager.mulaPin else {
-            return
-        }
-        guard mulaPin.isNotEmpty else {
-            return
-        }
-        guard let mulaPinData = Data(base64Encoded: mulaPin) else {
-            return
-        }
-        do {
-            guard let pin: String? = try TinggSecurity.simptleDecryption(mulaPinData) else {
-                return
-            }
-            if otp == pin {
-                callback(mulaPin)
-            } else {
-                hvm.uiModel = UIModel.error("Invalid pin")
-            }
-            
-        } catch {
-            hvm.uiModel = UIModel.error(error.localizedDescription)
-        }
-    }
+
     func onItemClick(_ item: SettingsItem) {
         switch item.main {
         case SettingsItem.MOBILENETWORK:
@@ -221,16 +201,16 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
             let req = request
                 .add(value: "OPT_OUT_BILL_REMINDERS", for: .ACTION)
                 .build()
-            hvm.updateBillReminder(request: req)
+            settingsVm.updateBillReminder(request: req)
         } else {
             let req = request
                 .add(value: "OPT_OUT_CAMPAIGN_MESSAGES", for: .ACTION)
                 .build()
-            hvm.updateCampaignMessages(request: req)
+            settingsVm.updateCampaignMessages(request: req)
         }
       
     }
-    func onServiceSubmission(selected: String) {
+    func onSubmitDefaultService(selected: String) {
         let service = Observer<MerchantService>().getEntities().first { serv in
             serv.serviceName == selected
         }
@@ -240,7 +220,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterP
                 .add(value: s.hubServiceID.convertStringToInt(), for: "DEFAULT_NETWORK_SERVICE_ID")
                 .add(value: "UPN", for: .SERVICE)
                 .build()
-            hvm.updateDefaultNetworkId(request: request)
+            settingsVm.updateDefaultNetworkId(request: request)
         }
     }
     

@@ -13,7 +13,7 @@ import Permissions
 import SwiftUI
 import Theme
 
-public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
+public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
     @Environment(\.realmManager) var realmManager
     @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
     @EnvironmentObject var contactViewModel: ContactViewModel
@@ -28,7 +28,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
     @State private var isValidAmount = false
     @State var copyOfOldBeneficiaries = [PreviousBeneficiaryModel]()
     @State var currentCountry = AppStorageManager.getCountry()
-   
+
     @FocusState var focused: String?
     public init(selectedServiceName: String) {
         _selectedServiceName = State(initialValue: selectedServiceName)
@@ -53,7 +53,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                                 isValidPhoneNumber = validateWithRegex(bavm.countryMobileRegex, value: phoneNumber)
                             }
                         }
-                       return isValidPhoneNumber
+                        return isValidPhoneNumber
                     }, onImageClick: {
                         fetchContacts()
                     }).focused($focused, equals: contactViewModel.selectedContact)
@@ -79,7 +79,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                                 isValidAmount = validateAmountByService(selectedService: bavm.currentService, amount: amount)
                             }
                         }
-                       return isValidAmount
+                        return isValidAmount
                     }.focused($focused, equals: bavm.selectedAmount)
                 }
                 SuggestedAmountListView(
@@ -99,31 +99,30 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
             .onAppear {
                 setServiceName(selectedServiceName)
                 setCurrentService(bavm.getServiceByServiceName(bavm.slm.selectedProvider))
-               
+
                 airtimeServices = bavm.getAirtimeServices()
                 bavm.enrollments = bavm.getEnrollments(to: bavm.currentService)
                 setServiceModelFromServices(airtimeServices)
 
                 setBeneficiariesFromEnrollments(bavm.enrollments)
-                
+
                 setAmountHistory(bavm.currentPhoneNumber)
-           
-                guard let userDefaultNetwork = AppStorageManager.getDefaultNetwork() else {
+
+                if let userDefaultNetwork = AppStorageManager.getDefaultNetwork() {
                     // Show network dialog if default network is not set
+                    bavm.defaultService = userDefaultNetwork
+                    if userDefaultNetwork.serviceName == selectedServiceName {
+                        bavm.currentPhoneNumber = bavm.myPhoneNumber
+                    }
+                } else {
                     showNetworkList = true
                     bavm.networkList = getNetworkItems(bavm.slm.serviceModels)
-                    return
                 }
-                bavm.defaultService = userDefaultNetwork
-                if userDefaultNetwork.serviceName == selectedServiceName {
-                    bavm.currentPhoneNumber = bavm.myPhoneNumber
-                }
-               
             }
             .customDialog(isPresented: $showNetworkList) {
                 DialogContentView(
                     networkList: bavm.networkList,
-                    phoneNumber: bavm.currentPhoneNumber,
+                    phoneNumber: bavm.myPhoneNumber,
                     selectedServiceName: selectedServiceName,
                     listener: self
                 )
@@ -133,6 +132,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                     AppStorageManager.setDefaultNetworkId(id: bavm.defaultService.hubServiceID.convertStringToInt())
                     AppStorageManager.setDefaultNetwork(service: bavm.defaultService)
                     bavm.currentPhoneNumber = bavm.myPhoneNumber
+                    showNetworkList = false
                 } action: {
                     showNetworkList = false
                 }
@@ -162,7 +162,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
                 } else {
                     bavm.oldBeneficiaries = copyOfOldBeneficiaries.filter { $0.phoneNumber.contains(newValue) }
                 }
-                
+
                 if newValue == bavm.myPhoneNumber {
                     bavm.whoseNumber = WhoseNumberLabel.my
                 } else if newValue.isEmpty {
@@ -196,19 +196,23 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
     fileprivate func setServiceName(_ name: String) {
         bavm.slm.selectedProvider = name
     }
+
     fileprivate func setCurrentService(_ service: MerchantService) {
         bavm.currentService = service
     }
+
     fileprivate func setBeneficiariesFromEnrollments(_ enrollments: [Enrollment]) {
-        bavm.oldBeneficiaries =  enrollments.map {
+        bavm.oldBeneficiaries = enrollments.map {
             PreviousBeneficiaryModel(name: $0.accountAlias, phoneNumber: $0.accountNumber)
         }
     }
+
     fileprivate func setServiceModelFromServices(_ services: [MerchantService]) {
         bavm.slm.serviceModels = services.map {
             ServiceModel(name: $0.serviceName, logoUrl: $0.serviceLogo)
         }
     }
+
     fileprivate func setAmountHistory(_ phoneNumber: String) {
         let amount = bavm.history.filter {
             $0.accountNumber == phoneNumber && $0.serviceName == bavm.slm.selectedProvider
@@ -223,7 +227,6 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
         }
         return service
     }
-
 
     fileprivate func handleKeyboardDone() -> ToolbarItemGroup<TupleView<(Spacer, Button<Text>?, Button<Text>?)>> {
         return ToolbarItemGroup(placement: .keyboard) {
@@ -259,7 +262,7 @@ public struct BuyAirtimeView: View, OnNetweorkSelectionListener {
         }
     }
 
-    public func onServiceSubmission(selected: String) {
+    public func onSubmitDefaultService(selected: String) {
         let service = filterServiceBySelectedServiceName(from: bavm.getAirtimeServices(), name: selected)
         if let service = service {
             bavm.defaultService = service
