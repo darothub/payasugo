@@ -27,7 +27,7 @@ public class HomeViewModel: ViewModel {
     @Published var permission = ContactManager()
     @Published var country = AppStorageManager.getCountry()
     @Published var sections: [TransactionSectionModel] = [.sample, .sample2]
-    @Published var setNewPin = true
+    @Published var setNewPin = AppStorageManager.mulaPin == nil
     @Published private var optInForBillReminder = AppStorageManager.optInForBillReminder()
     @Published private var optInForCampaignMessage = AppStorageManager.optInForCampaignMessages()
     @Published var selectedPinRequestChoice = AppStorageManager.pinRequestChoice
@@ -68,6 +68,8 @@ public class HomeViewModel: ViewModel {
         self.updateDefaultNetworkIdUsecase = updateDefaultNetworkIdUsecase
         self.systemUpdateUsecase = systemUpdateUsecase
         settings = populateSettings()
+       
+        Log.d(message: "Mulapin \(AppStorageManager.mulaPin) \(setNewPin)")
     }
 
     func fetchSystemUpdate() async {
@@ -84,6 +86,27 @@ public class HomeViewModel: ViewModel {
         }
     }
 
+    func pinNotYetSet() -> Bool {
+        guard  let pin: Base64String = AppStorageManager.mulaPin else {
+//            uiModel = UIModel.error("Pin has not been set for this profile")
+            return true
+        }
+        guard pin.isNotEmpty, let pinDecoded = Data(base64Encoded: pin) else {
+//            uiModel = UIModel.error("Error getting pin")
+            return true
+        }
+        do {
+            guard let _: String? = try TinggSecurity.simptleDecryption(pinDecoded) else {
+                return true
+            }
+            Log.d(message: "\(setNewPin)")
+            return false
+            
+        } catch {
+            uiModel = UIModel.error(error.localizedDescription)
+            return true
+        }
+    }
     /// Save System  update response in database
     func saveDataIntoDB(data: SystemUpdateDTO) async {
         let sortedCategories = data.categories.sorted { category1, category2 in
@@ -149,7 +172,6 @@ public class HomeViewModel: ViewModel {
             do {
                 let result:BaseDTO = try await baseRequest.result(request.encryptPayload()!)
                 handleResultState(model: &pinRequestChoiceUIModel, (Result.success(result) as Result<Any, Error>), showAlertOnSuccess: true)
-                AppStorageManager.mulaPin = ""
             } catch {
                 handleResultState(model: &pinRequestChoiceUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }

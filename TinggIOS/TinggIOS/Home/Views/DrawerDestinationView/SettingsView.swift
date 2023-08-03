@@ -10,7 +10,7 @@ import SwiftUI
 import Theme
 import CoreNavigation
 import Pin
-struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSuccessfulPINActionListener {
+struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnEnterPINListener {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var hvm = HomeDI.createHomeViewModel()
     @EnvironmentObject var navigation: NavigationManager
@@ -51,13 +51,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSucces
         }
         .backgroundmode(color: .white)
         .onAppear {
-            checkIfPinIsSet()
-            hvm.$setNewPin.sink { newValue in
-                hvm.settings = hvm.populateSettings()
-                hvm.selectedPinRequestChoice = AppStorageManager.pinRequestChoice
-                log(message: "Pin is set \(newValue)")
-            }.store(in: &hvm.subscriptions)
-          
+            hvm.setNewPin = hvm.pinNotYetSet()
             phoneNumber = AppStorageManager.getPhoneNumber()
             defaultService = AppStorageManager.getDefaultNetwork() ?? .init()
             defaultServiceName = defaultService.serviceName
@@ -92,8 +86,10 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSucces
                 secondaryButton: .cancel(Text("Cancel"))
             )
         }
-        .onChange(of: selectedPinRequestChoice){ newValue  in
-            log(message: newValue)
+        .onReceive(hvm.$setNewPin) { newValue in
+            hvm.selectedPinRequestChoice = AppStorageManager.pinRequestChoice
+            hvm.settings = hvm.populateSettings()
+            log(message: "set new pin? \(newValue)")
         }
         .handleUIState(uiState: $hvm.billReminderUIModel) { content in
             let dto = content.data as! BaseDTO
@@ -116,6 +112,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSucces
             log(message: "Pin disable request")
         } action: {
             hvm.setNewPin = true
+            AppStorageManager.pinRequestChoice = ""
             hvm.selectedPinRequestChoice = ""
             hvm.settings = hvm.populateSettings()
             showPinDialog = false
@@ -133,26 +130,11 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSucces
     func dismissDialogView() {
         showNetworkList = false
     }
-    func checkIfPinIsSet() {
-        guard  let pin: Base64String = AppStorageManager.mulaPin else {
-            return
-        }
-        guard pin.isNotEmpty, let pinDecoded = Data(base64Encoded: pin) else {
-           return
-        }
-        do {
-            guard let pinString: String? = try TinggSecurity.simptleDecryption(pinDecoded) else {
-                return
-            }
-            hvm.setNewPin = !((pinString?.isNotEmpty) != nil)
-        } catch {
-            hvm.uiModel = UIModel.error(error.localizedDescription)
-        }
-    }
-    func otpSuccessful(_ otp: String, next: String) {
+
+    func onFinish(_ otp: String, next: String) {
         switch next {
         case "DISABLE":
-            onOTPComplete(otp) { mulaPin in
+            onFinishPinInput(otp) { mulaPin in
                 let request = RequestMap.Builder()
                     .add(value: "DISABLE_PIN", for: .ACTION)
                     .add(value: "MPM", for: .SERVICE)
@@ -161,11 +143,13 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSucces
                 hvm.disablePin(request: request)
             }
         case "UPDATE_CHOICE":
-            onOTPComplete(otp) { mulaPin in
+            log(message: "PIN_REQUEST_TYPE \(hvm.selectedPinRequestChoice)")
+            onFinishPinInput(otp) { mulaPin in
                 let request = RequestMap.Builder()
                     .add(value: "UPDATE_PIN_REQUEST_TYPE", for: .ACTION)
                     .add(value: "MPM", for: .SERVICE)
                     .add(value: mulaPin, for: "MULA_PIN")
+                    .add(value: hvm.selectedPinRequestChoice, for: "PIN_REQUEST_TYPE" )
                     .build()
                 hvm.updatePinRequestChoice(request: request)
             }
@@ -173,7 +157,7 @@ struct SettingsView: View, OnSettingClick, OnNetweorkSelectionListener, OnSucces
             log(message: "Default")
         }
     }
-    func onOTPComplete(_ otp: String, callback: (String) -> Void) {
+    func onFinishPinInput(_ otp: String, callback: (String) -> Void) {
         guard let mulaPin: Base64String =  AppStorageManager.mulaPin else {
             return
         }
