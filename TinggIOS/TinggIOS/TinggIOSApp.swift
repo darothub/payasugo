@@ -37,7 +37,7 @@ struct TinggIOSApp: App, CheckoutListener {
     @StateObject var mvm = MainViewModel(systemUpdateUsecase: .init())
     @StateObject private var freshchatWrapper = FreshchatWrapper()
     @StateObject var firebaseManager = FirebaseDatabaseManager()
-
+    @State private var sheetHeight: CGFloat = .zero
   
     var body: some Scene {
         WindowGroup {
@@ -55,9 +55,15 @@ struct TinggIOSApp: App, CheckoutListener {
                     checkoutVm.cancelPublishers()
                 }) {
                     checkoutView()
-                        .presentationDetents([.fraction(0.7), .large])
-                        .presentationBackground(.thinMaterial)
-                        .presentationContentInteraction(.scrolls)
+                        .overlay {
+                            GeometryReader { geometry in
+                                Color.clear.preference(key: InnerHeightPreferenceKey.self, value: geometry.size.height)
+                            }
+                        }
+                        .onPreferenceChange(InnerHeightPreferenceKey.self) { newHeight in
+                            sheetHeight = newHeight
+                        }
+                        .presentationDetents([.height(sheetHeight)])
                 }
                 .customDialog(
                     isPresented: $checkoutVm.showBundles,
@@ -144,7 +150,12 @@ struct TinggIOSApp: App, CheckoutListener {
         }
     }
 }
-
+struct InnerHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = .zero
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
 
 @MainActor
 class MainViewModel: ViewModel {

@@ -36,7 +36,7 @@ public struct TextFieldAndRightIcon: View {
                 .onTapGesture {
                     onImageClick()
                 }
-        }.padding()
+        }.padding(15)
         .validateBorderStyle(text: $number, validation: validation)
     }
 }
@@ -69,7 +69,7 @@ public struct TextFieldAndLeftTitle: View {
                 .submitLabel(.next)
                 .focused($cursor)
                 
-        }.padding()
+        }.padding(15)
         .validateBorderStyle(text: $number, validation: validation)
    
     }
