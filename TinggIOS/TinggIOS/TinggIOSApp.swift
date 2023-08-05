@@ -55,7 +55,7 @@ struct TinggIOSApp: App, CheckoutListener {
                     checkoutVm.cancelPublishers()
                 }) {
                     checkoutView()
-                        .presentationDetents([.fraction(0.7)])
+                        .presentationDetents([.fraction(0.7), .large])
                         .presentationBackground(.thinMaterial)
                         .presentationContentInteraction(.scrolls)
                 }
@@ -129,6 +129,9 @@ struct TinggIOSApp: App, CheckoutListener {
     }
     func onAddNewBillClick() {
         addNewBill()
+    }
+    func onAddNewCardClick() {
+        navigation.navigateTo(screen: CreditCardScreen.enterCardDetailsScreen)
     }
     fileprivate func addNewBill() {
         let category = Observer<CategoryEntity>().getEntities().first { $0.categoryID == checkoutVm.currentService.categoryID }

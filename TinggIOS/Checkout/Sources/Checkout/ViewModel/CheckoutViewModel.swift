@@ -8,6 +8,7 @@ import Combine
 import CoreUI
 import Core
 import SwiftUI
+@MainActor
 public class CheckoutViewModel: ViewModel  {
 //    @Published public var sam: SuggestedAmountModel = .init()
 //    @Published public var fem: FavouriteEnrollmentModel = .init()

@@ -6,6 +6,7 @@
 //
 import Core
 import CoreUI
+import CreditCard
 import SwiftUI
 import Theme
 import CoreNavigation
@@ -61,9 +62,7 @@ struct SettingsView: View, OnSettingClick, OnDefaultServiceSelectionListener, On
             DialogContentView(networkList: networkList, phoneNumber: phoneNumber, selectedServiceName: defaultServiceName, listener: self)
                 .padding()
         }
-        .customDialog(isPresented: $showPinDialog, cancelOnTouchOutside: .constant(true)) {
-            EnterPinDialogView(pin: pin, next: nextActionForPin, listener: self)
-        }
+        .attachEnterPinDialog(showPinDialog: $showPinDialog, pin: pin, onFinish: $nextActionForPin, listener: self)
         .customDialog(isPresented: $showPinRequestChoiceDialog, cancelOnTouchOutside: .constant(true)) {
             SelectPinRequestTypeView(pinRequestChoice: $settingsVm.selectedPinRequestChoice) { choice in
                 showPinRequestChoiceDialog = false
@@ -111,18 +110,18 @@ struct SettingsView: View, OnSettingClick, OnDefaultServiceSelectionListener, On
         }
         .handleUIState(uiState: $settingsVm.disablePinUIModel, showAlertonSuccess: true) { content in
             log(message: "Pin disable request")
-        } action: {
             settingsVm.setNewPin = true
             AppStorageManager.pinRequestChoice = ""
             settingsVm.selectedPinRequestChoice = ""
             settingsVm.settings = settingsVm.populateSettings()
+        } action: {
             showPinDialog = false
         }
         .handleUIState(uiState: $settingsVm.pinRequestChoiceUIModel, showAlertonSuccess: true) { content in
             log(message: "Pin update request")
-        } action: {
             AppStorageManager.pinRequestChoice = settingsVm.selectedPinRequestChoice
             settingsVm.settings = settingsVm.populateSettings()
+        } action: {
             showPinDialog = false
         }
         .handleUIState(uiState: $settingsVm.uiModel, showAlertonSuccess: true)
@@ -171,6 +170,8 @@ struct SettingsView: View, OnSettingClick, OnDefaultServiceSelectionListener, On
            showPinAlert = true
         case SettingsItem.SECURITYLEVEL:
             showPinRequestChoiceDialog = true
+        case SettingsItem.CARD:
+            navigation.navigateTo(screen: CreditCardScreen.savedCardScreen)
         default:
             showNetworkList = false
         }

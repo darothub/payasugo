@@ -64,7 +64,7 @@ struct NavigationModifier: ViewModifier, ServicesListener {
                 case .pinCreationView:
                     EnterPinFullScreenView()
                 case let .cardDetailsView(response, invoice):
-                    EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
+                    EnterCardDetailsView(createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
 //                        .environmentObject(navigation)
                     
                 default:
@@ -84,6 +84,7 @@ struct NavigationModifier: ViewModifier, ServicesListener {
             .billsNavigation(quickTopUpListener: self)
             .airtimesNavigation()
             .pinNavigation()
+            .creditCardNavigation()
          
 
     }

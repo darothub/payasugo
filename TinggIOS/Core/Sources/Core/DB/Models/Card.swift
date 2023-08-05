@@ -45,8 +45,11 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
         case cardType = "CARD_TYPE"
         case countryDialCode
     }
-    func isInActive() -> Bool {
+    public func isInActive() -> Bool {
         return self.activeStatus == Card.STATUS_INACTIVE
+    }
+    public func isActive() -> Bool {
+        return self.activeStatus == Card.STATUS_ACTIVE
     }
 }
 

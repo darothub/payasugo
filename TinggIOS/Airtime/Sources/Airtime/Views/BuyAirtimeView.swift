@@ -48,11 +48,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                 TextFieldAndRightIcon(
                     number: $bavm.currentPhoneNumber,
                     validation: { phoneNumber in
-                        DispatchQueue.main.async {
-                            withAnimation {
-                                isValidPhoneNumber = validateWithRegex(bavm.countryMobileRegex, value: phoneNumber)
-                            }
-                        }
+                        isValidPhoneNumber = validateWithRegex(bavm.countryMobileRegex, value: phoneNumber)
                         return isValidPhoneNumber
                     }, onImageClick: {
                         fetchContacts()
@@ -74,11 +70,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                         placeHolder: "Enter amount",
                         keyboardType: .numberPad
                     ) { amount in
-                        DispatchQueue.main.async {
-                            withAnimation {
-                                isValidAmount = validateAmountByService(selectedService: bavm.currentService, amount: amount)
-                            }
-                        }
+                        isValidAmount = validateAmountByService(selectedService: bavm.currentService, amount: amount)
                         return isValidAmount
                     }.focused($focused, equals: bavm.selectedAmount)
                 }
@@ -136,6 +128,9 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                 } action: {
                     showNetworkList = false
                 }
+                .onDisappear {
+                    bavm.defaultNetworkUIModel = UIModel.nothing
+                }
             }
             .onChange(of: contactViewModel.selectedContact, perform: { newValue in
                 bavm.currentPhoneNumber = newValue
@@ -191,6 +186,9 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
         }
         .backgroundmode(color: .white)
         .navigationBarBackButton(navigation: navigation)
+        .onDisappear {
+            bavm.uiModel = UIModel.nothing
+        }
     }
 
     fileprivate func setServiceName(_ name: String) {
