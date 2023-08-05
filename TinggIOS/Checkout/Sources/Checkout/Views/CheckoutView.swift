@@ -61,6 +61,7 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
     @State private var isValidAmount = false
     @State private var isValidSomeoneElsePhoneNumber = false
     @State var showPinDialog = false
+    @State var showContact = false
     @State var nextActionAfterPinInput = ""
     let profile = Observer<Profile>().getEntities().first
     @FocusState var focused: String?
@@ -129,7 +130,7 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
                                 
                             },
                             onImageClick:  {
-                                fetchContacts()
+                                showContact = true
                             })
                             .disabled(
                                 checkoutVm.isSomeoneElsePaying ? false : true
@@ -156,10 +157,12 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
                     }.padding()
                     .focused($focused, equals: nil)
                 }
-                .sheet(isPresented: $contactViewModel.showContact) {
-                    showContactView(contactViewModel: contactViewModel)
-                }
                 .attachEnterPinDialog(showPinDialog: $showPinDialog, pin: pin, onFinish: $nextActionAfterPinInput, listener: self)
+                .showContactModifier($showContact, completion: { contact in
+                    checkoutVm.phoneNumber = contact.phoneNumber
+                }, onFailure: { err in
+                    checkoutVm.uiModel = UIModel.error(err)
+                })
                 .toolbar {
                     handleKeyboardDone()
                 }
@@ -191,9 +194,6 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
                         checkoutVm.showCardOptions = false
                         checkoutVm.addNewCard = false
                     }
-                }
-                .onChange(of: contactViewModel.selectedContact) { newValue in
-                    checkoutVm.phoneNumber = newValue
                 }
                 .onChange(of: checkoutVm.selectedAmount, perform: { newValue in
                     buttonText = "Pay \(newValue)"
@@ -293,13 +293,6 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
     fileprivate func updateButtonLabel() {
         withAnimation {
             buttonText = "Pay \(checkoutVm.selectedAmount)"
-        }
-    }
-    fileprivate func fetchContacts() {
-        Task {
-            await contactViewModel.fetchPhoneContacts { err in
-                checkoutVm.uiModel = UIModel.error(err.localizedDescription)
-            }
         }
     }
     @ViewBuilder

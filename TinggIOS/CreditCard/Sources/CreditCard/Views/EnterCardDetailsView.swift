@@ -98,7 +98,7 @@ public struct EnterCardDetailsView: View {
                                 label: "", placeHolder: "Exp date",
                                 type: .numberPad
                             ) { str in
-                                validateAddress(str)
+                                validateExpDate(str)
                             }
                             TextFieldView(
                                 fieldText: $cardDetails.cvv,
@@ -172,7 +172,27 @@ public struct EnterCardDetailsView: View {
                 showWebView = htmlString.isNotEmpty
             }
             .navigationTitle("Card")
-            .navigationBarBackButton(navigation: navigation)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(
+                leading:
+                Button(action: {
+                    if showWebView {
+                        successUrl = ""
+                        showWebView.toggle()
+                    } else {
+                        navigation.goBack()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Back")
+                    }
+                }
+            )
+
+            .onDisappear {
+                creditCardVm.uiModel = UIModel.nothing
+            }
         }
     }
 
@@ -337,6 +357,8 @@ public struct EnterCardDetailsView: View {
                 .add(value: "", for: "EMAIL_ADDRESS")
                 .add(value: cardDetails.address, for: "POSTAL_ADDRESS")
                 .add(value: cardDetails.getEncryptedExpDate(), for: "EX_DATE")
+                .add(value: cardDetails.getEncryptedAlias(), for: "SUFFIX")
+                .add(value: cardDetails.getEncryptedPrefix(), for: "PREFIX")
                 .add(value: cardDetails.getEncryptedAlias(), for: .CARD_ALIAS)
                 .build()
 
@@ -397,7 +419,7 @@ public struct EnterCardDetailsView: View {
                 }
                 let userMSISDN = Observer<Profile>().getEntities()[0].msisdn
                 let accountNumber = creditCardVm.fem.accountNumber
-                var customerName = getCustomerName(userMSISDN, accountNumber)
+                let customerName = getCustomerName(userMSISDN, accountNumber)
                 updateTransactionHistory(raisedInvoice, amount, customerName, accountNumber)
                 let content = UIModel.Content(statusMessage: "Updated invoice")
                 creditCardVm.uiModel = UIModel.content(content)
@@ -492,10 +514,10 @@ struct CardDetailsView_Previews: PreviewProvider {
 }
 
 extension EnterCardDetailsView {
-    private static let DEFAULT_CHECK_OUT_URL =
+    public static let DEFAULT_CHECK_OUT_URL =
         "https:beep2.cellulant.com:9001/hub/api/mulaProxy/mulaWebCardUI/"
-    private static let DEFAULT_SUCCESS_CALLBACK_URL = "https://merchant.com/web_hook_url.php"
-    private static let CARD_CHARGE_SUCCESS =
+    public static let DEFAULT_SUCCESS_CALLBACK_URL = "https://merchant.com/web_hook_url.php"
+    public static let CARD_CHARGE_SUCCESS =
         "https://beep2.cellulant.com:9001/hub/api/mulaProxy/mulaWebCardUI/src/DisplayStatus.php?"
 }
 
