@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  OnboardingScreen.swift
 //  
 //
 //  Created by Abdulrasaq on 27/04/2023.

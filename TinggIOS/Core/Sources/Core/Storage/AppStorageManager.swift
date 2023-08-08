@@ -24,6 +24,10 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.processRequestUrl.rawValue) fileprivate static var processRequestUrl: String = ""
     @AppStorage(LocalProperties.privateKeyData.rawValue) fileprivate static var privateKeyData: Data?
     @AppStorage(LocalProperties.publicKeyData.rawValue) fileprivate static var publicKeyData: Data?
+    @AppStorage(LocalProperties.securityQuestion.rawValue) public static var securityQuestion: String?
+    @AppStorage(LocalProperties.securityAnswer.rawValue) public static var securityAnswer: String?
+    @AppStorage(LocalProperties.mulaPin.rawValue) public static var mulaPin: String?
+    @AppStorage(LocalProperties.pinRequestChoice.rawValue) public static var pinRequestChoice: String = ""
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -141,5 +145,9 @@ public enum LocalProperties: String {
     case processRequestUrl
     case privateKeyData
     case publicKeyData
+    case securityQuestion
+    case securityAnswer
+    case mulaPin
+    case pinRequestChoice
 }
 

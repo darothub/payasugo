@@ -18,7 +18,7 @@ public struct HRadioButtonAndText: View {
         HStack{
             RadioButtonView(selected: $selected, id: name)
             Text(name)
-                .font(.subheadline)
+                .font(.caption)
                 .foregroundColor(.black)
         }
     }

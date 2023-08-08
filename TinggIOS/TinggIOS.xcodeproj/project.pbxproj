@@ -28,7 +28,6 @@
 		716708EC2A1D17BC00ED5E67 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 716708EB2A1D17BB00ED5E67 /* GoogleService-Info.plist */; };
 		71682416290B035200A80C26 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 71682415290B035200A80C26 /* Documentation.docc */; };
 		717219D12A7018240061F639 /* tingg.jks in Resources */ = {isa = PBXBuildFile; fileRef = 717219D02A7018240061F639 /* tingg.jks */; };
-		718114F729D2C0D200BCDE96 /* NewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718114F629D2C0D100BCDE96 /* NewView.swift */; };
 		718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718C628F283EBCB4002ADCA8 /* TinggIOSApp.swift */; };
 		718C6294283EBCB8002ADCA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6293283EBCB8002ADCA8 /* Assets.xcassets */; };
 		718C6297283EBCB8002ADCA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718C6296283EBCB8002ADCA8 /* Preview Assets.xcassets */; };
@@ -50,6 +49,7 @@
 		71988FE82A57036500C7D72F /* ActiveCategoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD32A57036500C7D72F /* ActiveCategoryListView.swift */; };
 		71988FE92A57036500C7D72F /* ActivateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD42A57036500C7D72F /* ActivateCardView.swift */; };
 		71988FEB2A57036500C7D72F /* HomeTopViewDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988FD62A57036500C7D72F /* HomeTopViewDesign.swift */; };
+		71A482D72A7B8BF2002516AA /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A482D62A7B8BF2002516AA /* SettingsViewModel.swift */; };
 		71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA90BD28FE7787007B85F2 /* LaunchScreenView.swift */; };
 		71D019E128A8538400312864 /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 71D019E028A8538400312864 /* Onboarding */; };
 		71F7D7A72981B1A00086AE84 /* CreditCard in Frameworks */ = {isa = PBXBuildFile; productRef = 71F7D7A62981B1A00086AE84 /* CreditCard */; };
@@ -115,7 +115,6 @@
 		71682415290B035200A80C26 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		71707E5028FFBDD700CD9BB6 /* Permissions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Permissions; sourceTree = "<group>"; };
 		717219D02A7018240061F639 /* tingg.jks */ = {isa = PBXFileReference; lastKnownFileType = file; path = tingg.jks; sourceTree = "<group>"; };
-		718114F629D2C0D100BCDE96 /* NewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewView.swift; sourceTree = "<group>"; };
 		71867FB628946D8E008A5411 /* Theme */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theme; sourceTree = "<group>"; };
 		71867FB728946DCB008A5411 /* Onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Onboarding; sourceTree = "<group>"; };
 		718C628C283EBCB4002ADCA8 /* TinggIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinggIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,6 +140,7 @@
 		71988FD32A57036500C7D72F /* ActiveCategoryListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveCategoryListView.swift; sourceTree = "<group>"; };
 		71988FD42A57036500C7D72F /* ActivateCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivateCardView.swift; sourceTree = "<group>"; };
 		71988FD62A57036500C7D72F /* HomeTopViewDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTopViewDesign.swift; sourceTree = "<group>"; };
+		71A482D62A7B8BF2002516AA /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		71AED53C285D007300A4B14F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71AED545286128F400A4B14F /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AED56F2864D90B00A4B14F /* Theme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Theme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,7 +263,6 @@
 				718C6295283EBCB8002ADCA8 /* Preview Content */,
 				71AED53C285D007300A4B14F /* Info.plist */,
 				71682415290B035200A80C26 /* Documentation.docc */,
-				718114F629D2C0D100BCDE96 /* NewView.swift */,
 			);
 			path = TinggIOS;
 			sourceTree = "<group>";
@@ -321,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				71988FC02A57036400C7D72F /* HomeViewModel.swift */,
+				71A482D62A7B8BF2002516AA /* SettingsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -605,12 +605,12 @@
 				71091EDD29F0179800843FFA /* VirtualCardState.swift in Sources */,
 				71988FE42A57036500C7D72F /* EditProfileView.swift in Sources */,
 				71091ED229EED7CE00843FFA /* TransactionListView.swift in Sources */,
+				71A482D72A7B8BF2002516AA /* SettingsViewModel.swift in Sources */,
 				71BA90BE28FE7787007B85F2 /* LaunchScreenView.swift in Sources */,
 				71091EDB29EFEDFD00843FFA /* VirtualCardLinkedStateView.swift in Sources */,
 				71988FD92A57036500C7D72F /* HomeDI.swift in Sources */,
 				718C6290283EBCB4002ADCA8 /* TinggIOSApp.swift in Sources */,
 				71F7D7AA29859ABE0086AE84 /* NavigationModifier.swift in Sources */,
-				718114F729D2C0D200BCDE96 /* NewView.swift in Sources */,
 				71988FE32A57036500C7D72F /* SettingsView.swift in Sources */,
 				71091ED729EED95100843FFA /* VerificationPendingStateView.swift in Sources */,
 				71091ECA29EED24300843FFA /* VirtualCardBannerView.swift in Sources */,

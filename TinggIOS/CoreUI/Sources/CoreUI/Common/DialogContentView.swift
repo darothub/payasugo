@@ -13,8 +13,8 @@ public struct DialogContentView: View {
     @State var selectedServiceName: String = "MTN"
     @State private var buttonLabel: String = "Done"
     @State private var isNetworkListEmpty = false
-    var listener: OnNetweorkSelectionListener
-    public init(networkList: [NetworkItem], phoneNumber: String = "090000000000", selectedServiceName: String = "MTN", listener: OnNetweorkSelectionListener) {
+    var listener: OnDefaultServiceSelectionListener
+    public init(networkList: [NetworkItem], phoneNumber: String = "090000000000", selectedServiceName: String = "MTN", listener: OnDefaultServiceSelectionListener) {
         self._networkList = State(initialValue: networkList)
         self._phoneNumber = State(initialValue: phoneNumber)
         self._selectedServiceName = State(initialValue: selectedServiceName)
@@ -35,7 +35,7 @@ public struct DialogContentView: View {
             Divider()
             Text("You have no service yet")
                 .showIf($isNetworkListEmpty)
-            List(networkList) { network in
+            ForEach(networkList) { network in
                 NetworkSelectionRowView(item: network, selectedNetwork: $selectedServiceName)
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)
@@ -51,7 +51,7 @@ public struct DialogContentView: View {
                 if networkList.isEmpty {
                     listener.onDismiss()
                 } else {
-                    listener.onServiceSubmission(selected: selectedServiceName)
+                    listener.onSubmitDefaultService(selected: selectedServiceName)
                 }
             }
         }
@@ -76,8 +76,10 @@ public struct NetworkSelectionRowView: View {
                 ResponsiveImageCardView(imageUrl: $item.imageUrl, y: 0, bgShape: .circular)
                 Text(item.networkName)
                     .foregroundColor(.black)
+                    .font(.subheadline)
                 Spacer()
                 RadioButtonView(selected: $selectedNetwork, id: item.id)
+                    .scaleEffect(0.7, anchor: .center)
             }.background(.white)
             Divider()
         }.background(.white)
@@ -102,7 +104,7 @@ public struct NetworkItem: Identifiable {
     }
 }
 
-public protocol OnNetweorkSelectionListener {
-    func onServiceSubmission(selected: String)
+public protocol OnDefaultServiceSelectionListener {
+    func onSubmitDefaultService(selected: String)
     func onDismiss()
 }

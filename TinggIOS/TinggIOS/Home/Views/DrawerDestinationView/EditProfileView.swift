@@ -84,14 +84,19 @@ struct EditProfileView: View {
             HStack {
                 TextFieldView(
                     fieldText: $firstName,
-                    label: "", placeHolder: "First name",
-                    success: $isFirstNameValid
-                )
-                TextFieldView(fieldText: $lastName, label: "", placeHolder: "Last name", success: $isLastNameValid)
+                    label: "", placeHolder: "First name"
+                ) {
+                    $0.isNotEmpty
+                }
+                TextFieldView(fieldText: $lastName, label: "", placeHolder: "Last name") {
+                    $0.isNotEmpty
+                }
             }
             .padding(.vertical)
 
-            TextFieldView(fieldText: $email, label: "", placeHolder: "Email address", success: $isEmailAddressValid)
+            TextFieldView(fieldText: $email, label: "", placeHolder: "Email address") {
+                $0.isValidEmail()
+            }
 
             TinggButton(buttonLabel: "Update profile") {
                 updateProfile()
@@ -111,15 +116,6 @@ struct EditProfileView: View {
                 email = profile?.emailAddress ?? ""
             }
         }
-        .onChange(of: firstName, perform: { newValue in
-            isFirstNameValid = newValue.isNotEmpty
-        })
-        .onChange(of: lastName, perform: { newValue in
-            isLastNameValid = newValue.isNotEmpty
-        })
-        .onChange(of: email, perform: { newValue in
-            isEmailAddressValid = newValue.isValidEmail()
-        })
         .sheet(isPresented: $isShowingImagePicker, onDismiss: {
             updateProfileImage(base64String)
         }) {

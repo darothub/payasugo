@@ -20,17 +20,9 @@ public class CardRepositoryImpl : CardRepository {
         self.baseRequest = baseRequest
     }
     public func createPin(tinggRequest: RequestMap) async throws ->  BaseDTO {
-        return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(parameters: tinggRequest.encryptPayload()!) { result in
-                continuation.resume(with: result)
-            }
-        }
+        try await baseRequest.result(tinggRequest.encryptPayload()!)
     }
     public func createCardChannel(tinggRequest: RequestMap) async throws -> CreateCardChannelResponse {
-        return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(parameters: tinggRequest.encryptPayload()!) { result in
-                continuation.resume(with: result)
-            }
-        }
+        try await baseRequest.result(tinggRequest.encryptPayload()!)
     }
 }

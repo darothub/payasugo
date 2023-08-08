@@ -67,7 +67,7 @@ public struct EnterCardDetailsView: View {
                         iconName: cardIcon,
                         placeHolder: cardNumberHolderText,
                         validation: { value in
-                        cardIsValid
+                        validateCardNumber(value)
                     }, onImageClick:  {
                         print("")
                     })
@@ -78,10 +78,16 @@ public struct EnterCardDetailsView: View {
                     }
                 }
                 VStack {
-                    TextFieldView(fieldText: $cardDetails.holderName, label:"", placeHolder: "Card holder's name", success: $isHolderNameValid)
+                    TextFieldView(fieldText: $cardDetails.holderName, label:"", placeHolder: "Card holder's name"){ str in
+                        validateHolderName(str)
+                    }
                     HStack {
-                        TextFieldView(fieldText: $cardDetails.expDate, label:"", placeHolder: "Exp date",type: .numberPad,  success:  $expDateIsValid)
-                        TextFieldView(fieldText: $cardDetails.cvv, label:"", placeHolder: "CVV", type: .numberPad, success:  $isCVVLengthValid)
+                        TextFieldView(fieldText: $cardDetails.expDate, label:"", placeHolder: "Exp date",type: .numberPad){ str in
+                            validateAddress(str)
+                        }
+                        TextFieldView(fieldText: $cardDetails.cvv, label:"", placeHolder: "CVV", type: .numberPad) { str in
+                           validateCVV(str)
+                        }
                     }
                     HStack {
                         Spacer()
@@ -89,6 +95,9 @@ public struct EnterCardDetailsView: View {
                             .font(.caption)
                     }
                     TextFieldView(fieldText: $cardDetails.address, label:"", placeHolder: "Address")
+                    { str in
+                        validateAddress(str)
+                    }
                 }
                 Spacer()
                 //Button
@@ -107,42 +116,6 @@ public struct EnterCardDetailsView: View {
             .showIf($showWebView)
            
         }
-        .onChange(of: cardDetails.cardNumber) { newValue in
-            cardDetails.cardNumber = checkLength(newValue, length: 19)
-            cardDetails.cardNumber = cardDetails.cardNumber.applyPattern()
-            if cardDetails.cardNumber.starts(with: "5") {
-                withAnimation(.linear(duration: 1.5)) {
-                    cardImage = .mastercardIcon
-                }
-            } else if cardDetails.cardNumber.starts(with: "4") {
-                withAnimation(.linear(duration: 1.5)) {
-                    cardImage = .visa
-                }
-            } else {
-               cardImage = .cardTempIcon
-           }
-            
-            cardIsValid = cardCheck(number: newValue.replacingOccurrences(of: " ", with: ""))
-            updateButton()
-        }
-        .onChange(of: cardDetails.expDate) { newValue in
-            cardDetails.expDate = checkLength(cardDetails.expDate, length: 5)
-            cardDetails.expDate = cardDetails.expDate.applyDatePattern()
-            expDateIsValid = isExpiryDateValid(expDate: cardDetails.expDate)
-            updateButton()
-        }
-        .onChange(of: cardDetails.cvv) { newValue in
-            isCVVLengthValid = newValue.count < 3 ? false : true
-            cardDetails.cvv = checkLength(newValue, length: 3)
-            updateButton()
-        }
-        .onChange(of: cardDetails.holderName, perform: { newValue in
-            isHolderNameValid = newValue.isEmpty ? false : true
-            updateButton()
-        })
-        .onChange(of: cardDetails.address, perform: { newValue in
-            updateButton()
-        })
         .onAppear {
             creditCardVm.currentPaymentProvider = Observer<MerchantPayer>().getEntities().first {
                 $0.clientName == "Card"
@@ -180,7 +153,47 @@ public struct EnterCardDetailsView: View {
         )
     
     }
-   
+    func validateHolderName(_ newValue: String) -> Bool {
+        isHolderNameValid = newValue.isEmpty ? false : true
+        updateButton()
+        return isHolderNameValid
+    }
+    func validateCVV(_ newValue: String) -> Bool {
+        isCVVLengthValid = newValue.count < 3 ? false : true
+        cardDetails.cvv = checkLength(newValue, length: 3)
+        updateButton()
+        return isCVVLengthValid
+    }
+    func validateExpDate(_ newValue: String) -> Bool {
+        cardDetails.expDate = checkLength(cardDetails.expDate, length: 5)
+        cardDetails.expDate = cardDetails.expDate.applyDatePattern()
+        expDateIsValid = isExpiryDateValid(expDate: cardDetails.expDate)
+        updateButton()
+        return expDateIsValid
+    }
+    func validateCardNumber(_ newValue: String) -> Bool {
+        cardDetails.cardNumber = checkLength(newValue, length: 19)
+        cardDetails.cardNumber = cardDetails.cardNumber.applyPattern()
+        if cardDetails.cardNumber.starts(with: "5") {
+            withAnimation(.linear(duration: 1.5)) {
+                cardImage = .mastercardIcon
+            }
+        } else if cardDetails.cardNumber.starts(with: "4") {
+            withAnimation(.linear(duration: 1.5)) {
+                cardImage = .visa
+            }
+        } else {
+           cardImage = .cardTempIcon
+       }
+        
+        cardIsValid = cardCheck(number: newValue.replacingOccurrences(of: " ", with: ""))
+        updateButton()
+        return cardIsValid
+    }
+    func validateAddress(_ newValue: String) -> Bool {
+        updateButton()
+        return true
+    }
     func createPostStringFromRequest(request: RequestMap) -> String {
         var sb = ""
         sb.append("<!DOCTYPE html>")
