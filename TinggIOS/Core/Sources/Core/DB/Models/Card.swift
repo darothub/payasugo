@@ -33,17 +33,13 @@ public class Card: Object,  ObjectKeyIdentifiable, Codable {
     public static let TYPE_NORMAL = "NORMAL"
     public static let STATUS_INACTIVE = "0"
     public static let  STATUS_ACTIVE = "1"
+
     
     enum CodingKeys: String, CodingKey {
-        case firstName, middleName, idPassport, phoneNumber, email, customerAddress, currencyCode, customerCity, countryCode
         case cardAlias = "CARD_ALIAS"
-        case nameType
         case payerClientID = "PAYER_CLIENT_ID"
-        case suffix
         case activeStatus = "ACTIVE_STATUS"
-        case validationServiceID
         case cardType = "CARD_TYPE"
-        case countryDialCode
     }
     public func isInActive() -> Bool {
         return self.activeStatus == Card.STATUS_INACTIVE

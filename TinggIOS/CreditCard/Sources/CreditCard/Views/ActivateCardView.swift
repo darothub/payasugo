@@ -30,6 +30,7 @@ public struct ActivateCardView: View {
     @State var disableActivateCardButton = true
     @State var amount = ""
     @State var buttonBgColor: Color = .gray.opacity(0.5)
+    @State var mutableCardDetails = CardDetails()
     let durationAndDelay : CGFloat = 0.3
     public init() {
         //
@@ -54,7 +55,7 @@ public struct ActivateCardView: View {
             }.frame(maxWidth: .infinity, alignment: .leading)
             TextFieldView (
                 fieldText: $amount,
-                label: "", placeHolder: "Card holder's name",
+                label: "", placeHolder: "Amount",
                 type: .numberPad
             ) { str in
                 validateAmount(str)
@@ -77,16 +78,17 @@ public struct ActivateCardView: View {
             }
         }.padding()
         .onAppear(perform: {
-            cardNumber = cardDetails.cardNumber
-            holderName = cardDetails.holderName
-            expDate = cardDetails.expDate
+            mutableCardDetails = cardDetails
+            cardNumber = mutableCardDetails.cardNumber
+            holderName = mutableCardDetails.holderName
+            expDate = mutableCardDetails.expDate
         })
         .onReceive(Just(cardNumber), perform: { newValue in
             let _ = validateCardNumber(newValue)
         })
         .handleUIState(uiState: $creditCardVm.uiModel, showAlertonSuccess: true) { content in
             let data = content.data as! BaseDTO
-            let card = creditCardVm.cards.first { $0.cardAlias == cardDetails.suffix }
+            let card = creditCardVm.cards.first { $0.cardAlias == mutableCardDetails.suffix }
             card?.activeStatus = Card.STATUS_ACTIVE
         } action: {
             navigation.goBack()
@@ -117,7 +119,7 @@ public struct ActivateCardView: View {
     private func makevalidationRequest() {
         var request = RequestMap.Builder()
             .add(value: amount, for: .AMOUNT)
-            .add(value: cardDetails.getEncryptedAlias(), for: .CARD_ALIAS)
+            .add(value: mutableCardDetails.getEncryptedAlias(), for: .CARD_ALIAS)
             .add(value: "VALIDATE_USER", for: .ACTION)
             .build()
         creditCardVm.validateUser(request: request)

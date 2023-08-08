@@ -254,6 +254,8 @@ public struct CardDetails {
     public var prefix: String = ""
     public var checkout = false
     public var isActive = false
+    public var cardType = ""
+    public var merchantPayer: MerchantPayer = .init()
     public init(
         imageUrl: String = "",
         cardNumber: String = "",
@@ -272,24 +274,46 @@ public struct CardDetails {
         self.email = email
         self.address = address
         self.amount = amount
-        suffix = cardNumber.suffix(4).description
-        prefix = cardNumber.prefix(4).description
-        formatAliasPan()
+        suffix = self.cardNumber.suffix(4).description
+        prefix = self.cardNumber.prefix(4).description
+       
     }
 
 
-    public func getEncryptedAlias() -> String {
-        CreditCardUtil.encrypt(data: self.suffix)
+    public mutating func getEncryptedAlias() -> String {
+        suffix = self.cardNumber.suffix(4).description
+        return CreditCardUtil.encrypt(data: suffix)
     }
     public func getEncryptedExpDate() -> String {
         CreditCardUtil.encrypt(data: self.expDate)
     }
-    public func getEncryptedPrefix() -> String {
-        CreditCardUtil.encrypt(data: self.prefix)
+    public mutating func getEncryptedPrefix() -> String {
+        prefix = self.cardNumber.prefix(4).description
+        return CreditCardUtil.encrypt(data: prefix)
     }
-    private mutating func formatAliasPan() {
-        if cardNumber.starts(with: "0") {
-            self.cardNumber = "************\(suffix)"
+    public func getMaskedPan() -> String {
+        return "**** **** **** \(cardNumber)"
+    }
+    public func getCreditCardName() -> String {
+        switch cardType {
+        case "001":
+            return "visa"
+        case "002":
+            return "mastercard"
+        case "003":
+            return "amex"
+        case "005":
+            return "DINERS"
+        case "004":
+            return "discover"
+        case "007":
+            return "jcb"
+        case "006":
+            return "CarteBlanche"
+        case "014":
+            return "EnRoute"
+        default:
+            return ""
         }
     }
 }

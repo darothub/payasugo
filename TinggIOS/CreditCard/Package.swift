@@ -15,8 +15,13 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(path: "../Checkout"),
-        .package(path: "../FreshChat")
+        .package(path: "../Theme"),
+        .package(path: "../CoreUI"),
+        .package(path: "../Core"),
+        .package(path: "../Permissions"),
+        .package(path: "../CoreNavigation"),
+        .package(path: "../FreshChat"),
+        .package(path: "../Pin")
         
         
     ],
@@ -25,7 +30,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "CreditCard",
-            dependencies: ["Checkout", "FreshChat"]),
+            dependencies: ["Core", "Theme", "CoreUI", "Permissions", "CoreNavigation", "FreshChat", "Pin"]),
         .testTarget(
             name: "CreditCardTests",
             dependencies: ["CreditCard"]),

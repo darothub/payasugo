@@ -29,7 +29,7 @@ public struct FloatingActionButtonView: View {
                 } label: {
                     Image(systemName: "plus")
                         .foregroundColor(.white)
-                        .padding(10)
+                        .padding(7)
                 }
                 .padding(.horizontal, 30)
                 .padding(.vertical)

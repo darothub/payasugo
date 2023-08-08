@@ -5,14 +5,15 @@
 //  Created by Abdulrasaq on 03/08/2023.
 //
 
-import Checkout
 import Core
 import CoreUI
 import Foundation
 import SwiftUI
 import CoreNavigation
+import FreshChat
 public struct CreditCardNavigationModifier: ViewModifier {
     @EnvironmentObject var navigation: NavigationManager
+    @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
     public func body(content: Content) -> some View {
         content
             .navigationDestination(for: CreditCardScreen.self, destination: { screen in

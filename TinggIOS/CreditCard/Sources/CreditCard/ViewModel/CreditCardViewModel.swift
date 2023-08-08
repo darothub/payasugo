@@ -9,14 +9,13 @@ import CoreUI
 import Core
 import Foundation
 import Alamofire
-import Checkout
 @MainActor
 public class CreditCardViewModel: ViewModel {
-    @Published public var slm: ServicesListModel = .init()
-    @Published public var sam: SuggestedAmountModel = .init()
-    @Published public var fem: FavouriteEnrollmentModel = .init()
-    @Published public var dcm: DebitCardModel = .init()
-    @Published public var dcddm: DebitCardDropDownModel = .init()
+//    @Published public var slm: ServicesListModel = .init()
+//    @Published public var sam: SuggestedAmountModel = .init()
+//    @Published public var fem: FavouriteEnrollmentModel = .init()
+//    @Published public var dcm: DebitCardModel = .init()
+//    @Published public var dcddm: DebitCardDropDownModel = .init()
     @Published public var cardDetails: CardDetails = .init()
     @Published public var showCardOptions: Bool = false
     @Published public var showCheckOutView: Bool = false
@@ -65,9 +64,11 @@ public class CreditCardViewModel: ViewModel {
             guard let merchantPayer = merchantPayer else {
                 return nil
             }
-            let cardPan = "0\(String(describing: card.cardAlias))"
+            let cardPan = "\(card.cardAlias ?? "0000")"
             var cardDetails = CardDetails(imageUrl: merchantPayer.logo ?? "", cardNumber: cardPan)
             cardDetails.isActive = card.isActive()
+            cardDetails.merchantPayer = merchantPayer
+            cardDetails.cardType = card.cardType ?? ""
             return cardDetails
         }
     }
@@ -97,6 +98,18 @@ public class CreditCardViewModel: ViewModel {
             do {
                 let success: BaseDTO = try await tinggApiServices.result(request.encryptPayload()!)
                 handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>)
+                
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
+            }
+        }
+    }
+    public func deleteCardRequest(request: RequestMap) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let success: BaseDTO = try await tinggApiServices.result(request.encryptPayload()!)
+                handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>, showAlertOnSuccess: true)
                 
             } catch {
                 handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)

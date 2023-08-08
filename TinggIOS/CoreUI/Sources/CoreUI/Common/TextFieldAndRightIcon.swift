@@ -30,7 +30,6 @@ public struct TextFieldAndRightIcon: View {
             TextField(placeHolder, text: $number)
                 .keyboardType(keyboardType)
                 .submitLabel(.next)
-                .focused($cursor)
                 .foregroundColor(.black)
             Image(systemName: iconName)
                 .onTapGesture {

@@ -46,8 +46,12 @@ public struct EnterCardDetailsView: View {
     @State var cardDetails: CardDetails = .init()
     @State var cardNumberCount = 0
     @State var cardCVVCount = 0
+    @State var holderNameTFTag = 1
+    @State var expDateTFTag = 2
+    @State var cvvTFTag = 3
+    @State var addressTFTag = 4
     var invoice: Invoice?
-
+    @FocusState var focus: Int?
     public init(createChannelResponse: CreateCardChannelResponse? = nil, invoice: Invoice? = nil) {
         self.createChannelResponse = createChannelResponse
         self.invoice = invoice
@@ -66,61 +70,89 @@ public struct EnterCardDetailsView: View {
                     )
                     HStack {
                         Image(systemName: "lock.fill")
+                            .font(.caption)
+
                         Text("Card details are saved securely")
+                            .font(.caption)
                     }
+                    
                     VStack {
-                        TextFieldAndRightIcon(
+                        TextFieldAndRightIcon (
                             number: $cardDetails.cardNumber,
                             iconName: cardIcon,
-                            placeHolder: cardNumberHolderText,
-                            validation: { value in
+                            placeHolder: cardNumberHolderText) { value in
                                 isValidCardNumber = validateCardNumber(value)
+                                if isValidCardNumber {
+                                    focus = 1
+                                }
                                 return isValidCardNumber
-                            }, onImageClick: {
+                            } onImageClick: {
                                 print("click card")
-                            })
+                            }
+                            .focused($focus, equals: 0)
+
                         HStack {
                             Spacer()
                             Text("\(cardNumberCount)/16")
                                 .font(.caption)
                         }
                     }
-                    VStack {
+                    TextFieldView(
+                        fieldText: $cardDetails.holderName,
+                        label: "", placeHolder: "Card holder's name"
+                    ) { str in
+                        let isValidHolderName = validateHolderName(str)
+                        return isValidHolderName
+                    }
+                    .focused($focus, equals: 1)
+
+                    HStack(alignment: .top) {
                         TextFieldView(
-                            fieldText: $cardDetails.holderName,
-                            label: "", placeHolder: "Card holder's name"
+                            fieldText: $cardDetails.expDate,
+                            label: "", placeHolder: "Exp date",
+                            type: .numberPad
                         ) { str in
-                            validateHolderName(str)
-                        }
-                        HStack {
-                            TextFieldView(
-                                fieldText: $cardDetails.expDate,
-                                label: "", placeHolder: "Exp date",
-                                type: .numberPad
-                            ) { str in
-                                validateExpDate(str)
+                            let isValidExp = validateExpDate(str)
+                            if isValidExp {
+                                focus = 3
                             }
+                            return isValidExp
+                        }
+                        .focused($focus, equals: 2)
+                        Spacer()
+                        VStack {
                             TextFieldView(
                                 fieldText: $cardDetails.cvv,
                                 label: "", placeHolder: "CVV",
                                 type: .numberPad
                             ) { str in
-                                validateCVV(str)
+                                let validCVV = validateCVV(str)
+                                if validCVV {
+                                    focus = 4
+                                }
+                                return validCVV
+                            }
+                            .focused($focus, equals: 3)
+                            HStack {
+                                Spacer()
+                                Text("\(cardCVVCount)/3")
+                                    .font(.caption)
                             }
                         }
-                        HStack {
-                            Spacer()
-                            Text("\(cardCVVCount)/3")
-                                .font(.caption)
-                        }
-                        TextFieldView(
-                            fieldText: $cardDetails.address,
-                            label: "",
-                            placeHolder: "Address"
-                        ) { str in
-                            validateAddress(str)
-                        }
                     }
+
+                    TextFieldView(
+                        fieldText: $cardDetails.address,
+                        label: "",
+                        placeHolder: "Address"
+                    ) { str in
+                        let isValidAddress = validateAddress(str)
+                        if isValidAddress {
+                            focus = 5
+                        }
+                        return isValidAddress
+                    }
+                    .focused($focus, equals: 4)
                     Spacer()
                     // Button
                     TinggButton(
@@ -129,7 +161,9 @@ public struct EnterCardDetailsView: View {
                         padding: 0
                     ) {
                         submitCardDetails()
-                    }.disabled(disableButton)
+                    }
+                    .disabled(disableButton)
+                    .focused($focus, equals: 5)
                 }
                 .padding()
                 // WebView
@@ -142,14 +176,6 @@ public struct EnterCardDetailsView: View {
                         submitCardDetails()
                     }
                 ).showIf($showWebView)
-            }
-            .onAppear {
-                updateButton()
-//                if creditCardVm.cardDetails.checkout {
-//                    let cvaKeyValueInRequest = createKeyValueAsRequest(createCardChannelResponse: createChannelResponse!)
-//                    htmlString = createPostStringFromRequest(request: cvaKeyValueInRequest)
-//                    showWebView = creditCardVm.cardDetails.checkout
-//                }
             }
             .onReceive(Just(cardDetails.cardNumber)) { newValue in
                 cardNumberCount = newValue.replacingOccurrences(of: " ", with: "").count
@@ -189,9 +215,28 @@ public struct EnterCardDetailsView: View {
                     }
                 }
             )
-
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    Button("Next") {
+                        if cardIsValid {
+                            focus = 1
+                        } else if isValidHolderName {
+                            focus = 2
+                        } else if isValidExpDate {
+                            focus = 3
+                        } else if isValidCVV {
+                            focus = 4
+                        } else {
+                            focus = 5
+                        }
+                    }
+                }
+            }
             .onDisappear {
                 creditCardVm.uiModel = UIModel.nothing
+            }
+            .onChange(of: focus) { newValue in
+                Log.d(message: "\(newValue)")
             }
         }
     }
@@ -210,7 +255,7 @@ public struct EnterCardDetailsView: View {
     }
 
     func validateExpDate(_ newValue: String) -> Bool {
-        cardDetails.expDate = checkLength(cardDetails.expDate, length: 5)
+        cardDetails.expDate = checkLength(newValue, length: 5)
         cardDetails.expDate = cardDetails.expDate.applyDatePattern()
         isValidExpDate = isExpiryDateValid(expDate: cardDetails.expDate)
         updateButton()
@@ -276,9 +321,11 @@ public struct EnterCardDetailsView: View {
     }
 
     private func createKeyValueAsRequest(createCardChannelResponse: CreateCardChannelResponse) -> RequestMap {
-        getBaseRequestBuilderForPostCreateChannel(createCardChannelResponse: createCardChannelResponse)
+        let request = getBaseRequestBuilderForPostCreateChannel(createCardChannelResponse: createCardChannelResponse)
             .add(value: "CARD_VALIDATION", for: "action")
             .build()
+        log(message: request)
+        return request
     }
 
     private func createECPKeyValueAsRequest(createCardChannelResponse: CreateCardChannelResponse) -> RequestMap {
@@ -316,10 +363,12 @@ public struct EnterCardDetailsView: View {
         guard let currencyCode = country.currency else {
             throwError(message: "Invalid Currency code")
         }
+        log(message: cardDetails)
         successCallbackUrl = statusUrl.isEmpty ? EnterCardDetailsView.DEFAULT_SUCCESS_CALLBACK_URL : statusUrl
-        let encyrptedHolderName = CreditCardUtil.encrypt(data: creditCardVm.cardDetails.holderName)
-        let encryptedCVV = CreditCardUtil.encrypt(data: creditCardVm.cardDetails.cvv)
-        let cardNumberWithoutWhiteSpace = creditCardVm.cardDetails.cardNumber.removeWhitespace()
+        log(message: cardDetails.holderName)
+        let encyrptedHolderName = CreditCardUtil.encrypt(data: cardDetails.holderName)
+        let encryptedCVV = CreditCardUtil.encrypt(data: cardDetails.cvv)
+        let cardNumberWithoutWhiteSpace = cardDetails.cardNumber.removeWhitespace()
         let encyrptedCardNumber = CreditCardUtil.encrypt(data: cardNumberWithoutWhiteSpace)
 
         return RequestMap.Builder()
@@ -330,13 +379,13 @@ public struct EnterCardDetailsView: View {
             .add(value: currencyCode, for: "currencyCode")
             .add(value: serviceDescription, for: "serviceDescription")
             .add(value: countryCode, for: "countryCode")
-            .add(value: customerEmail, for: "customerEmail")
+            .add(value: "georgenwauran@gmailcom", for: "customerEmail")
             .add(value: userName, for: "customerFirstName")
-            .add(value: creditCardVm.cardDetails.getEncryptedExpDate(), for: "expiry")
+            .add(value: cardDetails.getEncryptedExpDate(), for: "expiry")
             .add(value: encyrptedHolderName, for: "cardName")
             .add(value: encryptedCVV, for: "cvn")
-            .add(value: creditCardVm.cardDetails.address, for: "postalAddress")
-            .add(value: creditCardVm.cardDetails.email, for: "emailAddress")
+            .add(value: cardDetails.address, for: "postalAddress")
+            .add(value: cardDetails.email, for: "emailAddress")
             .add(value: encyrptedCardNumber, for: "cardNumber")
             .add(value: createCardChannelResponse.serviceName, for: "serviceName")
             .add(value: "en", for: "language")
@@ -360,7 +409,10 @@ public struct EnterCardDetailsView: View {
                 .add(value: cardDetails.getEncryptedAlias(), for: "SUFFIX")
                 .add(value: cardDetails.getEncryptedPrefix(), for: "PREFIX")
                 .add(value: cardDetails.getEncryptedAlias(), for: .CARD_ALIAS)
+                .add(value: "1", for: "IS_MAIN")
                 .build()
+            log(message: request)
+            log(message: cardDetails)
 
             Task { try await creditCardVm.createCreditCardChannel(tinggRequest: request) }
         } else {
@@ -408,7 +460,7 @@ public struct EnterCardDetailsView: View {
             isCardActivated = successValue == "2"
             let card = createAndAddCard()
             Observer<Card>().saveEntity(obj: card)
-        } else if creditCardVm.cardDetails.checkout && isSuccessful {
+        } else if cardDetails.checkout && isSuccessful {
             creditCardVm.uiModel = UIModel.loading
             _ = createChannelResponse
             let raisedInvoice = invoice
@@ -418,11 +470,11 @@ public struct EnterCardDetailsView: View {
                     Observer<Invoice>().saveEntity(obj: rinv)
                 }
                 let userMSISDN = Observer<Profile>().getEntities()[0].msisdn
-                let accountNumber = creditCardVm.fem.accountNumber
-                let customerName = getCustomerName(userMSISDN, accountNumber)
-                updateTransactionHistory(raisedInvoice, amount, customerName, accountNumber)
-                let content = UIModel.Content(statusMessage: "Updated invoice")
-                creditCardVm.uiModel = UIModel.content(content)
+//                let accountNumber = creditCardVm.fem.accountNumber
+//                let customerName = getCustomerName(userMSISDN, accountNumber)
+//                updateTransactionHistory(raisedInvoice, amount, customerName, accountNumber)
+//                let content = UIModel.Content(statusMessage: "Updated invoice")
+//                creditCardVm.uiModel = UIModel.content(content)
             }
         }
     }
@@ -449,13 +501,13 @@ public struct EnterCardDetailsView: View {
 
     private func createAndAddCard() -> Card {
         let card = Card()
-        card.cardAlias = ""
-        card.customerAddress = creditCardVm.cardDetails.address
+        card.cardAlias = cardDetails.suffix
+        card.customerAddress = cardDetails.address
         card.cardType = Card.TYPE_NORMAL
         card.activeStatus = isCardActivated ? Card.STATUS_ACTIVE : Card.STATUS_INACTIVE
-        card.firstName = creditCardVm.cardDetails.holderName.split(separator: " ").first?.description
-        card.middleName = creditCardVm.cardDetails.holderName.split(separator: " ")[2].description
-        card.nameType = getCreditCardNameUsingCardNumber(creditCardNumber: creditCardVm.cardDetails.cardNumber).rawValue
+        card.firstName = cardDetails.holderName.split(separator: " ").first?.description
+        card.middleName = cardDetails.holderName.split(separator: " ")[2].description
+        card.nameType = getCreditCardNameUsingCardNumber(creditCardNumber: cardDetails.cardNumber).rawValue
         card.suffix = ""
         card.validationServiceID = createChannelResponse?.serviceId
         return card
@@ -494,7 +546,8 @@ public struct EnterCardDetailsView: View {
     }
 
     private func getPayingMSISDN() -> String {
-        creditCardVm.isSomeoneElsePaying ? creditCardVm.fem.accountNumber : AppStorageManager.getPhoneNumber()
+//        creditCardVm.isSomeoneElsePaying ? creditCardVm.fem.accountNumber : AppStorageManager.getPhoneNumber()
+        return ""
     }
 }
 

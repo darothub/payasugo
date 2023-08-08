@@ -78,6 +78,7 @@ public struct PhoneNumberValidationView: View {
                     .environmentObject(navigation)
             })
             .onChange(of: ovm.countryFlag, perform: { newValue in
+                let dbCountries = Observer<CountryInfo>().getEntities()
                 let dialCode = newValue.split(separator: " ")[1]
                 ovm.currentCountryDialCode = String(dialCode.dropFirst())
                 let currentCountry = dbCountries.first {

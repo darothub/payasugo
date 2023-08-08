@@ -29,6 +29,7 @@ public struct CreditCardUtil {
     }
     
     public static func encrypt(data: String) -> String {
+        Log.d(message: "@Encryption:\(data)")
         var original = data
         let paddedData = original.padding()
         guard let dataObject = paddedData.data(using: .utf8) else {

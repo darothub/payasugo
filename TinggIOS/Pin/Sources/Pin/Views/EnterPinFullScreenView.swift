@@ -5,11 +5,10 @@
 //  Created by Abdulrasaq on 10/01/2023.
 //
 
-import CoreUI
-import CoreNavigation
 import Core
+import CoreNavigation
+import CoreUI
 import SwiftUI
-
 
 public struct EnterPinFullScreenView: View {
     @StateObject var pinVm = PinDI.createPinViewModel()
@@ -31,6 +30,7 @@ public struct EnterPinFullScreenView: View {
     public init() {
         //
     }
+
     public var body: some View {
         VStack(alignment: .leading) {
             Text(instruction)
@@ -38,15 +38,11 @@ public struct EnterPinFullScreenView: View {
                 if str.count == 4 {
                     focus = 1
                 }
-                DispatchQueue.main.async {
-                    isPinValid = validatePinFields(str)
-                }
+                isPinValid = validatePinFields(str)
                 return isPinValid
             }.focused($focus, equals: 0)
-            SecureTextFieldView(fieldText: $confirmPin, label: "", placeHolder: confirmPinFieldPlaceHolder, keyboardType: .numberPad) {  str in
-                DispatchQueue.main.async {
-                    isConfirmPinValid = validateConfirmPinFields(str)
-                }
+            SecureTextFieldView(fieldText: $confirmPin, label: "", placeHolder: confirmPinFieldPlaceHolder, keyboardType: .numberPad) { str in
+                isConfirmPinValid = validateConfirmPinFields(str)
                 return isConfirmPinValid
             }.focused($focus, equals: 1)
             HRadioButtonAndText(selected: $pinPermission, name: pinPermission1)
@@ -60,40 +56,42 @@ public struct EnterPinFullScreenView: View {
                     AppStorageManager.pinRequestChoice = pinPermission
                     navigation.navigateTo(screen: PinScreen.securityQuestionView(pin))
                 }
-               
             }
         }
         .padding()
-        .onChange(of: pinPermission) { newValue in
+        .onChange(of: pinPermission) { _ in
             updateButtonOnNewvalue()
         }
         .onAppear {
             pinPermission = AppStorageManager.pinRequestChoice
+            focus = 0
         }
     }
-    
+
     private func validatePinFields(_ newValue: String) -> Bool {
         pin = checkLength(newValue, length: 4)
         updateButtonOnNewvalue()
         if newValue.isEmpty {
             return false
-        } else if pin.count == 4{
+        } else if pin.count == 4 {
             return true
         }
-    
+
         return false
     }
+
     private func validateConfirmPinFields(_ newValue: String) -> Bool {
         confirmPin = checkLength(newValue, length: 4)
         updateButtonOnNewvalue()
         if newValue.isEmpty {
             return false
-        } else if confirmPin.count == 4 && confirmPin.elementsEqual(pin){
+        } else if confirmPin.count == 4 && confirmPin.elementsEqual(pin) {
             return true
         }
-    
+
         return false
     }
+
     private func updateButtonOnNewvalue() {
         if isPinValid && isConfirmPinValid && !pinPermission.isEmpty {
             buttonBgColor = .green
@@ -104,7 +102,6 @@ public struct EnterPinFullScreenView: View {
 }
 
 struct CheckoutCardPinView_Previews: PreviewProvider {
-
     struct CheckoutCardPreviewHolder: View {
         @State var pin: String = ""
         @State var confirmPin: String = ""
@@ -114,6 +111,7 @@ struct CheckoutCardPinView_Previews: PreviewProvider {
             EnterPinFullScreenView()
         }
     }
+
     static var previews: some View {
         CheckoutCardPreviewHolder()
             .environmentObject(NavigationManager())

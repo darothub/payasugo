@@ -14,7 +14,7 @@ import Contacts
 import Permissions
 import Pin
 
-public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
+public struct CheckoutView: View, OnEnterPINListener {
     @EnvironmentObject var checkoutVm: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var navigation: NavigationManager
@@ -117,6 +117,7 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
                     .stroke(lineWidth: 0.5)
             )
             .foregroundColor(.black)
+            .showIfNot($checkoutVm.showCardOptions)
             TextFieldAndRightIcon(
                 number: $checkoutVm.phoneNumber,
                 validation: { phoneNumber in
@@ -162,7 +163,6 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
             setCheckoutTitle()
 
             questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
-//                checkoutVm.cardDetails.amount = checkoutVm.sam.amount
             checkoutVm.accountList = checkoutVm.enrollments.compactMap {$0.accountNumber}
             isQuickTopUpOrAirtime = selectedService.isAirtimeService
             updateButtonLabel()
@@ -243,6 +243,9 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
             listener.onCheckoutSuccess(checkoutType: MerchantPayer.CHECKOUT_CARD, response: response)
         }
         .background(.white)
+        .onDisappear {
+            checkoutVm.showCardOptions = false
+        }
     }
     public func onFinish(_ otp: String, next: String) {
         showPinDialog = false
@@ -294,7 +297,10 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
                 checkoutVm.cardDetails.amount = checkoutVm.amount
                 showPinDialog = true
             }
+            .padding(.vertical)
             .showIf($checkoutVm.addNewCard)
+            .showIfNot($checkoutVm.dcddm.showDropDown)
+            
         }.showIfNot($showingDropDown)
     }
     @ViewBuilder
@@ -430,15 +436,6 @@ public struct CheckoutView: View, OnPINTextFieldListener, OnEnterPINListener {
             .add(value: "FWC", for: .SERVICE)
             .build()
         checkoutVm.makeFWCRequest(request: request)
-    }
-    public func onFinishInput(_ otp: String) {
-        let pin  = AppStorageManager.mulaPin
-        let request = RequestMap.Builder()
-            .add(value: "VALIDATE", for: .ACTION)
-            .add(value: "MPM", for: .SERVICE)
-            .add(value: pin, for: "MULA_PIN")
-            .build()
-        checkoutVm.validatePin(request: request)
     }
     private func makeCardCheckoutRequest() {
         let request = RequestMap.Builder()

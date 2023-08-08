@@ -12,8 +12,11 @@ import CoreUI
 import Permissions
 import SwiftUI
 import Theme
+import CreditCard
 
 public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
+
+    
     @Environment(\.realmManager) var realmManager
     @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
     @EnvironmentObject var checkoutVm: CheckoutViewModel
@@ -28,7 +31,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
     @State private var showContact = false
     @State var copyOfOldBeneficiaries = [PreviousBeneficiaryModel]()
     @State var currentCountry = AppStorageManager.getCountry()
-
+    @State var showCheckout = false
     @FocusState var focused: String?
     public init(selectedServiceName: String) {
         _selectedServiceName = State(initialValue: selectedServiceName)
@@ -83,7 +86,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
                     buttonLabel: "Buy airtime"
                 ) {
-                    onButtonClick()
+                    validateAndCheckout()
                 }
             }
             .padding()
@@ -183,6 +186,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
         }, onFailure: { err in
             bavm.uiModel = UIModel.error(err)
         })
+       
         .backgroundmode(color: .white)
         .navigationBarBackButton(navigation: navigation)
         .onDisappear {
@@ -267,7 +271,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
         showNetworkList = false
     }
 
-    fileprivate func onButtonClick() {
+    fileprivate func validateAndCheckout() {
         if bavm.slm.selectedProvider == "Unknown" {
             bavm.uiModel = UIModel.error("You have not selected a service")
             return
