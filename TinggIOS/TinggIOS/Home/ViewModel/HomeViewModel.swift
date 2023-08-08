@@ -15,17 +15,16 @@ public class HomeViewModel: ViewModel {
     @Published public var quickTopUIModel = UIModel.nothing
     @Published public var categoryUIModel = UIModel.nothing
     @Published public var uiModel = UIModel.nothing
-    @Published var campaignMessageUIModel = UIModel.nothing
     @Published var photoUploadUIModel = UIModel.nothing
     @Published var billReminderUIModel = UIModel.nothing
     @Published var defaultNetworkUIModel = UIModel.nothing
-    @Published var buyAirtimeUiModel = UIModel.nothing
     @Published var selectedDefaultNetworkName = ""
-    @Published var showNetworkList = false
     @Published var permission = ContactManager()
     @Published var country = AppStorageManager.getCountry()
     @Published var sections: [TransactionSectionModel] = [.sample, .sample2]
-  
+
+    var subscriptions = Set<AnyCancellable>()
+    var baseRequest: TinggApiServices = BaseRequest()
     var realmManager: RealmManager = .init()
     private var profileRepository: ProfileRepository
     private var merchantRepository: MerchantServiceRepository
@@ -166,18 +165,6 @@ public class HomeViewModel: ViewModel {
                 handleResultState(model: &billReminderUIModel, Result.success(result) as Result<Any, Error>, showAlertOnSuccess: true)
             } catch {
                 handleResultState(model: &billReminderUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
-            }
-        }
-    }
-
-    func updateCampaignMessages(request: RequestMap) {
-        campaignMessageUIModel = UIModel.loading
-        Task {
-            do {
-                let result = try await updateDefaultNetworkIdUsecase(request: request)
-                handleResultState(model: &campaignMessageUIModel, Result.success(result) as Result<Any, Error>, showAlertOnSuccess: true)
-            } catch {
-                handleResultState(model: &campaignMessageUIModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
             }
         }
     }

@@ -23,6 +23,7 @@ public class PinViewModel: ViewModel {
     @Published public var questions:[String] = .init()
     @Published public var selectedQuestion:String = ""
     @Published public var answer:String = ""
+    @Published public var pinRequestChoice = AppStorageManager.pinRequestChoice
     @Published public var subscriptions = Set<AnyCancellable>()
     private var usecase: PinUsecase
     public init(usecase: PinUsecase) {

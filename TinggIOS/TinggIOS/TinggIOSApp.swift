@@ -68,7 +68,6 @@ struct TinggIOSApp: App, CheckoutListener {
                         .environmentObject(checkoutVm)
                 }
                 .onAppear {
-                    
                     UITextField.appearance().keyboardAppearance = .light
                     UITabBar.appearance().backgroundColor = colorScheme == .dark ? UIColor.white : UIColor.white
                     Log.d(message: FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!.path)
@@ -90,11 +89,6 @@ struct TinggIOSApp: App, CheckoutListener {
                     } catch {
                         hvm.uiModel = UIModel.error(error.localizedDescription)
                     }
-//                    let base64String = "Oi3uayEWDiPLO8mpIBosVJ5Fhwp74zrhGDcmGYy+46udLZuXql2Wc9kcJ6wiUYp9rklzMEpOk84k8/rUhE3NlARMc6j3mKUzCkID6vOC/jzwgotfhN8ZbQhv3cyFEIF7MHfvW4DxQBGhX7dB0zRTv0tc9zBAvuMUYpL4atgwVlhAjgovF6hfOvwtdRU3T1FnHMofZ2X7V42mEJsR32KxYg=="
-//                    let secretbase64String = "1eBeKWI9ozmpL/WgLGhPUjlBjAODpaat7TuUiXCQ68o="
-//                    let ivbase64String = "qOxrUeyu2zJ7KBWW"
-//                    let result = decryptCode(ciphertextBase64: base64String, secretKeyBase64: secretbase64String, ivBase64: ivbase64String)
-//                    Log.d(message: result ?? "NOthing")
                 }
                 .handleUIState(uiState: $hvm.uiModel)
         }

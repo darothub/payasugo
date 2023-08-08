@@ -9,12 +9,16 @@ import Foundation
 import SwiftUI
 
 public typealias NavigationHome = String
+public typealias Settings = String
 /// An util class for handling navigation stack
 public class NavigationManager: NavigationProtocol {
     @Published public private(set) var  navigationStack = NavigationPath()
     private let navigationHome: NavigationHome = "Home"
+    private let settings: Settings = "Settings"
     @Published private var homeView: AnyView?
     public static var shared = NavigationManager()
+    let queue = DispatchQueue(label: "com.tinggios.concurrentQueue", attributes: .concurrent)
+
     public init() {
        //
     }
@@ -26,11 +30,16 @@ public class NavigationManager: NavigationProtocol {
     public func goBack() {
         navigationStack.removeLast()
     }
+    public func goBackStep(_ steps: Int) {
+        navigationStack.removeLast(steps)
+    }
     public func getNavigationStack() -> Binding<NavigationPath> {
        return Binding {
             self.navigationStack
         } set: { value in
-            self.navigationStack = value
+            self.queue.sync(flags: .barrier) {
+                self.navigationStack = value
+            }
         }
 
     }
@@ -45,6 +54,9 @@ public class NavigationManager: NavigationProtocol {
     }
     public func goHome() {
         navigationStack.append(navigationHome)
+    }
+    public func goToSettings() {
+        navigationStack.append(settings)
     }
 }
 

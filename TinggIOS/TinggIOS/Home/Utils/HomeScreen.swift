@@ -29,14 +29,10 @@ enum HomeScreen: Screen {
             hasher.combine(7)
         case .pinCreationView:
             hasher.combine(8)
-        case .securityQuestionView:
-            hasher.combine(9)
         case .cardDetailsView(_, _):
             hasher.combine(10)
         case .cardWebView(_):
             hasher.combine(11)
-        case .billView(_):
-            hasher.combine(12)
         case .categoriesAndServices(_):
             hasher.combine(13)
         }
@@ -45,10 +41,8 @@ enum HomeScreen: Screen {
     case intro,
          home(String, Tab),
          pinCreationView,
-         securityQuestionView,
          cardDetailsView(Any?, Any?),
          cardWebView(String),
-         billView(String),
          categoriesAndServices([Any])
 
 }

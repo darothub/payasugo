@@ -13,7 +13,7 @@ public struct DropDownView: View {
     @Binding var dropDownList: [String]
     @Binding var showDropDown: Bool
     @State var rowColor: Color
-    @State var outlineColor: Color
+    @Binding var outlineColor: Color
     @State var selectedTextColor: Color
     @State var label: String
     @State var placeHolder: String
@@ -25,7 +25,7 @@ public struct DropDownView: View {
                 dropDownList: Binding<[String]>,
                 showDropDown: Binding<Bool> = .constant(false),
                 rowColor: Color = .white,
-                outlineColor: Color = .black,
+                outlineColor: Binding<Color> = .constant(.black),
                 selectedTextColor: Color = .black,
                 label: String = "",
                 showLabel: Bool = false,
@@ -38,7 +38,7 @@ public struct DropDownView: View {
         _dropDownList = dropDownList
         _showDropDown = showDropDown
         _rowColor = State(initialValue: rowColor)
-        _outlineColor = State(initialValue: outlineColor)
+        _outlineColor = outlineColor
         _selectedTextColor = State(initialValue: selectedTextColor)
         _label = State(initialValue: label)
         _placeHolder = State(initialValue: placeHoder)
@@ -60,7 +60,7 @@ public struct DropDownView: View {
                 HStack {
                     TextField(placeHolder, text: $selectedText)
                         .disabled(disableEdit)
-                        .padding([.horizontal, .vertical], 17)
+                        .padding([.horizontal, .vertical], 10)
                         .foregroundColor(selectedTextColor)
                         .keyboardType(keyboardType)
                         .onTapGesture {
@@ -79,11 +79,12 @@ public struct DropDownView: View {
                         }
                         .padding()
                 }
-                .overlay(
+                .overlay{
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(lineWidth: 0.5)
-                )
-                .foregroundColor(outlineColor)
+                        .stroke(lineWidth: 1)
+                        .foregroundColor(outlineColor)
+                }
+              
                 .background(.white)
             }
             VStack(alignment: .leading) {

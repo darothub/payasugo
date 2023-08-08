@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 /// Custom OTF field view
-public struct OtpFieldView: View {
+public struct PINTextFieldView: View {
     public var fieldSize: Int
     public var focusColor: Color
     @Binding public var otpValue: String
@@ -17,13 +17,13 @@ public struct OtpFieldView: View {
     @FocusState fileprivate var cursor: Int?
     @State var toHaveBorder = false
     @FocusState var focus: Int?
-    var onCompleteListener: OnPINCompleteListener?
+    var onCompleteListener: OnPINTextFieldListener?
     /// ``OtpFieldView`` initialiser
     /// - Parameters:
     ///   - fieldSize: number of OTP field
     ///   - otpValue: Binded OTP value
     ///   - focusColor: Color of focused OTP field
-    public init(fieldSize: Int = 4, otpValue: Binding<String>, focusColor: Color, toHaveBorder: Bool = false, onCompleteListener: OnPINCompleteListener? = nil) {
+    public init(fieldSize: Int = 4, otpValue: Binding<String>, focusColor: Color, toHaveBorder: Bool = false, onCompleteListener: OnPINTextFieldListener? = nil) {
         self.fieldSize = fieldSize
         self._otpValue = otpValue
         self.focusColor = focusColor
@@ -41,7 +41,7 @@ public struct OtpFieldView: View {
                     focus = index - 1
                 }
              }
-            .frame(maxWidth: .infinity, maxHeight: 50)
+            .frame(maxWidth: .infinity, maxHeight: 30)
             .focused($focus, equals: index)
             .multilineTextAlignment(.center)
             .padding(5)
@@ -78,7 +78,7 @@ public struct OtpFieldView: View {
                 cursorMovement(value: newValue, index: index)
                 otpValue = fields.joined()
                 if onCompleteListener != nil  && index == fieldSize-1 && !newValue.isEmpty {
-                    onCompleteListener?.submit()
+                    onCompleteListener?.onFinishInput(otpValue)
                 }
             }
             .frame(width: 40)
@@ -108,7 +108,7 @@ struct OtpFieldView_Previews: PreviewProvider {
         @State var otp = ""
         var focusColor: Color = .green
         var body: some View {
-            OtpFieldView(fieldSize: fieldSize, otpValue: $otp, focusColor: focusColor)
+            PINTextFieldView(fieldSize: fieldSize, otpValue: $otp, focusColor: focusColor)
         }
     }
     static var previews: some View {
@@ -116,7 +116,7 @@ struct OtpFieldView_Previews: PreviewProvider {
     }
 }
 
-public protocol OnPINCompleteListener {
-    func submit() -> Void
+public protocol OnPINTextFieldListener {
+    func onFinishInput(_ otp: String) -> Void
 }
 

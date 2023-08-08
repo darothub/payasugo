@@ -40,7 +40,5 @@ extension ViewModel {
     public func cancelPublishers() {
         //TODO
     }
-    public func handleDecryption<T, E>(model: inout UIModel, _ result: Result<T, E>) {
-        //TODO
-    }
+    
 }

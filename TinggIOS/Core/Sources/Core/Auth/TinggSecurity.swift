@@ -397,6 +397,7 @@ extension SecuredResponse {
             let secretkey: Base64String = String(decryptedSignatureSplit[0])
             let iv: Base64String = String(decryptedSignatureSplit[1])
             let result = TinggSecurity.symmetricDecrypt(ciphertextBase64: payload, secretKeyBase64: secretkey, ivBase64: iv)
+            Log.d(message: result ?? "No result")
             return result!
         } catch {
             return nil

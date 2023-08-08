@@ -39,11 +39,17 @@ struct BiodataView: View {
                 ScrollView(showsIndicators: false) {
                     VStack {
                         Group {
-                            TextFieldView(fieldText: $dataModel.firstName, label: firstNameLabel, placeHolder: firstNameLabel)
-                            TextFieldView(fieldText: $dataModel.lastName, label: lastNameLabel, placeHolder: lastNameLabel)
+                            TextFieldView(fieldText: $dataModel.firstName, label: firstNameLabel, placeHolder: firstNameLabel) { str in
+                                str.isNotEmpty
+                            }
+                            TextFieldView(fieldText: $dataModel.lastName, label: lastNameLabel, placeHolder: lastNameLabel) { str in
+                                str.isNotEmpty
+                            }
                             DropDownView(selectedText: $dataModel.nationalID, dropDownList: $idTypes, showDropDown: $showDropDown, label: idTypesLabel)
                             Group {
-                                TextFieldView(fieldText: $dataModel.nationalID, label: nationalIdLabel, placeHolder: nationalIdLabel)
+                                TextFieldView(fieldText: $dataModel.nationalID, label: nationalIdLabel, placeHolder: nationalIdLabel) { str in
+                                    str.isNotEmpty
+                                }
                                 VStack(alignment: .leading) {
                                     Text("Date of Birth")
                                         .font(.subheadline)
@@ -56,8 +62,17 @@ struct BiodataView: View {
                                     ).foregroundColor(.black)
                                 }
                                 TextFieldView(fieldText: $dataModel.nationality, label: nationalityLabel, placeHolder: nationalityLabel)
+                                { str in
+                                    str.isNotEmpty
+                                }
                                 TextFieldView(fieldText: $dataModel.sourceOfIncome, label: sourceOfIncomeLabel, placeHolder: sourceOfIncomeLabel)
+                                { str in
+                                    str.isNotEmpty
+                                }
                                 TextFieldView(fieldText: $dataModel.address, label: homeAddressLabel, placeHolder: homeAddressLabel)
+                                { str in
+                                    str.isNotEmpty
+                                }
                                 TinggButton(buttonLabel: "Next") {
                                     print("")
                                 }

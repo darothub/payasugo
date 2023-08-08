@@ -59,7 +59,9 @@ struct DTBCheckoutDialogView: View {
     private func pinSection() -> some View {
         Section {
             Text("Enter PIN for account \(selectedAccount)")
-            TextFieldView(fieldText: $pin, label: "", placeHolder: pinFieldInstruction, success: $isValidPin)
+            TextFieldView(fieldText: $pin, label: "", placeHolder: pinFieldInstruction){ str in
+                str.isNotEmpty
+            }
         }.showIf($showPINField)
     }
     @ViewBuilder

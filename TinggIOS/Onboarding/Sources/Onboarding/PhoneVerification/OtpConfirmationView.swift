@@ -33,7 +33,7 @@ public struct OtpConfirmationView: View {
             Text("Enter the code received via SMS\nto confirm request")
                 .smallTextViewStyle(SmallTextStyle())
                 .foregroundColor(PrimaryTheme.getColor(.tinggblack))
-            OtpFieldView(fieldSize: otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
+            PINTextFieldView(fieldSize: otpSize, otpValue: $otp, focusColor: PrimaryTheme.getColor(.primaryColor))
 
             Text("Resend code in \(timeAdvice)")
                 .smallTextViewStyle(SmallTextStyle())

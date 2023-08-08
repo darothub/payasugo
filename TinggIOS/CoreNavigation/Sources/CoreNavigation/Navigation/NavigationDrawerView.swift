@@ -66,7 +66,7 @@ public struct NavigationDrawerView<S>: View where S: Hashable {
         List(0..<listOfMenu.count, id: \.self) { each in
             let menu = listOfMenu[each]
             NavigationDrawerMenu(item: menu)
-                .padding(.vertical, 25)
+                .padding(.vertical, 15)
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
                 .listRowBackground(whiteColor)
@@ -104,6 +104,7 @@ public struct NavigationDrawerMenu<S>: View where S: Hashable {
             Text(item.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(item.textColor)
+                .font(.caption)
         } .frame(maxWidth: .infinity, alignment: .leading)
     }
     public func getScreen() -> S {

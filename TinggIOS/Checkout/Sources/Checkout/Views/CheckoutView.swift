@@ -14,7 +14,7 @@ import Contacts
 import Permissions
 
 
-public struct CheckoutView: View, OnPINCompleteListener {
+public struct CheckoutView: View, OnPINTextFieldListener {
     @EnvironmentObject var checkoutVm: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var navigation: NavigationManager
@@ -217,7 +217,7 @@ public struct CheckoutView: View, OnPINCompleteListener {
             }
             .customDialog(isPresented: $showPinView, cancelOnTouchOutside: .constant(true), dialogContent: {
                 VStack {
-                    OtpFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)
+                    PINTextFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)
                     Text("Forgot PIN?")
                         .font(.caption)
                         .padding(.vertical)
@@ -462,11 +462,12 @@ public struct CheckoutView: View, OnPINCompleteListener {
             .build()
         checkoutVm.makeFWCRequest(request: request)
     }
-    public func submit() {
+    public func onFinishInput(_ otp: String) {
+        let pin  = AppStorageManager.mulaPin
         let request = RequestMap.Builder()
             .add(value: "VALIDATE", for: .ACTION)
             .add(value: "MPM", for: .SERVICE)
-            .add(value: CreditCardUtil.encrypt(data: pin), for: "MULA_PIN")
+            .add(value: pin, for: "MULA_PIN")
             .build()
         checkoutVm.validatePin(request: request)
     }

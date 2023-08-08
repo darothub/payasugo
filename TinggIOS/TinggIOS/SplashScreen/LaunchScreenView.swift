@@ -23,7 +23,7 @@ import CommonCrypto
 /// This view display the splash screen on launch.
 ///
 /// This is the first screen  of ``TinggIOSApp``.
-public struct LaunchScreenView: View, ServicesListener {
+public struct LaunchScreenView: View {
     @EnvironmentObject var navigation: NavigationManager
     @EnvironmentObject var hvm: HomeViewModel
     @State var colorTint:Color = .blue
@@ -34,55 +34,50 @@ public struct LaunchScreenView: View, ServicesListener {
     }
     public var body: some View {
         NavigationStack(path: navigation.getNavigationStack()) {
-            NavigationLink(value: HomeScreen.intro) {
-                ZStack {
-                    background
-                    image
-                        .accessibility(identifier: "tinggsplashscreenlogo")
-                }.onAppear {
-                    guard let sessionData = AppStorageManager.getIsLogin() else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            navigation.navigateTo(screen: HomeScreen.intro)
-                        }
+            ZStack {
+                background
+                image
+                    .accessibility(identifier: "tinggsplashscreenlogo")
+            }
+            .onAppear {
+                guard let sessionData = AppStorageManager.getIsLogin() else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        navigation.navigateTo(screen: HomeScreen.intro)
+                    }
+                    return
+                }
+                do {
+                    guard let userAlreadyLoggedIn: Bool = try TinggSecurity.simptleDecryption(sessionData) else {
                         return
                     }
-                    do {
-                        guard let userAlreadyLoggedIn: Bool = try TinggSecurity.simptleDecryption(sessionData) else {
-                            return
-                        }
-                        if userAlreadyLoggedIn {
-                            gotoHomeView()
-                            return
-                        }
-                    } catch {
-                        hvm.uiModel = UIModel.error("Error reading user session")
-                        log(message: "Error reading user session")
+                    if userAlreadyLoggedIn {
+                        gotoHomeView()
+                        return
                     }
-                    
+                } catch {
+                    hvm.uiModel = UIModel.error("Error reading user session")
+                    log(message: "Error reading user session")
                 }
-                .edgesIgnoringSafeArea(.all)
+                
             }
-         
+            .edgesIgnoringSafeArea(.all)
             .navigation()
-            .billsNavigation(quickTopUpListener: self)
-            .airtimesNavigation()
+            .handleUIState(uiState: $hvm.uiModel)
             .navigationDestination(for: NavigationHome.self) { screen in
                 navigation.getHomeView()
             }
-            .handleUIState(uiState: $hvm.uiModel)
-            
         }
         .transition(.move(edge: .bottom))
     }
     fileprivate func gotoHomeView() {
         withAnimation {
-            navigation.navigateTo(screen: HomeScreen.home(HomeBottomNavView.HOME, Tab.first))
+            navigation.goHome()
         }
     }
-    public func onQuicktop(serviceName: String) {
-        log(message: serviceName)
-        navigation.navigateTo(screen: BuyAirtimeScreen.buyAirtime(serviceName))
-    }
+//    public func onQuicktop(serviceName: String) {
+//        log(message: serviceName)
+//        navigation.navigateTo(screen: BuyAirtimeScreen.buyAirtime(serviceName))
+//    }
 }
 /// Struct responsible for preview of changes in Xcode
 struct LaunchScreenView_Previews: PreviewProvider {
