@@ -139,7 +139,9 @@ struct EditProfileView: View {
         }
         .handleViewStatesMods(uiState: hvm.$photoUploadUIModel) { content in
             let data = content.data as! PhotoUploadResponse
-            log(message: data)
+            RealmManager.write {
+                profile?.photoURL = data.profilePicUrl
+            }
         }
         .navigationBarBackButton(navigation: navigation)
     }
