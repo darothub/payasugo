@@ -33,7 +33,7 @@ public class ProfileRepositoryImpl: ProfileRepository {
     
     public func updateProfileImage(request: RequestMap) async throws -> PhotoUploadResponse {
         return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(url: "https://mula.co.ke:9101/mula_ke/api/TinggUploadImagesAPI/", method: .post, parameters: request.dict) { (result: Result<PhotoUploadResponse, ApiError>)  in
+            baseRequest.makeRequest(url: Utils.imageUploadUrl, method: .post, parameters: request.dict) { (result: Result<PhotoUploadResponse, ApiError>)  in
                 continuation.resume(with: result)
             }
         }
