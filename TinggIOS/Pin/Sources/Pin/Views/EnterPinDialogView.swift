@@ -24,7 +24,6 @@ public struct EnterPinDialogView: View, OnPINTextFieldListener {
         _next = State(initialValue: next)
         self.listener = listener
     }
-
     public var body: some View {
         VStack {
             PINTextFieldView(fieldSize: 4, otpValue: $pin, focusColor: PrimaryTheme.getColor(.primaryColor), toHaveBorder: true, onCompleteListener: self)

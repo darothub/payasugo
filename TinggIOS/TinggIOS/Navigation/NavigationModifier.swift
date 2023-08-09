@@ -59,13 +59,8 @@ struct NavigationModifier: ViewModifier, ServicesListener {
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
-//                        .environmentObject(navigation)
+                        .environmentObject(navigation)
                         .environmentObject(freshchatWrapper)
-                case .pinCreationView:
-                    EnterPinFullScreenView()
-                case let .cardDetailsView(response, invoice):
-                    EnterCardDetailsView(createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
-//                        .environmentObject(navigation)
                     
                 default:
                     EmptyView()
@@ -85,6 +80,7 @@ struct NavigationModifier: ViewModifier, ServicesListener {
             .airtimesNavigation()
             .pinNavigation()
             .creditCardNavigation()
+
          
 
     }

@@ -110,6 +110,7 @@ struct SettingsView: View, OnSettingClick, OnDefaultServiceSelectionListener, On
         }
         .handleUIState(uiState: $settingsVm.disablePinUIModel, showAlertonSuccess: true) { content in
             log(message: "Pin disable request")
+
             settingsVm.setNewPin = true
             AppStorageManager.pinRequestChoice = ""
             settingsVm.selectedPinRequestChoice = ""

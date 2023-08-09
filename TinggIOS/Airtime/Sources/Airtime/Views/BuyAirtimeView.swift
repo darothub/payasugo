@@ -15,8 +15,6 @@ import Theme
 import CreditCard
 
 public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
-
-    
     @Environment(\.realmManager) var realmManager
     @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
     @EnvironmentObject var checkoutVm: CheckoutViewModel

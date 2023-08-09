@@ -30,7 +30,6 @@ public struct EnterPinFullScreenView: View {
     public init() {
         //
     }
-
     public var body: some View {
         VStack(alignment: .leading) {
             Text(instruction)
@@ -111,7 +110,6 @@ struct CheckoutCardPinView_Previews: PreviewProvider {
             EnterPinFullScreenView()
         }
     }
-
     static var previews: some View {
         CheckoutCardPreviewHolder()
             .environmentObject(NavigationManager())

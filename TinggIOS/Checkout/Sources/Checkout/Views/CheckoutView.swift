@@ -180,7 +180,6 @@ public struct CheckoutView: View, OnEnterPINListener {
                     checkoutVm.showCardOptions = true
                 }
                 checkoutVm.addNewCard = true
-
             } else {
                 checkoutVm.showCardOptions = false
                 checkoutVm.addNewCard = false
