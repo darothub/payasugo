@@ -30,7 +30,7 @@ public struct BillView: View {
     @EnvironmentObject var navigation: NavigationManager
     @State var selectedTab: Tab = .first
     let transactionHistory = Observer<TransactionHistory>().getEntities()
-    public init(selectedTab: Tab = .second) {
+    public init(selectedTab: Tab = .first) {
         self._selectedTab = State(initialValue: selectedTab)
     }
     public var body: some View {

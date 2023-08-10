@@ -1,12 +1,13 @@
 //
-//  File.swift
-//  
+//  HTMLView.swift
+//
 //
 //  Created by Abdulrasaq on 26/01/2023.
 //
 
 import SwiftUI
 import WebKit
+
 @MainActor
 public struct WebView: UIViewRepresentable{
     let url: URL?
@@ -115,25 +116,24 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
         self.onTryAgain = onTryAgain
     }
     
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-      guard let response = navigationResponse.response as? HTTPURLResponse,
-        let url = navigationResponse.response.url else {
-        decisionHandler(.cancel)
-        return
-      }
-
-      if let headerFields = response.allHeaderFields as? [String: String] {
-        let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
-        cookies.forEach { cookie in
-            print("Cookie \(cookie) \(cookie.domain)")
-          webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-        }
-      }
-      
-      decisionHandler(.allow)
-    }
+//    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+//      guard let response = navigationResponse.response as? HTTPURLResponse,
+//        let url = navigationResponse.response.url else {
+//        decisionHandler(.cancel)
+//        return
+//      }
+//
+//      if let headerFields = response.allHeaderFields as? [String: String] {
+//        let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
+//        cookies.forEach { cookie in
+//          webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
+//        }
+//      }
+//      
+//      decisionHandler(.allow)
+//    }
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("Error \(error)")
+        logCurrentFunc("\(error)")
         didHaveError(error)
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!)  {
@@ -152,14 +152,20 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
             }
         }
         if let url = webView.url?.absoluteString {
+            logCurrentFunc(url)
             didFinish(url)
         }
     }
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "tryAgain", let messageBody = message.body as? String {
-            print(messageBody)
             self.onTryAgain()
         }
     }
     
+}
+func logCurrentFunc(fileStr: String = #file, funcStr: String = #function, _ message: String) {
+    var fileName = fileStr.components(separatedBy: "/").last ?? ""
+    fileName = fileName.components(separatedBy:".").first ?? ""
+    let printFunc = "\(fileName): \(funcStr) -> \(message)"
+    print(printFunc)
 }

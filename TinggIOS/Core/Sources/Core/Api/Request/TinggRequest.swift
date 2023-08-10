@@ -97,9 +97,6 @@ public var uuidForVendor: String {
 
 public struct RequestMap  {
     public var dict: [String: Any]
-    private var iv: String?
-    private var secretKey:String?
-    public var base64Payload: [String: String] = [:]
     private init(dict: [String: Any]) {
         self.dict = dict
     }
@@ -119,8 +116,9 @@ public struct RequestMap  {
             self.dict.updateValue(modelIdentifier(), forKey: RequestKey.DEVICE_NAME.str)
             self.dict.updateValue(15, forKey: RequestKey.API_LEVEL.str)
             self.dict.updateValue( "iOS", forKey: RequestKey.OS_TYPE.str)
-            self.dict.updateValue("4.0.73", forKey: RequestKey.APP_VERSION.str)
+            self.dict.updateValue("5.0.5", forKey: RequestKey.APP_VERSION.str)
             self.dict.updateValue("MULA_APP", forKey: RequestKey.ORIGIN.str)
+            self.dict.updateValue(true, forKey: "IS_LIVE_API")
             self.dict.updateValue(parseInstallationId, forKey: RequestKey.PARSE_INSTALLATION_ID.str)
             self.dict.updateValue("1", forKey: RequestKey.IS_EXPLICIT.str)
         }

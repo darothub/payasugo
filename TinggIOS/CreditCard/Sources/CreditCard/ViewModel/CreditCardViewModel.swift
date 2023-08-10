@@ -9,14 +9,13 @@ import CoreUI
 import Core
 import Foundation
 import Alamofire
-import Checkout
 @MainActor
 public class CreditCardViewModel: ViewModel {
-    @Published public var slm: ServicesListModel = .init()
-    @Published public var sam: SuggestedAmountModel = .init()
-    @Published public var fem: FavouriteEnrollmentModel = .init()
-    @Published public var dcm: DebitCardModel = .init()
-    @Published public var dcddm: DebitCardDropDownModel = .init()
+//    @Published public var slm: ServicesListModel = .init()
+//    @Published public var sam: SuggestedAmountModel = .init()
+//    @Published public var fem: FavouriteEnrollmentModel = .init()
+//    @Published public var dcm: DebitCardModel = .init()
+//    @Published public var dcddm: DebitCardDropDownModel = .init()
     @Published public var cardDetails: CardDetails = .init()
     @Published public var showCardOptions: Bool = false
     @Published public var showCheckOutView: Bool = false
@@ -38,7 +37,12 @@ public class CreditCardViewModel: ViewModel {
     @Published public var answer:String = ""
     @Published public var subscriptions = Set<AnyCancellable>()
     @Published public var currentPaymentProvider: MerchantPayer = .init()
+    @Published public var merchantPayers: [MerchantPayer] = Observer<MerchantPayer>().getEntities()
+    public var cards: [Card] = Observer<Card>().getEntities()
+    @Published var cardList: [CardDetails] = []
+    
     let creditCardUsecases: CreditCardUsecases
+    let tinggApiServices: TinggApiServices = BaseRequest.shared
     
     public init( creditCardUsecases: CreditCardUsecases) {
         self.creditCardUsecases = creditCardUsecases
@@ -53,6 +57,64 @@ public class CreditCardViewModel: ViewModel {
             handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
         }
        
+    }
+    public func populateSavedCards() -> [CardDetails] {
+        return cards.compactMap { card in
+            let merchantPayer = merchantPayers.first { $0.hubClientID == card.payerClientID }
+            guard let merchantPayer = merchantPayer else {
+                return nil
+            }
+            let cardPan = "\(card.cardAlias ?? "0000")"
+            var cardDetails = CardDetails(imageUrl: merchantPayer.logo ?? "", cardNumber: cardPan)
+            cardDetails.isActive = card.isActive()
+            cardDetails.merchantPayer = merchantPayer
+            cardDetails.cardType = card.cardType ?? ""
+            return cardDetails
+        }
+    }
+    func validatePin(pin: String) -> Bool {
+        guard  let mulapinBase64String: Base64String = AppStorageManager.mulaPin else {
+//            uiModel = UIModel.error("Pin has not been set for this profile")
+            return false
+        }
+        guard mulapinBase64String.isNotEmpty, let pinDecoded = Data(base64Encoded: mulapinBase64String) else {
+//            uiModel = UIModel.error("Error getting pin")
+            return false
+        }
+        do {
+            guard let mulaPin: String? = try TinggSecurity.simptleDecryption(pinDecoded) else {
+                return false
+            }
+            return mulaPin == pin
+            
+        } catch {
+            uiModel = UIModel.error(error.localizedDescription)
+            return false
+        }
+    }
+    public func validateUser(request: RequestMap) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let success: BaseDTO = try await tinggApiServices.result(request.encryptPayload()!)
+                handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>)
+                
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
+            }
+        }
+    }
+    public func deleteCardRequest(request: RequestMap) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let success: BaseDTO = try await tinggApiServices.result(request.encryptPayload()!)
+                handleResultState(model: &uiModel, Result.success(success) as Result<Any, Error>, showAlertOnSuccess: true)
+                
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<BaseDTO, ApiError>)
+            }
+        }
     }
     /// Handle result
     public func handleResultState<T, E>(model: inout UIModel, _ result: Result<T, E>, showAlertOnSuccess: Bool = false) where E : Error {

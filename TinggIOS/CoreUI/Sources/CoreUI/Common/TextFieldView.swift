@@ -16,7 +16,7 @@ public struct TextFieldView: View {
     @State var label: String
     @State var placeHolder: String
     @State private var color: Color = .black
-    @FocusState fileprivate var cursor: Bool
+    @FocusState var isFocused: Int?
     var keyBoardType: UIKeyboardType = .default
     private var validation: (String) -> Bool
     public init (fieldText: Binding<String>, label: String, placeHolder: String, type: UIKeyboardType = .default, validation: @escaping (String) -> Bool = {_ in true }) {
@@ -32,11 +32,52 @@ public struct TextFieldView: View {
                 Text(label)
                     .foregroundColor(.black)
                     .font(.subheadline)
-                TextField(placeHolder, text: $fieldText, prompt: Text(placeHolder).foregroundColor(.gray))
+                TextField(placeHolder, text: $fieldText, prompt: Text(placeHolder).foregroundColor(.gray)
+                )
                     .keyboardType(keyBoardType)
                     .padding(15)
-                    .focused($cursor)
+                    .lineLimit(nil)
                     .foregroundColor(.black)
+                    .validateBorderStyle(text: $fieldText, validation: validation)
+            }
+        }
+    }
+}
+public struct FocusTextFieldView: View {
+    @Environment(\.colorScheme) var colorScheme
+    @Binding var fieldText: String
+    @State var label: String
+    @State var placeHolder: String
+    @State private var color: Color = .black
+    var isFocused: FocusState<Int?>.Binding
+    @Binding var tag: Int
+    var keyBoardType: UIKeyboardType = .default
+    private var validation: (String) -> Bool
+    public init (fieldText: Binding<String>, label: String, placeHolder: String, isFocused: FocusState<Int?>.Binding, tag: Binding<Int> = .constant(0), type: UIKeyboardType = .default, validation: @escaping (String) -> Bool = {_ in true }) {
+        self._fieldText = fieldText
+        _label = State(initialValue: label)
+        _placeHolder = State(initialValue: placeHolder)
+        self.isFocused = isFocused
+        self._tag = tag
+        keyBoardType = type
+        self.validation = validation
+    }
+    public var body: some View {
+        VStack(alignment: .leading) {
+            Group {
+                Text(label)
+                    .foregroundColor(.black)
+                    .font(.subheadline)
+                TextField(
+                    placeHolder,
+                    text: $fieldText,
+                    prompt: Text(placeHolder).foregroundColor(.gray)
+                )
+                    .keyboardType(keyBoardType)
+                    .padding(15)
+                    .lineLimit(nil)
+                    .foregroundColor(.black)
+                    .focused(isFocused, equals: tag)
                     .validateBorderStyle(text: $fieldText, validation: validation)
             }
         }

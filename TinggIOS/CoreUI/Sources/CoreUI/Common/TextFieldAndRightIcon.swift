@@ -30,13 +30,12 @@ public struct TextFieldAndRightIcon: View {
             TextField(placeHolder, text: $number)
                 .keyboardType(keyboardType)
                 .submitLabel(.next)
-                .focused($cursor)
                 .foregroundColor(.black)
             Image(systemName: iconName)
                 .onTapGesture {
                     onImageClick()
                 }
-        }.padding()
+        }.padding(15)
         .validateBorderStyle(text: $number, validation: validation)
     }
 }
@@ -69,7 +68,7 @@ public struct TextFieldAndLeftTitle: View {
                 .submitLabel(.next)
                 .focused($cursor)
                 
-        }.padding()
+        }.padding(15)
         .validateBorderStyle(text: $number, validation: validation)
    
     }

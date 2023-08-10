@@ -5,6 +5,7 @@
 //  Created by Abdulrasaq on 13/07/2022.
 //
 import SwiftUI
+import Combine
 public extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         ModifiedContent(content: self, modifier: CornerRadiusStyle(radius: radius, corners: corners))
@@ -78,6 +79,12 @@ public extension View {
     func equatable<Content: View & Equatable>() -> EquatableView<Content> {
         return EquatableView(content: self as! Content)
     }
+
+    func attachFab(backgroundColor: Color, onClick: @escaping () -> Void) -> some View {
+        modifier(FabViewModifier(backgroundColor: backgroundColor, onClick: onClick))
+    }
+
+
 }
 
 public struct TabItemStyle: ViewModifier {
@@ -191,6 +198,7 @@ struct ValidatedTextFieldModifier: ViewModifier {
 
 struct ValidatedBorderModifier: ViewModifier {
     @Binding var text: String
+    @State private var borderColor: Color = .black
     private var validation: (String) -> Bool
 
     init(text: Binding<String>, validation: @escaping (String) -> Bool) {
@@ -204,14 +212,13 @@ struct ValidatedBorderModifier: ViewModifier {
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(borderColor, lineWidth: 1)
             )
-    }
-
-    private var borderColor: Color {
-        if text.isEmpty {
-            return .black
-        } else {
-            return validation(text) ? .green : .red
-        }
+            .onReceive(Just(text), perform: { newValue in
+                if newValue.isEmpty {
+                    borderColor = .black
+                } else {
+                    borderColor = validation(text) ? .green : .red
+                }
+            })
     }
 }
 
@@ -225,5 +232,3 @@ struct BorderModifier: ViewModifier {
             )
     }
 }
-
-

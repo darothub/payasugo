@@ -9,22 +9,29 @@ import SwiftUI
 
 public struct ContactRowView: View {
     @State var listOfContactRow = [ContactRow]()
+    @StateObject var contactVm = ContactViewModel()
     var onContactSelected: (ContactRow) -> Void
+    var onFailure: (String) -> Void
     @Environment(\.dismiss) var dismiss
-    public init(listOfContactRow: [ContactRow] = [ContactRow](), onContactSelected: @escaping (ContactRow) -> Void = {_ in
-        //TODO
-    }) {
-        self._listOfContactRow = State(initialValue: listOfContactRow)
+    public init(onContactSelected: @escaping (ContactRow) -> Void, onFailure: @escaping (String) -> Void) {
         self.onContactSelected = onContactSelected
+        self.onFailure = onFailure
     }
     public var body: some View {
         List {
-            ForEach(listOfContactRow, id: \.phoneNumber) { row in
+            ForEach(contactVm.listOfContact.sorted(), id: \.phoneNumber) { row in
                 HImageAndNameView(text: row.name, image: row.image)
                     .onTapGesture {
                         onContactSelected(row)
                         dismiss()
                     }
+            }
+        }
+        .onAppear {
+            Task {
+                await contactVm.fetchPhoneContacts { err in
+                    onFailure(err.localizedDescription)
+                }
             }
         }
     }
@@ -33,7 +40,11 @@ public struct ContactRowView: View {
 
 struct ContactRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ContactRowView()
+        ContactRowView(onContactSelected: { c in
+            //
+        }, onFailure: { err in
+            //
+        })
     }
 }
 

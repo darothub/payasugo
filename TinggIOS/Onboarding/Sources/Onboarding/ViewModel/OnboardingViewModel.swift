@@ -215,7 +215,7 @@ public class OnboardingVM: ViewModel {
         Observer<BundleObject>().getEntities().forEach { data in
             realmManager.delete(data: data)
         }
-        cardsTable.clearAndSaveEntities(objs: data.virtualCards.map { $0.toEntity })
+        cardsTable.clearAndSaveEntities(objs: data.cardDetails)
         let payers: [MerchantPayer] = data.merchantPayers.map { $0.toEntity }
         securityQuestionTable.clearAndSaveEntities(objs: data.securityQuestions.map { $0.toEntity })
         merchantPayerTable.clearAndSaveEntities(objs: payers)

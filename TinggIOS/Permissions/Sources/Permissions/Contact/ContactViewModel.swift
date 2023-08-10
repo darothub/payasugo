@@ -13,7 +13,7 @@ public class ContactViewModel: ObservableObject {
     @Published public var showContact = false
     @Published public var listOfContact = Set<ContactRow>()
     @Published public var contacts: CNContact = .init()
-    @Published var permission = ContactManager()
+    @Published var contactManager = ContactManager()
     public var subscriptions = Set<AnyCancellable>()
     public init() {
         //
@@ -38,7 +38,7 @@ public class ContactViewModel: ObservableObject {
         return contactRow
     }
     public func fetchPhoneContacts(onError: @escaping (Error) -> Void) async {
-        await permission.fetchContacts { [unowned self] result in
+        await contactManager.fetchContacts { [unowned self] result in
              switch result {
              case .failure(let error):
                  onError(error)
@@ -52,7 +52,7 @@ public class ContactViewModel: ObservableObject {
         
     }
     public func fetchPhoneContactsWIthoutUI(onSuccess: @escaping (ContactRow) -> Void,  onError: @escaping (Error) -> Void) async {
-        await permission.fetchContacts { [unowned self] result in
+        await contactManager.fetchContacts { [unowned self] result in
              switch result {
              case .failure(let error):
                  onError(error)
