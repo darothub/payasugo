@@ -845,18 +845,19 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSDebug.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Distribution: CELLULANT KENYA LIMITED (3XLCT788QW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: CELLULANT KENYA LIMITED (3XLCT788QW)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 43;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 3XLCT788QW;
+				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
@@ -866,7 +867,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -880,7 +881,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.cellullant.TinggIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = TinggIOSprofile;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "TinggIOS Provisioning Profile";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -902,18 +903,19 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_ENTITLEMENTS = TinggIOS/TinggIOSRelease.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Distribution: CELLULANT KENYA LIMITED (3XLCT788QW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: CELLULANT KENYA LIMITED (3XLCT788QW)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 43;
 				DEVELOPMENT_ASSET_PATHS = "\"TinggIOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 3XLCT788QW;
+				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 3XLCT788QW;
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinggIOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Tingg;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSCameraUsageDescription = "TinggIOS requires camera permission for profile photo";
 				INFOPLIST_KEY_NSContactsUsageDescription = "TinggIOS requires contact access for friends invite";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "TinggIOS requires your location for closest pay point";
@@ -923,7 +925,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -937,7 +939,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.cellullant.TinggIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = TinggIOSprofile;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "TinggIOS Provisioning Profile";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

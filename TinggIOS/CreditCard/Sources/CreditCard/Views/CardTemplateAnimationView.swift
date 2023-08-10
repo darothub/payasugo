@@ -21,7 +21,9 @@ struct CardTemplateAnimationView: View {
     let durationAndDelay : CGFloat = 0.3
     var body: some View {
         ZStack {
-            CardTemplateFrontView(rotationDegree: $frontDegree, backGroundColor: $frontBackGroundColor, cardNumber: $cardNumber, holderName: $holderName, expDate: $expDate, image: $cardImage)
+            VStack {
+                CardTemplateFrontView(rotationDegree: $frontDegree, backGroundColor: $frontBackGroundColor, cardNumber: $cardNumber, holderName: $holderName, expDate: $expDate, image: $cardImage)
+            }
             
             CardTemplateBackView(rotationDegree: $backDegree, cvv: $cvv, image: $cardImage)
         }

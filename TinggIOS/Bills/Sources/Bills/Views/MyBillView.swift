@@ -68,10 +68,6 @@ public struct MyBillView: View {
                 SavedBillListView(showSavedBill: $isShowingSavedBill, isLoading: $savedBillLoading) { bill in
                     let invoice = Observer<Invoice>().getEntities().first { $0.billReference == bill.accountNumber
                     }
-//                    let service = Observer<MerchantService>().getEntities().first { $0.serviceName == bill.serviceName
-//                    }
-//                    let enrollment = Observer<Enrollment>().getEntities().first { $0.hubServiceID == service?.hubServiceID.convertStringToInt()
-//                    }
                     if let i = invoice {
                         navigation.navigateTo(screen: BillsScreen.nominationDetails(i))
                     }

@@ -1,6 +1,6 @@
 //
 //  Utils.swift
-//  
+//
 //
 //  Created by Abdulrasaq on 01/07/2022.
 //
@@ -16,12 +16,11 @@ public func decodeJSON<T: Decodable>(_ jsonString: String) throws -> T {
     guard let jsonData = jsonString.data(using: .utf8) else {
         throw NSError(domain: "JSONDecodeError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON string."])
     }
-    
+
     let decoder = JSONDecoder()
     let decodedObject = try decoder.decode(T.self, from: jsonData)
     return decodedObject
 }
-
 
 public func addDaysToCurrentDate(numOfDays: Int) -> Date {
     let currentDate = Date()
@@ -44,7 +43,7 @@ public func validatePhoneNumberWith(regex: String, phoneNumber: String) -> [NSTe
         options: []
     )
     let sourceRange = NSRange(
-        phoneNumber.startIndex..<phoneNumber.endIndex,
+        phoneNumber.startIndex ..< phoneNumber.endIndex,
         in: phoneNumber
     )
     let result = phoneRegex?.matches(
@@ -58,15 +57,15 @@ public func validatePhoneNumberWith(regex: String, phoneNumber: String) -> [NSTe
 public func validatePhoneNumber(with regex: String, phoneNumber: String) -> Bool {
     let range = NSRange(location: 0, length: phoneNumber.count)
     let regex = try? NSRegularExpression(pattern: regex)
-    if regex?.firstMatch(in: phoneNumber, options: [], range: range) != nil{
+    if regex?.firstMatch(in: phoneNumber, options: [], range: range) != nil {
         return true
-    }else{
+    } else {
         return false
     }
 }
 
 public func validateWithRegex(_ regex: String, value: String) -> Bool {
-    let tester = NSPredicate(format:"SELF MATCHES %@", regex)
+    let tester = NSPredicate(format: "SELF MATCHES %@", regex)
     return tester.evaluate(with: value)
 }
 
@@ -82,14 +81,15 @@ public func checkStringForPatterns(inputString: String, pattern: String) -> Bool
     }
 }
 
-
 public func validatePhoneNumberIsNotEmpty(number: String) -> Bool {
     if number.isEmpty {
         return false
     }
     return true
 }
+
 // MARK: Optional Extension
+
 extension Optional: RawRepresentable where Wrapped: Codable {
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self),
@@ -131,7 +131,7 @@ public struct BillDetails: Hashable {
 public func handleServiceAndNominationFilter(service: MerchantService, nomination: [Enrollment]) -> BillDetails? {
     if service.presentmentType != "None" {
         let nominations: [Enrollment] = nomination.filter { enrollment in
-            return filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
+            filterNominationInfoByHubServiceId(enrollment: enrollment, service: service)
         }
         let billDetails = BillDetails(service: service, info: nominations)
         return billDetails
@@ -162,21 +162,18 @@ public func checkLength(_ newValue: String, length: Int) -> String {
 }
 
 public func updatedTimeInUnits(time: Int) -> String {
-    if time > (2*3599) {
+    if time > (2 * 3599) {
         return "\(time / 3600) hours ago"
-    }
-    else if time > 3599 {
+    } else if time > 3599 {
         return "\(time / 3600) hour ago"
-    }
-    else if time > 59 {
+    } else if time > 59 {
         return "\(time / 60) mins ago"
-    }
-    else {
+    } else {
         return "\(time) seconds ago"
     }
 }
 
-public func validatePhoneNumberByCountry(_ country: CountriesInfoDTO?, phoneNumber: String) -> Bool{
+public func validatePhoneNumberByCountry(_ country: CountriesInfoDTO?, phoneNumber: String) -> Bool {
     if let regex = country?.countryMobileRegex {
         let result = validatePhoneNumber(with: regex, phoneNumber: phoneNumber)
         return result
@@ -186,8 +183,8 @@ public func validatePhoneNumberByCountry(_ country: CountriesInfoDTO?, phoneNumb
 
 public func callSupport(phoneNumber: String) {
     let tel = "tel://"
-    let formattedPhoneNumber = tel+phoneNumber
-    guard let url = URL(string: formattedPhoneNumber) else {return}
+    let formattedPhoneNumber = tel + phoneNumber
+    guard let url = URL(string: formattedPhoneNumber) else { return }
     if UIApplication.shared.canOpenURL(url) {
         UIApplication.shared.open(url)
     }
@@ -200,26 +197,26 @@ public func validateAmountByService(selectedService: MerchantService, amount: St
     let maxAmount = convertStringToInt(value: selectedService.maxAmount)
     if amount.isEmpty {
         result = "Amount field can not be empty"
-    }
-    else if intAmount < minAmount || intAmount > maxAmount {
+    } else if intAmount < minAmount || intAmount > maxAmount {
         result = "Amount should between \(minAmount) and \(maxAmount)"
     }
     return result
 }
+
 public func validateAmountByService(selectedService: MerchantService, amount: String) -> Bool {
     let intAmount = convertStringToInt(value: amount.removeWhitespace())
     let minAmount = convertStringToInt(value: selectedService.minAmount)
     let maxAmount = convertStringToInt(value: selectedService.maxAmount)
     if amount.isEmpty {
         return false
-    }
-    else if intAmount < minAmount || intAmount > maxAmount {
+    } else if intAmount < minAmount || intAmount > maxAmount {
         return false
     }
     return true
 }
+
 extension Formatter {
-    static func currencyFormat(currency: String = "KES")-> NumberFormatter {
+    static func currencyFormat(currency: String = "KES") -> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.locale = .init(identifier: "en_US_POSIX")
         formatter.numberStyle = .currencyAccounting
@@ -227,16 +224,17 @@ extension Formatter {
         return formatter
     }
 }
+
 extension Numeric {
     var currencyUS: String {
-         Formatter.currencyFormat().string(for: self) ?? ""
+        Formatter.currencyFormat().string(for: self) ?? ""
     }
 }
 
 public func convertme(string: String, with currency: String) -> String {
     let string = string.filter("0123456789.".contains)
     let f = Formatter.currencyFormat(currency: currency)
-    if let integer = Int(string)  {
+    if let integer = Int(string) {
         f.maximumFractionDigits = 0
         return f.string(for: integer) ?? "0"
     }
@@ -244,21 +242,31 @@ public func convertme(string: String, with currency: String) -> String {
 }
 
 public struct CardDetails {
-    public var cardNumber: String = ""
+    public var imageUrl: String = ""
+    public var cardNumber: String
     public var holderName: String = ""
     public var expDate: String = ""
     public var cvv: String = ""
     public var email: String = ""
     public var address: String = ""
-    public var encryptedExpDate: String = ""
-    public var encryptedSuffix: String = ""
-    public var encryptedPrefix: String = ""
     public var amount: String = ""
-    public var suffix: String  = ""
+    public var suffix: String = ""
     public var prefix: String = ""
     public var checkout = false
-    
-    public init(cardNumber: String = "", holderName: String = "", expDate: String = "", cvv: String = "",  email: String = "",address: String = "", amount: String = "") {
+    public var isActive = false
+    public var cardType = ""
+    public var merchantPayer: MerchantPayer = .init()
+    public init(
+        imageUrl: String = "",
+        cardNumber: String = "",
+        holderName: String = "",
+        expDate: String = "",
+        cvv: String = "",
+        email: String = "",
+        address: String = "",
+        amount: String = ""
+    ) {
+        self.imageUrl = imageUrl
         self.cardNumber = cardNumber
         self.holderName = holderName
         self.expDate = expDate
@@ -266,31 +274,59 @@ public struct CardDetails {
         self.email = email
         self.address = address
         self.amount = amount
-        self.suffix = cardNumber.suffix(4).description
-        self.prefix = cardNumber.prefix(4).description
-    }
-    
-    public mutating func encryptdata() -> Self {
-        let s = String(self.cardNumber.suffix(4))
-        let p = String(self.cardNumber.prefix(4))
-        self.encryptedExpDate = CreditCardUtil.encrypt(data: self.expDate)
-        self.encryptedSuffix = CreditCardUtil.encrypt(data: s)
-        self.encryptedPrefix = CreditCardUtil.encrypt(data: p)
-        return self
+        suffix = self.cardNumber.suffix(4).description
+        prefix = self.cardNumber.prefix(4).description
+       
     }
 
+
+    public mutating func getEncryptedAlias() -> String {
+        suffix = self.cardNumber.suffix(4).description
+        return CreditCardUtil.encrypt(data: suffix)
+    }
+    public func getEncryptedExpDate() -> String {
+        CreditCardUtil.encrypt(data: self.expDate)
+    }
+    public mutating func getEncryptedPrefix() -> String {
+        prefix = self.cardNumber.prefix(4).description
+        return CreditCardUtil.encrypt(data: prefix)
+    }
+    public func getMaskedPan() -> String {
+        return "**** **** **** \(cardNumber)"
+    }
+    public func getCreditCardName() -> String {
+        switch cardType {
+        case "001":
+            return "visa"
+        case "002":
+            return "mastercard"
+        case "003":
+            return "amex"
+        case "005":
+            return "DINERS"
+        case "004":
+            return "discover"
+        case "007":
+            return "jcb"
+        case "006":
+            return "CarteBlanche"
+        case "014":
+            return "EnRoute"
+        default:
+            return ""
+        }
+    }
 }
-
 
 extension View {
     public func throwError(message: String) -> Never {
         return fatalError("\(Self.self) -> \(message)")
     }
+
     public func log(message: Any) {
         print("\(Self.self) -> \(message)")
     }
 }
-
 
 public func formatNumber(_ numberString: String) -> String {
     let numberFormatter = NumberFormatter()
@@ -302,20 +338,15 @@ public func formatNumber(_ numberString: String) -> String {
     } else {
         return numberString
     }
-
 }
-public func formatNumber(_ number: Double) -> String {
 
+public func formatNumber(_ number: Double) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
 
     if let formattedString = numberFormatter.string(from: NSNumber(value: number)) {
         return formattedString
     } else {
-       return String(number)
+        return String(number)
     }
-
 }
-
-
-

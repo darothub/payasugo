@@ -12,11 +12,11 @@ import CoreUI
 import Permissions
 import SwiftUI
 import Theme
+import CreditCard
 
 public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
     @Environment(\.realmManager) var realmManager
     @StateObject var bavm: BuyAirtimeViewModel = AirtimeDI.createBuyAirtimeVM()
-    @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject var checkoutVm: CheckoutViewModel
     @EnvironmentObject var navigation: NavigationManager
     @State private var showNetworkList = false
@@ -26,9 +26,10 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
     @State private var disablePhoneNumberTextField = false
     @State private var isValidPhoneNumber = false
     @State private var isValidAmount = false
+    @State private var showContact = false
     @State var copyOfOldBeneficiaries = [PreviousBeneficiaryModel]()
     @State var currentCountry = AppStorageManager.getCountry()
-
+    @State var showCheckout = false
     @FocusState var focused: String?
     public init(selectedServiceName: String) {
         _selectedServiceName = State(initialValue: selectedServiceName)
@@ -48,15 +49,11 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                 TextFieldAndRightIcon(
                     number: $bavm.currentPhoneNumber,
                     validation: { phoneNumber in
-                        DispatchQueue.main.async {
-                            withAnimation {
-                                isValidPhoneNumber = validateWithRegex(bavm.countryMobileRegex, value: phoneNumber)
-                            }
-                        }
+                        isValidPhoneNumber = validateWithRegex(bavm.countryMobileRegex, value: phoneNumber)
                         return isValidPhoneNumber
                     }, onImageClick: {
-                        fetchContacts()
-                    }).focused($focused, equals: contactViewModel.selectedContact)
+                        showContact = true
+                    }).focused($focused, equals: bavm.currentPhoneNumber)
 
                 ServicesListView(slm: $bavm.slm, onClick: {
                     bavm.currentPhoneNumber = ""
@@ -74,11 +71,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                         placeHolder: "Enter amount",
                         keyboardType: .numberPad
                     ) { amount in
-                        DispatchQueue.main.async {
-                            withAnimation {
-                                isValidAmount = validateAmountByService(selectedService: bavm.currentService, amount: amount)
-                            }
-                        }
+                        isValidAmount = validateAmountByService(selectedService: bavm.currentService, amount: amount)
                         return isValidAmount
                     }.focused($focused, equals: bavm.selectedAmount)
                 }
@@ -91,7 +84,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                     backgroundColor: PrimaryTheme.getColor(.primaryColor),
                     buttonLabel: "Buy airtime"
                 ) {
-                    onButtonClick()
+                    validateAndCheckout()
                 }
             }
             .padding()
@@ -136,10 +129,10 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                 } action: {
                     showNetworkList = false
                 }
+                .onDisappear {
+                    bavm.defaultNetworkUIModel = UIModel.nothing
+                }
             }
-            .onChange(of: contactViewModel.selectedContact, perform: { newValue in
-                bavm.currentPhoneNumber = newValue
-            })
             .onChange(of: bavm.slm, perform: { newValue in
                 guard let selectedService = filterServiceBySelectedServiceName(from: airtimeServices, name: newValue.selectedProvider) else {
                     return
@@ -179,9 +172,6 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                     disablePhoneNumberTextField = false
                 }
             })
-            .sheet(isPresented: $contactViewModel.showContact) {
-                showContactView(contactViewModel: contactViewModel)
-            }
             .toolbar {
                 handleKeyboardDone()
             }
@@ -189,8 +179,17 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
                 log(message: content)
             }
         }
+        .showContactModifier($showContact, completion: { contact in
+            bavm.currentPhoneNumber = contact.phoneNumber
+        }, onFailure: { err in
+            bavm.uiModel = UIModel.error(err)
+        })
+       
         .backgroundmode(color: .white)
         .navigationBarBackButton(navigation: navigation)
+        .onDisappear {
+            bavm.uiModel = UIModel.nothing
+        }
     }
 
     fileprivate func setServiceName(_ name: String) {
@@ -244,14 +243,6 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
         }
     }
 
-    private func fetchContacts() {
-        Task {
-            await contactViewModel.fetchPhoneContacts { err in
-                bavm.uiModel = UIModel.error(err.localizedDescription)
-            }
-        }
-    }
-
     private func getNetworkItems(_ airtimeServices: [ServiceModel]) -> [NetworkItem] {
         return airtimeServices.map { service in
             NetworkItem(
@@ -278,7 +269,7 @@ public struct BuyAirtimeView: View, OnDefaultServiceSelectionListener {
         showNetworkList = false
     }
 
-    fileprivate func onButtonClick() {
+    fileprivate func validateAndCheckout() {
         if bavm.slm.selectedProvider == "Unknown" {
             bavm.uiModel = UIModel.error("You have not selected a service")
             return

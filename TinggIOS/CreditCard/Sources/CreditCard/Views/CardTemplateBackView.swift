@@ -50,7 +50,6 @@ struct CardTemplateBackView: View {
             
         }
         .frame(height: cardHeight)
-        .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
                 .fill(.black)

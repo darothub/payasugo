@@ -59,13 +59,8 @@ struct NavigationModifier: ViewModifier, ServicesListener {
                 case .intro:
                     IntroView()
                         .navigationBarHidden(true)
-//                        .environmentObject(navigation)
+                        .environmentObject(navigation)
                         .environmentObject(freshchatWrapper)
-                case .pinCreationView:
-                    EnterPinFullScreenView()
-                case let .cardDetailsView(response, invoice):
-                    EnterCardDetailsView(cardDetails: $checkout.cardDetails, createChannelResponse: response as? CreateCardChannelResponse, invoice: invoice as? Invoice)
-//                        .environmentObject(navigation)
                     
                 default:
                     EmptyView()
@@ -84,6 +79,8 @@ struct NavigationModifier: ViewModifier, ServicesListener {
             .billsNavigation(quickTopUpListener: self)
             .airtimesNavigation()
             .pinNavigation()
+            .creditCardNavigation()
+
          
 
     }

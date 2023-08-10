@@ -16,7 +16,7 @@ struct DebitCardDropDownView: View {
                 Image(systemName: dcddm.showDropDown ? "chevron.up":"chevron.down")
                     .foregroundColor(.black)
             }
-            .padding()
+            .padding(20)
             .overlay {
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(lineWidth: 0.5)

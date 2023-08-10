@@ -1,16 +1,15 @@
 //
-//  File.swift
+//  PinNavigationModifier.swift
 //  
 //
 //  Created by Abdulrasaq on 01/08/2023.
 //
 
-import Foundation
-import Checkout
+
 import Core
 import CoreUI
 import Foundation
-import Permissions
+
 import SwiftUI
 public struct PinNavigationModifier: ViewModifier {
     @State var colorTint:Color = .blue

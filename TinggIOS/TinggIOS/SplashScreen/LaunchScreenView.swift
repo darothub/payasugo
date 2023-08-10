@@ -85,7 +85,6 @@ struct LaunchScreenView_Previews: PreviewProvider {
         LaunchScreenView()
             .environmentObject(NavigationManager())
             .environmentObject(CreditCardDI.createCreditCardViewModel())
-            .environmentObject(MainViewModel(systemUpdateUsecase: .init()))
     }
 }
 
