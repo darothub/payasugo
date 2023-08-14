@@ -116,22 +116,6 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
         self.onTryAgain = onTryAgain
     }
     
-//    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-//      guard let response = navigationResponse.response as? HTTPURLResponse,
-//        let url = navigationResponse.response.url else {
-//        decisionHandler(.cancel)
-//        return
-//      }
-//
-//      if let headerFields = response.allHeaderFields as? [String: String] {
-//        let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
-//        cookies.forEach { cookie in
-//          webView.configuration.websiteDataStore.httpCookieStore.setCookie(cookie)
-//        }
-//      }
-//      
-//      decisionHandler(.allow)
-//    }
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         logCurrentFunc("\(error)")
         didHaveError(error)

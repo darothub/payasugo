@@ -97,7 +97,7 @@ public class OnboardingVM: ViewModel {
             do {
                 let response = try await systemUpdateUsecase(request: systemUpdateRequest)
                 saveDataIntoDB(data: response)
-                handleResultState(model: &uiModel, Result.success(response) as Result<Any, ApiError>)
+                handleResultState(model: &uiModel, Result.success(response) as Result<SystemUpdateDTO, ApiError>)
             } catch {
                 let err = error as! ApiError
                 handleResultState(model: &uiModel, Result.failure(err) as Result<BaseDTO, ApiError>)
@@ -138,7 +138,6 @@ public class OnboardingVM: ViewModel {
             .add(value: "MAK", for: .SERVICE)
             .build()
         let encrypted = activationCodeRequest.encryptPayload()
-        Log.d(message: "\(String(describing: encrypted))")
         getActivationCode(request: activationCodeRequest)
     }
 
@@ -146,7 +145,6 @@ public class OnboardingVM: ViewModel {
         let number = "\(currentCountryDialCode)\(phoneNumber)"
         AppStorageManager.retainPhoneNumber(number: number)
         if let country = getCountryByDialCode(dialCode: currentCountryDialCode) {
-            Log.d(message: "\(country)")
             AppStorageManager.retainActiveCountry(country: country)
             otpRequest()
         }
@@ -232,13 +230,6 @@ public class OnboardingVM: ViewModel {
             model = UIModel.error((apiError as! ApiError).localizedString)
             return
         case let .success(data):
-            let dto = data as? BaseDTO
-            if let statusCode = dto?.statusCode {
-                if statusCode > 201 {
-                    model = UIModel.error(dto?.statusMessage ?? "")
-                    return
-                }
-            }
             let content = UIModel.Content(data: data)
             model = UIModel.content(content)
             return
