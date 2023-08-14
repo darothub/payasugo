@@ -48,8 +48,8 @@ struct BoxedTextView: View {
     @State var text: String
     var body: some View {
         Text(text)
-            .frame(width: 40)
             .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 25))
+            .font(.subheadline)
             .overlay(
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(lineWidth: 0.2)
@@ -64,7 +64,7 @@ struct SuggestedAmountListView_Previews: PreviewProvider {
         @State var serviceName = "Safaricom"
         @State var amount = "Safaricom"
         var body: some View {
-            SuggestedAmountListView(amountHistory: .constant([String]()), amountSelected: $amount)
+            SuggestedAmountListView(amountHistory: .constant(["100", "1000"]), amountSelected: $amount)
         }
     }
     static var previews: some View {

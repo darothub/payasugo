@@ -54,7 +54,9 @@ public struct FlagTextField: View {
 
 struct FlagTextField_Previews: PreviewProvider {
     static var previews: some View {
-        NewTest()
+        FlagTextField(phoneNumber: .constant("000000"), flags: .constant([]), selectedFlag: .constant("")) { str in
+            true
+        }
     }
 }
 

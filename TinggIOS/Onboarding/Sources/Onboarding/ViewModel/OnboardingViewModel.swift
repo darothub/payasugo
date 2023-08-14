@@ -39,7 +39,6 @@ public class OnboardingVM: ViewModel {
         self.activationUsecase = activationUsecase
         self.systemUpdateUsecase = systemUpdateUsecase
         self.getCountriesDictionaryUsecase = getCountriesDictionaryUsecase
-        uiModel = uiModel
     }
 
     /// Collect a dictionary of country code and dial code

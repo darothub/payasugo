@@ -157,7 +157,7 @@ public class WebViewCordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WK
         }
     }
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "tryAgain", let messageBody = message.body as? String {
+        if message.name == "tryAgain",  ((message.body as? String) != nil) {
             self.onTryAgain()
         }
     }

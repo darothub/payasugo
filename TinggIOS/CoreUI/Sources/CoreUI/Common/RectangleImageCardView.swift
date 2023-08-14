@@ -1,6 +1,6 @@
 //
-//  SwiftUIView.swift
-//  
+//  RectangleImageCardView.swift
+//
 //
 //  Created by Abdulrasaq on 15/01/2023.
 //
@@ -50,3 +50,6 @@ public struct RectangleImageCardView: View {
 }
 
 
+#Preview {
+    RectangleImageCardView()
+}

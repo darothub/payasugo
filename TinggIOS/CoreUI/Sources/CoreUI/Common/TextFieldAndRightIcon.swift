@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  TextFieldAndRightIcon.swift
 //  
 //
 //  Created by Abdulrasaq on 15/01/2023.
@@ -15,7 +15,7 @@ public struct TextFieldAndRightIcon: View {
     var keyboardType: UIKeyboardType = .numberPad
     private var validation: (String) -> Bool
     private var onImageClick: () -> Void
-    public init(number: Binding<String>, iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, validation: @escaping (String) -> Bool = {_ in false }, onImageClick: @escaping () -> Void = {
+    public init(number: Binding<String> = .constant("0000"), iconName: String = "person", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, validation: @escaping (String) -> Bool = {_ in false }, onImageClick: @escaping () -> Void = {
         //TODO
     }) {
         self._number = number
@@ -40,18 +40,16 @@ public struct TextFieldAndRightIcon: View {
     }
 }
 
-
-
-
 public struct TextFieldAndLeftTitle: View {
     @Binding var number: String
     var iconName: String
     @State var placeHolder = "Mobile number"
     @State var keyboardType: UIKeyboardType = .numberPad
     @FocusState var cursor: Bool
+    @State var showIconName = false
     private var validation: (String) -> Bool
     
-    public init(number: Binding<String>, iconName: String, placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, validation: @escaping (String) -> Bool = {_ in false }
+    public init(number: Binding<String> = .constant("00000"), iconName: String = "KE", placeHolder: String = "Mobile number", keyboardType: UIKeyboardType = .phonePad, validation: @escaping (String) -> Bool = {_ in false }
     ) {
         self._number = number
         self.iconName = iconName
@@ -63,6 +61,7 @@ public struct TextFieldAndLeftTitle: View {
     public var body: some View {
         HStack {
             Text(iconName)
+                .showIf($showIconName)
             TextField(placeHolder, text: $number)
                 .keyboardType(keyboardType)
                 .submitLabel(.next)
@@ -70,6 +69,27 @@ public struct TextFieldAndLeftTitle: View {
                 
         }.padding(15)
         .validateBorderStyle(text: $number, validation: validation)
+        .onChange(of: cursor) { newValue in
+            if newValue {
+                withAnimation {
+                    showIconName = true
+                }
+            }
+        }
+        .onChange(of: number) { newValue in
+            if !newValue.isEmpty {
+                withAnimation {
+                    showIconName = true
+                }
+            }
+        }
    
     }
+}
+#Preview {
+    TextFieldAndRightIcon()
+}
+
+#Preview {
+    TextFieldAndLeftTitle()
 }

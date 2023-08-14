@@ -45,15 +45,4 @@ public struct CustomDialog<DialogContent: View>: ViewModifier {
     }
   }
 }
-extension View {
-    func dialog<Content: View>(isPresented: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) -> some View {
-        ZStack {
-            self
 
-            if isPresented.wrappedValue {
-                content()
-            }
-        }
-        .animation(.easeInOut)
-    }
-}

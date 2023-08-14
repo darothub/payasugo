@@ -108,3 +108,21 @@ public protocol OnDefaultServiceSelectionListener {
     func onSubmitDefaultService(selected: String)
     func onDismiss()
 }
+
+#Preview {
+    DialogViewPreviewHolder()
+}
+
+struct DialogViewPreviewHolder: View, OnDefaultServiceSelectionListener {
+    func onSubmitDefaultService(selected: String) {
+        //
+    }
+    
+    func onDismiss() {
+        //
+    }
+    
+    var body: some View {
+        DialogContentView(networkList: [], phoneNumber: "000000", selectedServiceName: "airtel", listener: self)
+    }
+}
