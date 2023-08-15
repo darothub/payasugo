@@ -31,6 +31,7 @@ public class HomeViewModel: ViewModel {
     private var chunkedCategoriesUsecase: ChunkedCategoriesUsecase
     private var updateDefaultNetworkIdUsecase: UpdateDefaultNetworkUsecase
     private var systemUpdateUsecase: SystemUpdateUsecase
+    
     /// ``HomeViewModel`` initialiser
     /// - Parameters:
     ///   - profileRepository: ``ProfileRepositoryImpl``
@@ -156,7 +157,17 @@ public class HomeViewModel: ViewModel {
             }
         }
     }
-
+    func handleTermsAndConditionAcceptance(request: RequestMap) {
+        uiModel = UIModel.loading
+        Task {
+            do {
+                let result = try await profileRepository.acceptTermsAndCondition(request: request)
+                handleResultState(model: &uiModel, Result.success(result) as Result<BaseDTO, Error>, showAlertOnSuccess: true)
+            } catch {
+                handleResultState(model: &uiModel, Result.failure(error as! ApiError) as Result<Any, ApiError>)
+            }
+        }
+    }
     func updateBillReminder(request: RequestMap) {
         billReminderUIModel = UIModel.loading
         Task {

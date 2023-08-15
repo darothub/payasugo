@@ -20,6 +20,7 @@ public func TinggButton(
     } label: {
         Text(buttonLabel)
             .frame(maxWidth: .infinity)
+            .font(.subheadline)
             .padding(textPadding)
             .foregroundColor(.white)
             .background(isActive.wrappedValue ? backgroundColor : .gray)
@@ -42,6 +43,7 @@ public func TinggOutlineButton(
     } label: {
         Text(buttonLabel)
             .frame(maxWidth: .infinity)
+            .font(.subheadline)
             .padding()
             .foregroundColor(textColor)
             .cornerRadius(10)

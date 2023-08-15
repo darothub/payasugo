@@ -33,6 +33,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
     @State var selectedNavigationScreen = HomeScreen.home("", Tab.first)
     @State var drawerStatus = DrawerStatus.close
     @State private var selectedTab: String = ""
+    @State private var showTermsAndPrivacyPolicyDialog = false
     let menu =  [
         NavigationDrawerMenuItem(screen: HomeScreen.paymentOptions, title: "Payment"),
         NavigationDrawerMenuItem(screen: HomeScreen.settings, title: "Settings"),
@@ -95,6 +96,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
+            showTermsAndPrivacyPolicyDialog = !AppStorageManager.acceptedTermsAndCondition
             Task {
                 let profile = hvm.getProfile()
                 profileImage = (profile.photoURL)!
@@ -107,6 +109,9 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 }
                 .build()
                 .startScheduledRequest()
+        }
+        .customDialog(isPresented: $showTermsAndPrivacyPolicyDialog, cancelOnTouchOutside: .constant(false)) {
+            TermAndConditiomDialogView(isPresented: $showTermsAndPrivacyPolicyDialog)
         }
     }
     @ViewBuilder

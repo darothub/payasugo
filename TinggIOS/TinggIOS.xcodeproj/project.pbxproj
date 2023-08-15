@@ -19,6 +19,7 @@
 		71091EDB29EFEDFD00843FFA /* VirtualCardLinkedStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091EDA29EFEDFD00843FFA /* VirtualCardLinkedStateView.swift */; };
 		71091EDD29F0179800843FFA /* VirtualCardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71091EDC29F0179800843FFA /* VirtualCardState.swift */; };
 		710F9D2F2979B2FF0034E193 /* Pin in Frameworks */ = {isa = PBXBuildFile; productRef = 710F9D2E2979B2FF0034E193 /* Pin */; };
+		712EF0AF2A8A68C80083D5B7 /* TermAndConditiomDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712EF0AE2A8A68C80083D5B7 /* TermAndConditiomDialogView.swift */; };
 		71463F3628BE4CA800A54384 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3528BE4CA800A54384 /* HomeUITests.swift */; };
 		71463F3828BE4CA800A54384 /* HomeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71463F3728BE4CA800A54384 /* HomeUITestsLaunchTests.swift */; };
 		714B15AA2899D5C6005338EB /* OnboardingUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714B15A92899D5C6005338EB /* OnboardingUITest.swift */; };
@@ -100,6 +101,7 @@
 		71091EDA29EFEDFD00843FFA /* VirtualCardLinkedStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCardLinkedStateView.swift; sourceTree = "<group>"; };
 		71091EDC29F0179800843FFA /* VirtualCardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCardState.swift; sourceTree = "<group>"; };
 		710F9D2D2979B2E50034E193 /* Pin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Pin; sourceTree = "<group>"; };
+		712EF0AE2A8A68C80083D5B7 /* TermAndConditiomDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermAndConditiomDialogView.swift; sourceTree = "<group>"; };
 		71463F3328BE4CA800A54384 /* HomeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71463F3528BE4CA800A54384 /* HomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
 		71463F3728BE4CA800A54384 /* HomeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 				71988FD32A57036500C7D72F /* ActiveCategoryListView.swift */,
 				71988FD42A57036500C7D72F /* ActivateCardView.swift */,
 				71988FD62A57036500C7D72F /* HomeTopViewDesign.swift */,
+				712EF0AE2A8A68C80083D5B7 /* TermAndConditiomDialogView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -601,6 +604,7 @@
 				71988FE52A57036500C7D72F /* PaymentOptionsView.swift in Sources */,
 				71988FE02A57036500C7D72F /* ShimmerUIViews.swift in Sources */,
 				71988FB32A53213300C7D72F /* AppDelegate.swift in Sources */,
+				712EF0AF2A8A68C80083D5B7 /* TermAndConditiomDialogView.swift in Sources */,
 				71988FD82A57036500C7D72F /* HomeScreen.swift in Sources */,
 				71091EDD29F0179800843FFA /* VirtualCardState.swift in Sources */,
 				71988FE42A57036500C7D72F /* EditProfileView.swift in Sources */,

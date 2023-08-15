@@ -7,8 +7,6 @@
 
 import Foundation
 public class ProfileRepositoryImpl: ProfileRepository {
-  
-    
     var dbObserver: Observer<Profile>
     var baseRequest: BaseRequest
     /// ``ProfileRepositoryImpl`` initialiser
@@ -24,11 +22,7 @@ public class ProfileRepositoryImpl: ProfileRepository {
     }
     
     public func updateProfile(request: RequestMap) async throws -> BaseDTO {
-        return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(parameters: request.encryptPayload()!) { (result: Result<BaseDTO, ApiError>) in
-                continuation.resume(with: result)
-            }
-        }
+        try await baseRequest.result(request.encryptPayload()!)
     }
     
     public func updateProfileImage(request: RequestMap) async throws -> PhotoUploadResponse {
@@ -37,6 +31,9 @@ public class ProfileRepositoryImpl: ProfileRepository {
                 continuation.resume(with: result)
             }
         }
+    }
+    public func acceptTermsAndCondition(request: RequestMap) async throws -> BaseDTO {
+        try await baseRequest.result(request.encryptPayload()!)
     }
 }
 

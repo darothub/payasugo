@@ -28,6 +28,8 @@ public struct AppStorageManager {
     @AppStorage(LocalProperties.securityAnswer.rawValue) public static var securityAnswer: String?
     @AppStorage(LocalProperties.mulaPin.rawValue) public static var mulaPin: String?
     @AppStorage(LocalProperties.pinRequestChoice.rawValue) public static var pinRequestChoice: String = ""
+    @AppStorage(LocalProperties.termsAncConditionMessage.rawValue) public static var termsAncConditionMessage: String = ""
+    @AppStorage(LocalProperties.acceptedTermsAndCondition.rawValue) public static var acceptedTermsAndCondition: Bool = false
     public static func retainPhoneNumber(number: String) {
         phoneNumber = number
     }
@@ -149,5 +151,7 @@ public enum LocalProperties: String {
     case securityAnswer
     case mulaPin
     case pinRequestChoice
+    case termsAncConditionMessage
+    case acceptedTermsAndCondition
 }
 

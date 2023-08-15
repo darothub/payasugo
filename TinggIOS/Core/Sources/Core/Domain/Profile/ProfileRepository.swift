@@ -10,4 +10,5 @@ public protocol ProfileRepository {
     func getProfile() -> Profile?
     func updateProfile(request: RequestMap) async throws -> BaseDTO
     func updateProfileImage(request: RequestMap) async throws -> PhotoUploadResponse
+    func acceptTermsAndCondition(request: RequestMap) async throws -> BaseDTO
 }

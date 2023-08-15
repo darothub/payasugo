@@ -220,6 +220,7 @@ public class OnboardingVM: ViewModel {
         realmManager.save(data: data.bundleData.map { $0.toEntity })
 
         AppStorageManager.retainCountriesExtraInfo(countrExtra: data.countriesExtraInfo)
+        AppStorageManager.termsAncConditionMessage = data.tacMessage
     }
 
     /// Handle Result
