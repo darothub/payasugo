@@ -9,7 +9,7 @@ import Foundation
 public struct BillsDI {
     
     private static func createFetchBillRepository() -> InvoiceRepository {
-        FetchBillRepositoryImpl(baseRequest: BaseRequest(), dbObserver: .init())
+        FetchBillRepositoryImpl(baseRequest: BaseRequest())
     }
     private static func createGetSingleBillUsecase() -> GetSingleBillUsecase {
         GetSingleBillUsecaseImpl(fetchBillRepository: createFetchBillRepository())

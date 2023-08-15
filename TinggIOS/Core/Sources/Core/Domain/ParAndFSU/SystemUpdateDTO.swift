@@ -390,6 +390,7 @@ enum ShortDescription: String, Codable {
 public enum Status: String, Codable {
     case failed = "failed"
     case success = "success"
+    case pending = "pending"
 }
 
 public enum TransferType: String, Codable {

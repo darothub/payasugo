@@ -33,7 +33,7 @@ public class ProfileRepositoryImpl: ProfileRepository {
     
     public func updateProfileImage(request: RequestMap) async throws -> PhotoUploadResponse {
         return try await withCheckedThrowingContinuation { continuation in
-            baseRequest.makeRequest(urlPath: "TinggUploadImagesAPI/", tinggRequest: request) { (result: Result<PhotoUploadResponse, ApiError>) in
+            baseRequest.makeRequest(url: Utils.imageUploadUrl, method: .post, parameters: request.dict) { (result: Result<PhotoUploadResponse, ApiError>)  in
                 continuation.resume(with: result)
             }
         }

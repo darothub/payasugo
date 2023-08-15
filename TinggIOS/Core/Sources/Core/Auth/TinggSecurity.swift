@@ -404,13 +404,14 @@ extension SecuredResponse {
         }
     }
 
-    public func decodeToFinal<T: Decodable>() -> T? {
+    public func decodeToFinal<T: Decodable>() throws -> T {
         Log.d(message: "Real json \(json)")
         do {
             let t: T = try decodeJSON(json)
             return t
         } catch {
-            return nil
+            Log.d(message: "\(error)")
+            throw error
         }
     }
 }

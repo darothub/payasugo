@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  AmountAndCurrencyTextField.swift
 //  
 //
 //  Created by Abdulrasaq on 15/01/2023.

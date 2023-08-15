@@ -45,14 +45,6 @@ public class BaseRequest: TinggApiServices {
         }
     }
 
-//    func result<T: BaseDTOprotocol>(tinggRequest: TinggRequest) async throws -> Result<T, ApiError> {
-//        return try await withCheckedThrowingContinuation { continuation in
-//            makeRequest(tinggRequest: tinggRequest) { (result: Result<T, ApiError>) in
-//                continuation.resume(returning: result)
-//            }
-//        }
-//    }
-
     public func resultOfBasicAuthRequest<T: Decodable>(url: String, method: HTTPMethod, headers: HTTPHeaders?) async throws -> Result<T, ApiError> {
         return try await withCheckedThrowingContinuation { continuation in
             makeBasicAuthRequest(url: url, method: method, headers: headers, onCompletion: { (result: Result<T, ApiError>) in
@@ -77,12 +69,13 @@ public class BaseRequest: TinggApiServices {
                     continuation.resume(throwing: error)
                 case let .success(data):
                     if self.allowResponseDecryption {
-                        guard let object: T? = data.decodeToFinal() else {
-                            let object: BaseDTO? = data.decodeToFinal()
-                            continuation.resume(throwing: ApiError.networkError(object!.statusMessage))
-                            return
+                        do {
+                            let object: T = try data.decodeToFinal()
+                            continuation.resume(returning: object)
+                        } catch {
+                            continuation.resume(throwing: ApiError.networkError(error.localizedDescription))
                         }
-                        continuation.resume(returning: object!)
+                        
                     } else {
                         continuation.resume(returning: data as! T)
                     }
@@ -154,10 +147,10 @@ extension DataRequest {
         responseDecodable(of: T.self) { response in
             switch response.result {
             case let .success(data):
-                print("Decodable \(data)")
+                Log.d(message: "Decodable \(data)")
                 onCompletion(.success(data))
             case let .failure(error):
-                print("DecodableError \(error)")
+                Log.d(message:"DecodableError \(error)")
                 onCompletion(.failure(.networkError(error.localizedDescription)))
             }
         }
