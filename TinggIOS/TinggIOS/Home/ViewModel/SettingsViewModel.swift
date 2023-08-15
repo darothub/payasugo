@@ -76,11 +76,9 @@ public class SettingsViewModel: ViewModel {
     }
     func pinNotYetSet() -> Bool {
         guard  let pin: Base64String = AppStorageManager.mulaPin else {
-//            uiModel = UIModel.error("Pin has not been set for this profile")
             return true
         }
         guard pin.isNotEmpty, let pinDecoded = Data(base64Encoded: pin) else {
-//            uiModel = UIModel.error("Error getting pin")
             return true
         }
         do {

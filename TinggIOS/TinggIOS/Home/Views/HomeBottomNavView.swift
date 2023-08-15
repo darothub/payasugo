@@ -14,6 +14,7 @@ import Theme
 import FreshChat
 import Checkout
 import Permissions
+import Pin
 
 /// View that host the bottom navigation for the home package
 public struct HomeBottomNavView: View, NavigationMenuClick {
@@ -23,6 +24,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
     @EnvironmentObject var checkout: CheckoutViewModel
     @EnvironmentObject var contactViewModel: ContactViewModel
     @EnvironmentObject private var freshchatWrapper: FreshchatWrapper
+    @StateObject var settingVm = SettingsViewModel()
     public static var HOME = "Home"
     public static var BILL = "Bill"
     public static var GROUP = "Group"
@@ -34,6 +36,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
     @State var drawerStatus = DrawerStatus.close
     @State private var selectedTab: String = ""
     @State private var showTermsAndPrivacyPolicyDialog = false
+    @State private var showPintroductionDialog = false
     let menu =  [
         NavigationDrawerMenuItem(screen: HomeScreen.paymentOptions, title: "Payment"),
         NavigationDrawerMenuItem(screen: HomeScreen.settings, title: "Settings"),
@@ -97,6 +100,7 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             showTermsAndPrivacyPolicyDialog = !AppStorageManager.acceptedTermsAndCondition
+            showPintroductionDialog = !AppStorageManager.hasCheckedDontShowPinIntroductionAgain && settingVm.pinNotYetSet()
             Task {
                 let profile = hvm.getProfile()
                 profileImage = (profile.photoURL)!
@@ -112,6 +116,9 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         }
         .customDialog(isPresented: $showTermsAndPrivacyPolicyDialog, cancelOnTouchOutside: .constant(false)) {
             TermAndConditiomDialogView(isPresented: $showTermsAndPrivacyPolicyDialog)
+        }
+        .customDialog(isPresented: $showPintroductionDialog, cancelOnTouchOutside: .constant(false)) {
+            PinIntroductionDialogView(isPresented: $showPintroductionDialog)
         }
     }
     @ViewBuilder
