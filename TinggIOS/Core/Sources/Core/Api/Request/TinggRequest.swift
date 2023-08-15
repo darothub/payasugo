@@ -120,7 +120,7 @@ public struct RequestMap  {
             self.dict.updateValue("MULA_APP", forKey: RequestKey.ORIGIN.str)
             self.dict.updateValue(true, forKey: "IS_LIVE_API")
             self.dict.updateValue(parseInstallationId, forKey: RequestKey.PARSE_INSTALLATION_ID.str)
-            self.dict.updateValue("1", forKey: RequestKey.IS_EXPLICIT.str)
+//            self.dict.updateValue("1", forKey: RequestKey.IS_EXPLICIT.str)
         }
         public func clear() -> Builder {
             dict.removeAll()

@@ -158,17 +158,6 @@ public struct CheckoutView: View, OnEnterPINListener {
         .toolbar {
             handleKeyboardDone()
         }
-        .onAppear {
-            setPaymentServiceProviderModelFromServices(checkoutVm.paymentServiceProviders)
-            setCheckoutTitle()
-
-            questions = Observer<SecurityQuestion>().getEntities().map {$0.question}
-            checkoutVm.accountList = checkoutVm.enrollments.compactMap {$0.accountNumber}
-            isQuickTopUpOrAirtime = selectedService.isAirtimeService
-            updateButtonLabel()
-            checkoutVm.phoneNumber = AppStorageManager.getPhoneNumber()
-            
-        }
         .onChange(of: checkoutVm.slm) { model in
             checkoutVm.currentPaymentProvider = checkoutVm.paymentServiceProviders.first {$0.clientName == checkoutVm.slm.selectedProvider}!
             checkoutVm.canPayForOthers = checkoutVm.currentPaymentProvider.canPayForOther == "0" ? false : true

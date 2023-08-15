@@ -23,9 +23,10 @@ public class ImageCoordinator: NSObject, UINavigationControllerDelegate, UIImage
     }
 
     private func base64String(from image: UIImage) -> String {
-        if let imageData = image.jpegData(compressionQuality: 0.5) {
+        if let imageData = image.jpegData(compressionQuality: 0.1) {
             return imageData.base64EncodedString()
         }
         return ""
     }
 }
+//4247487

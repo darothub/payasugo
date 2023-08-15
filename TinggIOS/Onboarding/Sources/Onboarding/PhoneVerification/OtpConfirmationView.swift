@@ -66,9 +66,12 @@ public struct OtpConfirmationView: View {
         })
 
         .handleViewStatesMods(uiState: otpVM.$onConfirmActivationUIModel) { _ in
+            stopCountdown()
             otpVM.fetchSystemUpdate()
         }
-        .handleViewStatesMods(uiState: otpVM.$uiModel) { _ in
+        .handleViewStatesMods(uiState: otpVM.$uiModel) { content in
+            let data = content.data as! SystemUpdateDTO
+            log(message: data)
             dismiss()
             gotoHomeView()
         }
