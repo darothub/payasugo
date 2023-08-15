@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Pin/Sources/Pin/Views/PinIntroductionDialogView.swift">
-   </FileRef>
-   <FileRef
       location = "container:TinggIOS.xcodeproj">
    </FileRef>
 </Workspace>
