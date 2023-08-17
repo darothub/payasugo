@@ -50,8 +50,8 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
             destination: HomeScreen.profile
         )
     }
-    @State private var billViewTab: Tab = .second
-    public init(selectedTab: String = HomeBottomNavView.HOME, billViewTab: Tab = .second) {
+    @State private var billViewTab: Tab = .first
+    public init(selectedTab: String = HomeBottomNavView.HOME, billViewTab: Tab = .first) {
         self._selectedTab = State(initialValue: selectedTab)
         self._billViewTab = State(initialValue: billViewTab)
     }
