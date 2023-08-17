@@ -15,6 +15,7 @@ struct TermAndConditiomDialogView: View {
     @State private var showWebView = false
     @State private var url: URL = URL(string: "https://www.google.com")!
     @State private var tacVersion = 0
+    @State private var notActivated = false
     var activeCountry: CountriesInfoDTO {
         AppStorageManager.getCountry()!
     }
@@ -25,6 +26,7 @@ struct TermAndConditiomDialogView: View {
                 Text(AppStorageManager.termsAncConditionMessage)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .font(.subheadline)
+                    .multilineTextAlignment(.center)
                 TinggButton(backgroundColor: PrimaryTheme.getColor(.primaryColor), buttonLabel: "Read updated terms", padding: 10, textPadding: 10) {
                     url = URL(string: (activeCountry.tacURL)!)!
                     withAnimation {
@@ -41,13 +43,12 @@ struct TermAndConditiomDialogView: View {
                     CheckBoxView(checkboxChecked: $hasReadTermsAndPolicy)
                     Text("I have read and accepted")
                         .font(.subheadline)
-                    Spacer()
                 }
 
                 TinggOutlineButton(backgroundColor: Color.clear, buttonLabel: "Continue") {
                     if hasReadTermsAndPolicy {
                         let profile = Observer<Profile>().getEntities().first!
-                        tacVersion = profile.acceptedTacVersion == 0 ? 1 : profile.acceptedTacVersion!
+                        tacVersion = (profile.acceptedTacVersion == 0 ? 1 : profile.acceptedTacVersion) ?? 0
                         let request = RequestMap.Builder()
                             .add(value: "\(tacVersion)", for: "TAC_VERSION")
                             .add(value: "MTAC", for: .SERVICE)
@@ -87,10 +88,16 @@ struct TermAndConditiomDialogView: View {
                     profile.acceptedTacVersion = tacVersion
                 }
                 AppStorageManager.acceptedTermsAndCondition = true
+            } else {
+                notActivated = true
             }
         } action: {
-            withAnimation {
-                isPresented = false
+            if notActivated {
+                exit(0)
+            } else {
+                withAnimation {
+                    isPresented = false
+                }
             }
         }
     }

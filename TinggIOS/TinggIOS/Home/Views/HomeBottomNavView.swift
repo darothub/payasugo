@@ -99,8 +99,8 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            showTermsAndPrivacyPolicyDialog = !AppStorageManager.acceptedTermsAndCondition
             showPintroductionDialog = !AppStorageManager.hasCheckedDontShowPinIntroductionAgain && settingVm.pinNotYetSet()
+            showTermsAndPrivacyPolicyDialog = !AppStorageManager.acceptedTermsAndCondition
             Task {
                 let profile = hvm.getProfile()
                 profileImage = (profile.photoURL)!
@@ -114,12 +114,13 @@ public struct HomeBottomNavView: View, NavigationMenuClick {
                 .build()
                 .startScheduledRequest()
         }
-        .customDialog(isPresented: $showTermsAndPrivacyPolicyDialog, cancelOnTouchOutside: .constant(false)) {
-            TermAndConditiomDialogView(isPresented: $showTermsAndPrivacyPolicyDialog)
-        }
         .customDialog(isPresented: $showPintroductionDialog, cancelOnTouchOutside: .constant(false)) {
             PinIntroductionDialogView(isPresented: $showPintroductionDialog)
         }
+        .customDialog(isPresented: $showTermsAndPrivacyPolicyDialog, cancelOnTouchOutside: .constant(false)) {
+            TermAndConditiomDialogView(isPresented: $showTermsAndPrivacyPolicyDialog)
+        }
+     
     }
     @ViewBuilder
     func homeView() -> some View {

@@ -43,7 +43,7 @@ public class Profile: Object, DBObject,  ObjectKeyIdentifiable, Codable {
     @Persisted public var loyaltyPoints: String? = ""
     @Persisted public var identity: String? = ""
     @Persisted public var postalAddress: String? = ""
-    @Persisted public var acceptedTacVersion: Int?
+    @Persisted public var acceptedTacVersion: Int? = 0
     @Persisted public var dateAcceptedTac: String? = ""
     @Persisted public var nationalid: String? = ""
     @Persisted public var hasBritamAccount: String? = ""
